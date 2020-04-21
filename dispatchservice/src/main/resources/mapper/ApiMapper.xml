@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ApiMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Api">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="visittype" jdbcType="VARCHAR" property="visittype" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="headersname" jdbcType="VARCHAR" property="headersname" />
+    <result column="paramsname" jdbcType="VARCHAR" property="paramsname" />
+    <result column="body" jdbcType="BIT" property="body" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+</mapper>
