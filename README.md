@@ -1,11 +1,11 @@
-# Spring Boot Vue Admin
+# TestPlantform
 
 ![stars](https://img.shields.io/github/stars/Zoctan/spring-boot-vue-admin.svg?style=flat-square&label=Stars)
 ![license](https://img.shields.io/github/license/Zoctan/spring-boot-vue-admin.svg?style=flat-square)
 
 ## 简介
 
-提供一套前后端分离的后台权限管理模版。
+提供一套前后端分离的通用测试工作平台。
 
 前端思路参考[《手摸手，带你用vue撸后台 系列二(登录权限篇)》](https://juejin.im/post/591aa14f570c35006961acac)，模板来自 [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)，其他功能可以根据该项目进行拓展。
 
