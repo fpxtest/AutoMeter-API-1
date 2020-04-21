@@ -1,8 +1,8 @@
 <template>
   <!-- http://element-cn.eleme.io/#/zh-CN/component/menu -->
+  <!--:default-active="activeMenu"-->
+  <!--:collapse="isCollapse"-->
   <el-menu
-    :default-active="activeMenu"
-    :collapse="isCollapse"
     mode="vertical" text-color="#fff">
     <sidebar-item :routes="permissionRouters" />
   </el-menu>

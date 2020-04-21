@@ -231,11 +231,11 @@
         search(this.search).then(response => {
           this.dictionaryList = response.data.list
           this.total = response.data.total
-          this.listLoading = false
-          this.btnLoading = false
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.btnLoading = false
+        this.listLoading = false
       },
 
       /**

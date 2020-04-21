@@ -13,4 +13,29 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+  <resultMap id="deployValueWithNameMap" type="com.zoctan.api.entity.Deployunit" extends="BaseResultMap">
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname"/>
+    <result column="protocal" jdbcType="VARCHAR" property="protocal"/>
+  </resultMap>
+
+  <select id="findDeployNameValueWithCode" resultMap="deployValueWithNameMap">
+    SELECT a.deployunitname,a.protocal,a.port
+    FROM deployunit a where a.deployunitname = #{deployunitname}
+  </select>
+
+  <select id="findDeployWithName" resultMap="deployValueWithNameMap">
+    SELECT a.*
+    FROM deployunit a
+    <where>
+      <if test="deployunitname != null and deployunitname != ''">a.deployunitname = #{deployunitname}</if>
+      <if test="protocal != null  and protocal != ''">and a.protocal = #{protocal}</if>
+    </where>
+  </select>
+
+  <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">
+    update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
 </mapper>

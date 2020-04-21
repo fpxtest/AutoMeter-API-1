@@ -57,103 +57,101 @@ export const asyncRouterMap = [
     ]
   },
 
-  {
-    path: '/account',
-    component: Layout,
-    name: '资产管理',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: '服务器管理', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '设备管理', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试用例库', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试人员', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-    ]
-  },
+  // {
+  //   path: '/account',
+  //   component: Layout,
+  //   name: '资产管理',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: '服务器管理', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '设备管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试用例库', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试人员', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: '测试环境管理',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: '测试环境', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '测试环境服务器管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '服务器发布单元管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //   ]
+  // },
 
   {
-    path: '/test',
-    component: Layout,
-    name: '测试环境管理',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: '测试环境', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '测试环境服务器管理', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '服务器发布单元管理', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-    ]
-  },
-
-  {
-    path: '/test',
+    path: '/deployunit',
     component: Layout,
     name: '发布单元管理',
     icon: 'dashboard',
     children: [
-      { path: 'account/list', name: '发布单元', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '发布单元接口管理', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '接口参数管理', component: _import('role/list'), meta: { permission: ['role:detail'] }}
+      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { permission: ['depunit:list'] }}
     ]
   },
 
-  {
-    path: '/test',
-    component: Layout,
-    name: '测试工作管理',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: '测试项目任务管理', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '测试排期管理', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试文档库CF', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试经验分享', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试资金管理', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-    ]
-  },
-
-  {
-    path: '/test',
-    component: Layout,
-    name: '调度中心',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: '执行机管理', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '执行任务管理', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-    ]
-  },
-
-  {
-    path: '/test',
-    component: Layout,
-    name: '报告中心',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: '功能测试报告', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '性能测试报告', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-    ]
-  },
-
-  {
-    path: '/test',
-    component: Layout,
-    name: '数据统计',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: 'API测试分析', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '提测发布分析', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-    ]
-  },
-
-  {
-    path: '/test',
-    component: Layout,
-    name: '测试分析管理',
-    icon: 'dashboard',
-    children: [
-      { path: 'account/list', name: '静态扫描分析', component: _import('account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '单元测试覆盖分析', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试覆盖分析', component: _import('role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'role/list', name: '测试智能分析', component: _import('role/list'), meta: { permission: ['role:detail'] }}
-
-    ]
-  },
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: '测试工作管理',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: '测试项目任务管理', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '测试排期管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试文档库CF', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试经验分享', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试资金管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: '调度中心',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: '执行机管理', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '执行任务管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: '报告中心',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: '功能测试报告', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '性能测试报告', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: '数据统计',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: 'API测试分析', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '提测发布分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/test',
+  //   component: Layout,
+  //   name: '测试分析管理',
+  //   icon: 'dashboard',
+  //   children: [
+  //     { path: 'account/list', name: '静态扫描分析', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
+  //     { path: 'role/list', name: '单元测试覆盖分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试覆盖分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'role/list', name: '测试智能分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+  //
+  //   ]
+  // },
 
   {
     path: '/system',
@@ -161,23 +159,25 @@ export const asyncRouterMap = [
     name: '系统管理',
     icon: 'dashboard',
     children: [
+      { path: 'account/list', name: '账户管理', component: _import('system/account/list'), meta: { permission: ['account:detail'] }},
+      { path: 'role/list', name: '角色管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
       { path: 'dictionary/list', name: '字典管理', component: _import('system/dictionary/index'), meta: { permission: ['dictionary:list'] }}
     ]
   },
 
-  {
-    path: '/account',
-    component: Layout,
-    redirect: '/account/list',
-    icon: 'name',
-    noDropDown: true,
-    children: [{
-      path: 'list',
-      name: '账户管理',
-      component: _import('account/list'),
-      meta: { permission: ['account:list'] }
-    }]
-  },
+  // {
+  //   path: '/account',
+  //   component: Layout,
+  //   redirect: '/account/list',
+  //   icon: 'name',
+  //   noDropDown: true,
+  //   children: [{
+  //     path: 'list',
+  //     name: '账户管理',
+  //     component: _import('account/list'),
+  //     meta: { permission: ['account:list'] }
+  //   }]
+  // },
 
   {
     path: '/account',
@@ -187,21 +187,21 @@ export const asyncRouterMap = [
     children: [{
       path: 'detail',
       name: '账户中心',
-      component: _import('account/detail')
-    }]
-  },
-
-  {
-    path: '/role',
-    component: Layout,
-    redirect: '/role/list',
-    icon: 'role',
-    noDropDown: true,
-    children: [{
-      path: 'list',
-      name: '角色管理',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
+      component: _import('system/account/detail')
     }]
   }
+
+  // {
+  //   path: '/role',
+  //   component: Layout,
+  //   redirect: '/role/list',
+  //   icon: 'role',
+  //   noDropDown: true,
+  //   children: [{
+  //     path: 'list',
+  //     name: '角色管理',
+  //     component: _import('role/list'),
+  //     meta: { permission: ['role:list'] }
+  //   }]
+  // }
 ]

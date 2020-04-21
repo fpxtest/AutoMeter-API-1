@@ -287,13 +287,11 @@ export default {
       search(this.search).then(response => {
         this.accountList = response.data.list
         this.total = response.data.total
-        this.listLoading = false
-        this.btnLoading = false
       }).catch(res => {
         this.$message.error('搜索失败')
-        this.btnLoading = false
-        this.listLoading = false
       })
+      this.btnLoading = false
+      this.listLoading = false
     },
     /**
      * 改变每页数量
