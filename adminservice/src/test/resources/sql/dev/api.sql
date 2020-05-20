@@ -26,12 +26,11 @@ CREATE TABLE `api`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `deployunitid`  bigint(20) unsigned    NOT NULL  COMMENT 'DeployUnitId',
+    `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
     `apiname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '接口名',
-    `visittype`     varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '访问方式',
+    `visittype`     varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '访问方式，字典表获取',
     `path`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'url访问路径',
-    `headersname`       varchar(512) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '头参数以逗号分隔',
-    `paramsname`        varchar(512) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '参数以逗号分隔',
-    `body`          boolean COMMENT '是否有数据体',
+    `memo`          varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)
@@ -48,10 +47,10 @@ LOCK TABLES `api` WRITE;
 /*!40000 ALTER TABLE `api`
     DISABLE KEYS */;
 INSERT INTO `api`
-VALUES (1, 1,'getUserNamebyID', 'get', '/user','token,version','id',1,
+VALUES (1, 1,'getUserNamebyID','根据id获取用户名', 'get', '/user','根据id获取用户名',
         '2019-07-01 00:00:00', '2019-07-01 00:00:00');
 INSERT INTO `api`
-VALUES (2, 1,'getUserIDbyName', 'get', '/user','token,version','id,name',0,
+VALUES (2, 1,'getUserIDbyName','根据用户名获取id', 'post', '/user','根据用户名获取id',
         '2019-07-01 00:00:00', '2019-07-01 00:00:00');
 /*!40000 ALTER TABLE `api`
     ENABLE KEYS */;

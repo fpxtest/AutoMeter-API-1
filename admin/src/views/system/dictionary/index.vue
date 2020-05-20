@@ -21,10 +21,10 @@
 
         <span v-if="hasPermission('dictionary:search')">
           <el-form-item>
-            <el-input v-model="search.dicname" placeholder="字典名"></el-input>
+            <el-input v-model="search.dicname" @keyup.enter.native="searchBy" placeholder="字典名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.dicitemname" placeholder="字典项名"></el-input>
+            <el-input v-model="search.dicitemname" @keyup.enter.native="searchBy" placeholder="字典项名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -272,6 +272,7 @@
         // 显示新增对话框
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
+        this.tmpDictionary.id = ''
         this.tmpDictionary.dicname = ''
         this.tmpDictionary.diccode = ''
         this.tmpDictionary.dicitemname = ''
@@ -348,13 +349,15 @@
        */
       isUniqueDetail(dictionary) {
         for (let i = 0; i < this.dictionaryList.length; i++) {
-          if (this.dictionaryList[i].dicname === dictionary.dicname) {
-            this.$message.error('字典名已存在')
-            return false
-          }
-          if (this.dictionaryList[i].dicitemname === dictionary.dicitemname) {
-            this.$message.error('字典项名已存在')
-            return false
+          if (this.dictionaryList[i].id !== dictionary.id) { // 排除自己
+            if (this.dictionaryList[i].dicname === dictionary.dicname) {
+              this.$message.error('字典名已存在')
+              return false
+            }
+            if (this.dictionaryList[i].dicitemname === dictionary.dicitemname) {
+              this.$message.error('字典项名已存在')
+              return false
+            }
           }
         }
         return true

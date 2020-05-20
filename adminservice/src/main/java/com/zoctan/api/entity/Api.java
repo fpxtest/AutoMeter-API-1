@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Api {
     /**
@@ -17,12 +20,17 @@ public class Api {
     private Long deployunitid;
 
     /**
+     * 发布单元名
+     */
+    private String deployunitname;
+
+    /**
      * 接口名
      */
     private String apiname;
 
     /**
-     * 访问方式
+     * 访问方式，字典表获取
      */
     private String visittype;
 
@@ -32,19 +40,9 @@ public class Api {
     private String path;
 
     /**
-     * 头参数以逗号分隔
+     * 备注
      */
-    private String headersname;
-
-    /**
-     * 参数以逗号分隔
-     */
-    private String paramsname;
-
-    /**
-     * 是否有数据体
-     */
-    private Boolean body;
+    private String memo;
 
     /**
      * 创建时间
@@ -95,6 +93,24 @@ public class Api {
     }
 
     /**
+     * 获取发布单元名
+     *
+     * @return deployunitname - 发布单元名
+     */
+    public String getDeployunitname() {
+        return deployunitname;
+    }
+
+    /**
+     * 设置发布单元名
+     *
+     * @param deployunitname 发布单元名
+     */
+    public void setDeployunitname(String deployunitname) {
+        this.deployunitname = deployunitname;
+    }
+
+    /**
      * 获取接口名
      *
      * @return apiname - 接口名
@@ -113,18 +129,18 @@ public class Api {
     }
 
     /**
-     * 获取访问方式
+     * 获取访问方式，字典表获取
      *
-     * @return visittype - 访问方式
+     * @return visittype - 访问方式，字典表获取
      */
     public String getVisittype() {
         return visittype;
     }
 
     /**
-     * 设置访问方式
+     * 设置访问方式，字典表获取
      *
-     * @param visittype 访问方式
+     * @param visittype 访问方式，字典表获取
      */
     public void setVisittype(String visittype) {
         this.visittype = visittype;
@@ -149,57 +165,21 @@ public class Api {
     }
 
     /**
-     * 获取头参数以逗号分隔
+     * 获取备注
      *
-     * @return headersname - 头参数以逗号分隔
+     * @return memo - 备注
      */
-    public String getHeadersname() {
-        return headersname;
+    public String getMemo() {
+        return memo;
     }
 
     /**
-     * 设置头参数以逗号分隔
+     * 设置备注
      *
-     * @param headersname 头参数以逗号分隔
+     * @param memo 备注
      */
-    public void setHeadersname(String headersname) {
-        this.headersname = headersname;
-    }
-
-    /**
-     * 获取参数以逗号分隔
-     *
-     * @return paramsname - 参数以逗号分隔
-     */
-    public String getParamsname() {
-        return paramsname;
-    }
-
-    /**
-     * 设置参数以逗号分隔
-     *
-     * @param paramsname 参数以逗号分隔
-     */
-    public void setParamsname(String paramsname) {
-        this.paramsname = paramsname;
-    }
-
-    /**
-     * 获取是否有数据体
-     *
-     * @return body - 是否有数据体
-     */
-    public Boolean getBody() {
-        return body;
-    }
-
-    /**
-     * 设置是否有数据体
-     *
-     * @param body 是否有数据体
-     */
-    public void setBody(Boolean body) {
-        this.body = body;
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     /**

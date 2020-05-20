@@ -7,4 +7,7 @@ import com.zoctan.api.entity.RolePermission;
  * @author Zoctan
  * @date 2018/06/09
  */
-public interface RolePermissionService extends Service<RolePermission> {}
+public interface RolePermissionService extends Service<RolePermission> {
+
+    void deleteRolePermission(Long roleId);
+}

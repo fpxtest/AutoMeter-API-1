@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.TesterMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Tester">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="testername" jdbcType="VARCHAR" property="testername" />
+    <result column="testertitle" jdbcType="VARCHAR" property="testertitle" />
+    <result column="testerorg" jdbcType="VARCHAR" property="testerorg" />
+    <result column="testermemo" jdbcType="VARCHAR" property="testermemo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+
+  <resultMap id="testerWithNameMap" type="com.zoctan.api.entity.Tester" extends="BaseResultMap">
+    <result column="testername" jdbcType="VARCHAR" property="testername"/>
+    <result column="testertitle" jdbcType="VARCHAR" property="testertitle"/>
+  </resultMap>
+
+  <select id="findtesterName" resultMap="testerWithNameMap">
+    SELECT a.testername,a.testertitle
+    FROM tester a
+  </select>
+
+  <select id="findTesterWithName" resultMap="testerWithNameMap">
+    SELECT a.*
+    FROM tester a
+    <where>
+      <if test="testername != null and testername != ''">a.testername like CONCAT('%',#{testername},'%')</if>
+      <if test="testertitle != null and testertitle != ''">and a.testertitle = #{testertitle}</if>
+      <if test="testerorg != null and testerorg != ''">and a.testerorg = #{testerorg}</if>
+    </where>
+  </select>
+
+  <update id="updateTester" parameterType="com.zoctan.api.entity.Tester">
+    update tester set testername = #{testername},testertitle=#{testertitle},testerorg=#{testerorg},
+    testermemo = #{testermemo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+</mapper>

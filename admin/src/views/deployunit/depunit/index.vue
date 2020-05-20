@@ -21,10 +21,10 @@
 
         <span v-if="hasPermission('depunit:search')">
           <el-form-item>
-            <el-input v-model="search.deployunitname" placeholder="发布单元名"></el-input>
+            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.protocal" placeholder="协议"></el-input>
+            <el-input v-model="search.protocal" @keyup.enter.native="searchBy" placeholder="协议"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -262,12 +262,13 @@
         return (this.listQuery.page - 1) * this.listQuery.size + index + 1
       },
       /**
-       * 显示添加用户对话框
+       * 显示添加发布单元对话框
        */
       showAdddepunitDialog() {
         // 显示新增对话框
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
+        this.tmpdepunit.id = ''
         this.tmpdepunit.deployunitname = ''
         this.tmpdepunit.protocal = ''
         this.tmpdepunit.port = ''
@@ -293,8 +294,8 @@
         })
       },
       /**
-       * 显示修改用户对话框
-       * @param index 用户下标
+       * 显示修改发布单元对话框
+       * @param index 发布单元下标
        */
       showUpdatedepunitDialog(index) {
         this.dialogFormVisible = true
@@ -306,21 +307,23 @@
         this.tmpdepunit.memo = this.depunitList[index].memo
       },
       /**
-       * 更新用户
+       * 更新发布单元
        */
       updatedepunit() {
-        updatedepunit(this.tmpdepunit).then(() => {
-          this.$message.success('更新成功')
-          this.getdepunitList()
-          this.dialogFormVisible = false
-        }).catch(res => {
-          this.$message.error('更新失败')
-        })
+        if (this.isUniqueDetail(this.tmpdepunit)) {
+          updatedepunit(this.tmpdepunit).then(() => {
+            this.$message.success('更新成功')
+            this.getdepunitList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.$message.error('更新失败')
+          })
+        }
       },
 
       /**
        * 删除字典
-       * @param index 用户下标
+       * @param index 发布单元下标
        */
       removedepunit(index) {
         this.$confirm('删除该发布单元？', '警告', {
@@ -344,9 +347,11 @@
        */
       isUniqueDetail(depunit) {
         for (let i = 0; i < this.depunitList.length; i++) {
-          if (this.depunitList[i].deployunitname === depunit.deployunitname) {
-            this.$message.error('发布单元名已存在')
-            return false
+          if (this.depunitList[i].id !== depunit.id) { // 排除自己
+            if (this.depunitList[i].deployunitname === depunit.deployunitname) {
+              this.$message.error('发布单元名已存在')
+              return false
+            }
           }
         }
         return true

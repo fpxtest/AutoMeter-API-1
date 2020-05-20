@@ -18,6 +18,25 @@ public class RolePermission {
   @Column(name = "role_id")
   private Long roleId;
 
+
+  /**
+   * 获取字典项值
+   *
+   * @return roleId - 字典项值
+   */
+  public Long getroleId() {
+    return roleId;
+  }
+
+  /**
+   * 设置字典项值
+   *
+   * @param roleId 字典项值
+   */
+  public void setroleId(Long roleId) {
+    this.roleId = roleId;
+  }
+
   /** 权限Id */
   @Column(name = "permission_id")
   private Long permissionId;

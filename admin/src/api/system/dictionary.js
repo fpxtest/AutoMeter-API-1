@@ -8,6 +8,14 @@ export function getDicList(params) {
   })
 }
 
+export function getdatabydiccodeList(params) {
+  return request({
+    url: '/dictionary/apisearch',
+    method: 'get',
+    params
+  })
+}
+
 export function search(searchForm1) {
   return request({
     url: '/dictionary/search',

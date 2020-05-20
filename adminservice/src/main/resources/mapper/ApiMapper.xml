@@ -7,13 +7,28 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="visittype" jdbcType="VARCHAR" property="visittype" />
     <result column="path" jdbcType="VARCHAR" property="path" />
-    <result column="headersname" jdbcType="VARCHAR" property="headersname" />
-    <result column="paramsname" jdbcType="VARCHAR" property="paramsname" />
-    <result column="body" jdbcType="BIT" property="body" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+
+  <select id="findApiWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api a
+    <where>
+      <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
+      <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
+    </where>
+  </select>
+
+  <update id="updateApi" parameterType="com.zoctan.api.entity.Api">
+    update api set apiname = #{apiname}, deployunitname = #{deployunitname}, visittype = #{visittype},path = #{path},
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
 </mapper>

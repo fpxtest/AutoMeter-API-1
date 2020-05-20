@@ -33,8 +33,8 @@
         LEFT JOIN account_role ar ON a.id = ar.account_id
         LEFT JOIN role r ON ar.role_id = r.id
         <where>
-            <if test="accountName != null">a.name = #{accountName}</if>
-            <if test="roleName != null">and r.name = #{roleName}</if>
+            <if test="accountName != null and accountName != ''">a.name like CONCAT('%',#{accountName},'%')</if>
+            <if test="roleName != null and roleName != ''">and r.name like CONCAT('%',#{roleName},'%')</if>
         </where>
     </select>
 

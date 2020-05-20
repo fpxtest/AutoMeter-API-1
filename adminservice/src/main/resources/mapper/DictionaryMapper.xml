@@ -29,8 +29,8 @@
     SELECT a.*
     FROM dictionary a
     <where>
-      <if test="dicname != null and dicname != ''">a.dicname = #{dicname}</if>
-      <if test="dicitemname != null  and dicitemname != ''">and a.dicitemname = #{dicitemname}</if>
+      <if test="dicname != null and dicname != ''">a.dicname like CONCAT('%',#{dicname},'%')</if>
+      <if test="dicitemname != null  and dicitemname != ''">and a.dicitemname  like CONCAT('%',#{dicitemname},'%')</if>
     </where>
   </select>
 

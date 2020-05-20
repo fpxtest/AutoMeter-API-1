@@ -48,39 +48,35 @@ export const asyncRouterMap = [
     name: '测试',
     icon: 'dashboard',
     children: [
-      {
-        path: 'index',
-        name: '测试111',
-        component: _import('table/index'),
-        meta: { permission: ['table:list'] }
+      { path: 'index', name: '测试111', component: _import('test/dynamictest'), meta: { permission: ['table:list'] }
       }
     ]
   },
 
-  // {
-  //   path: '/account',
-  //   component: Layout,
-  //   name: '资产管理',
-  //   icon: 'dashboard',
-  //   children: [
-  //     { path: 'account/list', name: '服务器管理', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
-  //     { path: 'role/list', name: '设备管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-  //     { path: 'role/list', name: '测试用例库', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-  //     { path: 'role/list', name: '测试人员', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
-  //   ]
-  // },
-  //
-  // {
-  //   path: '/test',
-  //   component: Layout,
-  //   name: '测试环境管理',
-  //   icon: 'dashboard',
-  //   children: [
-  //     { path: 'account/list', name: '测试环境', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
-  //     { path: 'role/list', name: '测试环境服务器管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-  //     { path: 'role/list', name: '服务器发布单元管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
-  //   ]
-  // },
+  {
+    path: '/assets',
+    component: Layout,
+    name: '资产管理',
+    icon: 'dashboard',
+    children: [
+      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { permission: ['machine:list'] }},
+      { path: 'role/list', name: '移动设备管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      { path: 'role/list', name: '测试用例库', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      { path: 'tester/list', name: '测试人员', component: _import('assets/tester/index'), meta: { permission: ['tester:list'] }}
+    ]
+  },
+
+  {
+    path: '/enviroment',
+    component: Layout,
+    name: '环境管理',
+    icon: 'dashboard',
+    children: [
+      { path: 'testenviroment/list', name: '测试环境', component: _import('enviroment/testenviroment/index'), meta: { permission: ['enviroment:list'] }},
+      { path: 'role/list', name: '测试环境服务器管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      { path: 'role/list', name: '服务器发布单元管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+    ]
+  },
 
   {
     path: '/deployunit',
@@ -88,7 +84,9 @@ export const asyncRouterMap = [
     name: '发布单元管理',
     icon: 'dashboard',
     children: [
-      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { permission: ['depunit:list'] }}
+      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { permission: ['depunit:list'] }},
+      { path: 'api/list', name: '发布单元API', component: _import('deployunit/api/index'), meta: { permission: ['api:list'] }},
+      { path: 'apiparams/list', name: 'API参数管理', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
     ]
   },
 

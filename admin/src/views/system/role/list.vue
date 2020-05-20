@@ -318,11 +318,11 @@ export default {
           addRole(this.tempRole).then(() => {
             this.$message.success('添加成功')
             this.getRoleList()
-            this.dialogFormVisible = false
-            this.btnLoading = false
           }).catch(res => {
             this.$message.error('添加角色失败')
           })
+          this.dialogFormVisible = false
+          this.btnLoading = false
         } else {
           console.log('表单无效')
         }
@@ -341,11 +341,11 @@ export default {
           updateRole(this.tempRole).then(() => {
             this.$message.success('更新成功')
             this.getRoleList()
-            this.dialogFormVisible = false
-            this.btnLoading = false
           }).catch(res => {
             this.$message.error('更新角色失败')
           })
+          this.dialogFormVisible = false
+          this.btnLoading = false
         } else {
           console.log('表单无效')
         }

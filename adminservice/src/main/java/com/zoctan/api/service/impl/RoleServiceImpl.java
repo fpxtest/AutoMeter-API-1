@@ -4,14 +4,12 @@ import com.zoctan.api.core.service.AbstractService;
 import com.zoctan.api.dto.RoleWithPermission;
 import com.zoctan.api.dto.RoleWithResource;
 import com.zoctan.api.entity.Role;
-import com.zoctan.api.entity.RolePermission;
 import com.zoctan.api.mapper.PermissionMapper;
 import com.zoctan.api.mapper.RoleMapper;
 import com.zoctan.api.mapper.RolePermissionMapper;
 import com.zoctan.api.service.RoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,9 +48,10 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
   @Override
   public void update(final RoleWithPermission role) {
     // 删掉所有权限，再添加回去
-    final Condition condition = new Condition(RolePermission.class);
-    condition.createCriteria().andCondition("role_id = ", role.getId());
-    this.rolePermissionMapper.deleteByCondition(condition);
+//    final Condition condition = new Condition(RolePermission.class);
+//    condition.createCriteria().andCondition("role_id = ", role.getId());
+    this.rolePermissionMapper.deleteRolePermission(role.getId());
+    //this.rolePermissionMapper.deleteByCondition(condition);
     this.rolePermissionMapper.saveRolePermission(role.getId(), role.getPermissionIdList());
     this.roleMapper.updateTimeById(role.getId());
   }

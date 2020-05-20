@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('account:search')">
           <el-form-item>
-            <el-input v-model="search.accountName" placeholder="账户名"></el-input>
+            <el-input v-model="search.accountName" @keyup.enter.native="searchBy" placeholder="账户名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-select v-model="search.roleName" placeholder="角色">
@@ -50,22 +50,22 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="账户名" align="center" prop="name" width="80" />
-      <el-table-column label="邮箱" align="center" prop="email" width="200" />
-      <el-table-column label="注册时间" align="center" prop="registerTime" width="160">
+      <el-table-column label="账户名" align="center" prop="name" width="100" />
+      <el-table-column label="邮箱" align="center" prop="email" width="160" />
+      <el-table-column label="注册时间" align="center" prop="registerTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.registerTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后登录时间" align="center" prop="loginTime" width="160">
+      <el-table-column label="最后登录时间" align="center" prop="loginTime" width="150">
         <template slot-scope="scope">{{ scope.row.loginTime ? unix2CurrentTime(scope.row.loginTime) : '从未登录' }}</template>
       </el-table-column>
-      <el-table-column label="角色" align="center" prop="roleName" width="120" />
+      <el-table-column label="角色" align="center" prop="roleName" width="100" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('account:update') || hasPermission('account:delete')">
         <template slot-scope="scope">
           <el-button
             type="warning"
             size="mini"
-            v-if="hasPermission('role:update') && scope.row.id !== accountId"
+            v-if="hasPermission('role:update') && scope.row.id !== id"
             @click.native.prevent="showUpdateAccountDialog(scope.$index)"
           >账户</el-button>
           <el-button
@@ -77,7 +77,7 @@
           <el-button
             type="danger"
             size="mini"
-            v-if="hasPermission('account:delete') && scope.row.id !== accountId"
+            v-if="hasPermission('account:delete') && scope.row.id !== id"
             @click.native.prevent="removeAccount(scope.$index)"
           >删除</el-button>
         </template>
@@ -224,6 +224,7 @@ export default {
       },
       btnLoading: false, // 按钮等待动画
       tmpAccount: {
+        id: '',
         accountId: '',
         email: '',
         name: '',
@@ -327,6 +328,7 @@ export default {
       // 显示新增对话框
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
+      this.tmpAccount.id = ''
       this.tmpAccount.email = ''
       this.tmpAccount.name = ''
       this.tmpAccount.password = ''
@@ -357,7 +359,7 @@ export default {
     showUpdateAccountDialog(index) {
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
-      this.tmpAccount.accountId = this.accountList[index].id
+      this.tmpAccount.id = this.accountList[index].id
       this.tmpAccount.email = this.accountList[index].email
       this.tmpAccount.name = this.accountList[index].name
       this.tmpAccount.password = ''
@@ -367,13 +369,15 @@ export default {
      * 更新用户
      */
     updateAccount() {
-      updateAccount(this.tmpAccount).then(() => {
-        this.$message.success('更新成功')
-        this.getAccountList()
-        this.dialogFormVisible = false
-      }).catch(res => {
-        this.$message.error('更新失败')
-      })
+      if (this.isUniqueDetail(this.tmpAccount)) {
+        updateAccount(this.tmpAccount).then(() => {
+          this.$message.success('更新成功')
+          this.getAccountList()
+          this.dialogFormVisible = false
+        }).catch(res => {
+          this.$message.error('更新失败')
+        })
+      }
     },
     /**
      * 显示修改用户角色对话框
@@ -406,13 +410,15 @@ export default {
      */
     isUniqueDetail(account) {
       for (let i = 0; i < this.accountList.length; i++) {
-        if (this.accountList[i].name === account.name) {
-          this.$message.error('账户名已存在')
-          return false
-        }
-        if (this.accountList[i].email === account.email) {
-          this.$message.error('邮箱已存在')
-          return false
+        if (this.accountList[i].id !== account.id) { // 排除自己
+          if (this.accountList[i].name === account.name) {
+            this.$message.error('账户名已存在')
+            return false
+          }
+          if (this.accountList[i].email === account.email) {
+            this.$message.error('邮箱已存在')
+            return false
+          }
         }
       }
       return true

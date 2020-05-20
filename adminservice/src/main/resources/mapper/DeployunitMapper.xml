@@ -28,8 +28,8 @@
     SELECT a.*
     FROM deployunit a
     <where>
-      <if test="deployunitname != null and deployunitname != ''">a.deployunitname = #{deployunitname}</if>
-      <if test="protocal != null  and protocal != ''">and a.protocal = #{protocal}</if>
+      <if test="deployunitname != null and deployunitname != ''">a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
+      <if test="protocal != null  and protocal != ''">and a.protocal like CONCAT('%',#{protocal},'%')</if>
     </where>
   </select>
 

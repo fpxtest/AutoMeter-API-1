@@ -11,4 +11,28 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+  <resultMap id="enviromentWithNameMap" type="com.zoctan.api.entity.Enviroment" extends="BaseResultMap">
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname"/>
+    <result column="memo" jdbcType="VARCHAR" property="memo"/>
+  </resultMap>
+
+  <select id="findEnviromentName" resultMap="enviromentWithNameMap">
+    SELECT a.enviromentname,a.memo
+    FROM enviroment a
+  </select>
+
+  <select id="findEnviromentWithName" resultMap="enviromentWithNameMap">
+    SELECT a.*
+    FROM enviroment a
+    <where>
+      <if test="enviromentname != null and enviromentname != ''">a.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
+    </where>
+  </select>
+
+  <update id="updateEnviroment" parameterType="com.zoctan.api.entity.Enviroment">
+    update enviroment set enviromentname = #{enviromentname},
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
 </mapper>

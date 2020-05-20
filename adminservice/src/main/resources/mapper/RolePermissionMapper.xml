@@ -13,4 +13,11 @@
             (#{roleId}, #{item})
         </foreach>
     </insert>
+
+    <insert id="deleteRolePermission">
+        DELETE from role_permission
+        <where>
+            <if test="_parameter != null">role_id = #{roleId}</if>
+        </where>
+    </insert>
 </mapper>

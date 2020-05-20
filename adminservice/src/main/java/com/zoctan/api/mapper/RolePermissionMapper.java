@@ -19,4 +19,7 @@ public interface RolePermissionMapper extends MyMapper<RolePermission> {
    */
   void saveRolePermission(
       @Param("roleId") Long roleId, @Param("permissionIdList") List<Integer> permissionIdList);
+
+  void deleteRolePermission(Long roleId);
+
 }
