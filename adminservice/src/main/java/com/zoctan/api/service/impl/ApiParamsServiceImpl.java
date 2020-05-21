@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author Zoctan
@@ -19,4 +21,13 @@ public class ApiParamsServiceImpl extends AbstractService<ApiParams> implements 
 @Resource
 private ApiParamsMapper apiParamsMapper;
 
+    @Override
+    public List<ApiParams> findApiParamsWithName(Map<String, Object> params) {
+        return this.apiParamsMapper.findApiParamsWithName(params);
+    }
+
+    @Override
+    public void updateApiParams(ApiParams params) {
+        apiParamsMapper.updateApiParams(params);
+    }
 }

@@ -7,8 +7,31 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="envid" jdbcType="BIGINT" property="envid" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="machineid" jdbcType="BIGINT" property="machineid" />
+    <result column="machinename" jdbcType="VARCHAR" property="machinename" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+  <select id="findEnvAndMacWithName" resultMap="BaseResultMap">
+    select c.*, a.ip from machine a  ,envmachine c
+    <where>
+      a.id=c.machineid
+      <if test="enviromentname != null and enviromentname != ''">and c.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
+      <if test="machinename != null  and machinename != ''">and c.machinename like CONCAT('%',#{machinename},'%')</if>
+    </where>
+  </select>
+
+  <select id="listAllEnvAndMac" resultMap="BaseResultMap">
+    select c.*, a.ip from machine a  ,envmachine c
+    where  a.id=c.machineid
+  </select>
+
+  <update id="updateEnvAndMac" parameterType="com.zoctan.api.entity.Envmachine">
+    update envmachine set envid = #{envid}, machineid = #{machineid},machinename= #{machinename},enviromentname= #{enviromentname},
+    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
 </mapper>

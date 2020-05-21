@@ -41,19 +41,6 @@ CREATE TABLE `api_params`
 -- Dumping data for table `api_params`
 --
 
-LOCK TABLES `api_params` WRITE;
-/*!40000 ALTER TABLE `api_params`
-    DISABLE KEYS */;
-INSERT INTO `api_params`
-VALUES (1, 'getUserNamebyID', 'header', 'version',
-        '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-INSERT INTO `api_params`
-VALUES (1, 'getUserNamebypass', 'header', 'token',
-        '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-/*!40000 ALTER TABLE `api_params`
-    ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;

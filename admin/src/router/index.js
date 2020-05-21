@@ -73,7 +73,7 @@ export const asyncRouterMap = [
     icon: 'dashboard',
     children: [
       { path: 'testenviroment/list', name: '测试环境', component: _import('enviroment/testenviroment/index'), meta: { permission: ['enviroment:list'] }},
-      { path: 'role/list', name: '测试环境服务器管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      { path: 'envmachine/list', name: '测试环境服务器管理', component: _import('enviroment/envmachine/index'), meta: { permission: ['envmachine:list'] }},
       { path: 'role/list', name: '服务器发布单元管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
     ]
   },

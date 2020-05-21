@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Envmachine {
     /**
@@ -17,9 +20,32 @@ public class Envmachine {
     private Long envid;
 
     /**
+     * 环境名
+     */
+    private String enviromentname;
+
+    /**
+     * ip
+     */
+    private String ip;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    /**
      * 服务器Id
      */
     private Long machineid;
+
+    /**
+     * 机器名
+     */
+    private String machinename;
 
     /**
      * 创建时间
@@ -70,6 +96,24 @@ public class Envmachine {
     }
 
     /**
+     * 获取环境名
+     *
+     * @return enviromentname - 环境名
+     */
+    public String getEnviromentname() {
+        return enviromentname;
+    }
+
+    /**
+     * 设置环境名
+     *
+     * @param enviromentname 环境名
+     */
+    public void setEnviromentname(String enviromentname) {
+        this.enviromentname = enviromentname;
+    }
+
+    /**
      * 获取服务器Id
      *
      * @return machineid - 服务器Id
@@ -85,6 +129,24 @@ public class Envmachine {
      */
     public void setMachineid(Long machineid) {
         this.machineid = machineid;
+    }
+
+    /**
+     * 获取机器名
+     *
+     * @return machinename - 机器名
+     */
+    public String getMachinename() {
+        return machinename;
+    }
+
+    /**
+     * 设置机器名
+     *
+     * @param machinename 机器名
+     */
+    public void setMachinename(String machinename) {
+        this.machinename = machinename;
     }
 
     /**

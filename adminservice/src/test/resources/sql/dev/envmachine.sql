@@ -26,7 +26,9 @@ CREATE TABLE `envmachine`
 (
     `id`            bigint(20) unsigned            NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `envid`            bigint(20) unsigned         NOT NULL  COMMENT '环境Id',
+    `enviromentname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境名',
     `machineid`        bigint(20) unsigned            NOT NULL  COMMENT '服务器Id',
+    `machinename`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '机器名',
     `create_time`       datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)
@@ -43,10 +45,7 @@ LOCK TABLES `envmachine` WRITE;
 /*!40000 ALTER TABLE `envmachine`
     DISABLE KEYS */;
 INSERT INTO `envmachine`
-VALUES (1, 1, 1,
-        '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-INSERT INTO `envmachine`
-VALUES (2, 1, 2,
+VALUES (1, 1, '测试环境',1,'服务器',
         '2019-07-01 00:00:00', '2019-07-01 00:00:00');
 /*!40000 ALTER TABLE `envmachine`
     ENABLE KEYS */;

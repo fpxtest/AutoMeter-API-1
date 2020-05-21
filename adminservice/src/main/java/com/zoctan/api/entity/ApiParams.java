@@ -1,7 +1,7 @@
 package com.zoctan.api.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "api_params")
 public class ApiParams {
@@ -16,6 +16,11 @@ public class ApiParams {
      * api名
      */
     private String apiname;
+
+    /**
+     * 发布单元名
+     */
+    private String deployunitname;
 
     /**
      * api属性类型，header，body
@@ -73,6 +78,24 @@ public class ApiParams {
      */
     public void setApiname(String apiname) {
         this.apiname = apiname;
+    }
+
+    /**
+     * 获取发布单元名
+     *
+     * @return deployunitname - 发布单元名
+     */
+    public String getDeployunitname() {
+        return deployunitname;
+    }
+
+    /**
+     * 设置发布单元名
+     *
+     * @param deployunitname 发布单元名
+     */
+    public void setDeployunitname(String deployunitname) {
+        this.deployunitname = deployunitname;
     }
 
     /**

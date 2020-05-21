@@ -61,10 +61,10 @@
       <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
       <el-table-column label="参数名" align="center" prop="keyname" width="100"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -413,9 +413,11 @@
       isUniqueDetail(apiparams) {
         for (let i = 0; i < this.apiparamsList.length; i++) {
           if (this.apiparamsList[i].id !== apiparams.id) { // 排除自己
-            if (this.apiparamsList[i].propertytype === apiparams.propertytype) {
-              this.$message.error('api参数类型已存在')
-              return false
+            if (this.apiparamsList[i].apiname === apiparams.apiname) {
+              if (this.apiparamsList[i].propertytype === apiparams.propertytype) {
+                this.$message.error('api参数类型已存在')
+                return false
+              }
             }
           }
         }

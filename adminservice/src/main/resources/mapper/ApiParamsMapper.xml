@@ -7,9 +7,25 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
     <result column="keyname" jdbcType="VARCHAR" property="keyname" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+  <select id="findApiParamsWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api_params a
+    <where>
+      <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
+      <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
+    </where>
+  </select>
+
+  <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">
+    update api_params set apiname = #{apiname}, deployunitname = #{deployunitname}, propertytype = #{propertytype},keyname = #{keyname},
+    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
 </mapper>

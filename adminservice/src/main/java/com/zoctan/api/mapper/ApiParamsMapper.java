@@ -3,5 +3,23 @@ package com.zoctan.api.mapper;
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.ApiParams;
 
+import java.util.List;
+import java.util.Map;
+
 public interface ApiParamsMapper extends MyMapper<ApiParams> {
+    /**
+     * 按条件查询Api内容
+     *
+     * @param params 参数
+     * @return 用户列表
+     */
+    List<ApiParams> findApiParamsWithName(final Map<String, Object> params);
+
+    /**
+     * 更新Api内容
+     *
+     * @param params 参数
+     * @return 用户列表
+     */
+    void updateApiParams(ApiParams params);
 }

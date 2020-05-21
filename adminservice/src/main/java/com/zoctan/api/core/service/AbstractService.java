@@ -94,7 +94,7 @@ public abstract class AbstractService<T> implements Service<T> {
 
   @Override
   public void deleteById(final Object id) {
-    this.assertById(id);
+    //this.assertById(id);
     this.assertDelete(this.mapper.deleteByPrimaryKey(id) == 1);
   }
 
