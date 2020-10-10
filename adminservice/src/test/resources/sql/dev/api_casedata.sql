@@ -16,39 +16,25 @@
 /*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
 --
--- Table structure for table `api_params`
+-- Table structure for table `apicasedata`
 
 
-DROP TABLE IF EXISTS `api_params`;
+DROP TABLE IF EXISTS `api_casedata`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `api_params`
+CREATE TABLE `api_casedata`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `apiid`            bigint(20) unsigned    NOT NULL COMMENT 'apiId',
-    `apiname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api名',
-    `deployunitname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
+    `caseid`  bigint(20) unsigned    NOT NULL  COMMENT '用例Id',
+    `casename`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例名',
+    `apiparam`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api参数',
+    `apiparamvalue`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例参数值',
     `propertytype`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api属性类型，header，body',
-    `keyname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'key名',
+    `memo`          varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='api参数表';
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = utf8mb4 COMMENT ='api用例数据表';
 
---
--- Dumping data for table `api_params`
---
-
-
-/*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
-
--- Dump completed on 2018-02-16 19:24:53

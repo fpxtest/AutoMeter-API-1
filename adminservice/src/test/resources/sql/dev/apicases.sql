@@ -16,32 +16,46 @@
 /*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
 --
--- Table structure for table `api_params`
+-- Table structure for table `apicases`
 
 
-DROP TABLE IF EXISTS `api_params`;
+DROP TABLE IF EXISTS `apicases`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `api_params`
+CREATE TABLE `apicases`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `apiid`            bigint(20) unsigned    NOT NULL COMMENT 'apiId',
-    `apiname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api名',
-    `deployunitname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
-    `propertytype`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api属性类型，header，body',
-    `keyname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'key名',
+    `apiname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'API',
+    `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元',
+    `casename`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例名',
+    `casejmxname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例jmx名，和jmx文件名对齐',
+    `casecontent`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例内容，以英文逗号分开，提供jar获取自定义期望结果A：1的值，入参为冒号左边的内容',
+    `expect`     varchar(500) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '期望值',
+    `level`  varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '优先级',
+    `memo`          varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
+    `creator`    varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '创建者',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='api参数表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='api用例表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `api_params`
+-- Dumping data for table `apicases`
 --
 
+LOCK TABLES `apicases` WRITE;
+/*!40000 ALTER TABLE `apicases`
+    DISABLE KEYS */;
+INSERT INTO `apicases`
+VALUES (1, 'getnamebyuserid','accountservice','登录成功','loginsucess', '描述用例是做什么的', 'name:"aaa",pass:"bbb"','低','备注',
+        '2019-07-01 00:00:00', '2019-07-01 00:00:00','admin');
+/*!40000 ALTER TABLE `apicases`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;

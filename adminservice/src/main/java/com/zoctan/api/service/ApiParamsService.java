@@ -20,6 +20,11 @@ public interface ApiParamsService extends Service<ApiParams> {
      */
     List<ApiParams> findApiParamsWithName(final Map<String, Object> params);
 
+
+
+    List<ApiParams> getApiParamsbyname(final Map<String, Object> params);
+
+
     /**
      * 更新Api内容
      *

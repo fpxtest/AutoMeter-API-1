@@ -15,6 +15,16 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
      */
     List<ApiParams> findApiParamsWithName(final Map<String, Object> params);
 
+
+    /**
+     * 按条件查询Api内容
+     *
+     * @param params 参数
+     * @return 用户列表
+     */
+    List<ApiParams> getApiParamsbyname(final Map<String, Object> params);
+
+
     /**
      * 更新Api内容
      *

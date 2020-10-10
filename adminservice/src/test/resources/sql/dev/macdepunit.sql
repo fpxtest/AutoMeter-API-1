@@ -25,15 +25,19 @@ DROP TABLE IF EXISTS `macdepunit`;
 CREATE TABLE `macdepunit`
 (
     `id`            bigint(20) unsigned            NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `envid`            bigint(20) unsigned         NOT NULL  COMMENT '环境Id',
+    `depunitid`            bigint(20) unsigned         NOT NULL  COMMENT '发布单元Id',
+    `deployunitname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
     `machineid`        bigint(20) unsigned            NOT NULL  COMMENT '服务器Id',
+    `machinename`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '机器名',
+    `envid`            bigint(20) unsigned         NOT NULL  COMMENT '环境Id',
+    `enviromentname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境名',
     `domain`          varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务域名',
     `create_time`       datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='服务发布单元表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='服务器发布单元表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,11 +48,9 @@ LOCK TABLES `macdepunit` WRITE;
 /*!40000 ALTER TABLE `macdepunit`
     DISABLE KEYS */;
 INSERT INTO `macdepunit`
-VALUES (1, 1, 1,'accountservice.xxx.com',
+VALUES (1, 1,'accountservice', 1,'服务器',1,'测试环境','accountservice.xxx.com',
         '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-INSERT INTO `macdepunit`
-VALUES (2, 1, 2,'paymentservice.xxx.com',
-        '2019-07-01 00:00:00', '2019-07-01 00:00:00');
+
 /*!40000 ALTER TABLE `macdepunit`
     ENABLE KEYS */;
 UNLOCK TABLES;

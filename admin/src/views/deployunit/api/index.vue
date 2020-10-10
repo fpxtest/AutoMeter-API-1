@@ -412,8 +412,10 @@
        * @param api
        */
       isUniqueDetail(api) {
+        console.log(api.id)
         for (let i = 0; i < this.apiList.length; i++) {
           if (this.apiList[i].id !== api.id) { // 排除自己
+            console.log(this.apiList[i].id)
             if (this.apiList[i].apiname === api.apiname) {
               this.$message.error('api名已存在')
               return false

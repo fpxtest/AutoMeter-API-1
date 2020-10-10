@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="apiid" jdbcType="BIGINT" property="apiid" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
@@ -21,6 +22,11 @@
       <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
     </where>
+  </select>
+
+  <select id="getApiParamsbyname" resultMap="BaseResultMap">
+    SELECT apiid,propertytype,keyname
+    FROM api_params a where a.apiname=#{apiname} and a.deployunitname = #{deployunitname}
   </select>
 
   <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">

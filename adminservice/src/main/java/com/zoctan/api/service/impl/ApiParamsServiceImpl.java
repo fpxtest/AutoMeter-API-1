@@ -1,9 +1,9 @@
 package com.zoctan.api.service.impl;
 
-import com.zoctan.api.mapper.ApiParamsMapper;
-import com.zoctan.api.entity.ApiParams;
-import com.zoctan.api.service.ApiParamsService;
 import com.zoctan.api.core.service.AbstractService;
+import com.zoctan.api.entity.ApiParams;
+import com.zoctan.api.mapper.ApiParamsMapper;
+import com.zoctan.api.service.ApiParamsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +24,11 @@ private ApiParamsMapper apiParamsMapper;
     @Override
     public List<ApiParams> findApiParamsWithName(Map<String, Object> params) {
         return this.apiParamsMapper.findApiParamsWithName(params);
+    }
+
+    @Override
+    public List<ApiParams> getApiParamsbyname(Map<String, Object> params) {
+        return this.apiParamsMapper.getApiParamsbyname(params);
     }
 
     @Override

@@ -47,7 +47,7 @@ class CodeGenerator {
       CodeGenerator.packageConvertPath(CONTROLLER_PACKAGE);
 
   // @author
-  private static final String AUTHOR = "Zoctan";
+  private static final String AUTHOR = "SeasonFan";
   // @date
   private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
   private static final boolean isRestful = true;
@@ -60,7 +60,7 @@ class CodeGenerator {
 //    }
     System.out.print("start!!!");
 
-    CodeGenerator.genCode("envmachine");
+    CodeGenerator.genCode("executeplan");
     System.out.print("finish!!!");
 
     // genCodeByCustomModelName("输入表名","输入自定义Model名称");

@@ -59,13 +59,22 @@
       </el-table-column>
       <el-table-column label="api名" align="center" prop="apiname" width="120"/>
       <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
-      <el-table-column label="参数名" align="center" prop="keyname" width="100"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
       <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="参数名" align="center" prop="keyname" width="100">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.keyname }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">...</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
 
@@ -115,7 +124,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="api" prop="apiname" required >
-          <el-select v-model="tmpapiparams.apiname" placeholder="api">
+          <el-select v-model="tmpapiparams.apiname" placeholder="api" @change="apinameselectChanged($event)">
             <el-option label="请选择" value />
             <div v-for="(api, index) in apiList" :key="index">
               <el-option :label="api.apiname" :value="api.apiname"/>
@@ -207,6 +216,7 @@
         btnLoading: false, // 按钮等待动画
         tmpapiparams: {
           id: '',
+          apiid: '',
           apiname: '',
           deployunitname: '',
           propertytype: '',
@@ -281,6 +291,17 @@
         }).catch(res => {
           this.$message.error('加载api列表失败')
         })
+      },
+
+      /**
+       * api下拉选择事件获取apiid  e的值为options的选值
+       */
+      apinameselectChanged(e) {
+        for (let i = 0; i < this.apiList.length; i++) {
+          if (this.apiList[i].apiname === e) {
+            this.tmpapiparams.apiid = this.apiList[i].id
+          }
+        }
       },
 
       searchBy() {

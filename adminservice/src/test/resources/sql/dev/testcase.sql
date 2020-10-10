@@ -16,32 +16,44 @@
 /*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
 --
--- Table structure for table `api_params`
+-- Table structure for table `testcase`
+--
 
-
-DROP TABLE IF EXISTS `api_params`;
+DROP TABLE IF EXISTS `testcase`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `api_params`
+CREATE TABLE `testcase`
 (
-    `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `apiid`            bigint(20) unsigned    NOT NULL COMMENT 'apiId',
-    `apiname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api名',
-    `deployunitname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
-    `propertytype`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api属性类型，header，body',
-    `keyname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'key名',
-    `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
+    `id`            bigint(20) unsigned            NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `testcasename`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例名',
+    `testcasememo`        bigint(20) unsigned            NOT NULL  COMMENT '用例描述',
+    `machinename`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '机器名',
+    `envid`            bigint(20) unsigned         NOT NULL  COMMENT '环境Id',
+    `enviromentname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境名',
+    `domain`          varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务域名',
+    `create_time`       datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='api参数表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='服务器发布单元表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `api_params`
+-- Dumping data for table `testcase`
 --
 
+LOCK TABLES `testcase` WRITE;
+/*!40000 ALTER TABLE `testcase`
+    DISABLE KEYS */;
+INSERT INTO `testcase`
+VALUES (1, 1,'accountservice', 1,'服务器',1,'测试环境','accountservice.xxx.com',
+        '2019-07-01 00:00:00', '2019-07-01 00:00:00');
+
+/*!40000 ALTER TABLE `testcase`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;

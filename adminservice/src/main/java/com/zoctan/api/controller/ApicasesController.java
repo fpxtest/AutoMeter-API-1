@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
-import com.zoctan.api.entity.ApiParams;
-import com.zoctan.api.service.ApiParamsService;
+import com.zoctan.api.entity.Apicases;
+import com.zoctan.api.service.ApiCasedataService;
+import com.zoctan.api.service.ApicasesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,45 +16,48 @@ import java.util.Map;
 
 /**
  * @author Zoctan
- * @date 2020/05/20
+ * @date 2020/09/11
  */
 @RestController
-@RequestMapping("/api/params")
-public class ApiParamsController {
+@RequestMapping("/apicases")
+public class ApicasesController {
     @Resource
-    private ApiParamsService apiParamsService;
+    private ApicasesService apicasesService;
+    @Autowired
+    private ApiCasedataService apiCasedataService;
+
 
     @PostMapping
-    public Result add(@RequestBody ApiParams apiParams) {
-        apiParamsService.save(apiParams);
+    public Result add(@RequestBody Apicases apicases) {
+        apicasesService.save(apicases);
         return ResultGenerator.genOkResult();
     }
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        apiParamsService.deleteById(id);
+        apicasesService.deleteById(id);
+        apiCasedataService.deletcasedatabyid(id);
         return ResultGenerator.genOkResult();
     }
 
     @PatchMapping
-    public Result update(@RequestBody ApiParams apiParams) {
-        apiParamsService.update(apiParams);
+    public Result update(@RequestBody Apicases apicases) {
+        apicasesService.update(apicases);
         return ResultGenerator.genOkResult();
     }
 
     @GetMapping("/{id}")
     public Result detail(@PathVariable Long id) {
-        ApiParams apiParams = apiParamsService.getById(id);
-        return ResultGenerator.genOkResult(apiParams);
+        Apicases apicases = apicasesService.getById(id);
+        return ResultGenerator.genOkResult(apicases);
     }
 
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
-        List<ApiParams> list = apiParamsService.listAll();
-        PageInfo<ApiParams> pageInfo = PageInfo.of(list);
-        System.out.println(ResultGenerator.genOkResult(pageInfo));
+        List<Apicases> list = apicasesService.listAll();
+        PageInfo<Apicases> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
 
@@ -60,8 +65,8 @@ public class ApiParamsController {
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final ApiParams dic) {
-        this.apiParamsService.updateApiParams(dic);
+    public Result updateDeploy(@RequestBody final Apicases dic) {
+        this.apicasesService.updateApicase(dic);
         return ResultGenerator.genOkResult();
     }
 
@@ -71,17 +76,8 @@ public class ApiParamsController {
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
         PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
-        final List<ApiParams> list = this.apiParamsService.findApiParamsWithName(param);
-        final PageInfo<ApiParams> pageInfo = new PageInfo<>(list);
+        final List<Apicases> list = this.apicasesService.findApiCaseWithName(param);
+        final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
-
-    /**
-     * 输入框查询
-     */
-    @PostMapping("/searchid")
-    public Result searchid(@RequestBody Map<String, Object> param) {
-        final List<ApiParams> list = this.apiParamsService.getApiParamsbyname(param);
-        final PageInfo<ApiParams> pageInfo = new PageInfo<>(list);
-        return ResultGenerator.genOkResult(pageInfo);    }
 }

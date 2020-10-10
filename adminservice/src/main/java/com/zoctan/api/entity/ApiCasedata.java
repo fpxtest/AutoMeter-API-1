@@ -1,10 +1,10 @@
 package com.zoctan.api.entity;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
-@Table(name = "api_params")
-public class ApiParams {
+@Table(name = "api_casedata")
+public class ApiCasedata {
     /**
      * Id
      */
@@ -12,26 +12,25 @@ public class ApiParams {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    public Long getApiid() {
-        return apiid;
-    }
-
-    public void setApiid(Long apiid) {
-        this.apiid = apiid;
-    }
-
-    private Long apiid;
+    /**
+     * 用例Id
+     */
+    private Long caseid;
 
     /**
-     * api名
+     * 用例名
      */
-    private String apiname;
+    private String casename;
 
     /**
-     * 发布单元名
+     * api参数
      */
-    private String deployunitname;
+    private String apiparam;
+
+    /**
+     * 用例参数值
+     */
+    private String apiparamvalue;
 
     /**
      * api属性类型，header，body
@@ -39,9 +38,9 @@ public class ApiParams {
     private String propertytype;
 
     /**
-     * key名
+     * 备注
      */
-    private String keyname;
+    private String memo;
 
     /**
      * 创建时间
@@ -74,39 +73,75 @@ public class ApiParams {
     }
 
     /**
-     * 获取api名
+     * 获取用例Id
      *
-     * @return apiname - api名
+     * @return caseid - 用例Id
      */
-    public String getApiname() {
-        return apiname;
+    public Long getCaseid() {
+        return caseid;
     }
 
     /**
-     * 设置api名
+     * 设置用例Id
      *
-     * @param apiname api名
+     * @param caseid 用例Id
      */
-    public void setApiname(String apiname) {
-        this.apiname = apiname;
+    public void setCaseid(Long caseid) {
+        this.caseid = caseid;
     }
 
     /**
-     * 获取发布单元名
+     * 获取用例名
      *
-     * @return deployunitname - 发布单元名
+     * @return casename - 用例名
      */
-    public String getDeployunitname() {
-        return deployunitname;
+    public String getCasename() {
+        return casename;
     }
 
     /**
-     * 设置发布单元名
+     * 设置用例名
      *
-     * @param deployunitname 发布单元名
+     * @param casename 用例名
      */
-    public void setDeployunitname(String deployunitname) {
-        this.deployunitname = deployunitname;
+    public void setCasename(String casename) {
+        this.casename = casename;
+    }
+
+    /**
+     * 获取api参数
+     *
+     * @return apiparam - api参数
+     */
+    public String getApiparam() {
+        return apiparam;
+    }
+
+    /**
+     * 设置api参数
+     *
+     * @param apiparam api参数
+     */
+    public void setApiparam(String apiparam) {
+        this.apiparam = apiparam;
+    }
+
+    /**
+     * 获取用例参数值
+     *
+     * @return apiparamvalue - 用例参数值
+     */
+    public String getApiparamvalue() {
+        return apiparamvalue;
+    }
+
+    /**
+     * 设置用例参数值
+     *
+     * @param apiparamvalue 用例参数值
+     */
+    public void setApiparamvalue(String apiparamvalue) {
+        this.apiparamvalue = apiparamvalue;
     }
 
     /**
@@ -128,21 +163,21 @@ public class ApiParams {
     }
 
     /**
-     * 获取key名
+     * 获取备注
      *
-     * @return keyname - key名
+     * @return memo - 备注
      */
-    public String getKeyname() {
-        return keyname;
+    public String getMemo() {
+        return memo;
     }
 
     /**
-     * 设置key名
+     * 设置备注
      *
-     * @param keyname key名
+     * @param memo 备注
      */
-    public void setKeyname(String keyname) {
-        this.keyname = keyname;
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     /**

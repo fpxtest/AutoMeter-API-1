@@ -16,32 +16,43 @@
 /*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
 
 --
--- Table structure for table `api_params`
+-- Table structure for table `slaver`
 
 
-DROP TABLE IF EXISTS `api_params`;
+DROP TABLE IF EXISTS `slaver`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `api_params`
+CREATE TABLE `slaver`
 (
-    `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `apiid`            bigint(20) unsigned    NOT NULL COMMENT 'apiId',
-    `apiname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api名',
-    `deployunitname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
-    `propertytype`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'api属性类型，header，body',
-    `keyname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'key名',
-    `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
+    `id`            bigint(20) unsigned                             NOT NULL AUTO_INCREMENT COMMENT '执行机Id',
+    `slavername`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '执行机器名',
+    `ip`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'ip',
+    `port`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '端口',
+    `status`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '状态，idle，running',
+    `stype`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '执行机类型，功能机，性能机',
+    `memo`      varchar(512) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
+    `create_time` datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='api参数表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='服务器表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `api_params`
+-- Dumping data for table `slaver`
 --
 
+LOCK TABLES `slaver` WRITE;
+/*!40000 ALTER TABLE `slaver`
+    DISABLE KEYS */;
+INSERT INTO `slaver`
+VALUES (1, '执行机1', '192.168.1.1','8080' ,'空闲','功能机','memo',
+        '2019-07-01 00:00:00', '2019-07-01 00:00:00');
+/*!40000 ALTER TABLE `slaver`
+    ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;

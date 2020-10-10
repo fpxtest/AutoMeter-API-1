@@ -8,6 +8,14 @@ export function getapiparamsList(params) {
   })
 }
 
+export function getcaseparatype(params) {
+  return request({
+    url: '/api/params/searchid',
+    method: 'post',
+    data: params
+  })
+}
+
 export function search(apiparamsForm) {
   return request({
     url: '/api/params/search',

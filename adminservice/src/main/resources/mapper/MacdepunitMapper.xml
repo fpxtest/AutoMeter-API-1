@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.MacdepunitMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Macdepunit">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="depunitid" jdbcType="BIGINT" property="depunitid" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="machineid" jdbcType="BIGINT" property="machineid" />
+    <result column="machinename" jdbcType="VARCHAR" property="machinename" />
+    <result column="envid" jdbcType="BIGINT" property="envid" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
+    <result column="domain" jdbcType="VARCHAR" property="domain" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findMacAndDepWithName" resultMap="BaseResultMap">
+    select c.* from macdepunit c
+    <where>
+      <if test="enviromentname != null and enviromentname != ''">and c.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
+      <if test="deployunitname != null and deployunitname != ''">and c.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
+      <if test="machinename != null  and machinename != ''">and c.machinename like CONCAT('%',#{machinename},'%')</if>
+    </where>
+  </select>
+
+
+
+  <update id="updateMacAndDep" parameterType="com.zoctan.api.entity.Envmachine">
+    update macdepunit set enviromentname = #{enviromentname}, deployunitname = #{deployunitname},machinename= #{machinename},domain= #{domain},
+    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+</mapper>
