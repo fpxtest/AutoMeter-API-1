@@ -138,7 +138,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/adminservice/target/api/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/testcenterservice/target/api/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="api/web/Web" />
     </root>

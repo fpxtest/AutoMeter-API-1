@@ -2,37 +2,223 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/api/assets/apicases.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/api/assets/apicasesdata.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/api/dispatch/slaver.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/api/enviroment/macdepunit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/views/assets/apicases/index.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/views/enviroment/macdepunit/index.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/Casedata.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParamstype.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_casedata.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/apicases.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan_ext.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/slaver.sql" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/testcase.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/ApicasewithStatu.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_report.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/.gitignore" afterPath="$PROJECT_DIR$/testcenterservice/.gitignore" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README.md" afterPath="$PROJECT_DIR$/testcenterservice/README.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README/database.png" afterPath="$PROJECT_DIR$/testcenterservice/README/database.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README/permission.png" afterPath="$PROJECT_DIR$/testcenterservice/README/permission.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README/role.png" afterPath="$PROJECT_DIR$/testcenterservice/README/role.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README/role_permission.png" afterPath="$PROJECT_DIR$/testcenterservice/README/role_permission.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README/user.png" afterPath="$PROJECT_DIR$/testcenterservice/README/user.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/README/user_role.png" afterPath="$PROJECT_DIR$/testcenterservice/README/user_role.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/api.iml" afterPath="$PROJECT_DIR$/testcenterservice/api.iml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/pom.xml" afterPath="$PROJECT_DIR$/testcenterservice/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/resetDB.sh" afterPath="$PROJECT_DIR$/testcenterservice/resetDB.sh" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/Application.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/Application.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/aspect/ControllerLogAspect.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/aspect/ControllerLogAspect.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/AccountController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/AccountController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/AccountRoleController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/AccountRoleController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiCasedataController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiCasedataController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApicasesController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/DeployunitController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DeployunitController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/DictionaryController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DictionaryController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/EnviromentController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/MachineController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MachineController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/PermissionController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/PermissionController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/RoleController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/RoleController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/SlaverController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/SlaverController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/TestController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/TestController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/TesterController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/TesterController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/cache/CacheExpire.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/cache/CacheExpire.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/cache/MyRedisCacheManager.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/cache/MyRedisCacheManager.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/JasyptConfig.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/JasyptConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/RedisCacheConfig.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/RedisCacheConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/RedisConfig.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/RedisConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/Swagger2Config.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/Swagger2Config.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/ValidatorConfig.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/ValidatorConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/WebMvcConfig.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/WebMvcConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/config/WebSecurityConfig.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/WebSecurityConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/constant/ProjectConstant.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/constant/ProjectConstant.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/exception/ExceptionResolver.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/exception/ExceptionResolver.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/exception/ResourcesNotFoundException.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/exception/ResourcesNotFoundException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/exception/ServiceException.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/exception/ServiceException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/jasypt/MyEncryptablePropertyDetector.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/jasypt/MyEncryptablePropertyDetector.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/jwt/JwtConfigurationProperties.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/jwt/JwtConfigurationProperties.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/jwt/JwtUtil.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/jwt/JwtUtil.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/mapper/MyMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/mapper/MyMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/response/Result.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/response/Result.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/response/ResultCode.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/response/ResultCode.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/response/ResultGenerator.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/response/ResultGenerator.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/rsa/RsaConfigurationProperties.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/rsa/RsaConfigurationProperties.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/rsa/RsaUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/rsa/RsaUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/service/AbstractService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/service/AbstractService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/service/Service.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/service/Service.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/AccountDto.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/AccountDto.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/AccountWithRole.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/AccountWithRole.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/AccountWithRolePermission.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/AccountWithRolePermission.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/Casedata.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/Casedata.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/RoleWithPermission.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/RoleWithPermission.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/RoleWithResource.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/RoleWithResource.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Account.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Account.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/AccountRole.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/AccountRole.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Api.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Api.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiCasedata.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApiCasedata.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParams.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApiParams.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParamstype.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApiParamstype.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Apicases.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Apicases.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Deployunit.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Deployunit.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Dictionary.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Dictionary.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Enviroment.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Enviroment.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Envmachine.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Envmachine.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Executeplan.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Executeplan.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Handle.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Handle.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Macdepunit.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Macdepunit.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Machine.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Machine.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Permission.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Permission.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Resource.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Resource.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Role.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Role.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/RolePermission.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/RolePermission.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Slaver.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Slaver.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Test.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Test.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Tester.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Tester.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/filter/AuthenticationFilter.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/filter/AuthenticationFilter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/filter/MyAuthenticationEntryPoint.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/filter/MyAuthenticationEntryPoint.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/filter/RequestWrapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/filter/RequestWrapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/AccountMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/AccountMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/AccountRoleMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/AccountRoleMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApiCasedataMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiCasedataMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApiParamsMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiParamsMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApicasesMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/DictionaryMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/DictionaryMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/EnviromentMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/EnviromentMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/EnvmachineMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/EnvmachineMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/MacdepunitMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/MacdepunitMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/MachineMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/MachineMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/PermissionMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/PermissionMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/RoleMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/RoleMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/RolePermissionMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/RolePermissionMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/TestMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/TestMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/TesterMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/TesterMapper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/AccountRoleService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/AccountRoleService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/AccountService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/AccountService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApiCasedataService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApiCasedataService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApiParamsService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApiParamsService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApiService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApiService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApicasesService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/DeployunitService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/DeployunitService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/DictionaryService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/DictionaryService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/EnviromentService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/EnviromentService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/EnvmachineService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/EnvmachineService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/MacdepunitService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/MacdepunitService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/MachineService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/MachineService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/PermissionService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/PermissionService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/RolePermissionService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/RolePermissionService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/RoleService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/RoleService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/SlaverService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/SlaverService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/TestService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/TestService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/TesterService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/TesterService.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/AccountDetailsServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/AccountDetailsServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/AccountRoleServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/AccountRoleServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/AccountServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/AccountServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiCasedataServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApiCasedataServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiParamsServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApiParamsServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApiServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApicasesServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/DeployunitServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/DeployunitServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/DictionaryServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/DictionaryServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/EnviromentServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/EnviromentServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/EnvmachineServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/EnvmachineServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/MacdepunitServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/MacdepunitServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/MachineServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/MachineServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/PermissionServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/PermissionServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/RolePermissionServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/RolePermissionServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/RoleServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/RoleServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/SlaverServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/SlaverServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/TestServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/TestServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/TesterServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/TesterServiceImpl.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/AesUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/AesUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/AssertUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/AssertUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/ContextUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/ContextUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/IpUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/IpUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/JsonUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/JsonUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/RedisUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/RedisUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/util/UrlUtils.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/UrlUtils.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/META-INF/spring-devtools.properties" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/META-INF/spring-devtools.properties" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/application-dev.yml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/application-dev.yml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/application-prod.yml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/application-prod.yml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/application-test.yml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/application-test.yml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/application.yml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/application.yml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/banner.txt" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/banner.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/AccountMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/AccountMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/AccountRoleMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/AccountRoleMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiCasedataMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiCasedataMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiParamsMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiParamsMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApicasesMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/DeployunitMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/DeployunitMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/DictionaryMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/DictionaryMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/EnviromentMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/EnvmachineMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnvmachineMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ExecuteplanMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/MacdepunitMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/MacdepunitMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/MachineMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/MachineMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/PermissionMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/PermissionMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/RoleMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/RoleMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/RolePermissionMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/RolePermissionMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/SlaverMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/SlaverMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/TestMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/TestMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/TesterMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/TesterMapper.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/CodeGenerator.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/JasyptStringEncryptor.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/JasyptStringEncryptor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/PasswordEncryptor.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/PasswordEncryptor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/RsaEncryptor.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/RsaEncryptor.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/com/tsbtv/report/BaseControllerTest.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/com/tsbtv/report/BaseControllerTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/com/tsbtv/report/WithCustomSecurityContextFactory.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/com/tsbtv/report/WithCustomSecurityContextFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/java/com/tsbtv/report/WithCustomUser.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/com/tsbtv/report/WithCustomUser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/generator/template/controller-restful.ftl" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/generator/template/controller-restful.ftl" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/generator/template/controller.ftl" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/generator/template/controller.ftl" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/generator/template/service-impl.ftl" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/generator/template/service-impl.ftl" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/generator/template/service.ftl" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/generator/template/service.ftl" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/account.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/account.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/account_role.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/account_role.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/api.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_casedata.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/api_casedata.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_params.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/api_params.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/apicases.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/deployunit.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/deployunit.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/dictionary.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/dictionary.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/enviroment.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/enviroment.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/envmachine.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/envmachine.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/executeplan.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan_ext.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/executeplan_testcase.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/macdepunit.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/macdepunit.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/machine.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/machine.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/permission.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/permission.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/role.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/role.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/role_permission.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/role_permission.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/slaver.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/slaver.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/test.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/test.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/testcase.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/testcase.sql" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/tester.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/tester.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/api_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/api_war_exploded.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/deployunit/apiparams.js" afterPath="$PROJECT_DIR$/admin/src/api/deployunit/apiparams.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/router/index.js" afterPath="$PROJECT_DIR$/admin/src/router/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParams.java" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParams.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApiParamsMapper.java" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApiParamsMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApiParamsService.java" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApiParamsService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiParamsServiceImpl.java" afterPath="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiParamsServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiParamsMapper.xml" afterPath="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiParamsMapper.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/test/java/CodeGenerator.java" afterPath="$PROJECT_DIR$/adminservice/src/test/java/CodeGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_params.sql" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_params.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/macdepunit.sql" afterPath="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/macdepunit.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/adminservice/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,37 +238,106 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ExecuteplanServiceImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java">
+      <file leaf-file-name="ApicasesReportMapper.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportMapper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="30" column="59" lean-forward="false" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="59" />
+            <state relative-caret-position="105">
+              <caret line="11" column="24" lean-forward="false" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApiController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="146">
+              <caret line="66" column="4" lean-forward="false" selection-start-line="66" selection-start-column="4" selection-end-line="75" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApicasesReportController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="296">
+              <caret line="67" column="1" lean-forward="true" selection-start-line="67" selection-start-column="1" selection-end-line="67" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Application.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/Application.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="98">
+              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#922#923#0" expanded="true" />
-                <element signature="e#990#991#0" expanded="true" />
-                <marker date="1601298717000" expanded="false" signature="45:422" ph="..." />
+                <element signature="e#1301#1302#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.vue" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue">
+      <file leaf-file-name="resetDB.sh" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/resetDB.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="47" column="47" lean-forward="false" selection-start-line="47" selection-start-column="47" selection-end-line="47" selection-end-column="47" />
+            <state relative-caret-position="60">
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package-lock.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package-lock.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LICENSE" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/LICENSE">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-6168">
+              <caret line="1376" column="42" lean-forward="false" selection-start-line="1376" selection-start-column="20" selection-end-line="1376" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CodeGenerator.class" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/adminservice/target/test-classes/CodeGenerator.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2867">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
-                <element signature="n#el-form#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#el-table-column#1;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#el-table-column#6;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#el-table-column#7;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#el-table-column#8;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#template#0;n#el-table-column#8;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="n#el-dialog#1;n#div#0;n#template#0;n#!!top" expanded="false" />
-                <element signature="e#9554#9706#0" expanded="true" />
+                <element signature="e#0#11631#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="application-dev.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/application-dev.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="15" lean-forward="true" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -91,36 +346,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>addmachine</find>
-      <find>validate</find>
-      <find>tmpapicases</find>
-      <find>token</find>
-      <find>tmpcaseparamslist</find>
-      <find>fastjson</find>
-      <find>JsonUtils</find>
-      <find>apiparam</find>
-      <find>showUpdateapicasesDialog</find>
-      <find>showUpdateapicasesparamsDialog</find>
-      <find>search</find>
-      <find>apiparamvalue</find>
-      <find>addapicasesdata</find>
-      <find>addapicases</find>
-      <find>isUniqueDetail</find>
-      <find>tmpapicasesdata</find>
-      <find>tmpapicasesparamtype</find>
-      <find>removeapicases</find>
-      <find>getcaseparatype</find>
-      <find>machine</find>
-      <find>deployunit</find>
-      <find>depunit</find>
-      <find>发布单元</find>
+      <find>listQuery</find>
+      <find>apiQuery</find>
+      <find>selectChanged</find>
+      <find>caselistQuery</find>
+      <find>searchBy</find>
+      <find>getapiList</find>
+      <find>addapiparams</find>
+      <find>tmpapiparams</find>
+      <find>showTestCaseDialog</find>
+      <find>executeplan_ext</find>
       <find>executeplan</find>
-      <find>执行机</find>
-      <find>slaver</find>
-      <find>data</find>
-      <find>tmpslaver</find>
-      <find>id</find>
-      <find>handleSelectionChange</find>
+      <find>handleClickTableRow</find>
+      <find>multipleSelection</find>
+      <find>search</find>
+      <find>addexecuteplancase</find>
+      <find>fileTable</find>
+      <find>getapicasesList</find>
+      <find>executeplancaseList</find>
+      <find>searchcases</find>
+      <find>searchcase</find>
+      <find>testcaseList</find>
+      <find>total</find>
+      <find>searchtestplanexistcase</find>
+      <find>searchcaseBy</find>
+      <find>casehandleSelectionChange</find>
+      <find>addexecuteplantestcase</find>
+      <find>removeexecuteplantestcase</find>
+      <find>apicases</find>
+      <find>genCodeByCustomModelName</find>
+      <find>TEMPLATE_FILE_PATH</find>
     </findStrings>
     <replaceStrings>
       <replace>depunit</replace>
@@ -151,6 +406,8 @@
       <replace>执行计划</replace>
       <replace>executeplan</replace>
       <replace>tmpexecuteplan</replace>
+      <replace>executeplan_testcase</replace>
+      <replace>apicases_report</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -175,23 +432,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/admin/src/api/assets/apicases.js" />
-        <option value="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/apicases.sql" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApicasesMapper.xml" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApicasesMapper.java" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApicasesService.java" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApicasesServiceImpl.java" />
-        <option value="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" />
-        <option value="$PROJECT_DIR$/admin/src/api/deployunit/api.js" />
-        <option value="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_params.sql" />
-        <option value="$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParams.java" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ApiParamstype.java" />
-        <option value="$PROJECT_DIR$/admin/src/api/deployunit/apiparams.js" />
-        <option value="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/api_casedata.sql" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/casedata.java" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/RoleServiceImpl.java" />
-        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/Casedata.java" />
         <option value="$PROJECT_DIR$/admin/src/api/assets/apicasesdata.js" />
         <option value="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiCasedataMapper.xml" />
         <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ApiCasedataMapper.java" />
@@ -214,8 +454,6 @@
         <option value="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" />
         <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Slaver.java" />
         <option value="$PROJECT_DIR$/adminservice/src/main/resources/mapper/SlaverMapper.xml" />
-        <option value="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan_ext.sql" />
-        <option value="$PROJECT_DIR$/adminservice/src/test/java/CodeGenerator.java" />
         <option value="$PROJECT_DIR$/admin/src/router/index.js" />
         <option value="$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js" />
         <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" />
@@ -225,7 +463,26 @@
         <option value="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ExecuteplanMapper.xml" />
         <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" />
         <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" />
+        <option value="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan_ext.sql" />
+        <option value="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan_testcase.sql" />
+        <option value="$PROJECT_DIR$/adminservice/src/test/java/CodeGenerator.java" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/dto/ApicasewithStatu.java" />
+        <option value="$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ExecuteplanTestcaseService.java" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanTestcaseServiceImpl.java" />
+        <option value="$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java" />
         <option value="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_report.sql" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportService.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportMapper.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
       </list>
     </option>
   </component>
@@ -274,7 +531,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
+    <option name="x" value="26" />
+    <option name="y" value="27" />
     <option name="width" value="1280" />
     <option name="height" value="773" />
   </component>
@@ -293,6 +551,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -315,7 +576,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
+              <option name="myItemId" value="testcenterservice" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -333,19 +594,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dev" />
+              <option name="myItemId" value="target" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -363,605 +612,16 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="target" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="impl" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adminservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controller" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="role" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="executecenter" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="executeplan" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dispatch" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="slaver" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apicases" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="router" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="executecenter" />
+              <option name="myItemId" value="classes" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -987,11 +647,11 @@
       <recent name="com.zoctan.api.entity" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev" />
       <recent name="$PROJECT_DIR$/admin/src/api/executecenter" />
       <recent name="$PROJECT_DIR$/admin/src/views/executecenter" />
       <recent name="$PROJECT_DIR$/adminservice/src/test/resources/sql/dev" />
       <recent name="$PROJECT_DIR$/admin/src/api/dispatch" />
-      <recent name="$PROJECT_DIR$/admin/src/views/dispatch" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.Application">
@@ -1741,6 +1401,7 @@
     <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.zoctan.api.Application" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <module name="api" />
       <envs />
       <method />
@@ -1778,20 +1439,22 @@
       <workItem from="1600866128183" duration="10813000" />
       <workItem from="1600960846098" duration="9129000" />
       <workItem from="1601047296211" duration="19980000" />
-      <workItem from="1602310050426" duration="961000" />
+      <workItem from="1602310050426" duration="31912000" />
+      <workItem from="1602555141948" duration="37064000" />
+      <workItem from="1602810736922" duration="5610000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="233756000" />
+    <option name="totallyTimeSpent" value="307381000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="773" extended-state="6" />
+    <frame x="26" y="27" width="1280" height="773" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30543318" sideWeight="0.503231" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.073505655" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1807,11 +1470,11 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40381792" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45080763" sideWeight="0.49676898" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25256976" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27544427" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25256976" sideWeight="0.49676898" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2835218" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1835,31 +1498,31 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/AccountServiceImpl.java</url>
+          <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/AccountServiceImpl.java</url>
           <line>83</line>
           <properties />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/AccountController.java</url>
+          <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/AccountController.java</url>
           <line>85</line>
           <properties />
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/AccountRoleController.java</url>
+          <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/AccountRoleController.java</url>
           <line>29</line>
           <properties />
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiCasedataController.java</url>
-          <line>33</line>
+          <url>file://$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java</url>
+          <line>171</line>
           <properties />
-          <option name="timeStamp" value="19" />
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="22" />
+      <option name="time" value="23" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="SpringBootApplicationConfigurationType">
@@ -1872,35 +1535,121 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiParamsServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="28" column="13" lean-forward="true" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="210">
+          <caret line="14" column="25" lean-forward="true" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/core/service/Service.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/executeplan_testcase.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87">
-          <caret line="72" column="7" lean-forward="false" selection-start-line="72" selection-start-column="7" selection-end-line="72" selection-end-column="7" />
+        <state relative-caret-position="120">
+          <caret line="31" column="17" lean-forward="false" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ApiCasedataService.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiCasedataMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="23" column="9" lean-forward="false" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
+        <state relative-caret-position="126">
+          <caret line="16" column="22" lean-forward="true" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/filter/AuthenticationFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/MacdepunitMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="21" column="19" lean-forward="false" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
           <folding>
-            <element signature="imports" expanded="false" />
+            <marker date="1601212266000" expanded="false" signature="39:165" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApiCasedataMapper.xml">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiCasedataController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="47" lean-forward="false" selection-start-line="32" selection-start-column="47" selection-end-line="32" selection-end-column="47" />
+        <state relative-caret-position="705">
+          <caret line="58" column="4" lean-forward="false" selection-start-line="58" selection-start-column="4" selection-end-line="65" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="30" column="43" lean-forward="false" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/Casedata.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Apicases.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="5" column="21" lean-forward="false" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/ApicasewithStatu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="17" column="24" lean-forward="false" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="24" />
+          <folding>
+            <element signature="e#193#194#0" expanded="false" />
+            <element signature="e#216#217#0" expanded="false" />
+            <element signature="e#259#260#0" expanded="false" />
+            <element signature="e#289#290#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/assets/apicases/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4174">
+          <caret line="514" column="8" lean-forward="false" selection-start-line="514" selection-start-column="8" selection-end-line="514" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-171">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1599809917000" expanded="true" signature="1656:1954" ph="update apica... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiCasedataMapper.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="32" column="2" lean-forward="false" selection-start-line="32" selection-start-column="2" selection-end-line="34" selection-end-column="11" />
           <folding>
             <marker date="1601027417000" expanded="true" signature="1542:1650" ph="SELECT a.api... api_casedata" />
             <marker date="1601027417000" expanded="true" signature="1716:1798" ph="DELETE from " />
@@ -1909,127 +1658,210 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ApiCasedataServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/RolePermissionMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="43" lean-forward="false" selection-start-line="39" selection-start-column="43" selection-end-line="39" selection-end-column="43" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/ApicasesMapper.xml">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="283">
+          <caret line="37" column="39" lean-forward="false" selection-start-line="37" selection-start-column="14" selection-end-line="37" selection-end-column="39" />
           <folding>
-            <marker date="1599809917000" expanded="true" signature="1656:1954" ph="update apica... " />
+            <marker date="1602645092000" expanded="true" signature="1475:1592" ph="select COUNT... executeplan_testcase" />
+            <marker date="1602645092000" expanded="true" signature="2123:2223" ph="DELETE from " />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/AccountRoleController.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanTestcaseServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        <state relative-caret-position="570">
+          <caret line="48" column="5" lean-forward="false" selection-start-line="48" selection-start-column="5" selection-end-line="48" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApiCasedataController.java">
+    <entry file="file://$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state relative-caret-position="300">
+          <caret line="20" column="43" lean-forward="false" selection-start-line="20" selection-start-column="32" selection-end-line="20" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-aop/5.1.8.RELEASE/spring-aop-5.1.8.RELEASE.jar!/org/springframework/aop/framework/CglibAopProxy.class">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="492" column="0" lean-forward="false" selection-start-line="492" selection-start-column="0" selection-end-line="492" selection-end-column="0" />
+        <state relative-caret-position="300">
+          <caret line="25" column="1" lean-forward="true" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ApicasesController.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+        <state relative-caret-position="1545">
+          <caret line="118" column="5" lean-forward="false" selection-start-line="118" selection-start-column="5" selection-end-line="118" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8550">
+          <caret line="676" column="28" lean-forward="false" selection-start-line="676" selection-start-column="28" selection-end-line="676" selection-end-column="28" />
+          <folding>
+            <element signature="n#el-table-column#1;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-table-column#6;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-table-column#7;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#8836#8943#0" expanded="true" />
+            <element signature="e#15694#16809#0" expanded="false" />
+            <element signature="e#16818#16854#0" expanded="false" />
+            <element signature="e#16891#17577#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_report.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="47" column="36" lean-forward="false" selection-start-line="47" selection-start-column="36" selection-end-line="47" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/MachineMapper.xml">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/constant/ProjectConstant.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="9" lean-forward="true" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+        <state relative-caret-position="225">
+          <caret line="31" column="29" lean-forward="false" selection-start-line="31" selection-start-column="29" selection-end-line="31" selection-end-column="29" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/MachineService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/MachineServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/java/JasyptStringEncryptor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="17" column="13" lean-forward="false" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+          <caret line="18" column="13" lean-forward="false" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/MachineMapper.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="41" column="21" lean-forward="true" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/application.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApicasesReport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2863">
+          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/AccountMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-165">
+          <caret line="15" column="17" lean-forward="false" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/TesterMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/TestMapper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="5" column="17" lean-forward="false" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/MachineController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-30">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/api/assets/machine.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-105">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/EnviromentMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-135">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1587523907000" expanded="true" signature="1053:1105" ph="SELECT a.env... enviroment" />
-            <marker date="1587523907000" expanded="true" signature="1479:1634" ph="update envir... " />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/DeployunitMapper.xml">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="16" column="2" lean-forward="true" selection-start-line="16" selection-start-column="2" selection-end-line="39" selection-end-column="11" />
+          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/PermissionMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="14" column="17" lean-forward="false" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/RoleMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="13" column="17" lean-forward="false" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanTestcaseService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="23" column="34" lean-forward="false" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApiService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="13" column="4" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="19" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiMapper.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="19" column="2" lean-forward="false" selection-start-line="19" selection-start-column="2" selection-end-line="26" selection-end-column="11" />
           <folding>
-            <marker date="1587524291000" expanded="true" signature="1208:1314" ph="SELECT a.dep... deployunit" />
-            <marker date="1587524291000" expanded="true" signature="1788:1983" ph="update deplo... " />
+            <marker date="1589855688000" expanded="true" signature="1414:1625" ph="update api s... " />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/DictionaryService.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="22" column="26" lean-forward="true" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="12" column="17" lean-forward="false" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
@@ -2037,294 +1869,103 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/DeployunitService.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="21" column="4" lean-forward="false" selection-start-line="21" selection-start-column="4" selection-end-line="35" selection-end-column="41" />
+        <state relative-caret-position="210">
+          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/DeployunitServiceImpl.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="36" column="16" lean-forward="true" selection-start-line="36" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="e#1071#1072#0" expanded="false" />
-            <element signature="e#1124#1125#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="75">
+          <caret line="9" column="4" lean-forward="true" selection-start-line="9" selection-start-column="4" selection-end-line="14" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/api/dispatch/slaver.js">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportMapper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="7" column="4" lean-forward="true" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/DeployunitController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="58" column="4" lean-forward="false" selection-start-line="58" selection-start-column="4" selection-end-line="65" selection-end-column="5" />
+          <caret line="11" column="24" lean-forward="false" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/slaver.sql">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="49" column="41" lean-forward="false" selection-start-line="49" selection-start-column="41" selection-end-line="49" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="23" column="21" lean-forward="false" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="21" />
+        <state relative-caret-position="146">
+          <caret line="66" column="4" lean-forward="false" selection-start-line="66" selection-start-column="4" selection-end-line="75" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Slaver.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding>
-            <element signature="e#476#477#0" expanded="false" />
-            <element signature="e#503#504#0" expanded="false" />
-            <element signature="e#543#544#0" expanded="false" />
-            <element signature="e#575#576#0" expanded="false" />
-            <element signature="e#661#662#0" expanded="false" />
-            <element signature="e#689#690#0" expanded="false" />
-            <element signature="e#731#732#0" expanded="false" />
-            <element signature="e#765#766#0" expanded="false" />
-            <element signature="e#919#920#0" expanded="false" />
-            <element signature="e#946#947#0" expanded="false" />
-            <element signature="e#986#987#0" expanded="false" />
-            <element signature="e#1018#1019#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan_ext.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="27" column="70" lean-forward="false" selection-start-line="27" selection-start-column="70" selection-end-line="27" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/views/system/role/list.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2951">
-          <caret line="455" column="22" lean-forward="true" selection-start-line="455" selection-start-column="22" selection-end-line="455" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/test/java/CodeGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="59" column="7" lean-forward="true" selection-start-line="59" selection-start-column="7" selection-end-line="59" selection-end-column="7" />
+        <state relative-caret-position="296">
+          <caret line="67" column="1" lean-forward="true" selection-start-line="67" selection-start-column="1" selection-end-line="67" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/SlaverMapper.xml">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/Application.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="31" selection-end-column="11" />
+        <state relative-caret-position="98">
+          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding>
-            <marker date="1601192601000" expanded="true" signature="1358:1544" ph="update slave... " />
+            <element signature="e#1301#1302#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/api/executecenter/executeplan/slaver.js" />
-    <entry file="file://$PROJECT_DIR$/admin/src/router/index.js">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/resetDB.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="111" column="26" lean-forward="false" selection-start-line="111" selection-start-column="15" selection-end-line="111" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="10" column="38" lean-forward="false" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-584">
-          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        <state relative-caret-position="60">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java">
+    <entry file="file://$PROJECT_DIR$/adminservice/target/test-classes/CodeGenerator.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-532">
-          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        <state relative-caret-position="-2867">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#11631#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/application-dev.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="15" lean-forward="true" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/SlaverController.java">
+    <entry file="file://$PROJECT_DIR$/package-lock.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="57" column="4" lean-forward="false" selection-start-line="57" selection-start-column="4" selection-end-line="75" selection-end-column="5" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/TestController.java">
+    <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-284">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/TesterController.java">
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-532">
-          <caret line="20" column="13" lean-forward="false" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        <state relative-caret-position="-6168">
+          <caret line="1376" column="42" lean-forward="false" selection-start-line="1376" selection-start-column="20" selection-end-line="1376" selection-end-column="42" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/MacdepunitService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="12" column="17" lean-forward="false" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/SlaverService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="15" column="4" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="29" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="21" column="19" lean-forward="false" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1601212266000" expanded="false" signature="39:165" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/SlaverServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="25" column="17" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#859#860#0" expanded="false" />
-            <element signature="e#913#914#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/test/resources/sql/dev/executeplan.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="29" column="12" lean-forward="false" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/entity/Executeplan.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="35" column="11" lean-forward="false" selection-start-line="35" selection-start-column="11" selection-end-line="35" selection-end-column="11" />
-          <folding>
-            <element signature="e#527#528#0" expanded="false" />
-            <element signature="e#557#558#0" expanded="false" />
-            <element signature="e#603#604#0" expanded="false" />
-            <element signature="e#641#642#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/views/assets/apicases/index.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="212" column="9" lean-forward="true" selection-start-line="212" selection-start-column="0" selection-end-line="260" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="160" column="8" lean-forward="false" selection-start-line="160" selection-start-column="8" selection-end-line="165" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/resources/mapper/ExecuteplanMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="18" column="11" lean-forward="true" selection-start-line="18" selection-start-column="11" selection-end-line="18" selection-end-column="11" />
-          <folding>
-            <marker date="1601293981000" expanded="true" signature="1144:1318" ph="update execu... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="62" column="47" lean-forward="false" selection-start-line="62" selection-start-column="47" selection-end-line="62" selection-end-column="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="28" column="9" lean-forward="false" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1601212266000" expanded="false" signature="40:55" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adminservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="30" column="59" lean-forward="false" selection-start-line="30" selection-start-column="59" selection-end-line="30" selection-end-column="59" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#922#923#0" expanded="true" />
-            <element signature="e#990#991#0" expanded="true" />
-            <marker date="1601298717000" expanded="false" signature="45:422" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="47" column="47" lean-forward="false" selection-start-line="47" selection-start-column="47" selection-end-line="47" selection-end-column="47" />
-          <folding>
-            <element signature="n#el-form#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#el-table-column#1;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#el-table-column#6;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#el-table-column#7;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#el-table-column#8;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#template#0;n#el-table-column#8;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#el-dialog#1;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="e#9554#9706#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

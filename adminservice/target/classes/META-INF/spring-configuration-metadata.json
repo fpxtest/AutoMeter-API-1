@@ -1,0 +1,219 @@
+{
+  "groups": [
+    {
+      "name": "jwt",
+      "type": "com.zoctan.api.core.jwt.JwtConfigurationProperties",
+      "sourceType": "com.zoctan.api.core.jwt.JwtConfigurationProperties"
+    },
+    {
+      "name": "rsa",
+      "type": "com.zoctan.api.core.rsa.RsaConfigurationProperties",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties"
+    },
+    {
+      "name": "spring.redis",
+      "type": "org.springframework.data.redis.connection.RedisConnectionFactory",
+      "sourceType": "com.zoctan.api.core.config.RedisConfig",
+      "sourceMethod": "redisConnectionFactory(redis.clients.jedis.JedisPoolConfig)"
+    },
+    {
+      "name": "spring.redis.jedis.pool",
+      "type": "redis.clients.jedis.JedisPoolConfig",
+      "sourceType": "com.zoctan.api.core.config.RedisConfig",
+      "sourceMethod": "jedisPoolConfig()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "jwt.admin-expire-time",
+      "type": "java.time.Duration",
+      "description": "管理后台过期时间",
+      "sourceType": "com.zoctan.api.core.jwt.JwtConfigurationProperties"
+    },
+    {
+      "name": "jwt.claim-key-auth",
+      "type": "java.lang.String",
+      "description": "claim authorities key",
+      "sourceType": "com.zoctan.api.core.jwt.JwtConfigurationProperties"
+    },
+    {
+      "name": "jwt.header",
+      "type": "java.lang.String",
+      "description": "请求头或请求参数的key",
+      "sourceType": "com.zoctan.api.core.jwt.JwtConfigurationProperties"
+    },
+    {
+      "name": "jwt.token-type",
+      "type": "java.lang.String",
+      "description": "token 前缀",
+      "sourceType": "com.zoctan.api.core.jwt.JwtConfigurationProperties"
+    },
+    {
+      "name": "jwt.wechat-expire-time",
+      "type": "java.time.Duration",
+      "description": "小程序前台过期时间",
+      "sourceType": "com.zoctan.api.core.jwt.JwtConfigurationProperties"
+    },
+    {
+      "name": "rsa.private-key",
+      "type": "java.lang.String",
+      "description": "私钥",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties"
+    },
+    {
+      "name": "rsa.private-key-head",
+      "type": "java.lang.String",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties",
+      "defaultValue": "-----BEGIN PRIVATE KEY-----"
+    },
+    {
+      "name": "rsa.private-key-path",
+      "type": "java.lang.String",
+      "description": "私钥位置",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties"
+    },
+    {
+      "name": "rsa.private-key-tail",
+      "type": "java.lang.String",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties",
+      "defaultValue": "-----END PRIVATE KEY-----"
+    },
+    {
+      "name": "rsa.public-key",
+      "type": "java.lang.String",
+      "description": "公钥",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties"
+    },
+    {
+      "name": "rsa.public-key-head",
+      "type": "java.lang.String",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties",
+      "defaultValue": "-----BEGIN PUBLIC KEY-----"
+    },
+    {
+      "name": "rsa.public-key-path",
+      "type": "java.lang.String",
+      "description": "公钥位置",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties"
+    },
+    {
+      "name": "rsa.public-key-tail",
+      "type": "java.lang.String",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties",
+      "defaultValue": "-----END PUBLIC KEY-----"
+    },
+    {
+      "name": "rsa.use-file",
+      "type": "java.lang.Boolean",
+      "description": "使用文件还是直接使用字符串",
+      "sourceType": "com.zoctan.api.core.rsa.RsaConfigurationProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "spring.redis.jedis.pool.block-when-exhausted",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.eviction-policy",
+      "type": "org.apache.commons.pool2.impl.EvictionPolicy<java.lang.Object>",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.eviction-policy-class-name",
+      "type": "java.lang.String",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.evictor-shutdown-timeout-millis",
+      "type": "java.lang.Long",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.fairness",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.jmx-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.jmx-name-base",
+      "type": "java.lang.String",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.jmx-name-prefix",
+      "type": "java.lang.String",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.lifo",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.max-idle",
+      "type": "java.lang.Integer",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.max-total",
+      "type": "java.lang.Integer",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.max-wait-millis",
+      "type": "java.lang.Long",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.min-evictable-idle-time-millis",
+      "type": "java.lang.Long",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.min-idle",
+      "type": "java.lang.Integer",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.num-tests-per-eviction-run",
+      "type": "java.lang.Integer",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.soft-min-evictable-idle-time-millis",
+      "type": "java.lang.Long",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.test-on-borrow",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.test-on-create",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.test-on-return",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.test-while-idle",
+      "type": "java.lang.Boolean",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    },
+    {
+      "name": "spring.redis.jedis.pool.time-between-eviction-runs-millis",
+      "type": "java.lang.Long",
+      "sourceType": "redis.clients.jedis.JedisPoolConfig"
+    }
+  ],
+  "hints": []
+}
