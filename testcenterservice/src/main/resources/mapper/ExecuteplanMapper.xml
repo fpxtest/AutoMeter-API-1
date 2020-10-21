@@ -9,6 +9,7 @@
     <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -22,7 +23,7 @@
   </select>
 
   <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
-    update executeplan set executeplanname = #{executeplanname}, usetype=#{usetype}, memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    update executeplan set executeplanname = #{executeplanname}, usetype=#{usetype}, memo = #{memo},ip =#{ip}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 </mapper>

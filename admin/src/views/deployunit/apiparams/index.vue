@@ -144,7 +144,7 @@
             type="textarea"
             prefix-icon="el-icon-message"
             auto-complete="off"
-            v-model="tmpapiparams.keyname"
+            v-model.trim="tmpapiparams.keyname"
             placeholder="例如key1,key2,key3"
           />
         </el-form-item>

@@ -2,7 +2,6 @@ package com.zoctan.api;
 
 import com.alibaba.fastjson.JSON;
 import com.zoctan.api.core.response.Result;
-import com.zoctan.api.filter.AuthenticationFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -39,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {Application.class})
 public abstract class BaseControllerTest {
   @Autowired protected WebApplicationContext context;
-  @Autowired protected AuthenticationFilter authenticationFilter;
 
   protected MockMvc mockMvc;
 

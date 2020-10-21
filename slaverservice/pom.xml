@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.zoctan</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>slaverservice</artifactId>
     <version>1.0</version>
     <!-- 打包类型 -->
     <packaging>war</packaging>
@@ -58,15 +58,6 @@
             <version>${swagger2.version}</version>
         </dependency>
         <!-- spring security + json web token -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
         <!-- MySQL JDBC驱动 -->
         <dependency>
             <groupId>mysql</groupId>

@@ -14,7 +14,7 @@
             type="success"
             size="mini"
             v-if="hasPermission('executeplan:list')"
-            @click.native.prevent="getexecuteplanList"
+            @click.native.prevent="executeplancase"
           >运行</el-button>
           <el-button
             type="warning"
@@ -56,13 +56,14 @@
         type="selection"
         width="40">
       </el-table-column>
-      <el-table-column label="编号" align="center" width="60">
+      <el-table-column label="编号" align="center" width="50">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="执行计划名" align="center" prop="executeplanname" width="140"/>
-      <el-table-column label="状态" align="center" prop="status" width="60"/>
+      <el-table-column label="执行计划名" align="center" prop="executeplanname" width="100"/>
+      <el-table-column label="状态" align="center" prop="status" width="50"/>
+      <el-table-column label="测试服务器" align="center" prop="ip" width="120"/>
       <el-table-column label="类型" align="center" prop="usetype" width="60"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -124,13 +125,19 @@
             v-model="tmpexecuteplan.executeplanname"
           />
         </el-form-item>
-        <el-form-item label="类型" prop="usetype">
-          <el-input
-            type="text"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model="tmpexecuteplan.usetype"
-          />
+        <el-form-item label="类型" prop="usetype" required>
+          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型">
+            <el-option label="功能" value="功能" />
+            <el-option label="性能" value="性能" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="测试服务器" prop="ip"  required>
+          <el-select v-model="tmpexecuteplan.ip" placeholder="测试服务器">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(macname, index) in machinenameList" :key="index">
+              <el-option :label="`${macname.machinename} ：${macname.ip}`" :value="macname.ip" required/>
+            </div>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="memo">
           <el-input
@@ -244,8 +251,9 @@
   import { search as getapiList } from '@/api/deployunit/api'
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
   import { searchcases as searchtestplancases, addexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
-  import { getexecuteplanList as getexecuteplanList, search, addexecuteplan, updateexecuteplan, removeexecuteplan } from '@/api/executecenter/executeplan'
+  import { getexecuteplanList as getexecuteplanList, search, addexecuteplan, updateexecuteplan, removeexecuteplan, executeplan } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
+  import { getmachineList as getmachineList } from '@/api/assets/machine'
 
   export default {
     filters: {
@@ -260,6 +268,7 @@
     },
     data() {
       return {
+        machinenameList: [], // 服务器列表
         apiList: [], // api列表
         deployunitList: [], // 发布单元列表
         multipleSelection: [], // 执行计划表格被选中的内容
@@ -304,6 +313,7 @@
           executeplanname: '',
           status: '',
           usetype: '',
+          ip: '',
           memo: ''
         },
         tmpapicases: {
@@ -338,10 +348,46 @@
       this.getexecuteplanList()
       this.getapiList()
       this.getdepunitList()
+      this.getmachineList()
     },
 
     methods: {
       unix2CurrentTime,
+      /**
+       * 执行执行计划
+       */
+      executeplancase() {
+        if (this.multipleSelection.length === 0) {
+          this.$message.error('请选择执行计划')
+        } else {
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            if (this.multipleSelection[i].status === 'waiting' || this.multipleSelection[i].status === 'running') {
+              this.multipleSelection.splice(i)
+            }
+          }
+          executeplan(this.multipleSelection).then(() => {
+            this.$message.success('计划执行成功')
+            this.btnLoading = false
+          }).catch(res => {
+            this.$message.error('计划执行失败')
+            this.btnLoading = false
+          })
+        }
+      },
+
+      /**
+       * 获取服务器列表
+       */
+      getmachineList() {
+        this.listLoading = true
+        getmachineList(this.listQuery).then(response => {
+          this.machinenameList = response.data.list
+          this.total = response.data.total
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载服务器列表失败')
+        })
+      },
 
       handleClickTableRow(row, event, column) {
         // console.log(row)
@@ -599,6 +645,7 @@
         this.tmpexecuteplan.status = 'new'
         this.tmpexecuteplan.memo = ''
         this.tmpexecuteplan.usetype = ''
+        this.tmpexecuteplan.ip = ''
       },
       /**
        * 添加执行计划
@@ -631,6 +678,7 @@
         this.tmpexecuteplan.status = this.executeplanList[index].status
         this.tmpexecuteplan.usetype = this.executeplanList[index].usetype
         this.tmpexecuteplan.memo = this.executeplanList[index].memo
+        this.tmpexecuteplan.ip = this.executeplanList[index].ip
       },
 
       /**

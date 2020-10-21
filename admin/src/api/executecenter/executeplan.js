@@ -24,6 +24,14 @@ export function addexecuteplan(executeplanForm) {
   })
 }
 
+export function executeplan(executeplanForm) {
+  return request({
+    url: '/executeplan/execplancases',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function updateexecuteplan(executeplanForm) {
   return request({
     url: '/executeplan/detail',

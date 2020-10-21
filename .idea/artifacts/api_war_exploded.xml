@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="api:war exploded">
-    <output-path>$PROJECT_DIR$/adminservice/target/api</output-path>
+    <output-path>$PROJECT_DIR$/testcenterservice/target/testcenterservice</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -135,10 +135,12 @@
           <element id="library" level="project" name="Maven: tk.mybatis:mapper:3.5.2" />
           <element id="library" level="project" name="Maven: javax.persistence:persistence-api:1.0" />
           <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.28" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.4" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.2" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/testcenterservice/target/api/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/testcenterservice/target/testcenterservice/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="api/web/Web" />
     </root>

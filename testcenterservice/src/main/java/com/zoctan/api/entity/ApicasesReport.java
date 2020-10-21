@@ -1,10 +1,10 @@
 package com.zoctan.api.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "apicases_report")
-public class ApicasesReport {
+public class ApicasesReport extends Apicases {
     /**
      * Id
      */

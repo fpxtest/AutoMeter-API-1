@@ -27,4 +27,7 @@ public interface ExecuteplanService extends Service<Executeplan> {
      * @return 用户列表
      */
     void updateexecuteplanname(Executeplan params);
+
+    void executeplancase(final List<Executeplan> executeplan);
+
 }

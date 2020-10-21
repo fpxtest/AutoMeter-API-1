@@ -23,6 +23,10 @@
     </where>
   </select>
 
+  <select id="findcasebytestplanid" resultMap="BaseResultMap">
+    select testcaseid, deployunitname from executeplan_testcase a where a.executeplanid = #{executeplanid}
+  </select>
+
   <select id="findcasebyplanidandcaseid" resultType="java.lang.Integer">
     select COUNT(*) from executeplan_testcase a where a.executeplanid = #{executeplanid} and a.testcaseid = #{testcaseid}
   </select>

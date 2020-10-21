@@ -28,6 +28,12 @@ public class ExecuteplanController {
         return ResultGenerator.genOkResult();
     }
 
+    @PostMapping("/execplancases")
+    public Result execcases(@RequestBody final List<Executeplan> executeplanList) {
+        executeplanService.executeplancase(executeplanList);
+        return ResultGenerator.genOkResult();
+    }
+
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         executeplanService.deleteById(id);

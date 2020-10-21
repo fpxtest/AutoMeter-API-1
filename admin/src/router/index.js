@@ -115,13 +115,12 @@ export const asyncRouterMap = [
   },
 
   {
-    path: '/test',
+    path: '/reportcenter',
     component: Layout,
     name: '报告中心',
     icon: 'dashboard',
     children: [
-      { path: 'account/list', name: '功能测试报告', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
-      { path: 'role/list', name: '性能测试报告', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
+      { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }}
     ]
   },
 

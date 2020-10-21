@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/testcenterservice/api.iml" filepath="$PROJECT_DIR$/testcenterservice/api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ftSecurity/security.iml" filepath="$PROJECT_DIR$/ftSecurity/security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slaverservice/slaverservice.iml" filepath="$PROJECT_DIR$/slaverservice/slaverservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/strategy/slaverservice (1).iml" filepath="$PROJECT_DIR$/strategy/slaverservice (1).iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/testplantform.iml" filepath="$PROJECT_DIR$/.idea/testplantform.iml" />
     </modules>
   </component>

@@ -1,16 +1,12 @@
 package com.zoctan.api.core.exception;
 
-import com.zoctan.api.core.response.ResultCode;
 import com.zoctan.api.core.response.Result;
+import com.zoctan.api.core.response.ResultCode;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.util.UrlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -68,21 +64,6 @@ public class ExceptionResolver {
     return ResultGenerator.genFailedResult(ResultCode.DATABASE_EXCEPTION);
   }
 
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
-  public Result authException(final Throwable e) {
-    log.error("==> 身份验证异常: {}", e.getMessage());
-    e.printStackTrace();
-    return ResultGenerator.genFailedResult(ResultCode.UNAUTHORIZED_EXCEPTION);
-  }
-
-  @ResponseStatus(HttpStatus.FORBIDDEN)
-  @ExceptionHandler({AccessDeniedException.class, UsernameNotFoundException.class})
-  public Result accountException(final Throwable e) {
-    log.error("==> 账户异常: {}", e.getMessage());
-    e.printStackTrace();
-    return ResultGenerator.genFailedResult(e.getMessage());
-  }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
   @ExceptionHandler(NoHandlerFoundException.class)

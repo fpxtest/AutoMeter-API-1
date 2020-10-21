@@ -164,7 +164,7 @@
             type="textarea"
             prefix-icon="el-icon-message"
             auto-complete="off"
-            v-model="tmpapicases.expect"
+            v-model.trim="tmpapicases.expect"
             placeholder="例如age=20,pass=123456,tmplist[0].count=10"
           />
         </el-form-item>

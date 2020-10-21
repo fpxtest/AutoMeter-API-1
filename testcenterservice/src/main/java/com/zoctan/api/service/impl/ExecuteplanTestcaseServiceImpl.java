@@ -1,9 +1,9 @@
 package com.zoctan.api.service.impl;
 
-import com.zoctan.api.mapper.ExecuteplanTestcaseMapper;
-import com.zoctan.api.entity.ExecuteplanTestcase;
-import com.zoctan.api.service.ExecuteplanTestcaseService;
 import com.zoctan.api.core.service.AbstractService;
+import com.zoctan.api.entity.ExecuteplanTestcase;
+import com.zoctan.api.mapper.ExecuteplanTestcaseMapper;
+import com.zoctan.api.service.ExecuteplanTestcaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +22,7 @@ public class ExecuteplanTestcaseServiceImpl extends AbstractService<ExecuteplanT
 @Resource
 private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
 
+
     @Override
     public void savetestplancase(List<ExecuteplanTestcase> testcase) {
         List<ExecuteplanTestcase> caselist = new ArrayList<ExecuteplanTestcase>();
@@ -35,6 +36,8 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
             executeplanTestcaseMapper.savetestplancase(caselist);
         }
     }
+
+
 
     @Override
     public List<ExecuteplanTestcase> findcasebydeployandapi(Map<String, Object> params) {

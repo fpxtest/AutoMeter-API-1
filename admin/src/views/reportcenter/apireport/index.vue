@@ -1,0 +1,405 @@
+<template>
+  <div class="app-container">
+    <div class="filter-container">
+      <el-form :inline="true">
+        <el-form-item>
+          <el-button
+            type="success"
+            size="mini"
+            icon="el-icon-refresh"
+            v-if="hasPermission('apireport:list')"
+            @click.native.prevent="getapireportList"
+          >刷新</el-button>
+        </el-form-item>
+
+        <span v-if="hasPermission('apireport:search')">
+          <el-form-item>
+            <el-input v-model="search.apireportname" @keyup.enter.native="searchBy" placeholder="apireport名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+        </span>
+      </el-form>
+    </div>
+    <el-table
+      :data="apireportList"
+      v-loading.body="listLoading"
+      element-loading-text="loading"
+      border
+      fit
+      highlight-current-row
+    >
+      <el-table-column label="编号" align="center" width="60">
+        <template slot-scope="scope">
+          <span v-text="getIndex(scope.$index)"></span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用例名" align="center" prop="casename" width="120"/>
+      <el-table-column label="apiname" align="center" prop="apiname" width="80"/>
+      <el-table-column label="状态" align="center" prop="status" width="100"/>
+
+      <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
+      <el-table-column label="响应" align="center" prop="respone" width="100"/>
+      <el-table-column label="断言详情" align="center" prop="assertvalue" width="100"/>
+      <el-table-column label="运行时间(ms)" align="center" prop="runtime" width="100"/>
+      <el-table-column label="期望值" align="center" prop="expect" width="100"/>
+
+      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
+        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="listQuery.page"
+      :page-size="listQuery.size"
+      :total="total"
+      :page-sizes="[10, 20, 30, 40]"
+      layout="total, sizes, prev, pager, next, jumper"
+    ></el-pagination>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="100px"
+        style="width: 300px; margin-left:50px;"
+        :model="tmpapireport"
+        ref="tmpapireport"
+      >
+        <el-form-item label="apireport名" prop="apireportname" required>
+          <el-input
+            type="text"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpapireport.apireportname"
+          />
+        </el-form-item>
+        <el-form-item label="访问方式" prop="visittype" required>
+          <el-select v-model="tmpapireport.visittype" placeholder="访问方式">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(vistype, index) in visittypeList" :key="index">
+              <el-option :label="vistype.dicitmevalue" :value="vistype.dicitmevalue" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="资源路径" prop="path" required>
+          <el-input
+            type="text"
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model="tmpapireport.path"
+          />
+        </el-form-item>
+        <el-form-item label="发布单元" prop="deployunitname" required >
+          <el-select v-model="tmpapireport.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(depunitname, index) in deployunitList" :key="index">
+              <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="memo">
+          <el-input
+            type="text"
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model="tmpapireport.memo"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
+        <el-button
+          type="danger"
+          v-if="dialogStatus === 'add'"
+          @click.native.prevent="$refs['tmpapireport'].resetFields()"
+        >重置</el-button>
+        <el-button
+          type="success"
+          v-if="dialogStatus === 'add'"
+          :loading="btnLoading"
+          @click.native.prevent="addapireport"
+        >添加</el-button>
+        <el-button
+          type="success"
+          v-if="dialogStatus === 'update'"
+          :loading="btnLoading"
+          @click.native.prevent="updateapireport"
+        >修改</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+<script>
+  import { getapireportList as getapireportList, search, addapireport, updateapireport, removeapireport } from '@/api/reportcenter/apireport'
+  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdatabydiccodeList as getvisittypeList } from '@/api/system/dictionary'
+  import { unix2CurrentTime } from '@/utils'
+
+  export default {
+    filters: {
+      statusFilter(status) {
+        const statusMap = {
+          published: 'success',
+          draft: 'gray',
+          deleted: 'danger'
+        }
+        return statusMap[status]
+      }
+    },
+    data() {
+      return {
+        apireportList: [], // apireport列表
+        visittypeList: [], // apireport访问方式列表
+        deployunitList: [], // 发布单元列表
+        listLoading: false, // 数据加载等待动画
+        dicvisitypeQuery: {
+          page: 1, // 页码
+          size: 30, // 每页数量
+          diccode: 'httpvisittype' // 获取字典表入参
+        },
+        total: 0, // 数据总数
+        listQuery: {
+          page: 1, // 页码
+          size: 20, // 每页数量
+          listLoading: true
+        },
+        dialogStatus: 'add',
+        dialogFormVisible: false,
+        textMap: {
+          updateRole: '修改apireport',
+          update: '修改apireport',
+          add: '添加apireport'
+        },
+        btnLoading: false, // 按钮等待动画
+        tmpapireport: {
+          id: '',
+          deployunitid: '',
+          deployunitname: '',
+          apireportname: '',
+          visittype: '',
+          path: '',
+          memo: ''
+        },
+        search: {
+          page: null,
+          size: null,
+          apireportname: null,
+          deployunitname: null
+        }
+      }
+    },
+
+    created() {
+      this.getapireportList()
+      this.getvisittypeList()
+      this.getdepunitList()
+    },
+
+    methods: {
+      unix2CurrentTime,
+
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      selectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpapireport.deployunitid = this.deployunitList[i].id
+          }
+          console.log(this.deployunitList[i].id)
+        }
+      },
+
+      /**
+       * 获取apireport列表
+       */
+      getapireportList() {
+        this.listLoading = true
+        getapireportList(this.listQuery).then(response => {
+          this.apireportList = response.data.list
+          this.total = response.data.total
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载apireport列表失败')
+        })
+      },
+      /**
+       * 获取字典访问方式列表
+       */
+      getvisittypeList() {
+        this.listLoading = true
+        getvisittypeList(this.dicvisitypeQuery).then(response => {
+          this.visittypeList = response.data.list
+          this.total = response.data.total
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载字典访问方式列表失败')
+        })
+      },
+
+      /**
+       * 获取发布单元列表
+       */
+      getdepunitList() {
+        this.listLoading = true
+        getdepunitList(this.listQuery).then(response => {
+          this.deployunitList = response.data.list
+          this.total = response.data.total
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载发布单元列表失败')
+        })
+      },
+
+      searchBy() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.search.page = this.listQuery.page
+        this.search.size = this.listQuery.size
+        search(this.search).then(response => {
+          this.apireportList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      /**
+       * 改变每页数量
+       * @param size 页大小
+       */
+      handleSizeChange(size) {
+        this.listQuery.size = size
+        this.listQuery.page = 1
+        this.getapireportList()
+      },
+      /**
+       * 改变页码
+       * @param page 页号
+       */
+      handleCurrentChange(page) {
+        this.listQuery.page = page
+        this.getapireportList()
+      },
+      /**
+       * 表格序号
+       * 可参考自定义表格序号
+       * http://element-cn.eleme.io/#/zh-CN/component/table#zi-ding-yi-suo-yin
+       * @param index 数据下标
+       * @returns 表格序号
+       */
+      getIndex(index) {
+        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+      },
+      /**
+       * 显示添加apireport对话框
+       */
+      showAddapireportDialog() {
+        // 显示新增对话框
+        this.dialogFormVisible = true
+        this.dialogStatus = 'add'
+        this.tmpapireport.id = ''
+        this.tmpapireport.deployunitid = ''
+        this.tmpapireport.deployunitname = ''
+        this.tmpapireport.apireportname = ''
+        this.tmpapireport.visittype = ''
+        this.tmpapireport.path = ''
+        this.tmpapireport.memo = ''
+      },
+      /**
+       * 添加apireport
+       */
+      addapireport() {
+        this.$refs.tmpapireport.validate(valid => {
+          if (valid && this.isUniqueDetail(this.tmpapireport)) {
+            this.btnLoading = true
+            addapireport(this.tmpapireport).then(() => {
+              this.$message.success('添加成功')
+              this.getapireportList()
+              this.dialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+      /**
+       * 显示修改apireport对话框
+       * @param index apireport下标
+       */
+      showUpdateapireportDialog(index) {
+        this.dialogFormVisible = true
+        this.dialogStatus = 'update'
+        this.tmpapireport.id = this.apireportList[index].id
+        this.tmpapireport.deployunitid = this.apireportList[index].deployunitid
+        this.tmpapireport.deployunitname = this.apireportList[index].deployunitname
+        this.tmpapireport.apireportname = this.apireportList[index].apireportname
+        this.tmpapireport.visittype = this.apireportList[index].visittype
+        this.tmpapireport.path = this.apireportList[index].path
+        this.tmpapireport.memo = this.apireportList[index].memo
+      },
+      /**
+       * 更新apireport
+       */
+      updateapireport() {
+        if (this.isUniqueDetail(this.tmpapireport)) {
+          updateapireport(this.tmpapireport).then(() => {
+            this.$message.success('更新成功')
+            this.getapireportList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.$message.error('更新失败')
+          })
+        }
+      },
+
+      /**
+       * 删除字典
+       * @param index apireport下标
+       */
+      removeapireport(index) {
+        this.$confirm('删除该apireport？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.apireportList[index].id
+          removeapireport(id).then(() => {
+            this.$message.success('删除成功')
+            this.getapireportList()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+
+      /**
+       * apireport资料是否唯一
+       * @param apireport
+       */
+      isUniqueDetail(apireport) {
+        console.log(apireport.id)
+        for (let i = 0; i < this.apireportList.length; i++) {
+          if (this.apireportList[i].id !== apireport.id) { // 排除自己
+            console.log(this.apireportList[i].id)
+            if (this.apireportList[i].apireportname === apireport.apireportname) {
+              this.$message.error('apireport名已存在')
+              return false
+            }
+          }
+        }
+        return true
+      }
+    }
+  }
+</script>

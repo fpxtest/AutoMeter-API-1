@@ -42,6 +42,17 @@ public class Executeplan {
      */
     private String memo;
 
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    private String ip;
+
     /**
      * 创建时间
      */

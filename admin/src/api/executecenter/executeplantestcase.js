@@ -16,6 +16,14 @@ export function addexecuteplantestcase(executeplanForm) {
   })
 }
 
+export function executeplantestcase(executeplanForm) {
+  return request({
+    url: '/executeplan/testcase/execcases',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function removeexecuteplantestcase(executeplanForm) {
   return request({
     url: '/executeplan/testcase/removecases',
