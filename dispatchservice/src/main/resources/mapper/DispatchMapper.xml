@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.DispatchMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Dispatch">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="execplanid" jdbcType="BIGINT" property="execplanid" />
+    <result column="execplanname" jdbcType="VARCHAR" property="execplanname" />
+    <result column="batchid" jdbcType="BIGINT" property="batchid" />
+    <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="slaverid" jdbcType="BIGINT" property="slaverid" />
+    <result column="slavername" jdbcType="VARCHAR" property="slavername" />
+    <result column="testcaseid" jdbcType="BIGINT" property="testcaseid" />
+    <result column="testcasename" jdbcType="VARCHAR" property="testcasename" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+</mapper>

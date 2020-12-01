@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Envmachine;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -31,4 +32,8 @@ public interface EnvmachineMapper extends MyMapper<Envmachine> {
      * @return 环境服务器列表
      */
     void updateEnvAndMac(Envmachine params);
+
+    Envmachine findexist(@Param("enviromentname")String enviromentname, @Param("machinename")String machinename);
+    Envmachine findexistwithoutself(@Param("enviromentname")String enviromentname,@Param("machinename")String machinename,@Param("id")Long id);
+
 }

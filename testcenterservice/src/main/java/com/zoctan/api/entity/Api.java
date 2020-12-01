@@ -34,10 +34,42 @@ public class Api {
      */
     private String visittype;
 
+    public String getApistyle() {
+        return apistyle;
+    }
+
+    public void setApistyle(String apistyle) {
+        this.apistyle = apistyle;
+    }
+
+    private String apistyle;
+
     /**
      * url访问路径
      */
     private String path;
+
+    public String getRequestcontenttype() {
+        return requestcontenttype;
+    }
+
+    public void setRequestcontenttype(String requestcontenttype) {
+        this.requestcontenttype = requestcontenttype;
+    }
+
+    private String requestcontenttype;
+
+    public String getResponecontenttype() {
+        return responecontenttype;
+    }
+
+    public void setResponecontenttype(String responecontenttype) {
+        this.responecontenttype = responecontenttype;
+    }
+
+    private String responecontenttype;
+
+
 
     /**
      * 备注

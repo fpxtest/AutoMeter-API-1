@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('enviroment:search')">
           <el-form-item>
-            <el-input v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
+            <el-input maxlength="40" v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -43,6 +43,7 @@
         </template>
       </el-table-column>
       <el-table-column label="测试环境名" align="center" prop="enviromentname" width="120"/>
+      <el-table-column label="环境类型" align="center" prop="envtype" width="120"/>
       <el-table-column label="描述" align="center" prop="memo" width="250"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -91,12 +92,21 @@
       >
         <el-form-item label="测试环境名" prop="enviromentname" required>
           <el-input
+            maxlength="20"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpenviroment.enviromentname"
           />
         </el-form-item>
+
+        <el-form-item label="环境类型" prop="envtype" required >
+          <el-select v-model="tmpenviroment.envtype" placeholder="环境类型">
+            <el-option label="功能" value="功能"></el-option>
+            <el-option label="性能" value="性能"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="备注" prop="memo">
           <el-input
             type="text"
@@ -165,6 +175,7 @@
         tmpenviroment: {
           id: '',
           enviromentname: '',
+          envtype: '',
           memo: ''
         },
         search: {
@@ -247,13 +258,14 @@
         this.tmpenviroment.id = ''
         this.tmpenviroment.enviromentname = ''
         this.tmpenviroment.memo = ''
+        this.tmpenviroment.envtype = ''
       },
       /**
        * 添加测试环境
        */
       addenviroment() {
         this.$refs.tmpenviroment.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpenviroment)) {
+          if (valid) {
             this.btnLoading = true
             addenviroment(this.tmpenviroment).then(() => {
               this.$message.success('添加成功')
@@ -276,21 +288,24 @@
         this.dialogStatus = 'update'
         this.tmpenviroment.id = this.enviromentList[index].id
         this.tmpenviroment.enviromentname = this.enviromentList[index].enviromentname
+        this.tmpenviroment.envtype = this.enviromentList[index].envtype
         this.tmpenviroment.memo = this.enviromentList[index].memo
       },
       /**
        * 更新测试环境
        */
       updateenviroment() {
-        if (this.isUniqueDetail(this.tmpenviroment)) {
-          updateenviroment(this.tmpenviroment).then(() => {
-            this.$message.success('更新成功')
-            this.getenviromentList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpenviroment.validate(valid => {
+          if (valid) {
+            updateenviroment(this.tmpenviroment).then(() => {
+              this.$message.success('更新成功')
+              this.getenviromentList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+            })
+          }
+        })
       },
 
       /**

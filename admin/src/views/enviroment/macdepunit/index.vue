@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('macdepunit:add')"
             @click.native.prevent="showAddmacdepunitDialog"
-          >添加测试环境服务器</el-button>
+          >添加服务器部署</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('macdepunit:search')">
@@ -24,7 +24,7 @@
             <el-input v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元名"></el-input>
+            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元,组件名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -46,8 +46,9 @@
         </template>
       </el-table-column>
       <el-table-column label="测试环境" align="center" prop="enviromentname" width="120"/>
-      <el-table-column label="服务器" align="center" prop="machinename" width="120"/>
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="服务器" align="center" prop="machinename" width="100"/>
+      <el-table-column label="组件名" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="组件类型" align="center" prop="assembletype" width="80"/>
       <el-table-column label="访问域名" align="center" prop="domain" width="120"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -90,7 +91,7 @@
         class="small-space"
         label-position="left"
         label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpmacdepunit"
         ref="tmpmacdepunit"
       >
@@ -112,17 +113,48 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpmacdepunit.deployunitname" placeholder="发布单元" @change="selectChangedDU($event)">
-            <el-option label="请选择" value="''" style="display: none" />
-            <div v-for="(depunit, index) in deployUnitList" :key="index">
-              <el-option :label="depunit.deployunitname" :value="depunit.deployunitname" required/>
-            </div>
+        <el-form-item label="组件类型" prop="assembletype" required >
+          <el-select v-model="tmpmacdepunit.assembletype" placeholder="组件类型" @change="selectChangedAandD($event)">
+            <el-option label="组件" value="组件"></el-option>
+            <el-option label="发布单元" value="发布单元"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="访问域名" prop="domain">
-          <el-input v-model="tmpmacdepunit.domain"  placeholder="测试环境名"></el-input>
-        </el-form-item>
+
+        <div v-if="deployunitVisible">
+          <el-form-item label="发布单元" prop="deployunitname" required >
+            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="发布单元" @change="selectChangedDU($event)">
+              <el-option label="请选择" value="''" style="display: none" />
+              <div v-for="(depunit, index) in deployUnitList" :key="index">
+                <el-option :label="depunit.deployunitname" :value="depunit.deployunitname" required/>
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="访问方式" prop="visittype" required >
+            <el-select v-model="tmpmacdepunit.visittype" placeholder="访问方式" @change="selectChangedVisittype($event)">
+              <el-option label="ip" value="ip"></el-option>
+              <el-option label="域名" value="域名"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <div v-if="domianVisible">
+            <el-form-item label="访问域名" prop="domain" required>
+              <el-input v-model="tmpmacdepunit.domain"  placeholder="访问域名" required></el-input>
+            </el-form-item>
+          </div>
+        </div>
+
+        <div v-if="assembleVisible">
+          <el-form-item label="组件" prop="deployunitname" required >
+            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="组件" @change="selectChangedAS($event)">
+              <el-option label="请选择" value="''" style="display: none" />
+              <div v-for="(assemble, index) in assembleList" :key="index">
+                <el-option :label="assemble.assemblename" :value="assemble.assemblename" required/>
+              </div>
+            </el-select>
+          </el-form-item>
+        </div>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
@@ -149,10 +181,11 @@
 </template>
 <script>
   import { getmacdepunitList as getmacdepunitList, search, addmacdepunit, updatemacdepunit, removemacdepunit } from '@/api/enviroment/macdepunit'
-  import { getmachineList as getmachineList } from '@/api/assets/machine'
-  import { getenviromentList as getenviromentList } from '@/api/enviroment/testenviroment'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getmachineLists as getmachineLists } from '@/api/assets/machine'
+  import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
+  import { getassembleallnameList as getassembleallnameList } from '@/api/enviroment/enviromentassemble'
 
   export default {
     filters: {
@@ -167,6 +200,7 @@
     },
     data() {
       return {
+        assembleList: [], // 环境组件列表
         macdepunitList: [], // 环境服务器列表
         enviromentnameList: [], // 环境列表
         machinenameList: [], // 服务器列表
@@ -179,11 +213,14 @@
           listLoading: true
         },
         dialogStatus: 'add',
+        deployunitVisible: false,
+        assembleVisible: false,
+        domianVisible: false,
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改环境服务器发布单元',
-          update: '修改环境服务器发布单元',
-          add: '添加环境服务器发布单元'
+          updateRole: '修改环境服务器发布单元,组件',
+          update: '修改环境服务器发布单元,组件',
+          add: '添加环境服务器发布单元,组件'
         },
         btnLoading: false, // 按钮等待动画
         tmpmacdepunit: {
@@ -191,9 +228,13 @@
           envid: '',
           machineid: '',
           depunitid: '',
+          assembleid: '',
+          assembletype: '',
           enviromentname: '',
           machinename: '',
-          deployunitname: ''
+          deployunitname: '',
+          domain: '',
+          visittype: ''
         },
         search: {
           page: null,
@@ -206,13 +247,41 @@
 
     created() {
       this.getmacdepunitList()
-      this.getenviromentList()
-      this.getmachineList()
-      this.getdepunitList()
+      this.getenviromentallList()
+      this.getmachineLists()
+      this.getdepunitLists()
+      this.getassembleLists()
     },
 
     methods: {
       unix2CurrentTime,
+
+      selectChangedAandD(e) {
+        if (e === '组件') {
+          this.deployunitVisible = false
+          this.assembleVisible = true
+        }
+        if (e === '发布单元') {
+          this.assembleVisible = false
+          this.deployunitVisible = true
+          this.domianVisible = false
+        }
+        this.tmpmacdepunit.deployunitname = ''
+        this.tmpmacdepunit.assembleid = ''
+        this.tmpmacdepunit.depunitid = ''
+      },
+
+      /**
+       * 发布单元访问方式下拉控制是否显示域名  e的值为options的选值
+       */
+      selectChangedVisittype(e) {
+        if (e === '域名') {
+          this.domianVisible = true
+        }
+        if (e === 'ip') {
+          this.domianVisible = false
+        }
+      },
 
       /**
        * 环境下拉选择事件获取发布单元id  e的值为options的选值
@@ -246,8 +315,20 @@
           if (this.deployUnitList[i].deployunitname === e) {
             this.tmpmacdepunit.depunitid = this.deployUnitList[i].id
           }
-          console.log(this.deployUnitList[i].id)
         }
+        this.tmpmacdepunit.assembleid = ''
+      },
+
+      /**
+       * 组件下拉选择事件获取组件id  e的值为options的选值
+       */
+      selectChangedAS(e) {
+        for (let i = 0; i < this.assembleList.length; i++) {
+          if (this.assembleList[i].assemblename === e) {
+            this.tmpmacdepunit.assembleid = this.assembleList[i].id
+          }
+        }
+        this.tmpmacdepunit.depunitid = ''
       },
 
       /**
@@ -267,12 +348,9 @@
       /**
        * 获取环境列表
        */
-      getenviromentList() {
-        this.listLoading = true
-        getenviromentList(this.listQuery).then(response => {
-          this.enviromentnameList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
+      getenviromentallList() {
+        getenviromentallList().then(response => {
+          this.enviromentnameList = response.data
         }).catch(res => {
           this.$message.error('加载测试环境列表失败')
         })
@@ -281,12 +359,9 @@
       /**
        * 获取服务器列表
        */
-      getmachineList() {
-        this.listLoading = true
-        getmachineList(this.listQuery).then(response => {
-          this.machinenameList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
+      getmachineLists() {
+        getmachineLists().then(response => {
+          this.machinenameList = response.data
         }).catch(res => {
           this.$message.error('加载服务器列表失败')
         })
@@ -295,15 +370,23 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
-        this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployUnitList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
+      getdepunitLists() {
+        getdepunitLists().then(response => {
+          this.deployUnitList = response.data
           console.log(this.deployunitList)
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
+        })
+      },
+
+      /**
+       * 获取环境组件名列表
+       */
+      getassembleLists() {
+        getassembleallnameList().then(response => {
+          this.assembleList = response.data
+        }).catch(res => {
+          this.$message.error('加载组件名列表失败')
         })
       },
 
@@ -359,17 +442,24 @@
         this.tmpmacdepunit.id = ''
         this.tmpmacdepunit.envid = ''
         this.tmpmacdepunit.machineid = ''
+        this.tmpmacdepunit.assembleid = ''
         this.tmpmacdepunit.depunitid = ''
         this.tmpmacdepunit.machinename = ''
         this.tmpmacdepunit.enviromentname = ''
         this.tmpmacdepunit.deployunitname = ''
+        this.tmpmacdepunit.assembletype = ''
+        this.tmpmacdepunit.domain = ''
+        this.tmpmacdepunit.visittype = ''
+        this.deployunitVisible = false
+        this.assembleVisible = false
+        this.domianVisible = false
       },
       /**
        * 添加测试环境
        */
       addmacdepunit() {
         this.$refs.tmpmacdepunit.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpmacdepunit)) {
+          if (valid) {
             this.btnLoading = true
             addmacdepunit(this.tmpmacdepunit).then(() => {
               this.$message.success('添加成功')
@@ -397,22 +487,52 @@
         this.tmpmacdepunit.machinename = this.macdepunitList[index].machinename
         this.tmpmacdepunit.enviromentname = this.macdepunitList[index].enviromentname
         this.tmpmacdepunit.deployunitname = this.macdepunitList[index].deployunitname
+        this.tmpmacdepunit.assembletype = this.macdepunitList[index].assembletype
+        this.tmpmacdepunit.domain = this.macdepunitList[index].domain
+        this.tmpmacdepunit.assembleid = this.macdepunitList[index].assembleid
+        this.tmpmacdepunit.visittype = this.macdepunitList[index].visittype
+        if (this.tmpmacdepunit.assembletype === '组件') {
+          this.deployunitVisible = false
+          this.assembleVisible = true
+        }
+        if (this.tmpmacdepunit.assembletype === '发布单元') {
+          this.assembleVisible = false
+          this.deployunitVisible = true
+        }
+        if (this.tmpmacdepunit.visittype === 'ip') {
+          this.domianVisible = false
+        }
+        if (this.tmpmacdepunit.visittype === '域名') {
+          this.domianVisible = true
+        }
       },
       /**
        * 更新测试环境
        */
       updatemacdepunit() {
-        if (this.isUniqueDetail(this.tmpmacdepunit)) {
-          updatemacdepunit(this.tmpmacdepunit).then(() => {
-            this.$message.success('更新成功')
-            this.getmacdepunitList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpmacdepunit.validate(valid => {
+          if (valid) {
+            if (this.tmpmacdepunit.visittype === 'ip') {
+              this.tmpmacdepunit.domain = ''
+            }
+            if (this.tmpmacdepunit.assembletype === '组件') {
+              this.tmpmacdepunit.visittype = ''
+              this.tmpmacdepunit.depunitid = ''
+              this.tmpmacdepunit.domain = ''
+            }
+            if (this.tmpmacdepunit.assembletype === '发布单元') {
+              this.tmpmacdepunit.assembleid = ''
+            }
+            updatemacdepunit(this.tmpmacdepunit).then(() => {
+              this.$message.success('更新成功')
+              this.getmacdepunitList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+            })
+          }
+        })
       },
-
       /**
        * 删除测试环境
        * @param index 测试环境下标

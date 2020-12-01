@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.core.service.Service;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -26,5 +27,16 @@ public interface ApicasesService extends Service<Apicases> {
      * @return 发布单元列表
      */
     void updateApicase(Apicases params);
+
+    int ifexist(Condition condition);
+
+    List<Apicases> forupdateifexist(Apicases apicase);
+
+
+    List<Apicases> getapicasebyName(String deployunitname,String apiname);
+
+
+
+
 
 }

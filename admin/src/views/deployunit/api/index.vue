@@ -47,9 +47,11 @@
       </el-table-column>
       <el-table-column label="api名" align="center" prop="apiname" width="120"/>
       <el-table-column label="访问方式" align="center" prop="visittype" width="80"/>
+      <el-table-column label="api风格" align="center" prop="apistyle" width="80"/>
       <el-table-column label="路径" align="center" prop="path" width="100"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
-      <el-table-column label="备注" align="center" prop="memo" width="100"/>
+      <el-table-column label="请求数据格式" align="center" prop="requestcontenttype" width="100"/>
+      <el-table-column label="响应数据格式" align="center" prop="responecontenttype" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -90,33 +92,43 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 350px; margin-left:50px;"
         :model="tmpapi"
         ref="tmpapi"
       >
         <el-form-item label="api名" prop="apiname" required>
           <el-input
             type="text"
+            maxlength="40"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpapi.apiname"
           />
         </el-form-item>
         <el-form-item label="访问方式" prop="visittype" required>
-          <el-select v-model="tmpapi.visittype" placeholder="访问方式">
+          <el-select v-model="tmpapi.visittype" placeholder="访问方式" @change="visitypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(vistype, index) in visittypeList" :key="index">
               <el-option :label="vistype.dicitmevalue" :value="vistype.dicitmevalue" required/>
             </div>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="api风格" prop="apistyle" required >
+          <el-select v-model="tmpapi.apistyle" placeholder="api风格">
+            <el-option label="restful" value="restful"></el-option>
+            <el-option label="普通方式" value="普通方式"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="资源路径" prop="path" required>
           <el-input
             type="text"
+            maxlength="200"
             prefix-icon="el-icon-message"
             auto-complete="off"
-            v-model="tmpapi.path"
+            v-model.trim="tmpapi.path"
           />
         </el-form-item>
         <el-form-item label="发布单元" prop="deployunitname" required >
@@ -127,9 +139,32 @@
             </div>
           </el-select>
         </el-form-item>
+
+        <div v-if="requestcontenttypeVisible">
+          <el-form-item label="请求数据格式" prop="requestcontenttype" required>
+            <el-select v-model="tmpapi.requestcontenttype" placeholder="请求数据格式">
+              <el-option label="请选择" value="''" style="display: none" />
+              <div v-for="(type, index) in requestcontentList" :key="index">
+                <el-option :label="type.dicitmevalue" :value="type.dicitmevalue" required/>
+              </div>
+            </el-select>
+          </el-form-item>
+        </div>
+
+
+        <el-form-item label="响应数据格式" prop="responecontenttype" required>
+          <el-select v-model="tmpapi.responecontenttype" placeholder="响应数据格式">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(type, index) in responecontenttypeList" :key="index">
+              <el-option :label="type.dicitmevalue" :value="type.dicitmevalue" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="备注" prop="memo">
           <el-input
             type="text"
+            maxlength="100"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpapi.memo"
@@ -162,7 +197,7 @@
 <script>
   import { getapiList as getapiList, search, addapi, updateapi, removeapi } from '@/api/deployunit/api'
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
-  import { getdatabydiccodeList as getvisittypeList } from '@/api/system/dictionary'
+  import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
   import { unix2CurrentTime } from '@/utils'
 
   export default {
@@ -181,11 +216,24 @@
         apiList: [], // api列表
         visittypeList: [], // api访问方式列表
         deployunitList: [], // 发布单元列表
+        requestcontentList: [], // 字典表获取api请求数据格式
+        responecontenttypeList: [], // 字典表获取api响应数据格式
+        requestcontenttypeVisible: false, // 请求方式是否显示标志
         listLoading: false, // 数据加载等待动画
         dicvisitypeQuery: {
           page: 1, // 页码
           size: 30, // 每页数量
           diccode: 'httpvisittype' // 获取字典表入参
+        },
+        dicrequestypeQuery: {
+          page: 1, // 页码
+          size: 30, // 每页数量
+          diccode: 'requestcontentype' // 获取字典表入参
+        },
+        dicresponetypeQuery: {
+          page: 1, // 页码
+          size: 30, // 每页数量
+          diccode: 'responecontenttype' // 获取字典表入参
         },
         total: 0, // 数据总数
         listQuery: {
@@ -207,7 +255,10 @@
           deployunitname: '',
           apiname: '',
           visittype: '',
+          apistyle: '',
           path: '',
+          requestcontenttype: '',
+          responecontenttype: '',
           memo: ''
         },
         search: {
@@ -222,6 +273,8 @@
     created() {
       this.getapiList()
       this.getvisittypeList()
+      this.getrequestcontenttypeList()
+      this.getresponecontenttypeList()
       this.getdepunitList()
     },
 
@@ -237,6 +290,18 @@
             this.tmpapi.deployunitid = this.deployunitList[i].id
           }
           console.log(this.deployunitList[i].id)
+        }
+      },
+
+      /**
+       * 访问方式下拉，为get，不显示请求数据格式  e的值为options的选值
+       */
+      visitypeselectChanged(e) {
+        if (e === 'get') {
+          this.requestcontenttypeVisible = false
+          this.tmpapi.requestcontenttype = ''
+        } else {
+          this.requestcontenttypeVisible = true
         }
       },
 
@@ -257,13 +322,32 @@
        * 获取字典访问方式列表
        */
       getvisittypeList() {
-        this.listLoading = true
-        getvisittypeList(this.dicvisitypeQuery).then(response => {
+        getdatabydiccodeList(this.dicvisitypeQuery).then(response => {
           this.visittypeList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
         }).catch(res => {
           this.$message.error('加载字典访问方式列表失败')
+        })
+      },
+
+      /**
+       * 获取字典请求数据格式列表
+       */
+      getrequestcontenttypeList() {
+        getdatabydiccodeList(this.dicrequestypeQuery).then(response => {
+          this.requestcontentList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载请求数据格式列表失败')
+        })
+      },
+
+      /**
+       * 获取字典响应数据格式列表
+       */
+      getresponecontenttypeList() {
+        getdatabydiccodeList(this.dicresponetypeQuery).then(response => {
+          this.responecontenttypeList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载响应数据格式列表失败')
         })
       },
 
@@ -335,7 +419,10 @@
         this.tmpapi.deployunitname = ''
         this.tmpapi.apiname = ''
         this.tmpapi.visittype = ''
+        this.tmpapi.apistyle = ''
         this.tmpapi.path = ''
+        this.tmpapi.requestcontenttype = ''
+        this.tmpapi.responecontenttype = ''
         this.tmpapi.memo = ''
       },
       /**
@@ -343,8 +430,9 @@
        */
       addapi() {
         this.$refs.tmpapi.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpapi)) {
+          if (valid) {
             this.btnLoading = true
+            this.tmpapi.path = this.tmpapi.path.trim()
             addapi(this.tmpapi).then(() => {
               this.$message.success('添加成功')
               this.getapiList()
@@ -370,21 +458,34 @@
         this.tmpapi.apiname = this.apiList[index].apiname
         this.tmpapi.visittype = this.apiList[index].visittype
         this.tmpapi.path = this.apiList[index].path
+        this.tmpapi.apistyle = this.apiList[index].apistyle
+        this.tmpapi.responecontenttype = this.apiList[index].responecontenttype
         this.tmpapi.memo = this.apiList[index].memo
+        if (this.tmpapi.visittype === 'get') {
+          this.requestcontenttypeVisible = false
+          this.tmpapi.requestcontenttype = ''
+        } else {
+          this.tmpapi.requestcontenttype = this.apiList[index].requestcontenttype
+          this.requestcontenttypeVisible = true
+        }
       },
       /**
        * 更新api
        */
       updateapi() {
-        if (this.isUniqueDetail(this.tmpapi)) {
-          updateapi(this.tmpapi).then(() => {
-            this.$message.success('更新成功')
-            this.getapiList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpapi.validate(valid => {
+          if (valid) {
+            this.tmpapi.path = this.tmpapi.path.trim()
+            updateapi(this.tmpapi).then(() => {
+              this.$message.success('更新成功')
+              this.getapiList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
       },
 
       /**

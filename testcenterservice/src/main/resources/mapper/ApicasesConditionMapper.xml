@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ApicasesConditionMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ApicasesCondition">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="execplanid" jdbcType="BIGINT" property="execplanid" />
+    <result column="execplanname" jdbcType="VARCHAR" property="execplanname" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="caseid" jdbcType="BIGINT" property="caseid" />
+    <result column="casedeployunitname" jdbcType="VARCHAR" property="casedeployunitname" />
+    <result column="caseapiname" jdbcType="VARCHAR" property="caseapiname" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="basetype" jdbcType="VARCHAR" property="basetype" />
+    <result column="conditionbasetype" jdbcType="VARCHAR" property="conditionbasetype" />
+    <result column="conditiontype" jdbcType="VARCHAR" property="conditiontype" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="conditionvalue" jdbcType="VARCHAR" property="conditionvalue" />
+    <result column="conditioncaseid" jdbcType="BIGINT" property="conditioncaseid" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findconditionWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM apicases_condition a
+    <where>
+      <if test="casedeployunitname != null and casedeployunitname != ''">a.casedeployunitname like CONCAT('%',#{casedeployunitname},'%')</if>
+      <if test="caseapiname != null  and caseapiname != ''">and a.caseapiname like CONCAT('%',#{caseapiname},'%')</if>
+      <if test="casename != null  and casename != ''">and a.casename like CONCAT('%',#{casename},'%')</if>
+    </where>
+  </select>
+</mapper>

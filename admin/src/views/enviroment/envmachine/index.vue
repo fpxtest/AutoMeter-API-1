@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('envmachine:add')"
             @click.native.prevent="showAddenvmachineDialog"
-          >添加测试环境服务器</el-button>
+          >添加环境服务器</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('envmachine:search')">
@@ -318,7 +318,7 @@
        */
       addenvmachine() {
         this.$refs.tmpenvmachine.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpenvmachine)) {
+          if (valid) {
             this.btnLoading = true
             addenvmachine(this.tmpenvmachine).then(() => {
               this.$message.success('添加成功')
@@ -349,15 +349,17 @@
        * 更新测试环境
        */
       updateenvmachine() {
-        if (this.isUniqueDetail(this.tmpenvmachine)) {
-          updateenvmachine(this.tmpenvmachine).then(() => {
-            this.$message.success('更新成功')
-            this.getenvmachineList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpenvmachine.validate(valid => {
+          if (valid) {
+            updateenvmachine(this.tmpenvmachine).then(() => {
+              this.$message.success('更新成功')
+              this.getenvmachineList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+            })
+          }
+        })
       },
 
       /**

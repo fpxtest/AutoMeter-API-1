@@ -23,10 +23,10 @@
 
         <span v-if="hasPermission('machine:search')">
           <el-form-item>
-            <el-input v-model="search.machinename" @keyup.enter.native="searchBy" placeholder="服务器名"></el-input>
+            <el-input maxlength="40" v-model="search.machinename" @keyup.enter.native="searchBy" placeholder="服务器名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
+            <el-input maxlength="40" v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -101,6 +101,7 @@
       >
         <el-form-item label="服务器名" prop="machinename" required>
           <el-input
+            maxlength="40"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"
@@ -110,6 +111,7 @@
         <el-form-item label="ip" prop="ip" required>
           <el-input
             type="text"
+            maxlength="40"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpmachine.ip"
@@ -117,6 +119,7 @@
         </el-form-item>
         <el-form-item label="cpu" prop="cpu" required>
           <el-input
+            maxlength="40"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"
@@ -126,6 +129,7 @@
         <el-form-item label="disk" prop="disk" required>
           <el-input
             type="text"
+            maxlength="40"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpmachine.disk"
@@ -134,6 +138,7 @@
         <el-form-item label="mem" prop="mem" required>
           <el-input
             type="text"
+            maxlength="300"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpmachine.mem"
@@ -230,7 +235,7 @@
       unix2CurrentTime,
 
       /**
-       * 获取字典列表
+       * 获取服务器列表
        */
       getmachineList() {
         this.listLoading = true
@@ -303,7 +308,7 @@
        */
       addmachine() {
         this.$refs.tmpmachine.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpmachine)) {
+          if (valid) {
             this.btnLoading = true
             addmachine(this.tmpmachine).then(() => {
               this.$message.success('添加成功')
@@ -335,15 +340,17 @@
        * 更新服务器
        */
       updatemachine() {
-        if (this.isUniqueDetail(this.tmpmachine)) {
-          updatemachine(this.tmpmachine).then(() => {
-            this.$message.success('更新成功')
-            this.getmachineList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpmachine.validate(valid => {
+          if (valid) {
+            updatemachine(this.tmpmachine).then(() => {
+              this.$message.success('更新成功')
+              this.getmachineList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+            })
+          }
+        })
       },
 
       /**

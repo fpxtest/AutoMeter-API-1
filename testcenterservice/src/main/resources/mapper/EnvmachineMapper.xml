@@ -10,7 +10,6 @@
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="machineid" jdbcType="BIGINT" property="machineid" />
     <result column="machinename" jdbcType="VARCHAR" property="machinename" />
-    <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -22,6 +21,16 @@
       <if test="enviromentname != null and enviromentname != ''">and c.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
       <if test="machinename != null  and machinename != ''">and c.machinename like CONCAT('%',#{machinename},'%')</if>
     </where>
+  </select>
+
+  <select id="findexist" resultMap="BaseResultMap">
+    select * from envmachine a
+    where  a.enviromentname= #{enviromentname} and a.machinename =#{machinename}
+  </select>
+
+  <select id="findexistwithoutself" resultMap="BaseResultMap">
+    select * from envmachine a
+    where  a.enviromentname= #{enviromentname} and a.machinename =#{machinename} and a.id != #{id}
   </select>
 
   <select id="listAllEnvAndMac" resultMap="BaseResultMap">

@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.ApiParams;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -32,5 +33,8 @@ public interface ApiParamsService extends Service<ApiParams> {
      * @return 用户列表
      */
     void updateApiParams(ApiParams params);
+
+    int ifexist(Condition condition);
+
 
 }

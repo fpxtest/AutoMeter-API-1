@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.Enviroment;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -35,5 +36,8 @@ public interface EnviromentService extends Service<Enviroment> {
      * @return 用户列表
      */
     void updateEnviroment(Enviroment params);
+
+
+    int ifexist(Condition condition);
 
 }

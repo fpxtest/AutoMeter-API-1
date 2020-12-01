@@ -6,6 +6,7 @@ import com.zoctan.api.service.MacdepunitService;
 import com.zoctan.api.core.service.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,5 +30,15 @@ private MacdepunitMapper macdepunitMapper;
     @Override
     public void updateMacAndDep(Macdepunit params) {
         macdepunitMapper.updateMacAndDep(params);
+    }
+
+    @Override
+    public int ifexist(Condition condition) {
+        return countByCondition(condition);
+    }
+
+    @Override
+    public Integer findmachinenumbyenvidanddeployid(long envid, long depunitid) {
+        return macdepunitMapper.findmachinenumbyenvidanddeployid(envid,depunitid);
     }
 }

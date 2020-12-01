@@ -25,6 +25,8 @@ DROP TABLE IF EXISTS `executeplan`;
 CREATE TABLE `executeplan`
 (
     `id`            bigint(20) unsigned  NOT NULL AUTO_INCREMENT COMMENT '执行计划Id',
+    `envid`            bigint(20) unsigned         NOT NULL  COMMENT '环境Id',
+    `enviromentname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境名',
     `executeplanname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '执行计划名',
     `status`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '状态，new，waiting，running，pause，finish',
     `usetype`      varchar(512) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '运行类型，function，performance，来区分分配什么slaver',

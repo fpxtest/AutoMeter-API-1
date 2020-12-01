@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.EnviromentMapper;
 import com.zoctan.api.service.EnviromentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,5 +37,10 @@ private EnviromentMapper enviromentMapper;
     public void updateEnviroment(Enviroment params) {
         enviromentMapper.updateEnviroment(params);
 
+    }
+
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
     }
 }

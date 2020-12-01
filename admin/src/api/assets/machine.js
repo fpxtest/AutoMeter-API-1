@@ -8,6 +8,13 @@ export function getmachineList(params) {
   })
 }
 
+export function getmachineLists() {
+  return request({
+    url: '/machine/getmachine',
+    method: 'get'
+  })
+}
+
 export function search(machineForm) {
   return request({
     url: '/machine/search',

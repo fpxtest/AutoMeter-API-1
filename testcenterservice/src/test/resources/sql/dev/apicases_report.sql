@@ -27,11 +27,13 @@ CREATE TABLE `apicases_report`
     `id`            bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `caseid`  bigint(20) unsigned NOT NULL COMMENT '用例id',
     `testplanid`  bigint(20) unsigned NOT NULL COMMENT '执行计划id',
+    `batchname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '批次',
     `status`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '运行结果，成功，失败，异常',
-    `respone`  varchar(500) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '返回结果',
-    `assertvalue`  varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '断言详细经过',
+    `respone`  varchar(5000) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '返回结果',
+    `assertvalue`  varchar(5000) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '断言详细经过',
     `runtime`      bigint(20) NOT NULL COMMENT '运行时长',
     `expect`     varchar(500) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '期望值',
+    `errorinfo`     varchar(500) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '错误信息',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     `creator`    varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '创建者',
@@ -49,7 +51,7 @@ LOCK TABLES `apicases_report` WRITE;
 /*!40000 ALTER TABLE `apicases_report`
     DISABLE KEYS */;
 INSERT INTO `apicases_report`
-VALUES (1, 1,1,'成功','code=200', 'expect is xxx， actual is yyy | expect is zzzz， actual is vvvvv',20,'name=1,pass=2',
+VALUES (1, 1,1,'batch2020-10-21-tag-100','成功','code=200', 'expect is xxx， actual is yyy | expect is zzzz， actual is vvvvv',20,'name=1,pass=2',
         '2019-07-01 00:00:00', '2019-07-01 00:00:00','admin');
 /*!40000 ALTER TABLE `apicases_report`
     ENABLE KEYS */;

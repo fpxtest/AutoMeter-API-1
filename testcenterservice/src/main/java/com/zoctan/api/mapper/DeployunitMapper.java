@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Deployunit;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -32,4 +33,8 @@ public interface DeployunitMapper extends MyMapper<Deployunit> {
      * @return 发布单元列表
      */
     void updateDeploy(Deployunit params);
+
+
+    int ifexist(Condition condition);
+
 }

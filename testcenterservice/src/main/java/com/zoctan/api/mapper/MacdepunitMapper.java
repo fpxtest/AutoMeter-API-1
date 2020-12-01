@@ -2,6 +2,8 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Macdepunit;
+import org.apache.ibatis.annotations.Param;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +24,8 @@ public interface MacdepunitMapper extends MyMapper<Macdepunit> {
      * @return 环境服务器列表
      */
     void updateMacAndDep(Macdepunit params);
+
+    int ifexist(Condition condition);
+
+    Integer findmachinenumbyenvidanddeployid(@Param("envid") long envid, @Param("depunitid")long depunitid);
 }

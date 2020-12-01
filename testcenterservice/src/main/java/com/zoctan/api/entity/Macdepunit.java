@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Macdepunit {
     /**
@@ -16,10 +19,30 @@ public class Macdepunit {
      */
     private Long depunitid;
 
+    public Long getAssembleid() {
+        return assembleid;
+    }
+
+    public void setAssembleid(Long assembleid) {
+        this.assembleid = assembleid;
+    }
+
+    private Long assembleid;
+
     /**
      * 发布单元名
      */
     private String deployunitname;
+
+    public String getAssembletype() {
+        return assembletype;
+    }
+
+    public void setAssembletype(String assembletype) {
+        this.assembletype = assembletype;
+    }
+
+    private String assembletype;
 
     /**
      * 服务器Id
@@ -45,6 +68,16 @@ public class Macdepunit {
      * 服务域名
      */
     private String domain;
+
+    public String getVisittype() {
+        return visittype;
+    }
+
+    public void setVisittype(String visittype) {
+        this.visittype = visittype;
+    }
+
+    private String visittype;
 
     /**
      * 创建时间

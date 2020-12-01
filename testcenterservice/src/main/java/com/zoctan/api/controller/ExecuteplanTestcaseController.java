@@ -91,6 +91,8 @@ public class ExecuteplanTestcaseController {
                     et.setExpect(ac.getExpect());
                     et.setCasename(ac.getCasename());
                     et.setId(ac.getId());
+                    et.setApiid(ac.getApiid());
+                    et.setDeployunitid(ac.getDeployunitid());
                     et.setStatus(true);
                     flag = true;
                     lastresult.add(et);
@@ -105,6 +107,8 @@ public class ExecuteplanTestcaseController {
                 et.setExpect(ac.getExpect());
                 et.setCasename(ac.getCasename());
                 et.setId(ac.getId());
+                et.setApiid(ac.getApiid());
+                et.setDeployunitid(ac.getDeployunitid());
                 et.setStatus(false);
                 lastresult.add(et);
             }

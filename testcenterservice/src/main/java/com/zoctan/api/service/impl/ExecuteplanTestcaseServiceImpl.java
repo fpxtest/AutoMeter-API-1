@@ -37,6 +37,10 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
         }
     }
 
+    @Override
+    public List<ExecuteplanTestcase> finddeployunitbyplanid(long executeplanid) {
+        return executeplanTestcaseMapper.finddeployunitbyplanid(executeplanid);
+    }
 
 
     @Override
@@ -49,5 +53,10 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
         for (ExecuteplanTestcase tc : testcase) {
             executeplanTestcaseMapper.removeexecuteplantestcase(tc.getExecuteplanid(), tc.getTestcaseid());
         }
+    }
+
+    @Override
+    public Integer findcasenumbyplanid(long executeplanid) {
+        return executeplanTestcaseMapper.findcasenumbyplanid(executeplanid);
     }
 }

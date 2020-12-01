@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.ApicasesMapper;
 import com.zoctan.api.service.ApicasesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,5 +33,20 @@ private ApicasesMapper apicasesMapper;
     public void updateApicase(Apicases params) {
         apicasesMapper.updateApicase(params);
 
+    }
+
+    @Override
+    public int ifexist(Condition condition) {
+        return countByCondition(condition);
+    }
+
+    @Override
+    public List<Apicases> forupdateifexist(Apicases apicase) {
+        return apicasesMapper.forupdateifexist(apicase);
+    }
+
+    @Override
+    public List<Apicases> getapicasebyName(String deployunitname, String apiname) {
+        return apicasesMapper.getapicasebyName(deployunitname,apiname);
     }
 }

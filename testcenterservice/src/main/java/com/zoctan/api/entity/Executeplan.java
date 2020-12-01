@@ -42,16 +42,26 @@ public class Executeplan {
      */
     private String memo;
 
-
-    public String getIp() {
-        return ip;
+    public String getEnviromentname() {
+        return enviromentname;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setEnviromentname(String enviromentname) {
+        this.enviromentname = enviromentname;
     }
 
-    private String ip;
+    private String enviromentname;
+
+
+    public Long getEnvid() {
+        return envid;
+    }
+
+    public void setEnvid(Long envid) {
+        this.envid = envid;
+    }
+
+    private Long envid;
 
     /**
      * 创建时间

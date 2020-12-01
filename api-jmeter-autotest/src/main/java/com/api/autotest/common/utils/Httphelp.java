@@ -10,10 +10,7 @@ package com.api.autotest.common.utils;
 */
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -21,6 +18,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,12 +27,17 @@ public class Httphelp {
     public static final String JSON_CONTENT_FORM = "application/json;charset=UTF-8";
     public static final String CONTENT_FORM = "application/x-www-form-urlencoded;charset=UTF-8";
 
-    public static String doService(String url,String method, HttpParamers paramers, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static String doService(String protocal,String url, String method,String apistyle, HttpParamers paramers, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         switch (method) {
             case "get":
-                return doGet(url, paramers, header, connectTimeout, readTimeout);
+                String getrequesturl= getrequesturl(url, apistyle,paramers);
+                return doGet(protocal,getrequesturl, paramers, requestcontenttype, header, connectTimeout, readTimeout);
             case "post":
-                return doPost(url, paramers, header, connectTimeout, readTimeout);
+                return doPost(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
+            case "put":
+                return doPut(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
+            case "delete":
+                return doDelete(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
         }
         return null;
     }
@@ -50,20 +53,20 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doPost(String url, HttpParamers paramers, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static String doPost(String protocal,String url, HttpParamers paramers, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
         String responseData = "";
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
             String query = null;
             HttpPost httpPost = new HttpPost(url);
-            if(header.getParams().size()>0)
-            {
+            if (header.getParams().size() > 0) {
                 setHeader(httpPost, header);
             }
-            if (paramers.isJson()) {
+            if (requestcontenttype.equals(new String("json"))) {
                 //json数据
                 httpPost.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
+                paramers.setJsonParamer();
                 query = paramers.getJsonParamer();
             } else {
                 //表单数据
@@ -74,30 +77,81 @@ public class Httphelp {
                 HttpEntity reqEntity = new StringEntity(query);
                 httpPost.setEntity(reqEntity);
             }
-            httpClient = HttpClients.createDefault();
+            if(protocal.equals(new String("http")))
+            {
+                httpClient = HttpClients.createDefault();
+            }
+            if(protocal.equals(new String("https")))
+            {
+                httpClient = new SSLClient();
+            }
             httpResponse = httpClient.execute(httpPost);
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
-            System.out.println("Exception is :"+e.getMessage());
-            responseData=e.getMessage();
+            System.out.println("Exception is :" + e.getMessage());
+            responseData = e.getMessage();
             //e.printStackTrace();
         } finally {
-            if(httpResponse!=null)
-            {
+            if (httpResponse != null) {
                 httpResponse.close();
             }
-            if(httpClient!=null) {
+            if (httpClient != null) {
                 httpClient.close();
             }
         }
-        System.out.println("responseData is :"+responseData);
+        System.out.println("responseData is :" + responseData);
         return responseData;
     }
 
 
     /**
      * get方法
+     *
+     * @param url
+     * @param header
+     * @param connectTimeout
+     * @param readTimeout
+     * @return
+     * @throws IOException
+     */
+    public static String doGet(String protocal, String url, HttpParamers paramsob, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+        String responseData = "";
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse httpResponse = null;
+        try {
+            HttpGet httpGet = new HttpGet(url);
+            if (header.getParams().size() > 0) {
+                setHeader(httpGet, header);
+            }
+            if(protocal.equals(new String("http")))
+            {
+                httpClient = HttpClients.createDefault();
+            }
+            if(protocal.equals(new String("https")))
+            {
+                httpClient = new SSLClient();
+            }
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity resEntity = httpResponse.getEntity();
+            responseData = EntityUtils.toString(resEntity);
+        } catch (Exception e) {
+            responseData = e.getMessage();
+            throw new Exception("请求url:"+url+"发生异常，原因："+responseData);
+        } finally {
+            if (httpResponse != null) {
+                httpResponse.close();
+            }
+            if (httpClient != null) {
+                httpClient.close();
+            }
+        }
+        return responseData;
+    }
+
+
+    /**
+     * put方法
      *
      * @param url
      * @param params
@@ -107,32 +161,107 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doGet(String url, HttpParamers params, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static String doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
         String responseData = "";
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
-            String query = params.getQueryString(DEFAULT_CHARSET);
+
+            String query = null;
             url = buildGetUrl(url, query);
-            HttpGet httpGet = new HttpGet(url);
-            if(header.getParams().size()>0)
-            {
+            HttpPut httpGet = new HttpPut(url);
+            if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
-            httpClient = HttpClients.createDefault();
+            if (requestcontenttype.equals(new String("json"))) {
+                //json数据
+                httpGet.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
+                query = params.getJsonParamer();
+            } else {
+                //表单数据
+                httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
+                query = params.getQueryString(DEFAULT_CHARSET);
+            }
+
+            if(protocal.equals(new String("http")))
+            {
+                httpClient = HttpClients.createDefault();
+            }
+            if(protocal.equals(new String("https")))
+            {
+                httpClient = new SSLClient();
+            }
             httpResponse = httpClient.execute(httpGet);
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
-            e.printStackTrace();
+            responseData = e.getMessage();
         } finally {
-            if(httpResponse!=null)
-            {
+            if (httpResponse != null) {
                 httpResponse.close();
             }
-            if(httpClient!=null) {
+            if (httpClient != null) {
                 httpClient.close();
-            };
+            }
+            ;
+        }
+        return responseData;
+    }
+
+    /**
+     * delete
+     *
+     * @param url
+     * @param params
+     * @param header
+     * @param connectTimeout
+     * @param readTimeout
+     * @return
+     * @throws IOException
+     */
+    public static String doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+        String responseData = "";
+        CloseableHttpClient httpClient = null;
+        CloseableHttpResponse httpResponse = null;
+        try {
+
+            String query = null;
+            url = buildGetUrl(url, query);
+            HttpDelete httpGet = new HttpDelete(url);
+            if (header.getParams().size() > 0) {
+                setHeader(httpGet, header);
+            }
+            if (requestcontenttype.equals(new String("json"))) {
+                //json数据
+                httpGet.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
+                query = params.getJsonParamer();
+            } else {
+                //表单数据
+                httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
+                query = params.getQueryString(DEFAULT_CHARSET);
+            }
+
+            if(protocal.equals(new String("http")))
+            {
+                httpClient = HttpClients.createDefault();
+            }
+            if(protocal.equals(new String("https")))
+            {
+                httpClient = new SSLClient();
+            }
+            httpResponse = httpClient.execute(httpGet);
+            HttpEntity resEntity = httpResponse.getEntity();
+            responseData = EntityUtils.toString(resEntity);
+        } catch (Exception e) {
+            responseData = e.getMessage();
+        } finally {
+            if (httpResponse != null) {
+                httpResponse.close();
+            }
+            if (httpClient != null) {
+                httpClient.close();
+            }
+            ;
         }
         return responseData;
     }
@@ -170,4 +299,71 @@ public class Httphelp {
         hasPrepend = false;
         return newUrl.toString();
     }
+
+    public static String getrequesturl(String url, String apistyle, HttpParamers paramsob) throws Exception {
+        String requestUrl = "";
+        String params;// 编码之后的参数
+        StringBuffer sb = new StringBuffer();// 存储参数
+        requestUrl = url;
+        Map<String, String> parameters = paramsob.getParams();
+        if (apistyle.equals(new String("restful"))) {
+            if (!(url.contains("{") && url.contains("}"))) {
+                throw new Exception("restfulapi-url:" + url + " 未包含{}参数");
+            }
+        }
+        if (parameters.size() < 1) {
+            if (apistyle.equals(new String("restful"))) {
+                throw new Exception("restfulapi-未设置url:" + url + " 中的对应的参数和用例数据");
+            } else {
+                requestUrl = url;
+            }
+        } else if (parameters.size() == 1) {
+            if (apistyle.equals(new String("restful"))) {
+                for (String name : parameters.keySet()) {
+                    if (!url.contains("{" + name + "}")) {
+                        throw new Exception("Api的参数:" + name + "和url:" + url + "中的参数不匹配");
+                    } else {
+                        requestUrl = requestUrl.replace("{" + name + "}", parameters.get(name));
+                    }
+                }
+            } else {
+                for (String name : parameters.keySet()) {
+                    try {
+                        sb.append(name).append("=").append(
+                                java.net.URLEncoder.encode(parameters.get(name),
+                                        "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                params = sb.toString();
+                requestUrl = url + "?" + params;
+            }
+        } else {
+            if (apistyle.equals(new String("restful"))) {
+                for (String name : parameters.keySet()) {
+                    if (!url.contains("{" + name + "}")) {
+                        throw new Exception("Api的参数:" + name + "和url:" + url + "中的参数不匹配");
+                    } else {
+                        requestUrl = requestUrl.replace("{" + name + "}", parameters.get(name));
+                    }
+                }
+            } else {
+                for (String name : parameters.keySet()) {
+                    try {
+                        sb.append(name).append("=").append(
+                                java.net.URLEncoder.encode(parameters.get(name),
+                                        "UTF-8")).append("&");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                String tempParams = sb.toString();
+                params = tempParams.substring(0, tempParams.length() - 1);
+                requestUrl = url + "?" + params;
+            }
+        }
+        return requestUrl;
+    }
 }
+

@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Api;
 import com.zoctan.api.service.ApiService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,8 +25,18 @@ public class ApiController {
 
     @PostMapping
     public Result add(@RequestBody Api api) {
-        apiService.save(api);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Api.class);
+        con.createCriteria().andCondition("deployunitname = '" + api.getDeployunitname() + "'")
+                .andCondition("apiname = '" + api.getApiname() + "'");
+        if(apiService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("此发布单元下已经存在此API");
+        }
+        else
+        {
+            apiService.save(api);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -55,13 +66,31 @@ public class ApiController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
+
+    @GetMapping("/apibydeploy")
+    public Result listbydeploy(@RequestParam String deployunitname) {
+        List<Api> list = apiService.listAllbydeploy(deployunitname);
+        return ResultGenerator.genOkResult(list);
+    }
+
     /**
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final Api dic) {
-        this.apiService.updateApi(dic);
-        return ResultGenerator.genOkResult();
+    public Result updateDeploy(@RequestBody final Api api) {
+        Condition con=new Condition(Api.class);
+        con.createCriteria().andCondition("deployunitname = '" + api.getDeployunitname() + "'")
+                .andCondition("apiname = '" + api.getApiname() + "'")
+                .andCondition("id <> " + api.getId());
+        if(apiService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("此发布单元下已经存在此API");
+        }
+        else {
+
+            this.apiService.updateApi(api);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Enviroment {
     /**
@@ -20,6 +23,16 @@ public class Enviroment {
      * 环境描述
      */
     private String memo;
+
+    public String getEnvtype() {
+        return envtype;
+    }
+
+    public void setEnvtype(String envtype) {
+        this.envtype = envtype;
+    }
+
+    private String envtype;
 
     /**
      * 创建时间

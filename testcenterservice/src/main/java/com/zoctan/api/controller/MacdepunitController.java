@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Macdepunit;
 import com.zoctan.api.service.MacdepunitService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,8 +25,18 @@ public class MacdepunitController {
 
     @PostMapping
     public Result add(@RequestBody Macdepunit macdepunit) {
-        macdepunitService.save(macdepunit);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Macdepunit.class);
+        con.createCriteria().andCondition("enviromentname = '" + macdepunit.getEnviromentname() + "'").andCondition("machinename = '" + macdepunit.getMachinename() + "'").andCondition("deployunitname = '" + macdepunit.getDeployunitname() + "'");
+        if(macdepunitService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("环境服务器上已经存在此发布单元或者组件");
+        }
+        else
+        {
+            macdepunitService.save(macdepunit);
+            return ResultGenerator.genOkResult();
+        }
+
     }
 
     @DeleteMapping("/{id}")
@@ -59,9 +70,17 @@ public class MacdepunitController {
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final Macdepunit dic) {
-        this.macdepunitService.updateMacAndDep(dic);
-        return ResultGenerator.genOkResult();
+    public Result updateDeploy(@RequestBody final Macdepunit macdepunit) {
+        Condition con=new Condition(Macdepunit.class);
+        con.createCriteria().andCondition("enviromentname = '" + macdepunit.getEnviromentname() + "'").andCondition("machinename = '" + macdepunit.getMachinename() + "'").andCondition("deployunitname = '" + macdepunit.getDeployunitname() + "'").andCondition("id <> " + macdepunit.getId());
+        if(macdepunitService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("环境服务器上已经存在此发布单元或者组件");
+        }
+        else {
+            this.macdepunitService.updateMacAndDep(macdepunit);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**

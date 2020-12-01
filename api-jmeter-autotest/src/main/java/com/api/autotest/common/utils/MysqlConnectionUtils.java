@@ -55,6 +55,19 @@ public class MysqlConnectionUtils {
         }
     }
 
+
+    /**
+     * 连接数据库
+     */
+    public static void getConnectionbycon(String conurl,String username,String password) throws Exception {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(conurl, username, password);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage()+"|"+conurl+"|"+username+"|"+password);
+        }
+    }
+
     /**
      * 关闭数据库连接
      * @return
@@ -123,6 +136,20 @@ public class MysqlConnectionUtils {
             closeConnection();
         }
         return total;
+    }
+
+
+    public static void execsql(String sql) throws Exception {
+        getConnection();
+        int total = 0;
+        try {
+            st = conn.createStatement();
+            st.execute(sql);
+        }  catch (Exception e) {
+            throw new Exception("mysql执行sql发生异常: "+e.getMessage()+" sql:"+sql);
+        } finally {
+            closeConnection();
+        }
     }
 
 

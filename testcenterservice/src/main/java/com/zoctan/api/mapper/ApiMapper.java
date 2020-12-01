@@ -2,6 +2,8 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Api;
+import org.apache.ibatis.annotations.Param;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +24,9 @@ public interface ApiMapper extends MyMapper<Api> {
      * @return 发布单元列表
      */
     void updateApi(Api params);
+
+    List<Api> listAllbydeploy(@Param("deployunitname") String deployunitname);
+
+    int ifexist(Condition condition);
+
 }

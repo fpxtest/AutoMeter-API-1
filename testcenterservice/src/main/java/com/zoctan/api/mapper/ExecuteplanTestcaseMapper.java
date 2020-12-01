@@ -17,13 +17,16 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
     void savetestplancase(@Param("casedataList") final List<ExecuteplanTestcase> testcase);
 
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
+
     List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);
-
-
 
     Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
 
+    Integer findcasenumbyplanid(@Param("executeplanid") long executeplanid);
 
     void removeexecuteplantestcase(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
+
+    List<ExecuteplanTestcase> finddeployunitbyplanid(final @Param("executeplanid") long executeplanid);
+
 
 }

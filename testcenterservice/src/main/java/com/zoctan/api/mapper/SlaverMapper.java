@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Slaver;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,9 @@ public interface SlaverMapper extends MyMapper<Slaver> {
      * @return 用户列表
      */
     List<Slaver> findslaverWithName(final Map<String, Object> params);
+
+    List<Slaver> findslaverWithType(@Param("stype") final String stype);
+
 
     /**
      * 更新字典内容

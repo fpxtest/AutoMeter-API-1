@@ -25,12 +25,15 @@ DROP TABLE IF EXISTS `macdepunit`;
 CREATE TABLE `macdepunit`
 (
     `id`            bigint(20) unsigned            NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `depunitid`            bigint(20) unsigned         NOT NULL  COMMENT '发布单元Id',
+    `depunitid`            bigint(20) unsigned           COMMENT '发布单元Id',
+    `assembleid`            bigint(20) unsigned          COMMENT '组件Id',
     `deployunitname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
+    `assembletype`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '组件类型',
     `machineid`        bigint(20) unsigned            NOT NULL  COMMENT '服务器Id',
     `machinename`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '机器名',
     `envid`            bigint(20) unsigned         NOT NULL  COMMENT '环境Id',
     `enviromentname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境名',
+    `visittype`         varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '访问方式，ip,域名',
     `domain`          varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '服务域名',
     `create_time`       datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',

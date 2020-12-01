@@ -2,6 +2,8 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Apicases;
+import org.apache.ibatis.annotations.Param;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -22,4 +24,12 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
      * @return 发布单元列表
      */
     void updateApicase(Apicases params);
+
+    int ifexist(Condition condition);
+
+    List<Apicases> forupdateifexist(Apicases apicase);
+
+    List<Apicases> getapicasebyName(@Param("deployunitname")String deployunitname,@Param("apiname") String apiname);
+
+
 }

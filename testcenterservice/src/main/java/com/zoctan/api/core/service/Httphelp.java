@@ -50,7 +50,7 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doPost(String url, String paramers, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static String doPost(String url, String paramers, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
@@ -65,7 +65,7 @@ public class Httphelp {
             httpPost.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
             query = paramers;
             if (query != null) {
-                HttpEntity reqEntity = new StringEntity(query);
+                HttpEntity reqEntity = new StringEntity(query,"utf-8");
                 httpPost.setEntity(reqEntity);
             }
             httpClient = HttpClients.createDefault();
@@ -73,8 +73,9 @@ public class Httphelp {
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
-            System.out.println("Exception is :"+e.getMessage());
+            System.out.println("post Exception is :"+e.getMessage());
             responseData=e.getMessage();
+            throw new Exception(e.getMessage());
             //e.printStackTrace();
         } finally {
             if(httpResponse!=null)
@@ -85,7 +86,7 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        System.out.println("responseData is :"+responseData);
+        System.out.println("post responseData is :"+responseData);
         return responseData;
     }
 

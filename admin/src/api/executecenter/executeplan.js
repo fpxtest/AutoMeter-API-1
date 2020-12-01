@@ -8,6 +8,13 @@ export function getexecuteplanList(params) {
   })
 }
 
+export function getallexplan() {
+  return request({
+    url: '/executeplan/getallexplan',
+    method: 'get'
+  })
+}
+
 export function search(executeplanForm) {
   return request({
     url: '/executeplan/search',
@@ -32,10 +39,26 @@ export function executeplan(executeplanForm) {
   })
 }
 
+export function checkplancondition(executeplanForm) {
+  return request({
+    url: '/executeplan/checkcondition',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function updateexecuteplan(executeplanForm) {
   return request({
     url: '/executeplan/detail',
     method: 'put',
+    data: executeplanForm
+  })
+}
+
+export function updateexecuteplanstatus(executeplanForm) {
+  return request({
+    url: '/executeplan/updatestatus',
+    method: 'post',
     data: executeplanForm
   })
 }

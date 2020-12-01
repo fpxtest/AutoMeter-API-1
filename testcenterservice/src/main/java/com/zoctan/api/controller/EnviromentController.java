@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Enviroment;
 import com.zoctan.api.service.EnviromentService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,8 +25,17 @@ public class EnviromentController {
 
     @PostMapping
     public Result add(@RequestBody Enviroment enviroment) {
-        enviromentService.save(enviroment);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Enviroment.class);
+        con.createCriteria().andCondition("enviromentname = '" + enviroment.getEnviromentname() + "'");
+        if(enviromentService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("环境名已经存在");
+        }
+        else {
+            enviromentService.save(enviroment);
+            return ResultGenerator.genOkResult();
+        }
+
     }
 
     @DeleteMapping("/{id}")
@@ -36,8 +46,8 @@ public class EnviromentController {
 
     @PatchMapping
     public Result update(@RequestBody Enviroment enviroment) {
-        enviromentService.update(enviroment);
-        return ResultGenerator.genOkResult();
+            enviromentService.update(enviroment);
+            return ResultGenerator.genOkResult();
     }
 
     @GetMapping("/{id}")
@@ -55,13 +65,28 @@ public class EnviromentController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
+    @GetMapping("/ens")
+    public Result listall() {
+        List<Enviroment> list = enviromentService.listAll();
+        return ResultGenerator.genOkResult(list);
+    }
+
     /**
      * 更新自己的资料
      */
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Enviroment dic) {
-        this.enviromentService.updateEnviroment(dic);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Enviroment.class);
+        con.createCriteria().andCondition("enviromentname = '" + dic.getEnviromentname() + "'").andCondition("id <> " + dic.getId());
+        if(enviromentService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("环境名已经存在");
+        }
+        else {
+
+            this.enviromentService.updateEnviroment(dic);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**

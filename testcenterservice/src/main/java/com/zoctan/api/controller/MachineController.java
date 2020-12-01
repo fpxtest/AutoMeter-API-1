@@ -1,15 +1,17 @@
 package com.zoctan.api.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Machine;
 import com.zoctan.api.service.MachineService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Zoctan
@@ -23,8 +25,16 @@ public class MachineController {
 
     @PostMapping
     public Result add(@RequestBody Machine machine) {
-        machineService.save(machine);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Machine.class);
+        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'").orCondition("ip = '" + machine.getIp() + "'");
+        if(machineService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("环境名或者ip已经存在");
+        }
+        else {
+            machineService.save(machine);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -33,10 +43,19 @@ public class MachineController {
         return ResultGenerator.genOkResult();
     }
 
-    @PatchMapping
+    @PutMapping("/detail")
     public Result update(@RequestBody Machine machine) {
-        machineService.update(machine);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Machine.class);
+        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'").andCondition("id <> " + machine.getId()).orCondition("ip = '" + machine.getIp() + "'");
+        if(machineService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("环境名或者ip已经存在");
+        }
+        else
+        {
+            machineService.update(machine);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @GetMapping("/{id}")
@@ -51,6 +70,23 @@ public class MachineController {
         PageHelper.startPage(page, size);
         List<Machine> list = machineService.listAll();
         PageInfo<Machine> pageInfo = PageInfo.of(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @GetMapping("/getmachine")
+    public Result listbyenvname() {
+        List<Machine> list = machineService.listAll();
+        return ResultGenerator.genOkResult(list);
+    }
+
+    /**
+     * 输入框查询
+     */
+    @PostMapping("/search")
+    public Result search(@RequestBody final Map<String, Object> param) {
+        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        final List<Machine> list = this.machineService.findMachineWithName(param);
+        final PageInfo<Machine> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
 }

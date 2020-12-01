@@ -1,11 +1,12 @@
 package com.zoctan.api.service.impl;
 
-import com.zoctan.api.mapper.ApiMapper;
-import com.zoctan.api.entity.Api;
-import com.zoctan.api.service.ApiService;
 import com.zoctan.api.core.service.AbstractService;
+import com.zoctan.api.entity.Api;
+import com.zoctan.api.mapper.ApiMapper;
+import com.zoctan.api.service.ApiService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,5 +31,15 @@ private ApiMapper apiMapper;
     public void updateApi(Api params) {
         apiMapper.updateApi(params);
 
+    }
+
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
+    }
+
+    @Override
+    public List<Api> listAllbydeploy(String deployunitname) {
+        return apiMapper.listAllbydeploy(deployunitname);
     }
 }

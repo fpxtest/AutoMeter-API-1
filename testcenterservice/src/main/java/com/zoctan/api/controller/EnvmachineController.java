@@ -24,8 +24,15 @@ public class EnvmachineController {
 
     @PostMapping
     public Result add(@RequestBody Envmachine envmachine) {
-        envmachineService.save(envmachine);
-        return ResultGenerator.genOkResult();
+        if(envmachineService.findexist(envmachine.getEnviromentname(),envmachine.getMachinename())!=null)
+        {
+            return ResultGenerator.genFailedResult("此环境下服务器已经存在");
+        }
+        else {
+            envmachineService.save(envmachine);
+            return ResultGenerator.genOkResult();
+        }
+
     }
 
     @DeleteMapping("/{id}")
@@ -59,9 +66,17 @@ public class EnvmachineController {
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final Envmachine dic) {
-        this.envmachineService.updateEnvAndMac(dic);
-        return ResultGenerator.genOkResult();
+    public Result updateDeploy(@RequestBody final Envmachine envmachine) {
+        if(envmachineService.findexistwithoutself(envmachine.getEnviromentname(),envmachine.getMachinename(),envmachine.getId())!=null)
+        {
+            return ResultGenerator.genFailedResult("此环境下服务器已经存在");
+        }
+        else
+        {
+            this.envmachineService.updateEnvAndMac(envmachine);
+            return ResultGenerator.genOkResult();
+        }
+
     }
 
     /**

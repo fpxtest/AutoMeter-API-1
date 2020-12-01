@@ -2,6 +2,7 @@
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/HttpUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/model/AutoTestTaskInfoModel.java
+/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/test/testservice/Sample.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/JarToolUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/SshUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/TextUtils.java
@@ -11,16 +12,16 @@
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/PropertiesUtil.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/SHAUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/dto/SshConnectDto.java
-/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/test/demo/Sample.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Httphelp.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/DateUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/core/Testcore.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/ArrayUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/MD5Utils.java
+/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/test/cornerservice/getInfoDetailById.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/service/ResultCheck.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/model/AutoTestTaskModel.java
-/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/test/demo/DemoTest.java
+/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/test/cornerservice/getInfoByLocationtestlalo.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Md5Encrypt.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/PaymentFunction.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/JsonUtils.java

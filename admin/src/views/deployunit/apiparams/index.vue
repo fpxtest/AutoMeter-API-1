@@ -110,13 +110,13 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="150px"
+        style="width: 500px; margin-left:50px;"
         :model="tmpapiparams"
         ref="tmpapiparams"
       >
         <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpapiparams.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+          <el-select v-model="tmpapiparams.deployunitname" placeholder="发布单元" @change="paramdeployselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -142,6 +142,7 @@
         <el-form-item label="参数(英文逗号隔开)" prop="keyname">
           <el-input
             type="textarea"
+            maxlength="50"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapiparams.keyname"
@@ -174,8 +175,8 @@
 </template>
 <script>
   import { getapiparamsList as getapiparamsList, search, addapiparams, updateapiparams, removeapiparams } from '@/api/deployunit/apiparams'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
-  import { search as getapiList } from '@/api/deployunit/api'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
+  import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { unix2CurrentTime } from '@/utils'
 
   export default {
@@ -196,9 +197,7 @@
         deployunitList: [], // 发布单元列表
         listLoading: false, // 数据加载等待动画
         apiQuery: {
-          page: 1, // 页码
-          size: 30, // 每页数量
-          deployunitname: '' // 获取字典表入参
+          deployunitname: ''
         },
         total: 0, // 数据总数
         listQuery: {
@@ -217,6 +216,7 @@
         tmpapiparams: {
           id: '',
           apiid: '',
+          deployunitid: '',
           apiname: '',
           deployunitname: '',
           propertytype: '',
@@ -243,8 +243,7 @@
 
     created() {
       this.getapiparamsList()
-      this.getdepunitList()
-      this.getapiList()
+      this.getdepunitLists()
     },
 
     methods: {
@@ -267,12 +266,9 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
-        this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
+      getdepunitLists() {
+        getdepunitLists().then(response => {
+          this.deployunitList = response.data
           console.log(this.deployunitList)
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -284,9 +280,32 @@
        */
       selectChanged(e) {
         this.apiList = null
+        this.search.apiname = ''
         this.apiQuery.deployunitname = e
-        getapiList(this.apiQuery).then(response => {
-          this.apiList = response.data.list
+        getapiListbydeploy(this.apiQuery).then(response => {
+          this.apiList = response.data
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
+      },
+
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      paramdeployselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpapiparams.deployunitid = this.deployunitList[i].id
+          }
+        }
+        this.apiList = null
+        this.tmpapiparams.apiname = ''
+        this.tmpapiparams.propertytype = ''
+        this.tmpapiparams.keyname = ''
+        this.apiQuery.deployunitname = e
+        getapiListbydeploy(this.apiQuery).then(response => {
+          this.apiList = response.data
           this.total = response.data.total
         }).catch(res => {
           this.$message.error('加载api列表失败')
@@ -297,6 +316,8 @@
        * api下拉选择事件获取apiid  e的值为options的选值
        */
       apinameselectChanged(e) {
+        this.tmpapiparams.propertytype = ''
+        this.tmpapiparams.keyname = ''
         for (let i = 0; i < this.apiList.length; i++) {
           if (this.apiList[i].apiname === e) {
             this.tmpapiparams.apiid = this.apiList[i].id
@@ -358,14 +379,16 @@
         this.tmpapiparams.deployunitname = ''
         this.tmpapiparams.apiname = ''
         this.tmpapiparams.propertytype = ''
+        this.tmpapiparams.deployunitid = ''
       },
       /**
        * 添加apiparams
        */
       addapiparams() {
         this.$refs.tmpapiparams.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpapiparams)) {
+          if (valid) {
             this.btnLoading = true
+            this.tmpapiparams.keyname = this.tmpapiparams.keyname.trim()
             addapiparams(this.tmpapiparams).then(() => {
               this.$message.success('添加成功')
               this.getapiparamsList()
@@ -391,20 +414,29 @@
         this.tmpapiparams.keyname = this.apiparamsList[index].keyname
         this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
         this.tmpapiparams.propertytype = this.apiparamsList[index].propertytype
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === this.tmpapiparams.deployunitname) {
+            this.tmpapiparams.deployunitid = this.deployunitList[i].id
+          }
+        }
       },
       /**
        * 更新apiparams
        */
       updateapiparams() {
-        if (this.isUniqueDetail(this.tmpapiparams)) {
-          updateapiparams(this.tmpapiparams).then(() => {
-            this.$message.success('更新成功')
-            this.getapiparamsList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpapiparams.validate(valid => {
+          if (valid) {
+            this.tmpapiparams.keyname = this.tmpapiparams.keyname.trim()
+            updateapiparams(this.tmpapiparams).then(() => {
+              this.$message.success('更新成功')
+              this.getapiparamsList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
       },
 
       /**

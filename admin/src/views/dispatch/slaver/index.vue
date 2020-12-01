@@ -10,13 +10,6 @@
             v-if="hasPermission('slaver:list')"
             @click.native.prevent="getslaverList"
           >刷新</el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('slaver:add')"
-            @click.native.prevent="showAddslaverDialog"
-          >添加执行机</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('slaver:search')">
@@ -48,7 +41,6 @@
       <el-table-column label="执行机名" align="center" prop="slavername" width="120"/>
       <el-table-column label="ip" align="center" prop="ip" width="100"/>
       <el-table-column label="端口" align="center" prop="port" width="60"/>
-      <el-table-column label="状态" align="center" prop="status" width="60"/>
       <el-table-column label="类型" align="center" prop="stype" width="80"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">
@@ -107,6 +99,7 @@
         <el-form-item label="ip" prop="ip">
           <el-input
             type="text"
+            readonly="true"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpslaver.ip"
@@ -120,22 +113,14 @@
             v-model="tmpslaver.port"
           />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-input
-            type="text"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model="tmpslaver.status"
-          />
+
+        <el-form-item label="类型" prop="stype" required >
+          <el-select v-model="tmpslaver.stype" placeholder="类型">
+            <el-option label="功能" value="功能"/>
+            <el-option label="性能" value="性能"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="类型" prop="stype">
-          <el-input
-            type="text"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model="tmpslaver.stype"
-          />
-        </el-form-item>
+
         <el-form-item label="备注" prop="memo">
           <el-input
             type="text"

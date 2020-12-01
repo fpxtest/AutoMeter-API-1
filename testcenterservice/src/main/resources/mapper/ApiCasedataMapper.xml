@@ -26,7 +26,7 @@
   </insert>
 
   <select id="getparamvaluebycaseidandtype" resultMap="BaseResultMap">
-    SELECT a.apiparamvalue
+    SELECT a.apiparam,a.apiparamvalue
     FROM api_casedata a where a.caseid = #{caseid} and a.propertytype=#{propertytype}
   </select>
 

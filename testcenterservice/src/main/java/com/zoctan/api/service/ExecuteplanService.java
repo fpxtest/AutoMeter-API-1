@@ -1,7 +1,9 @@
 package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
+import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Executeplan;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,13 @@ public interface ExecuteplanService extends Service<Executeplan> {
      */
     void updateexecuteplanname(Executeplan params);
 
-    void executeplancase(final List<Executeplan> executeplan);
+    void executeplancase(final List<Testplanandbatch> executeplan);
 
+    void updatetestplanstatus(Long id, String status);
+
+    Executeplan findexplanWithid(Long id);
+
+    int ifexist(Condition condition);
+
+    List<Executeplan> getallexplan();
 }

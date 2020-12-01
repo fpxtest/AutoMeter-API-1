@@ -26,6 +26,7 @@ CREATE TABLE `enviroment`
 (
     `id`            bigint(20) unsigned                             NOT NULL AUTO_INCREMENT COMMENT '环境Id',
     `enviromentname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境名',
+    `envtype`          varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '环境类型',
     `memo`          varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '环境描述',
     `create_time` datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',

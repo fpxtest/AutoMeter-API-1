@@ -9,6 +9,7 @@ import com.zoctan.api.service.ApiCasedataService;
 import com.zoctan.api.service.ApicasesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,8 +30,21 @@ public class ApicasesController {
 
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
-        apicasesService.save(apicases);
-        return ResultGenerator.genOkResult();
+
+        Condition con=new Condition(Apicases.class);
+        con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
+                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename() + "'")
+                ;
+        //.orCondition("casejmxname = '" + apicases.getCasejmxname() + "'")
+        if(apicasesService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("用例名或者jmx名已存在");
+        }
+        else
+        {
+            apicasesService.save(apicases);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -65,9 +79,22 @@ public class ApicasesController {
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final Apicases dic) {
-        this.apicasesService.updateApicase(dic);
-        return ResultGenerator.genOkResult();
+    public Result updateDeploy(@RequestBody final Apicases apicases) {
+//        Condition con=new Condition(Apicases.class);
+//        con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
+//                .andCondition("apiname = '" + apicases.getApiname() + "'")
+//                .andCondition("id <> " + apicases.getId())
+//                .andCondition("casename = '" + apicases.getCasename() + "'")
+//                .orCondition("casejmxname = '" + apicases.getCasejmxname() + "'");
+        if(apicasesService.forupdateifexist(apicases).size() >0)
+        {
+            return ResultGenerator.genFailedResult("用例名或者jmx名已存在");
+        }
+        else
+        {
+            this.apicasesService.updateApicase(apicases);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**
@@ -79,5 +106,16 @@ public class ApicasesController {
         final List<Apicases> list = this.apicasesService.findApiCaseWithName(param);
         final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 输入框查询
+     */
+    @PostMapping("/searchbyname")
+    public Result searchbyname(@RequestBody final Map<String, Object> param) {
+        String deployunitname=(String)param.get("casedeployunitname");
+        String apiname=(String)param.get("caseapiname");
+        final List<Apicases> list = this.apicasesService.getapicasebyName(deployunitname,apiname);
+        return ResultGenerator.genOkResult(list);
     }
 }

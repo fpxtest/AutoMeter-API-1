@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.DictionaryMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Dictionary">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="dicname" jdbcType="VARCHAR" property="dicname" />
+    <result column="diccode" jdbcType="VARCHAR" property="diccode" />
+    <result column="dicitemname" jdbcType="VARCHAR" property="dicitemname" />
+    <result column="dicitmevalue" jdbcType="VARCHAR" property="dicitmevalue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+
+  <resultMap id="DicValueWithNameMap" type="com.zoctan.api.entity.Dictionary" extends="BaseResultMap">
+    <result column="dicitemname" jdbcType="VARCHAR" property="dicitemname"/>
+    <result column="dicitmevalue" jdbcType="VARCHAR" property="dicitmevalue"/>
+  </resultMap>
+
+  <select id="findDicNameValueWithCode" resultMap="DicValueWithNameMap">
+    SELECT a.dicitemname,a.dicitmevalue
+    FROM dictionary a where a.diccode = #{diccode}
+  </select>
+
+  <select id="findDicWithName" resultMap="DicValueWithNameMap">
+    SELECT a.*
+    FROM dictionary a
+    <where>
+      <if test="dicname != null and dicname != ''">a.dicname = #{dicname}</if>
+      <if test="dicitemname != null  and dicitemname != ''">and a.dicitemname = #{dicitemname}</if>
+    </where>
+  </select>
+
+  <update id="updateDic" parameterType="com.zoctan.api.entity.Dictionary">
+    update dictionary set dicname = #{dicname}, diccode = #{diccode}, dicitemname = #{dicitemname},
+     dicitmevalue = #{dicitmevalue}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+
+
+</mapper>

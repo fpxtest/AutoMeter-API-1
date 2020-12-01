@@ -8,6 +8,13 @@ export function getdepunitList(params) {
   })
 }
 
+export function getdepunitLists() {
+  return request({
+    url: '/deployunit/getdeplist',
+    method: 'get'
+  })
+}
+
 export function search(depunitForm) {
   return request({
     url: '/deployunit/search',

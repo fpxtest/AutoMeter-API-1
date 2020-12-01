@@ -1,9 +1,9 @@
 package com.zoctan.api.service.impl;
 
-import com.zoctan.api.mapper.EnvmachineMapper;
-import com.zoctan.api.entity.Envmachine;
-import com.zoctan.api.service.EnvmachineService;
 import com.zoctan.api.core.service.AbstractService;
+import com.zoctan.api.entity.Envmachine;
+import com.zoctan.api.mapper.EnvmachineMapper;
+import com.zoctan.api.service.EnvmachineService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +31,20 @@ private EnvmachineMapper envmachineMapper;
         return this.envmachineMapper.findEnvAndMacWithName(params);
     }
 
+
+
     @Override
     public void updateEnvAndMac(Envmachine params) {
         envmachineMapper.updateEnvAndMac(params);
+    }
+
+    @Override
+    public Envmachine findexist(String enviromentname, String machinename) {
+        return this.envmachineMapper.findexist(enviromentname,machinename);
+    }
+
+    @Override
+    public Envmachine findexistwithoutself(String enviromentname, String machinename, Long id) {
+        return this.envmachineMapper.findexistwithoutself(enviromentname,machinename,id);
     }
 }

@@ -1,7 +1,6 @@
 package com.zoctan.api.service.impl;
 
 import com.zoctan.api.core.service.AbstractService;
-import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.mapper.ApicasesMapper;
 import com.zoctan.api.service.TestPlanCaseService;
@@ -21,15 +20,22 @@ public class TestPlanCaseServiceImpl extends AbstractService<ExecuteplanTestcase
 @Resource
 private ApicasesMapper apicaseMapper;
 
+
     @Override
-    public void executeplancase(long planid, long caseid, String deployname, String jmeterpath, String jmxpath) {
-        Apicases apicase = apicaseMapper.getjmetername(caseid);
-        String jmx = apicase.getCasejmxname();
-        String jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath + "/" + deployname + "/" + jmx + ".jmx -Jthread=1 -Jloops=1 -Jtestplanid=" + planid + " -Jcaseid=" + caseid + " -Jcasenum=1";
+    public void executeplancase(long slaverid,long batchid,long planid, long caseid, String deployname, String jmeterpath, String jmxpath, String jmxcasename, String batchname) {
+        //Apicases apicase = apicaseMapper.getjmetername(caseid);
+        //String jmx = jmxcasename;
+        String jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath  + "/apitest.jmx -Jthread=1 -Jloops=1 -Jtestplanid=" + planid + " -Jcaseid=" + caseid+ " -Jslaverid=" + slaverid+ " -Jbatchid=" + batchid+" -Jbatchname=" +batchname+ " -Jcasenum=1"+" -Jtestdeployunit=" +deployname+" -Jtestclass=" +jmxcasename;
         System.out.println("jmetercmd is :"+jmetercmd);
         Runtime run = Runtime.getRuntime();
         try {
             Process process = run.getRuntime().exec(jmetercmd);
+//            try {
+//                //process.waitFor();
+//            } catch (InterruptedException e) {
+//                System.out.println("jmetercmd InterruptedException is :"+e.getMessage());
+//                e.printStackTrace();
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }

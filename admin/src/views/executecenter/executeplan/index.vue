@@ -14,14 +14,8 @@
             type="success"
             size="mini"
             v-if="hasPermission('executeplan:list')"
-            @click.native.prevent="executeplancase"
+            @click.native.prevent="showplanbatchDialog"
           >运行</el-button>
-          <el-button
-            type="warning"
-            size="mini"
-            v-if="hasPermission('executeplan:list')"
-            @click.native.prevent="getexecuteplanList"
-          >暂停</el-button>
           <el-button
             type="primary"
             size="mini"
@@ -62,8 +56,9 @@
         </template>
       </el-table-column>
       <el-table-column label="执行计划名" align="center" prop="executeplanname" width="100"/>
+      <el-table-column label="envid" align="center" v-if="show" prop="envid" width="50"/>
       <el-table-column label="状态" align="center" prop="status" width="50"/>
-      <el-table-column label="测试服务器" align="center" prop="ip" width="120"/>
+      <el-table-column label="执行环境" align="center" prop="enviromentname" width="120"/>
       <el-table-column label="类型" align="center" prop="usetype" width="60"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -107,7 +102,7 @@
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <el-dialog :title="新增执行计划" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         status-icon
         class="small-space"
@@ -131,11 +126,11 @@
             <el-option label="性能" value="性能" />
           </el-select>
         </el-form-item>
-        <el-form-item label="测试服务器" prop="ip"  required>
-          <el-select v-model="tmpexecuteplan.ip" placeholder="测试服务器">
+        <el-form-item label="执行环境" prop="enviromentname"  required>
+          <el-select v-model="tmpexecuteplan.enviromentname" placeholder="执行环境" @change="enviromentselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
-            <div v-for="(macname, index) in machinenameList" :key="index">
-              <el-option :label="`${macname.machinename} ：${macname.ip}`" :value="macname.ip" required/>
+            <div v-for="(envname, index) in enviromentnameList" :key="index">
+              <el-option :label="envname.enviromentname" :value="envname.enviromentname" required/>
             </div>
           </el-select>
         </el-form-item>
@@ -166,7 +161,7 @@
         >修改</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="装载用例" :visible.sync="casedialogFormVisible">
+    <el-dialog :title="loadcase" :visible.sync="casedialogFormVisible">
       <div class="filter-container" >
         <el-form :inline="true" :model="searchcase" ref="searchcase" >
           <span v-if="hasPermission('apicases:search')">
@@ -210,6 +205,8 @@
         </el-table-column>
 
         <el-table-column type="selection" prop="status" width="50"/>
+        <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
+        <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
         <el-table-column label="用例名" align="center" prop="casename" width="120"/>
         <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
         <el-table-column label="API" align="center" prop="apiname" width="120"/>
@@ -225,7 +222,6 @@
         :page-sizes="[10, 20, 30, 40]"
         layout="total, sizes, prev, pager, next, jumper"
       ></el-pagination>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="casedialogFormVisible = false">取消</el-button>
         <el-button
@@ -240,6 +236,29 @@
         >取消装载</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="loadbatch" :visible.sync="batchdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="tmpplanbatch" ref="tmpplanbatch" >
+          <el-form-item label="批次"  prop="batchname" required>
+            <el-input
+              type="text"
+              placeholder="例如2020-10-21-tag-101"
+              prefix-icon="el-icon-edit"
+              auto-complete="off"
+              v-model="tmpplanbatch.batchname"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="batchdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="savebatchandexecuteplancase"
+        >提交</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -250,10 +269,11 @@
   } from '@/api/assets/apicases'
   import { search as getapiList } from '@/api/deployunit/api'
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { addexecuteplanbatch as addexecuteplanbatch } from '@/api/executecenter/executeplanbatch'
   import { searchcases as searchtestplancases, addexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
-  import { getexecuteplanList as getexecuteplanList, search, addexecuteplan, updateexecuteplan, removeexecuteplan, executeplan } from '@/api/executecenter/executeplan'
+  import { checkplancondition as checkplancondition, getexecuteplanList as getexecuteplanList, search, addexecuteplan, updateexecuteplan, removeexecuteplan, executeplan, updateexecuteplanstatus } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
-  import { getmachineList as getmachineList } from '@/api/assets/machine'
+  import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
 
   export default {
     filters: {
@@ -268,7 +288,8 @@
     },
     data() {
       return {
-        machinenameList: [], // 服务器列表
+        show: false,
+        enviromentnameList: [], // 环境列表
         apiList: [], // api列表
         deployunitList: [], // 发布单元列表
         multipleSelection: [], // 执行计划表格被选中的内容
@@ -279,6 +300,8 @@
         executeplancaseList: [], // 执行计划装载用例列表
         executeplancaseexistList: [], // 查询执行计划已存在的用例列表
         executeplancaseremovetList: [], // 查询执行计划需要删除存在的用例列表
+        executeplanstopList: [], // 停止执行计划列表
+        tmpplanbatchList: [], // 计划批次列表
         listLoading: false, // 数据加载等待动画
         caselistLoading: false, // 用例列表页面数据加载等待动画
         total: 0, // 数据总数
@@ -301,6 +324,9 @@
         dialogStatus: 'add',
         dialogFormVisible: false,
         casedialogFormVisible: false,
+        batchdialogFormVisible: false,
+        loadcase: '装载用例',
+        loadbatch: '添加批次',
         textMap: {
           updateRole: '修改执行计划',
           update: '修改执行计划',
@@ -311,10 +337,21 @@
         tmpexecuteplan: {
           id: '',
           executeplanname: '',
+          enviromentname: '',
+          envid: '',
           status: '',
           usetype: '',
           ip: '',
           memo: ''
+        },
+        tmpplanbatch: {
+          executeplanid: '',
+          batchname: ''
+        },
+        tmpplanenv: {
+          id: '',
+          envid: '',
+          enviromentname: ''
         },
         tmpapicases: {
           id: '',
@@ -339,7 +376,6 @@
           deployunitname: null,
           apiname: null,
           executeplanid: null
-
         }
       }
     },
@@ -348,44 +384,99 @@
       this.getexecuteplanList()
       this.getapiList()
       this.getdepunitList()
-      this.getmachineList()
+      this.getenviromentallList()
     },
 
     methods: {
       unix2CurrentTime,
       /**
-       * 执行执行计划
+       * 停止执行计划
        */
-      executeplancase() {
+      stopexecuteplanList() {
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          if (this.multipleSelection[i].status === 'waiting' || this.multipleSelection[i].status === 'new' || this.multipleSelection[i].status === 'finish' || this.multipleSelection[i].status === 'stop') {
+            this.multipleSelection.splice(i)
+          }
+        }
         if (this.multipleSelection.length === 0) {
-          this.$message.error('请选择执行计划')
+          this.$message.error('未选择执行计划,或者只有运行中才可以停止')
         } else {
           for (let i = 0; i < this.multipleSelection.length; i++) {
-            if (this.multipleSelection[i].status === 'waiting' || this.multipleSelection[i].status === 'running') {
-              this.multipleSelection.splice(i)
-            }
+            this.executeplanstopList.push({
+              'id': this.multipleSelection[i].id,
+              'status': 'stop'
+            })
           }
-          executeplan(this.multipleSelection).then(() => {
-            this.$message.success('计划执行成功')
+          updateexecuteplanstatus(this.executeplanstopList).then(() => {
+            this.$message.success('已停止执行计划')
             this.btnLoading = false
           }).catch(res => {
-            this.$message.error('计划执行失败')
+            this.$message.error('停止计划执行失败')
             this.btnLoading = false
           })
         }
+        this.getexecuteplanList()
       },
-
       /**
-       * 获取服务器列表
+       * 添加执行计划批次
        */
-      getmachineList() {
-        this.listLoading = true
-        getmachineList(this.listQuery).then(response => {
-          this.machinenameList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
-        }).catch(res => {
-          this.$message.error('加载服务器列表失败')
+      savebatchandexecuteplancase() {
+        this.$refs.tmpplanbatch.validate(valid => {
+          if (valid) {
+            this.btnLoading = true
+            addexecuteplanbatch(this.tmpplanbatch).then(() => {
+              this.executeplancase()
+              this.batchdialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+      /**
+       * 添加执行计划批次并且执行计划用例
+       */
+      // savebatchandexecuteplancase() {
+      // this.addexecuteplanbatch()
+      // this.executeplancase()
+      // this.batchdialogFormVisible = false
+      // },
+      /**
+       * 执行执行计划
+       */
+      executeplancase() {
+        this.tmpplanbatchList = []
+        this.$refs.tmpplanbatch.validate(valid => {
+          if (valid && this.isUniqueDetail(this.tmpplanbatch)) {
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+              if (this.multipleSelection[i].status === 'running') {
+                this.multipleSelection.splice(i)
+              }
+            }
+            if (this.multipleSelection.length === 0) {
+              this.$message.error('未选择执行计划,或者所选计划已经在执行中')
+            } else {
+              if (this.multipleSelection.length > 1) {
+                this.$message.error('不支持多执行计划一起提交，单个提交')
+              } else {
+                for (let i = 0; i < this.multipleSelection.length; i++) {
+                  this.tmpplanbatchList.push({
+                    'planid': this.multipleSelection[0].id,
+                    'batchname': this.tmpplanbatch.batchname
+                  })
+                }
+                executeplan(this.tmpplanbatchList).then(() => {
+                  this.$message.success('计划即将开始执行')
+                  this.btnLoading = false
+                }).catch(res => {
+                  this.$message.error('计划执行失败')
+                  this.btnLoading = false
+                })
+              }
+            }
+            this.getexecuteplanList()
+          }
         })
       },
 
@@ -397,6 +488,7 @@
       handleSelectionChange(rows) {
         // console.log(rows)
         this.multipleSelection = rows
+        console.log('00000000000000000000000000')
         console.log(this.multipleSelection)
       },
 
@@ -405,9 +497,8 @@
       },
 
       casehandleSelectionChange(rows) {
-        console.log('22222222222222')
         this.casemultipleSelection = rows
-        console.log(this.casemultipleSelection)
+        // console.log(this.casemultipleSelection)
       },
 
       /**
@@ -465,6 +556,19 @@
       getIndex(index) {
         return (this.listQuery.page - 1) * this.listQuery.size + index + 1
       },
+
+      /**
+       * 环境下拉框活的环境id
+       */
+      enviromentselectChanged(e) {
+        for (let i = 0; i < this.enviromentnameList.length; i++) {
+          if (this.enviromentnameList[i].enviromentname === e) {
+            this.tmpexecuteplan.envid = this.enviromentnameList[i].id
+          }
+          console.log(this.enviromentnameList[i].id)
+        }
+      },
+
       /**
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
        */
@@ -490,6 +594,17 @@
           this.caselistLoading = false
         }).catch(res => {
           this.$message.error('加载api列表失败')
+        })
+      },
+
+      /**
+       * 获取环境列表
+       */
+      getenviromentallList() {
+        getenviromentallList().then(response => {
+          this.enviromentnameList = response.data
+        }).catch(res => {
+          this.$message.error('加载环境列表失败')
         })
       },
 
@@ -645,14 +760,49 @@
         this.tmpexecuteplan.status = 'new'
         this.tmpexecuteplan.memo = ''
         this.tmpexecuteplan.usetype = ''
-        this.tmpexecuteplan.ip = ''
+        this.tmpexecuteplan.enviromentname = ''
+      },
+
+      /**
+       * 显示添加执行计划批次对话框
+       */
+      showplanbatchDialog() {
+        // 显示新增对话框
+        console.log('11111111111')
+        console.log(this.multipleSelection.length)
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          if (this.multipleSelection[i].status === 'running') {
+            this.multipleSelection.splice(i)
+          }
+        }
+        console.log('222222222222')
+        console.log(this.multipleSelection.length)
+        if (this.multipleSelection.length === 0) {
+          this.$message.error('未选择执行计划,或者所选计划已经在执行中')
+        } else {
+          if (this.multipleSelection.length > 1) {
+            this.$message.error('不支持多执行计划一起提交，单个提交')
+          } else {
+            this.tmpplanenv.id = this.multipleSelection[0].id
+            this.tmpplanenv.envid = this.multipleSelection[0].envid
+            this.tmpplanenv.enviromentname = this.multipleSelection[0].enviromentname
+            checkplancondition(this.tmpplanenv).then(() => {
+              console.log('3333333333333333333')
+              this.batchdialogFormVisible = true
+              this.tmpplanbatch.executeplanid = this.multipleSelection[0].id
+              this.tmpplanbatch.batchname = ''
+            }).catch(res => {
+              // this.$message.error('执行失败')
+            })
+          }
+        }
       },
       /**
        * 添加执行计划
        */
       addexecuteplan() {
         this.$refs.tmpexecuteplan.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpexecuteplan)) {
+          if (valid) {
             this.btnLoading = true
             addexecuteplan(this.tmpexecuteplan).then(() => {
               this.$message.success('添加成功')
@@ -678,7 +828,7 @@
         this.tmpexecuteplan.status = this.executeplanList[index].status
         this.tmpexecuteplan.usetype = this.executeplanList[index].usetype
         this.tmpexecuteplan.memo = this.executeplanList[index].memo
-        this.tmpexecuteplan.ip = this.executeplanList[index].ip
+        this.tmpexecuteplan.enviromentname = this.executeplanList[index].enviromentname
       },
 
       /**
@@ -692,10 +842,12 @@
           for (let i = 0; i < this.casemultipleSelection.length; i++) {
             this.executeplancaseList.push({
               'executeplanid': this.tmpexecuteplan.id,
+              'deployunitid': this.casemultipleSelection[i].deployunitid,
+              'apiid': this.casemultipleSelection[i].apiid,
               'deployunitname': this.casemultipleSelection[i].deployunitname,
               'apiname': this.casemultipleSelection[i].apiname,
               'testcaseid': this.casemultipleSelection[i].id,
-              'testcasename': this.casemultipleSelection[i].casename
+              'casename': this.casemultipleSelection[i].casename
             })
           }
           addexecuteplantestcase(this.executeplancaseList).then(() => {
@@ -730,7 +882,7 @@
                 'deployunitname': this.testcaselastList[i].deployunitname,
                 'apiname': this.testcaselastList[i].apiname,
                 'testcaseid': this.testcaselastList[i].id,
-                'testcasename': this.testcaselastList[i].casename
+                'casename': this.testcaselastList[i].casename
               })
             }
           }
@@ -762,17 +914,19 @@
        * 更新执行计划
        */
       updateexecuteplan() {
-        if (this.isUniqueDetail(this.tmpexecuteplan)) {
-          updateexecuteplan(this.tmpexecuteplan).then(() => {
-            this.$message.success('更新成功')
-            this.getexecuteplanList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpexecuteplan.validate(valid => {
+          if (valid) {
+            updateexecuteplan(this.tmpexecuteplan).then(() => {
+              this.$message.success('更新成功')
+              this.getexecuteplanList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+              this.btnLoading = false
+            })
+          }
+        })
       },
-
       /**
        * 删除字典
        * @param index 执行计划下标

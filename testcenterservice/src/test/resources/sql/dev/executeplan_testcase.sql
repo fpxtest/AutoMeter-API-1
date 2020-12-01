@@ -26,10 +26,12 @@ CREATE TABLE `executeplan_testcase`
 (
     `id`            bigint(20) unsigned  NOT NULL AUTO_INCREMENT COMMENT '主键Id',
     `executeplanid`  bigint(20) unsigned  NOT NULL COMMENT '执行计划id',
+    `apiid`  bigint(20) unsigned  NOT NULL COMMENT 'apiid',
+    `deployunitid`  bigint(20) unsigned  NOT NULL COMMENT '发布单元id',
     `deployunitname`   varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '发布单元',
     `apiname`   varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'API名',
     `testcaseid`       bigint(20) unsigned  NOT NULL COMMENT '用例id',
-    `testcasename`      varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '用例名',
+    `casename`      varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '用例名',
     `create_time` datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)

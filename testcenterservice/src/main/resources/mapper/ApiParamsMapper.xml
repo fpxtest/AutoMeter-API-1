@@ -8,6 +8,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <id column="apiid" jdbcType="BIGINT" property="apiid" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="deployunitid" jdbcType="VARCHAR" property="deployunitid" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
     <result column="keyname" jdbcType="VARCHAR" property="keyname" />
@@ -30,7 +31,7 @@
   </select>
 
   <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">
-    update api_params set apiname = #{apiname}, deployunitname = #{deployunitname}, propertytype = #{propertytype},keyname = #{keyname},
+    update api_params set apiname = #{apiname},deployunitid =#{deployunitid}, deployunitname = #{deployunitname}, propertytype = #{propertytype},keyname = #{keyname},
     lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>

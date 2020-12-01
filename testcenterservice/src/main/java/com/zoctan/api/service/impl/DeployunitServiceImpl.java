@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.DeployunitMapper;
 import com.zoctan.api.service.DeployunitService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,6 +36,11 @@ private DeployunitMapper deployunitMapper;
     public void updateDeploy(Deployunit params)
     {
         deployunitMapper.updateDeploy(params);
+    }
+
+    @Override
+    public int ifexist(Condition condition) {
+        return countByCondition(condition);
     }
 
 }

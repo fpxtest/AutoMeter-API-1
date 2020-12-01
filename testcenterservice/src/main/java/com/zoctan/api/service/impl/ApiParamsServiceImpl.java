@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.ApiParamsMapper;
 import com.zoctan.api.service.ApiParamsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,6 +30,11 @@ private ApiParamsMapper apiParamsMapper;
     @Override
     public List<ApiParams> getApiParamsbyname(Map<String, Object> params) {
         return this.apiParamsMapper.getApiParamsbyname(params);
+    }
+
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
     }
 
     @Override

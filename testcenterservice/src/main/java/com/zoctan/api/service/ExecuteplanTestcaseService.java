@@ -19,11 +19,11 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
      */
     void savetestplancase(final List<ExecuteplanTestcase> testcase);
 
-
+    List<ExecuteplanTestcase> finddeployunitbyplanid(final long executeplanid);
 
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
     void removeexecuteplantestcase(final List<ExecuteplanTestcase> testcase);
 
-
+    Integer findcasenumbyplanid(long executeplanid);
 }

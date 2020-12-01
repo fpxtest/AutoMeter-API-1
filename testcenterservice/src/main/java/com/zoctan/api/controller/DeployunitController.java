@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Deployunit;
 import com.zoctan.api.service.DeployunitService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,8 +25,18 @@ public class DeployunitController {
 
     @PostMapping
     public Result add(@RequestBody Deployunit deployunit) {
-        deployunitService.save(deployunit);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(Deployunit.class);
+        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname() + "'");
+        if(deployunitService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("此发布单元已经存在");
+        }
+        else
+        {
+            deployunitService.save(deployunit);
+            return ResultGenerator.genOkResult();
+        }
+
     }
 
     @DeleteMapping("/{id}")
@@ -55,14 +66,30 @@ public class DeployunitController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
+    @GetMapping("/getdeplist")
+    public Result listall() {
+        List<Deployunit> list = deployunitService.listAll();
+        return ResultGenerator.genOkResult(list);
+    }
+
 
     /**
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final Deployunit dic) {
-        this.deployunitService.updateDeploy(dic);
-        return ResultGenerator.genOkResult();
+    public Result updateDeploy(@RequestBody final Deployunit deployunit) {
+        Condition con=new Condition(Deployunit.class);
+        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname() + "'")
+                .andCondition("id <> " + deployunit.getId());
+        if(deployunitService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("此发布单元已经存在");
+        }
+        else
+        {
+            this.deployunitService.updateDeploy(deployunit);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**

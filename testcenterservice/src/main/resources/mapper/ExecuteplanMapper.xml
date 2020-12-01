@@ -6,10 +6,11 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="envid" jdbcType="BIGINT" property="envid" />
     <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
-    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -22,8 +23,23 @@
     </where>
   </select>
 
+  <select id="findexplanWithid" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplan a
+    where a.id=#{id}
+  </select>
+
+  <select id="getallexplan" resultMap="BaseResultMap">
+    SELECT a.id, a.executeplanname FROM executeplan a
+  </select>
+
   <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
-    update executeplan set executeplanname = #{executeplanname}, usetype=#{usetype}, memo = #{memo},ip =#{ip}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    update executeplan set executeplanname = #{executeplanname},envid = #{envid},enviromentname=#{enviromentname}, usetype=#{usetype}, memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
+  </update>
+
+
+  <update id="updatetestplanstatus">
+    update  executeplan set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where id = #{id}
   </update>
 </mapper>

@@ -8,6 +8,14 @@ export function getapiList(params) {
   })
 }
 
+export function getapiListbydeploy(params) {
+  return request({
+    url: 'api/apibydeploy',
+    method: 'get',
+    params
+  })
+}
+
 export function search(apiForm) {
   return request({
     url: '/api/search',

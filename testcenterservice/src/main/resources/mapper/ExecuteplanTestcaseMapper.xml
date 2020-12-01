@@ -7,10 +7,12 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="apiid" jdbcType="BIGINT" property="apiid" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="testcaseid" jdbcType="BIGINT" property="testcaseid" />
-    <result column="testcasename" jdbcType="VARCHAR" property="testcasename" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -24,18 +26,26 @@
   </select>
 
   <select id="findcasebytestplanid" resultMap="BaseResultMap">
-    select testcaseid, deployunitname from executeplan_testcase a where a.executeplanid = #{executeplanid}
+    select a.testcaseid, c.deployunitname,b.casejmxname,b.casename,b.expect from executeplan_testcase a join apicases b join deployunit c on a.testcaseid = b.id and c.id = a.deployunitid  where a.executeplanid = #{executeplanid}
   </select>
 
   <select id="findcasebyplanidandcaseid" resultType="java.lang.Integer">
     select COUNT(*) from executeplan_testcase a where a.executeplanid = #{executeplanid} and a.testcaseid = #{testcaseid}
   </select>
 
+  <select id="findcasenumbyplanid" resultType="java.lang.Integer">
+    select COUNT(*) from executeplan_testcase a where a.executeplanid = #{executeplanid}
+  </select>
+
+  <select id="finddeployunitbyplanid" resultMap="BaseResultMap">
+    select a.deployunitid,b.deployunitname from executeplan_testcase a join deployunit b on a.deployunitid=b.id where a.executeplanid = #{executeplanid} group by a.deployunitid
+  </select>
+
   <insert id="savetestplancase">
-    INSERT INTO executeplan_testcase (executeplanid, deployunitname,apiname,testcaseid,testcasename,create_time,lastmodify_time)
+    INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time)
     VALUES
     <foreach collection="casedataList" item="item" index="index" separator=",">
-    (#{item.executeplanid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.testcasename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
     </foreach>
   </insert>
 

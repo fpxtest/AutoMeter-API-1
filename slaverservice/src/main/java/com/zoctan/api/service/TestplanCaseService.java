@@ -9,6 +9,6 @@ import com.zoctan.api.entity.ExecuteplanTestcase;
 */
 public interface TestPlanCaseService extends Service<ExecuteplanTestcase> {
 
-    void executeplancase(long planid,long caseid,String deployname,String jmeterpath,String jmxpath);
+    void executeplancase(long slaverid,long batchid,long planid,long caseid,String deployname,String jmeterpath,String jmxpath,String jmxcasename,String batchname);
 
 }

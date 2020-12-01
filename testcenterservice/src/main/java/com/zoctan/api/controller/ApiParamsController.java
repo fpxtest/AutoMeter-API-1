@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.ApiParams;
 import com.zoctan.api.service.ApiParamsService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,8 +25,19 @@ public class ApiParamsController {
 
     @PostMapping
     public Result add(@RequestBody ApiParams apiParams) {
-        apiParamsService.save(apiParams);
-        return ResultGenerator.genOkResult();
+        Condition con=new Condition(ApiParams.class);
+        con.createCriteria().andCondition("deployunitname = '" + apiParams.getDeployunitname() + "'")
+                .andCondition("apiname = '" + apiParams.getApiname() + "'")
+                .andCondition("propertytype = '" + apiParams.getPropertytype() + "'");
+        if(apiParamsService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("发布单元下已经存在此类型的API参数");
+        }
+        else
+        {
+            apiParamsService.save(apiParams);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -60,9 +72,23 @@ public class ApiParamsController {
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final ApiParams dic) {
-        this.apiParamsService.updateApiParams(dic);
-        return ResultGenerator.genOkResult();
+    public Result updateDeploy(@RequestBody final ApiParams apiParams) {
+        Condition con=new Condition(ApiParams.class);
+        con.createCriteria().andCondition("deployunitname = '" + apiParams.getDeployunitname() + "'")
+                .andCondition("apiname = '" + apiParams.getApiname() + "'")
+                .andCondition("propertytype = '" + apiParams.getPropertytype() + "'")
+                .andCondition("id <> " + apiParams.getId());
+        if(apiParamsService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("发布单元下已经存在此类型的API参数");
+        }
+
+        else
+        {
+            this.apiParamsService.updateApiParams(apiParams);
+            return ResultGenerator.genOkResult();
+        }
+
     }
 
     /**

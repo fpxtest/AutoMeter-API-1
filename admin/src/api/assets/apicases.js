@@ -16,6 +16,14 @@ export function search(apicasesForm) {
   })
 }
 
+export function findcasesbyname(apicasesForm) {
+  return request({
+    url: '/apicases/searchbyname',
+    method: 'post',
+    data: apicasesForm
+  })
+}
+
 export function addapicases(apicasesForm) {
   return request({
     url: '/apicases',

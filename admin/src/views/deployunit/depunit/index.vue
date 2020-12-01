@@ -97,6 +97,7 @@
         <el-form-item label="发布单元名" prop="deployunitname" required>
           <el-input
             type="text"
+            maxlength="40"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpdepunit.deployunitname"
@@ -105,6 +106,7 @@
         <el-form-item label="协议" prop="protocal">
           <el-input
             type="text"
+            maxlength="40"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpdepunit.protocal"
@@ -113,6 +115,7 @@
         <el-form-item label="端口" prop="port">
           <el-input
             type="text"
+            maxlength="40"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpdepunit.port"
@@ -121,6 +124,7 @@
         <el-form-item label="备注" prop="memo">
           <el-input
             type="text"
+            maxlength="300"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpdepunit.memo"
@@ -279,7 +283,7 @@
        */
       adddepunit() {
         this.$refs.tmpdepunit.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpdepunit)) {
+          if (valid) {
             this.btnLoading = true
             adddepunit(this.tmpdepunit).then(() => {
               this.$message.success('添加成功')
@@ -310,15 +314,18 @@
        * 更新发布单元
        */
       updatedepunit() {
-        if (this.isUniqueDetail(this.tmpdepunit)) {
-          updatedepunit(this.tmpdepunit).then(() => {
-            this.$message.success('更新成功')
-            this.getdepunitList()
-            this.dialogFormVisible = false
-          }).catch(res => {
-            this.$message.error('更新失败')
-          })
-        }
+        this.$refs.tmpdepunit.validate(valid => {
+          if (valid) {
+            updatedepunit(this.tmpdepunit).then(() => {
+              this.$message.success('更新成功')
+              this.getdepunitList()
+              this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+              this.btnLoading = false
+            })
+          }
+        })
       },
 
       /**

@@ -25,12 +25,18 @@ DROP TABLE IF EXISTS `apicases`;
 CREATE TABLE `apicases`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
+    `apiid`  bigint(20) unsigned  NOT NULL COMMENT 'apiid',
     `apiname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'API',
+    `deployunitid`  bigint(20) unsigned  NOT NULL COMMENT '发布单元id',
     `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元',
     `casename`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例名',
     `casejmxname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例jmx名，和jmx文件名对齐',
+    `casetype`  varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '类型，功能，性能',
+    `threadnum`  bigint(20) unsigned  NOT NULL COMMENT '线程数',
+    `loops`  bigint(20) unsigned  NOT NULL COMMENT '循环数',
     `casecontent`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例内容，以英文逗号分开，提供jar获取自定义期望结果A：1的值，入参为冒号左边的内容',
     `expect`     varchar(500) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '期望值',
+    `middleparam`     varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '中间变量',
     `level`  varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '优先级',
     `memo`          varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
@@ -50,7 +56,7 @@ LOCK TABLES `apicases` WRITE;
 /*!40000 ALTER TABLE `apicases`
     DISABLE KEYS */;
 INSERT INTO `apicases`
-VALUES (1, 'getnamebyuserid','accountservice','登录成功','loginsucess', '描述用例是做什么的', 'name:"aaa",pass:"bbb"','低','备注',
+VALUES (1,1, 'getnamebyuserid',1,'accountservice','登录成功','loginsucess', '描述用例是做什么的','功能', 'name:"aaa",pass:"bbb"','低','备注',
         '2019-07-01 00:00:00', '2019-07-01 00:00:00','admin');
 /*!40000 ALTER TABLE `apicases`
     ENABLE KEYS */;

@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
-public class Envmachine {
+public class Envmachine extends Machine {
     /**
      * Id
      */
@@ -24,18 +24,7 @@ public class Envmachine {
      */
     private String enviromentname;
 
-    /**
-     * ip
-     */
-    private String ip;
 
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
 
     /**
      * 服务器Id

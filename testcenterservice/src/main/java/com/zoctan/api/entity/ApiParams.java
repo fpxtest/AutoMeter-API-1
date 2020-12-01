@@ -23,6 +23,16 @@ public class ApiParams {
 
     private Long apiid;
 
+    public Long getDeployunitid() {
+        return deployunitid;
+    }
+
+    public void setDeployunitid(Long deployunitid) {
+        this.deployunitid = deployunitid;
+    }
+
+    private Long deployunitid;
+
     /**
      * api名
      */

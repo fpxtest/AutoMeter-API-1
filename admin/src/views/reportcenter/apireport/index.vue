@@ -13,11 +13,21 @@
         </el-form-item>
 
         <span v-if="hasPermission('apireport:search')">
-          <el-form-item>
-            <el-input v-model="search.apireportname" @keyup.enter.native="searchBy" placeholder="apireport名"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元名"></el-input>
+          <el-form-item label="执行计划" prop="testplanname" >
+          <el-select v-model="search.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(testplan, index) in execplanList" :key="index">
+              <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
+            </div>
+          </el-select>
+        </el-form-item>
+          <el-form-item label="批次" prop="batchname" >
+            <el-select v-model="search.batchname" placeholder="批次">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(planbatch, index) in planbatchList" :key="index">
+              <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
+            </div>
+          </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -33,20 +43,65 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="编号" align="center" width="60">
+      <el-table-column label="编号" align="center" width="50">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
       <el-table-column label="用例名" align="center" prop="casename" width="120"/>
       <el-table-column label="apiname" align="center" prop="apiname" width="80"/>
-      <el-table-column label="状态" align="center" prop="status" width="100"/>
+      <el-table-column label="状态" align="center" prop="status" width="50">
+      <template slot-scope="scope">
+        <span v-if="scope.row.status === '失败'" style="color:red">{{ scope.row.status }}</span>
+        <span v-else style="color: #37B328">{{ scope.row.status }}</span>
+      </template>
+      </el-table-column>
+      <el-table-column label="批次" align="center" prop="batchname" width="80"/>
+      <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
+      <el-table-column label="期望值" align="center" prop="expect" width="100">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>{{ scope.row.expect }}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">...</el-tag>
+          </div>
+        </el-popover>
+      </template>
+      </el-table-column>
 
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
-      <el-table-column label="响应" align="center" prop="respone" width="100"/>
-      <el-table-column label="断言详情" align="center" prop="assertvalue" width="100"/>
+      <el-table-column label="响应" align="center" prop="respone" width="100">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>{{ scope.row.respone }}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">...</el-tag>
+          </div>
+        </el-popover>
+      </template>
+      </el-table-column>
+
+      <el-table-column label="断言详情" align="center" prop="assertvalue" width="100">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>{{ scope.row.assertvalue }}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">...</el-tag>
+          </div>
+        </el-popover>
+      </template>
+      </el-table-column>
+
       <el-table-column label="运行时间(ms)" align="center" prop="runtime" width="100"/>
-      <el-table-column label="期望值" align="center" prop="expect" width="100"/>
+      <el-table-column label="运行信息" align="center" prop="errorinfo" width="100">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>{{ scope.row.errorinfo }}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">...</el-tag>
+          </div>
+        </el-popover>
+      </template>
+      </el-table-column>
 
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -135,10 +190,16 @@
     </el-dialog>
   </div>
 </template>
+<style>
+  .el-table.cell.el-tooltip {
+    white-space: pre-wrap;
+  }
+</style>
 <script>
   import { getapireportList as getapireportList, search, addapireport, updateapireport, removeapireport } from '@/api/reportcenter/apireport'
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
-  import { getdatabydiccodeList as getvisittypeList } from '@/api/system/dictionary'
+  import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
+  import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
   import { unix2CurrentTime } from '@/utils'
 
   export default {
@@ -154,8 +215,10 @@
     },
     data() {
       return {
-        apireportList: [], // apireport列表
-        visittypeList: [], // apireport访问方式列表
+        apireportList: [], // api报告列表
+        apiList: [], // api列表
+        planbatchList: [], // 批次列表
+        execplanList: [], // 计划列表
         deployunitList: [], // 发布单元列表
         listLoading: false, // 数据加载等待动画
         dicvisitypeQuery: {
@@ -178,9 +241,11 @@
         },
         btnLoading: false, // 按钮等待动画
         tmpapireport: {
+          executeplanid: '', // 计划id
           id: '',
           deployunitid: '',
           deployunitname: '',
+          batchname: '',
           apireportname: '',
           visittype: '',
           path: '',
@@ -189,20 +254,37 @@
         search: {
           page: null,
           size: null,
-          apireportname: null,
-          deployunitname: null
+          testplanname: '',
+          testplanid: null,
+          batchname: null
         }
       }
     },
 
     created() {
-      this.getapireportList()
-      this.getvisittypeList()
+      this.getexecplanList()
       this.getdepunitList()
+      this.getapireportList()
     },
 
     methods: {
       unix2CurrentTime,
+
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      testplanselectChanged(e) {
+        for (let i = 0; i < this.execplanList.length; i++) {
+          if (this.execplanList[i].executeplanname === e) {
+            this.tmpapireport.executeplanid = this.execplanList[i].id
+          }
+        }
+        getbatchbyplan(this.tmpapireport).then(response => {
+          this.planbatchList = response.data
+        }).catch(res => {
+          this.$message.error('加载批次列表失败')
+        })
+      },
 
       /**
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
@@ -217,7 +299,7 @@
       },
 
       /**
-       * 获取apireport列表
+       * 获取api报告列表
        */
       getapireportList() {
         this.listLoading = true
@@ -226,20 +308,18 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载apireport列表失败')
+          this.$message.error('加载api报告列表失败')
         })
       },
+
       /**
-       * 获取字典访问方式列表
+       * 获取执行计划列表
        */
-      getvisittypeList() {
-        this.listLoading = true
-        getvisittypeList(this.dicvisitypeQuery).then(response => {
-          this.visittypeList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
+      getexecplanList() {
+        getallexplan().then(response => {
+          this.execplanList = response.data
         }).catch(res => {
-          this.$message.error('加载字典访问方式列表失败')
+          this.$message.error('加载计划列表失败')
         })
       },
 
@@ -247,11 +327,8 @@
        * 获取发布单元列表
        */
       getdepunitList() {
-        this.listLoading = true
         getdepunitList(this.listQuery).then(response => {
           this.deployunitList = response.data.list
-          this.total = response.data.total
-          this.listLoading = false
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
         })
@@ -262,6 +339,7 @@
         this.listLoading = true
         this.search.page = this.listQuery.page
         this.search.size = this.listQuery.size
+        this.search.testplanid = this.tmpapireport.executeplanid
         search(this.search).then(response => {
           this.apireportList = response.data.list
           this.total = response.data.total

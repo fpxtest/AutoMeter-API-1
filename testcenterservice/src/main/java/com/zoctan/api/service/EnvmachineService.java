@@ -1,7 +1,7 @@
 package com.zoctan.api.service;
 
-import com.zoctan.api.entity.Envmachine;
 import com.zoctan.api.core.service.Service;
+import com.zoctan.api.entity.Envmachine;
 
 import java.util.List;
 import java.util.Map;
@@ -34,5 +34,9 @@ public interface EnvmachineService extends Service<Envmachine> {
      * @return 环境服务器列表
      */
     void updateEnvAndMac(Envmachine params);
+
+    Envmachine findexist(String enviromentname,String machinename);
+
+    Envmachine findexistwithoutself(String enviromentname,String machinename,Long id);
 
 }
