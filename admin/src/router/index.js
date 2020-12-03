@@ -43,34 +43,15 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
-    path: '/table',
-    component: Layout,
-    name: '测试',
-    icon: 'dashboard',
-    children: [
-      { path: 'index', name: '测试111', component: _import('test/dynamictest'), meta: { permission: ['table:list'] }
-      }
-    ]
-  },
-
-  {
     path: '/assets',
     component: Layout,
     name: '资产管理',
     icon: 'dashboard',
     children: [
       { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { permission: ['machine:list'] }},
-      { path: 'role/list', name: '移动设备管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
       { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
       { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { permission: ['apicases:list'] }},
       { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { permission: ['casecondition:list'] }}
-
-      // { path: 'assets/apicases',
-      //   name: 'API用例库',
-      //   children: [
-      //     { path: 'apicases/list', name: '用例', component: _import('assets/cases/apicases/index'), meta: { permission: ['apicases:list'] }}
-      //   ]
-      // }
     ]
   },
 
@@ -129,9 +110,7 @@ export const asyncRouterMap = [
     icon: 'dashboard',
     children: [
       { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
-      { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
-      { path: 'apireport/list', name: '性能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
-      { path: 'apireport/list', name: '性能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }}
+      { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }}
     ]
   },
 

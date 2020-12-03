@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/dispatchservice" />
     <file type="web" url="file://$PROJECT_DIR$/ftSecurity" />
     <file type="web" url="file://$PROJECT_DIR$/slaverservice" />
     <file type="web" url="file://$PROJECT_DIR$/strategy" />
     <file type="web" url="file://$PROJECT_DIR$/testcenterservice" />
+    <file type="web" url="file://$PROJECT_DIR$/tradeservice" />
   </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
@@ -17,6 +19,8 @@
         <option value="$PROJECT_DIR$/slaverservice/pom.xml" />
         <option value="$PROJECT_DIR$/strategy/pom.xml" />
         <option value="$PROJECT_DIR$/ftSecurity/pom.xml" />
+        <option value="$PROJECT_DIR$/tradeservice/pom.xml" />
+        <option value="$PROJECT_DIR$/dispatchservice/pom.xml" />
       </list>
     </option>
   </component>

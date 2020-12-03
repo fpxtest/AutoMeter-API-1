@@ -7,16 +7,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api" />
+        <module name="dispatchservice" />
         <module name="security" />
         <module name="slaverservice" />
         <module name="slaverservice (1)" />
+        <module name="tradeservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api" target="1.8" />
+      <module name="dispatchservice" target="1.8" />
       <module name="security" target="1.8" />
       <module name="slaverservice" target="1.8" />
       <module name="slaverservice (1)" target="1.8" />
+      <module name="tradeservice" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

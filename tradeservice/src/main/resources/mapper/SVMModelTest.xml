@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.SVMModelTestMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.SVMModelTest">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="pythonfile" jdbcType="VARCHAR" property="pythonfile" />
+    <result column="stockids" jdbcType="VARCHAR" property="stockids" />
+    <result column="modelparams" jdbcType="VARCHAR" property="modelparams" />
+    <result column="accountchange" jdbcType="VARCHAR" property="accountchange" />
+    <result column="startTime" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="endTime" jdbcType="TIMESTAMP" property="endTime" />
+  </resultMap>
+</mapper>
