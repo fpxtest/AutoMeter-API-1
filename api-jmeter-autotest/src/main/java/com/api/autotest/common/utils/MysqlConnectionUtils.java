@@ -96,10 +96,10 @@ public class MysqlConnectionUtils {
         }
     }
 
-    public static ArrayList<HashMap<String, String>> query(String sql) {
-        getConnection();
+    public static ArrayList<HashMap<String, String>> query(String sql) throws Exception {
         ArrayList<HashMap<String, String>> resultArrayList = new ArrayList<>();
         try {
+            getConnection();
             st = conn.createStatement();
             rs = st.executeQuery(sql);
             ResultSetMetaData data = rs.getMetaData();
@@ -112,30 +112,26 @@ public class MysqlConnectionUtils {
                 }
                 resultArrayList.add(map);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw  new Exception(e.getMessage());
         } finally {
             closeConnection();
         }
         return resultArrayList;
     }
 
-    public static Integer update(String sql) {
+    public static String update(String sql) {
         getConnection();
-        int total = 0;
+        String result="";
         try {
             st = conn.createStatement();
-            total = st.executeUpdate(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+            st.executeUpdate(sql);
+        }  catch (Exception e) {
+            result=e.getMessage();
         } finally {
             closeConnection();
         }
-        return total;
+        return result;
     }
 
 
@@ -162,7 +158,7 @@ public class MysqlConnectionUtils {
 //        String sql = "UPDATE acquire_trade t SET t.status=0 WHERE t.channel_code='100008' AND t.trade_day='20170601'";
 //        String sql = "DELETE FROM recon_exp WHERE channel_code = '100006' AND trade_day='20170601'";
 //        System.out.println(MysqlConnectionUtils.update(sql));
-        String sql = "SELECT t.`status` FROM acquire_trade t WHERE t.channel_code='100008' AND t.trade_day='20170601' ORDER BY `status`";
-        System.out.println(MysqlConnectionUtils.query(sql));
+        //String sql = "SELECT t.`status` FROM acquire_trade t WHERE t.channel_code='100008' AND t.trade_day='20170601' ORDER BY `status`";
+        //System.out.println(MysqlConnectionUtils.query(sql));
     }
 }

@@ -11,6 +11,7 @@ import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanTestcaseService;
 import com.zoctan.api.service.MacdepunitService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.Map;
  * @author SeasonFan
  * @date 2020/09/27
  */
+@Slf4j
 @RestController
 @RequestMapping("/executeplan")
 @Validated

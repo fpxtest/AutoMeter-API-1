@@ -64,7 +64,7 @@ export const asyncRouterMap = [
       { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { permission: ['enviroment:list'] }},
       { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { permission: ['envmachine:list'] }},
       { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { permission: ['enviromentassemble:list'] }},
-      { path: 'macdepunit/list', name: '服务器部署', component: _import('enviroment/macdepunit/index'), meta: { permission: ['macdepunit:list'] }
+      { path: 'macdepunit/list', name: '组件部署', component: _import('enviroment/macdepunit/index'), meta: { permission: ['macdepunit:list'] }
       }
     ]
   },
@@ -72,11 +72,11 @@ export const asyncRouterMap = [
   {
     path: '/deployunit',
     component: Layout,
-    name: '发布单元管理',
+    name: '发布单元',
     icon: 'dashboard',
     children: [
       { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { permission: ['depunit:list'] }},
-      { path: 'api/list', name: '发布单元API', component: _import('deployunit/api/index'), meta: { permission: ['api:list'] }},
+      { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { permission: ['api:list'] }},
       { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
     ]
   },
@@ -87,7 +87,7 @@ export const asyncRouterMap = [
     name: '调度中心',
     icon: 'dashboard',
     children: [
-      { path: 'slaver/list', name: 'Slaver管理', component: _import('dispatch/slaver/index'), meta: { permission: ['slaver:list'] }},
+      { path: 'slaver/list', name: '执行节点', component: _import('dispatch/slaver/index'), meta: { permission: ['slaver:list'] }},
       { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { permission: ['dispatch:list'] }}
     ]
   },
@@ -110,7 +110,10 @@ export const asyncRouterMap = [
     icon: 'dashboard',
     children: [
       { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
-      { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }}
+      { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
+      { path: 'apiperformancereport/list', name: '性能测试明细', component: _import('reportcenter/apiperformancereport/index'), meta: { permission: ['apiperformancereport:list'] }},
+      { path: 'apiperformancestatistics/list', name: '性能测试统计', component: _import('reportcenter/apiperformancestatistics/index'), meta: { permission: ['apiperformancestatistics:list'] }}
+
     ]
   },
 

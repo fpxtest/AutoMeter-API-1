@@ -23,6 +23,17 @@ public class RequestObject {
 
     private String RequestmMthod;
 
+    public String getProtocal() {
+        return protocal;
+    }
+
+    public void setProtocal(String protocal) {
+        this.protocal = protocal;
+    }
+
+    private String protocal;
+
+
     public String getResource() {
         return resource;
     }
@@ -64,6 +75,17 @@ public class RequestObject {
     }
 
     private String requestcontenttype;
+
+    public String getResponecontenttype() {
+        return responecontenttype;
+    }
+
+    public void setResponecontenttype(String responecontenttype) {
+        this.responecontenttype = responecontenttype;
+    }
+
+    private String responecontenttype;
+
 
 
     public HttpHeader getHeader() {

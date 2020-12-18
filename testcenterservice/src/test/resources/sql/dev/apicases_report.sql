@@ -28,6 +28,7 @@ CREATE TABLE `apicases_report`
     `caseid`  bigint(20) unsigned NOT NULL COMMENT '用例id',
     `testplanid`  bigint(20) unsigned NOT NULL COMMENT '执行计划id',
     `batchname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '批次',
+    `slaverid`  bigint(20) unsigned NOT NULL COMMENT '执行机id',
     `status`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '运行结果，成功，失败，异常',
     `respone`  varchar(5000) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '返回结果',
     `assertvalue`  varchar(5000) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '断言详细经过',

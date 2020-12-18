@@ -26,7 +26,7 @@ CREATE TABLE `executeplanbatch`
 (
     `id`            bigint(20) unsigned  NOT NULL AUTO_INCREMENT COMMENT '执行计划Id',
     `executeplanid`  bigint(20) unsigned  NOT NULL COMMENT '执行计划id',
-    `batchname`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '状态，new，waiting，running，pause，finish',
+    `batchname`      varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '批次名',
     `create_time` datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     `creator`    varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '创建者',

@@ -22,7 +22,11 @@ public class Sample extends AbstractJavaSamplerClient {
         super.setupTest(context);
         core = new Testcore(getLogger());
         //初始化用例请求数据
-        core.InitHttpData(context);
+        try {
+            core.InitHttpData(context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         getLogger().info(Testcore.logplannameandcasename+"数据库初始化完成");
         //前置条件
         getLogger().info(Testcore.logplannameandcasename+"开始处理前置条件" );
@@ -43,6 +47,7 @@ public class Sample extends AbstractJavaSamplerClient {
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
         long start = new Date().getTime();
+        TestAssert testAssert= new TestAssert();
         long end = 0;
         String errorinfo="";
         String actualresult = null;
@@ -61,7 +66,7 @@ public class Sample extends AbstractJavaSamplerClient {
             results.setResponseData("casename=" + core.getcaseName() + " |expResult=" + expect + " |actualresult" + actualresult, null);
             results.setDataType(SampleResult.TEXT);
             //获取期望值数据
-            expect = core.getExpectmap();
+           // expect = core.getExpectmap();
             // 解析请求响应内容，使用期望值expect开始断言
             String expectcode = core.getExpectValue("code");
             getLogger().info(Testcore.logplannameandcasename + "expectcode is:" + expectcode);
@@ -71,7 +76,7 @@ public class Sample extends AbstractJavaSamplerClient {
             String actualcode = jsonObject.get("code").toString();
             getLogger().info(Testcore.logplannameandcasename + "actualcode is:" + expectcode);
             // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertinfo = TestAssert.AssertEqual(actualcode, expectcode);
+            assertinfo = testAssert.AssertEqual(actualcode, expectcode);
 
             String piclistcount = core.getExpectValue("data.picList.count");
             getLogger().info(Testcore.logplannameandcasename + "expectpiclistcount is:" + piclistcount);
@@ -79,16 +84,16 @@ public class Sample extends AbstractJavaSamplerClient {
             int actualpiclistcount = jsonArray.size();
             getLogger().info(Testcore.logplannameandcasename + "actualpiclistcount is:" + actualpiclistcount);
             // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertinfo = TestAssert.AssertEqual(actualpiclistcount, Integer.parseInt(piclistcount));
+            assertinfo = testAssert.AssertEqual(actualpiclistcount, Integer.parseInt(piclistcount));
         } catch (Exception ex) {
-            TestAssert.caseresult = false;
+            testAssert.setCaseresult(false);
             errorinfo = ex.getMessage();
             getLogger().error(Testcore.logplannameandcasename + "用例执行发生异常，请检查!" + ex.toString());
         } finally {
             // 保存用例运行结果，jmeter的sample运行结果
-            results.setSuccessful(TestAssert.caseresult);
-            core.savetestcaseresult(TestAssert.caseresult, end - start, actualresult, assertinfo,errorinfo);
-            core.updatedispatchcasestatus();
+            results.setSuccessful(testAssert.isCaseresult());
+            core.savetestcaseresult(testAssert.isCaseresult(), end - start, actualresult, assertinfo,errorinfo);
+            //core.updatedispatchcasestatus();
         }
         //定义一个事务，表示这是事务的结束点，类似于LoadRunner的lr.end_transaction
         results.sampleEnd();

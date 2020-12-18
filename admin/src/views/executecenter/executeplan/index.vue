@@ -829,6 +829,12 @@
         this.tmpexecuteplan.usetype = this.executeplanList[index].usetype
         this.tmpexecuteplan.memo = this.executeplanList[index].memo
         this.tmpexecuteplan.enviromentname = this.executeplanList[index].enviromentname
+
+        for (let i = 0; i < this.enviromentnameList.length; i++) {
+          if (this.enviromentnameList[i].enviromentname === this.tmpexecuteplan.enviromentname) {
+            this.tmpexecuteplan.envid = this.enviromentnameList[i].id
+          }
+        }
       },
 
       /**
