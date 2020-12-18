@@ -63,13 +63,13 @@ AutoMeter是一款针对分布式服务，微服务API做功能和性能一体�
         在目录admin/config/prod.env.js中修改配置BASE_API项，为调用testcenterservice的ip和端口，或者使用域名
         module.exports = {
           NODE_ENV: '"production"',
-          BASE_API: '"http://81.69.0.136:8080"'
+          BASE_API: '"http://xxxxxxxxxx"'
         }
     5.api-jmeter-autotest (编写测试用例类)
         配置src/resource/app.properties,数据库访问连接字
         mysql.host=jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
-        username=test
-        password=test
+        username=xxxxxx
+        password=xxxxxx
         
     6.系统字典表配置
         如果需要部署多个slaver集群运行测试，则需要在字典表中配置调度服务的访问地址

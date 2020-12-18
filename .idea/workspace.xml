@@ -2,53 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_base_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_core_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_boot_autoconfigure_2_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_boot_starter_2_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_weekend_1_1_3.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/common/utils/MysqlConnectionUtils.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/common/utils/MysqlConnectionUtils.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestAssert.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestAssert.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/Testcore.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/Testcore.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/dto/RequestObject.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/dto/RequestObject.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/service/ResultCheck.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/service/ResultCheck.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/cornerservice/getInfoByLocationtestlalo.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/cornerservice/getInfoByLocationtestlalo.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/cornerservice/getInfoDetailById.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/cornerservice/getInfoDetailById.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/testservice/Sample.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/testservice/Sample.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/testservice/hotSearch.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/testservice/hotSearch.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/router/index.js" afterPath="$PROJECT_DIR$/admin/src/router/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/login/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/login/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/.idea/workspace.xml" afterPath="$PROJECT_DIR$/api-jmeter-autotest/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/Testcore.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/Testcore.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/service/ResultCheck.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/service/ResultCheck.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/cornerservice/getInfoByLocationtestlalo.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/cornerservice/getInfoByLocationtestlalo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/cornerservice/getInfoDetailById.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/cornerservice/getInfoDetailById.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/testservice/Sample.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/testservice/Sample.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/testservice/hotSearch.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/testservice/hotSearch.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/resources/app.properties" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/resources/app.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/app.properties" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/app.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/servicejmxcase/apitest.jmx" afterPath="$PROJECT_DIR$/servicejmxcase/apitest.jmx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/pom.xml" afterPath="$PROJECT_DIR$/slaverservice/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/ScheduleTask.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/ScheduleTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/entity/Apicases.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/entity/Apicases.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestplanCaseService.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestplanCaseService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestplanCaseServiceImpl.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestplanCaseServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/resources/application-dev.yml" afterPath="$PROJECT_DIR$/slaverservice/src/main/resources/application-dev.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/test/java/CodeGenerator.java" afterPath="$PROJECT_DIR$/slaverservice/src/test/java/CodeGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_report.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_report.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/testplanbatch.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/testplanbatch.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
     </list>
     <ignored path="$PROJECT_DIR$/adminservice/target/" />
     <ignored path="$PROJECT_DIR$/testcenterservice/target/" />
@@ -178,9 +132,9 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SECOND">
-              <first_editor relative-caret-position="1140">
-                <caret line="89" column="11" lean-forward="false" selection-start-line="89" selection-start-column="11" selection-end-line="89" selection-end-column="11" />
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="240">
+                <caret line="71" column="23" lean-forward="false" selection-start-line="71" selection-start-column="23" selection-end-line="71" selection-end-column="23" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -212,7 +166,7 @@
         <entry file="file://$PROJECT_DIR$/admin/config/prod.env.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15">
-              <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="4" selection-end-column="1" />
+              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="4" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -1495,12 +1449,12 @@
       <workItem from="1606556010835" duration="10332000" />
       <workItem from="1606629057835" duration="6636000" />
       <workItem from="1606785855943" duration="76664000" />
-      <workItem from="1608090299420" duration="27102000" />
+      <workItem from="1608090299420" duration="27559000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="842118000" />
+    <option name="totallyTimeSpent" value="842575000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="773" extended-state="0" />
@@ -2104,7 +2058,7 @@
     <entry file="file://$PROJECT_DIR$/admin/config/prod.env.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="4" selection-end-column="1" />
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="4" selection-end-column="1" />
           <folding />
         </state>
       </provider>
@@ -2216,9 +2170,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SECOND">
-          <first_editor relative-caret-position="1140">
-            <caret line="89" column="11" lean-forward="false" selection-start-line="89" selection-start-column="11" selection-end-line="89" selection-end-column="11" />
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="240">
+            <caret line="71" column="23" lean-forward="false" selection-start-line="71" selection-start-column="23" selection-end-line="71" selection-end-column="23" />
             <folding />
           </first_editor>
           <second_editor />
