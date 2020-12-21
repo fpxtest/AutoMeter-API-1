@@ -19,11 +19,13 @@
       <file leaf-file-name="Testcore.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/Testcore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="532" column="173" lean-forward="false" selection-start-line="532" selection-start-column="173" selection-end-line="532" selection-end-column="173" />
+            <state relative-caret-position="142">
+              <caret line="339" column="34" lean-forward="false" selection-start-line="339" selection-start-column="34" selection-end-line="339" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#getcaseName#0;class#Testcore#0" expanded="false" />
+                <element signature="e#13502#13503#0" expanded="true" />
+                <element signature="e#13555#13556#0" expanded="true" />
                 <element signature="method#getcaseData#0;class#Testcore#0" expanded="false" />
                 <element signature="method#getcaseValue#0;class#Testcore#0" expanded="false" />
                 <element signature="method#fixhttprequestdatas#0;class#Testcore#0" expanded="false" />
@@ -36,11 +38,9 @@
       <file leaf-file-name="MysqlConnectionUtils.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1935">
-              <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+            <state relative-caret-position="165">
+              <caret line="20" column="23" lean-forward="false" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -57,11 +57,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="retrySendSmsOrFindShortUrl.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="retrySendSmsOrFindShortUrl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/test/marketingservice/retrySendSmsOrFindShortUrl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="114" column="27" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
+            <state relative-caret-position="225">
+              <caret line="64" column="12" lean-forward="false" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
               <folding>
                 <element signature="method#teardownTest#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
                 <element signature="method#checkpreconditionright#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
@@ -74,8 +74,8 @@
       <file leaf-file-name="postcondition.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/postcondition.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+            <state relative-caret-position="375">
+              <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -83,11 +83,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="app.properties" pinned="false" current-in-tab="true">
+      <file leaf-file-name="app.properties" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/app.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="84" />
+            <state relative-caret-position="15">
+              <caret line="1" column="20" lean-forward="false" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="precondition.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/precondition.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="31" column="27" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -122,18 +132,6 @@
                 <element signature="imports" expanded="false" />
                 <element signature="method#getDefaultParameters#0;class#getInfoDetailById#0" expanded="false" />
                 <element signature="method#main#0;class#getInfoDetailById#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Sample.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/test/testservice/Sample.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="870">
-              <caret line="68" column="13" lean-forward="false" selection-start-line="68" selection-start-column="13" selection-end-line="68" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -224,7 +222,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/SSLClient.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/Httphelp.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/ReportHelper.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/app.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/test/testservice/testjmeter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/service/ResultCheck.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java" />
@@ -235,9 +232,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/test/testservice/hotSearch.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/test/cornerservice/getInfoDetailById.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/core/TestAssert.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/test/marketingservice/retrySendSmsOrFindShortUrl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/core/Testcore.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/app.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/core/postcondition.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/api/autotest/test/marketingservice/retrySendSmsOrFindShortUrl.java" />
       </list>
     </option>
   </component>
@@ -402,6 +400,138 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="marketingservice" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api-jmeter-autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="autotest" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1326,16 +1456,16 @@
       <workItem from="1606556755366" duration="3379000" />
       <workItem from="1606633195087" duration="27695000" />
       <workItem from="1606785867694" duration="104241000" />
-      <workItem from="1608090307104" duration="19330000" />
+      <workItem from="1608090307104" duration="24091000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="490422000" />
+    <option name="totallyTimeSpent" value="495183000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="773" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1471,6 +1601,8 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#getcaseName#0;class#Testcore#0" expanded="false" />
+            <element signature="e#13502#13503#0" expanded="true" />
+            <element signature="e#13555#13556#0" expanded="true" />
             <element signature="method#getcaseData#0;class#Testcore#0" expanded="false" />
             <element signature="method#getcaseValue#0;class#Testcore#0" expanded="false" />
             <element signature="method#fixhttprequestdatas#0;class#Testcore#0" expanded="false" />
@@ -1618,6 +1750,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="22" column="22" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1681,6 +1814,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="318">
           <caret line="342" column="0" lean-forward="false" selection-start-line="342" selection-start-column="0" selection-end-line="342" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1688,14 +1822,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="164">
           <caret line="11" column="19" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/precondition.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="31" column="44" lean-forward="false" selection-start-line="31" selection-start-column="44" selection-end-line="31" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1798,16 +1924,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1935">
-          <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/src.zip!/java/text/SimpleDateFormat.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3594">
@@ -1832,37 +1948,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/test/marketingservice/retrySendSmsOrFindShortUrl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="114" column="27" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="115" selection-end-column="0" />
-          <folding>
-            <element signature="method#teardownTest#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
-            <element signature="method#checkpreconditionright#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
-            <element signature="method#setuphelp#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/Testcore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="532" column="173" lean-forward="false" selection-start-line="532" selection-start-column="173" selection-end-line="532" selection-end-column="173" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#getcaseName#0;class#Testcore#0" expanded="false" />
-            <element signature="method#getcaseData#0;class#Testcore#0" expanded="false" />
-            <element signature="method#getcaseValue#0;class#Testcore#0" expanded="false" />
-            <element signature="method#fixhttprequestdatas#0;class#Testcore#0" expanded="false" />
-            <element signature="method#updatetestcaseresultfail#0;class#Testcore#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/postcondition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="120" column="0" lean-forward="false" selection-start-line="120" selection-start-column="0" selection-end-line="120" selection-end-column="0" />
+        <state relative-caret-position="375">
+          <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1871,9 +1960,54 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/app.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="3" selection-end-column="84" />
+        <state relative-caret-position="15">
+          <caret line="1" column="20" lean-forward="false" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="20" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/precondition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="31" column="27" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/core/Testcore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="339" column="34" lean-forward="false" selection-start-line="339" selection-start-column="34" selection-end-line="339" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#getcaseName#0;class#Testcore#0" expanded="false" />
+            <element signature="e#13502#13503#0" expanded="true" />
+            <element signature="e#13555#13556#0" expanded="true" />
+            <element signature="method#getcaseData#0;class#Testcore#0" expanded="false" />
+            <element signature="method#getcaseValue#0;class#Testcore#0" expanded="false" />
+            <element signature="method#fixhttprequestdatas#0;class#Testcore#0" expanded="false" />
+            <element signature="method#updatetestcaseresultfail#0;class#Testcore#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/common/utils/MysqlConnectionUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="20" column="23" lean-forward="false" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/api/autotest/test/marketingservice/retrySendSmsOrFindShortUrl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="64" column="12" lean-forward="false" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
+          <folding>
+            <element signature="method#teardownTest#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
+            <element signature="method#checkpreconditionright#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
+            <element signature="method#setuphelp#0;class#retrySendSmsOrFindShortUrl#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

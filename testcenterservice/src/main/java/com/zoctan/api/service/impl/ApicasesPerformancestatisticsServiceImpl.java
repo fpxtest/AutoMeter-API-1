@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author SeasonFan
@@ -23,5 +24,10 @@ private ApicasesPerformancestatisticsMapper apicasesPerformancestatisticsMapper;
     @Override
     public List<ApicasesPerformancestatistics> listallresult() {
         return apicasesPerformancestatisticsMapper.listallresult();
+    }
+
+    @Override
+    public List<ApicasesPerformancestatistics> findApicasereportWithName(Map<String, Object> params) {
+        return apicasesPerformancestatisticsMapper.findApicasereportWithName(params);
     }
 }

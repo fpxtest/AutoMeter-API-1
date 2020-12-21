@@ -56,6 +56,11 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
     }
 
     @Override
+    public List<Executeplan> getallexplanbytype(String usetype) {
+        return executeplanMapper.getallexplanbytype(usetype);
+    }
+
+    @Override
     public void executeplancase(List<Testplanandbatch> testplanlist) {
         for (Testplanandbatch plan : testplanlist) {
             Long execplanid = plan.getPlanid();

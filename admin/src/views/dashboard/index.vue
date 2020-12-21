@@ -1,10 +1,11 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">
-      <h4>Permission</h4>
-      <ol>
-        <li v-for="code in permissionCodeList" :key="code">{{ code }}</li>
-      </ol>
+      <!--<h4>Permission</h4>-->
+      <!--<ol>-->
+        <!--<li v-for="code in permissionCodeList" :key="code">{{ code }}</li>-->
+      <!--</ol>-->
+      coming soon!
     </div>
   </div>
 </template>

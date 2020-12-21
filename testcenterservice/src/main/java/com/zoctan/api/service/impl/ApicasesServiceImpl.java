@@ -30,6 +30,11 @@ private ApicasesMapper apicasesMapper;
     }
 
     @Override
+    public List<Apicases> findApiCasebynameandcasetype(Map<String, Object> params) {
+        return apicasesMapper.findApiCasebynameandcasetype(params);
+    }
+
+    @Override
     public void updateApicase(Apicases params) {
         apicasesMapper.updateApicase(params);
 

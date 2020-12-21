@@ -375,7 +375,8 @@
           size: null,
           deployunitname: null,
           apiname: null,
-          executeplanid: null
+          executeplanid: null,
+          casetype: null
         }
       }
     },
@@ -703,6 +704,7 @@
         this.$refs.searchcase.validate(valid => {
           if (valid) {
             this.searchcase.executeplanid = this.tmpexecuteplan.id
+            this.searchcase.casetype = this.tmpexecuteplan.usetype
             this.searchcase.page = this.caselistQuery.page
             this.searchcase.size = this.caselistQuery.size
             searchtestplancases(this.searchcase).then(response => {

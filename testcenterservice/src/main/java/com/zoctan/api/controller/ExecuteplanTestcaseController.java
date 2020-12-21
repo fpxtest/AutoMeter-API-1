@@ -76,7 +76,7 @@ public class ExecuteplanTestcaseController {
     @PostMapping("/getcasebydeployandapi")
     public Result casevalue(@RequestBody final Map<String, Object> param) {
         final List<ExecuteplanTestcase> plancaselist = this.executeplanTestcaseService.findcasebydeployandapi(param);
-        final List<Apicases> apicaselist = this.apicaseservice.findApiCaseWithName(param);
+        final List<Apicases> apicaselist = this.apicaseservice.findApiCasebynameandcasetype(param);
         List<ApicasewithStatu> lastresult = new ArrayList<ApicasewithStatu>();
         for (Apicases ac : apicaselist) {
             Boolean flag = false;

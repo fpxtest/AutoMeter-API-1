@@ -141,6 +141,10 @@ public class GeneralPerformancestatisticsScheduleTask {
             }
 
             GeneralPerformancestatisticsScheduleTask.log.info("statisticsTableStr is:"+statisticsTableStr);
+            statisticsTableStr=statisticsTableStr.replace("Infinity","0.0");
+            statisticsTableStr=statisticsTableStr.replace("NaN","0.0");
+
+
 
             JSONObject statisticsTableJson = JSONObject.parseObject(statisticsTableStr);
             JSONArray titlesArr = statisticsTableJson.getJSONArray("titles");

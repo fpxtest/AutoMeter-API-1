@@ -50,24 +50,6 @@
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
-
-      <el-table-column label="管理" align="center"
-                       v-if="hasPermission('dispatch:update')  || hasPermission('dispatch:delete')">
-        <template slot-scope="scope">
-          <el-button
-            type="warning"
-            size="mini"
-            v-if="hasPermission('dispatch:update') && scope.row.id !== id"
-            @click.native.prevent="showUpdatedispatchDialog(scope.$index)"
-          >取消</el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            v-if="hasPermission('dispatch:delete') && scope.row.id !== id"
-            @click.native.prevent="removedispatch(scope.$index)"
-          >暂停</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"

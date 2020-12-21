@@ -17,6 +17,8 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
      */
     List<Apicases> findApiCaseWithName(final Map<String, Object> params);
 
+    List<Apicases> findApiCasebynameandcasetype(final Map<String, Object> params);
+
     /**
      * 更新发布单元内容
      *

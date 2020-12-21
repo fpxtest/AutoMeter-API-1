@@ -49,7 +49,7 @@ export const asyncRouterMap = [
     icon: 'dashboard',
     children: [
       { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { permission: ['machine:list'] }},
-      { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
       { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { permission: ['apicases:list'] }},
       { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { permission: ['casecondition:list'] }}
     ]
@@ -98,8 +98,8 @@ export const asyncRouterMap = [
     name: '执行中心',
     icon: 'dashboard',
     children: [
-      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { permission: ['executeplan:list'] }},
-      { path: 'apiparams/list', name: '执行监控', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
+      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { permission: ['executeplan:list'] }}
+      //  { path: 'apiparams/list', name: '执行监控', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
     ]
   },
 
@@ -110,7 +110,7 @@ export const asyncRouterMap = [
     icon: 'dashboard',
     children: [
       { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
-      { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
+      //  { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
       { path: 'apiperformancereport/list', name: '性能测试明细', component: _import('reportcenter/apiperformancereport/index'), meta: { permission: ['apiperformancereport:list'] }},
       { path: 'apiperformancestatistics/list', name: '性能测试统计', component: _import('reportcenter/apiperformancestatistics/index'), meta: { permission: ['apiperformancestatistics:list'] }}
 

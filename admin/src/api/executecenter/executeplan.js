@@ -8,6 +8,14 @@ export function getexecuteplanList(params) {
   })
 }
 
+export function getallexplanbytype(params) {
+  return request({
+    url: '/executeplan/getallexplanbytype',
+    method: 'get',
+    params
+  })
+}
+
 export function getallexplan() {
   return request({
     url: '/executeplan/getallexplan',

@@ -39,4 +39,7 @@ public interface ExecuteplanService extends Service<Executeplan> {
     int ifexist(Condition condition);
 
     List<Executeplan> getallexplan();
+    List<Executeplan> getallexplanbytype(String usetype);
+
+
 }

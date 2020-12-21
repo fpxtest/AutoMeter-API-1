@@ -29,6 +29,15 @@
     <result column="creator" jdbcType="VARCHAR" property="creator" />
   </resultMap>
 
+  <select id="findApicasereportWithName" resultMap="BaseResultMap">
+    SELECT c.executeplanname,b.casename,a.batchname,a.runtime,a.samples,a.errorcount,a.errorrate,a.average,a.min,a.max,a.median,a.nzpct,a.nfpct,a.nnpct,a.tps,a.receivekbsec,a.sendkbsec
+    FROM apicases_performancestatistics a join apicases b join executeplan c  on a.caseid=b.id and a.testplanid=c.id
+    <where>
+      <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+    </where>
+  </select>
+
   <select id="listallresult" resultMap="BaseResultMap">
     SELECT c.executeplanname,b.casename,a.batchname,a.runtime,a.samples,a.errorcount,a.errorrate,a.average,a.min,a.max,a.median,a.nzpct,a.nfpct,a.nnpct,a.tps,a.receivekbsec,a.sendkbsec
     FROM apicases_performancestatistics a join apicases b join executeplan c  on a.caseid=b.id and a.testplanid=c.id

@@ -62,7 +62,7 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
         TestAssert testAssert= new TestAssert();
         core=new Testcore(getLogger());
         try {
-                        // 获得请求响应
+            // 获得请求响应
             start = new Date().getTime();
             ob =core.InitHttpDatabyJmeter(ctx);
             //获取期望值数据

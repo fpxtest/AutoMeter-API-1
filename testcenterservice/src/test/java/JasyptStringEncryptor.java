@@ -2,7 +2,6 @@ import com.zoctan.api.Application;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -23,8 +22,8 @@ public class JasyptStringEncryptor {
 
   @Test
   public void encode() {
-    final String name = this.stringEncryptor.encrypt("root");
-    final String password = this.stringEncryptor.encrypt("root");
+    final String name = this.stringEncryptor.encrypt("centeradmin");
+    final String password = this.stringEncryptor.encrypt("Centeradmin!@#$");
 
     System.err.println("name = " + name);
     System.err.println("password = " + password);

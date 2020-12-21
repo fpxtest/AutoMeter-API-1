@@ -147,6 +147,12 @@ public class ExecuteplanController {
         return ResultGenerator.genOkResult(list);
     }
 
+    @GetMapping("/getallexplanbytype")
+    public Result getallexplanbytype(@RequestParam String usetype) {
+        List<Executeplan> list = executeplanService.getallexplanbytype(usetype);
+        return ResultGenerator.genOkResult(list);
+    }
+
     /**
      * 更新自己的资料
      */

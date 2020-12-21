@@ -198,7 +198,7 @@
 <script>
   import { getapireportList as getapireportList, search, addapireport, updateapireport, removeapireport } from '@/api/reportcenter/apireport'
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
-  import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
+  import { getallexplanbytype as getallexplanbytype } from '@/api/executecenter/executeplan'
   import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
   import { unix2CurrentTime } from '@/utils'
 
@@ -250,6 +250,9 @@
           visittype: '',
           path: '',
           memo: ''
+        },
+        tmpexecplantype: {
+          usetype: ''
         },
         search: {
           page: null,
@@ -316,7 +319,8 @@
        * 获取执行计划列表
        */
       getexecplanList() {
-        getallexplan().then(response => {
+        this.tmpexecplantype.usetype = '功能'
+        getallexplanbytype(this.tmpexecplantype).then(response => {
           this.execplanList = response.data
         }).catch(res => {
           this.$message.error('加载计划列表失败')
