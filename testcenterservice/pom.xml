@@ -174,11 +174,9 @@
         <!-- Druid 数据库连接池 -->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
+            <artifactId>druid</artifactId>
             <version>${druid.version}</version>
-            <!--            <scope>provided</scope>-->
         </dependency>
-
         <!-- jasypt 用于加密配置文件 -->
         <!-- https://mvnrepository.com/artifact/com.github.ulisesbocchio/jasypt-spring-boot-starter -->
         <dependency>
