@@ -73,7 +73,7 @@ export default {
     return {
       loading: false,
       loginForm: {
-        nameOrEmail: 'admin',
+        nameOrEmail: '',
         password: ''
       },
       loginRules: {
