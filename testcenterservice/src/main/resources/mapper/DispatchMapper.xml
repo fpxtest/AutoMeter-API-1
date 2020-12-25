@@ -21,4 +21,13 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+  <select id="findDispatchWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM dispatch a
+    <where>
+      <if test="execplanname != null and execplanname != ''">a.execplanname like CONCAT('%',#{execplanname},'%')</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname like CONCAT('%',#{batchname},'%')</if>
+    </where>
+  </select>
 </mapper>

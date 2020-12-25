@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author SeasonFan
@@ -19,4 +21,8 @@ public class DispatchServiceImpl extends AbstractService<Dispatch> implements Di
 @Resource
 private DispatchMapper dispatchMapper;
 
+    @Override
+    public List<Dispatch> findDispatchWithName(Map<String, Object> params) {
+        return dispatchMapper.findDispatchWithName(params);
+    }
 }

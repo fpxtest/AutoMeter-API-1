@@ -1,4 +1,4 @@
-package com.api.autotest.test.marketingservice;
+package com.api.autotest.test.helloworldservice;
 
 import com.alibaba.fastjson.JSONObject;
 import com.api.autotest.core.TestAssert;
@@ -11,7 +11,7 @@ import org.apache.jmeter.samplers.SampleResult;
 
 import java.util.Date;
 
-public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
+public class HelloWorld extends AbstractJavaSamplerClient {
     //测试核心
     private TestCore core;
     //API请求数据对象
@@ -25,12 +25,12 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
     //用例运行结束时间
     private long end = 0;
 
-    // 初始化方法，实际运行时每个线程仅执行一次
+    // 初始化方法，实际运行时每个线程仅执行一次，在测试方法运行前执行，类似于LoadRunner中的init方法
     public void setupTest(JavaSamplerContext context) {
         super.setupTest(context);
     }
 
-    // 设置传入的参数，已设置的参数会显示到Jmeter的参数列表中
+    // 设置传入的参数，可以设置多个，已设置的参数会显示到Jmeter的参数列表中
     public Arguments getDefaultParameters() {
         Arguments params = new Arguments();
         //定义一个参数，显示到Jmeter的参数列表中，第一个参数为参数默认的显示名称，第二个参数为默认值
@@ -70,31 +70,31 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
             initalTestData(ctx);
             // 发送用例请求
             sendCaseRequest();
-
-            //获取请求返回值actualResult转换成JSONObject对象
+            // ===========================用例断言区，新开发一个用例，需要在此编写用例断言======================================
+            // 此例子返回类型为json格式，把请求返回值actualResult转换成JSONObject对象，新的用例开发根据实际返回类型做相应断言处理
             JSONObject actualResultObject = JSONObject.parseObject(actualResult);
+            // ---------------断言status步骤开始-------------------------------------
+            //获取期望值的status结果
+            String expectStatus = getCaseExpectValue("status");
+            //获取实际值status结果
+            String actualStatus = actualResultObject.get("status").toString();
+            //日志记录实际值
+            getLogger().info(TestCore.logplannameandcasename + "actualStatus is:" + actualStatus);
+            // 完成期望值status和实际值status的比较，并且收集断言结果到assertInfo中
+            assertInfo = testAssert.AssertEqual(expectStatus, actualStatus);
+            // ---------------断言status步骤结束-------------------------------------
 
-            // 断言code
-            String expectCode = getCaseExpectValue("code");
-            String actualCode = actualResultObject.get("code").toString();
-            getLogger().info(TestCore.logplannameandcasename + "actualcode is:" + expectCode);
-            // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertInfo = testAssert.AssertEqual(expectCode, actualCode);
-
-            // 断言message
-            String expectMessage = getCaseExpectValue("message");
-            String actualMessage = actualResultObject.get("message").toString();
-            getLogger().info(TestCore.logplannameandcasename + "actualMessage is:" + actualMessage);
-            // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertInfo = testAssert.AssertEqual(expectMessage, actualMessage);
-
-            // 断言result
-            String expectResult = getCaseExpectValue("result");
-            String actualResult = actualResultObject.get("result").toString();
-            getLogger().info(TestCore.logplannameandcasename + "actualResult is:" + actualResult);
-            // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertInfo = testAssert.AssertEqual(expectResult, actualResult);
-
+            // ---------------断言msg步骤开始----------------------------------------
+            //获取期望值的msg结果
+            String expectMsg = getCaseExpectValue("msg");
+            //获取实际值msg结果
+            String actualMsg = actualResultObject.get("msg").toString();
+            //日志记录实际值
+            getLogger().info(TestCore.logplannameandcasename + "actualMsg is:" + actualMsg);
+            // 完成期望值和实际值msg的比较，并且收集断言结果到assertInfo中
+            assertInfo = testAssert.AssertEqual(expectMsg, actualMsg);
+            // ---------------断言msg步骤结束----------------------------------------
+            // ===========================用例断言区========================================================================
         } catch (Exception ex) {
             caseException(results, testAssert, ex.getMessage());
         } finally {
@@ -105,7 +105,6 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
         results.sampleEnd();
         return results;
     }
-
 
     //初始化用例的基础数据
     private void initalTestData(JavaSamplerContext ctx) throws Exception {
@@ -147,14 +146,10 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
         return expectValue;
     }
 
-    //结束方法，实际运行时每个线程仅执行一次
+    //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
         super.teardownTest(ctx);
     }
-
-
-
-
 
     // 本地调试
     public static void main(String[] args) {
@@ -180,7 +175,7 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
         params.addArgument("bodyjson", "");
         params.addArgument("dubbojson", "");
         JavaSamplerContext ctx = new JavaSamplerContext(params);
-        retrySendSmsOrFindShortUrl test = new retrySendSmsOrFindShortUrl();
+        HelloWorld test = new HelloWorld();
         test.setupTest(ctx);
         test.runTest(ctx);
         test.teardownTest(ctx);

@@ -13,11 +13,21 @@
         </el-form-item>
 
         <span v-if="hasPermission('dispatch:search')">
-          <el-form-item>
-            <el-input v-model="search.dispatchname" @keyup.enter.native="searchBy" placeholder="执行机名"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
+          <el-form-item label="执行计划" prop="execplanname" >
+          <el-select v-model="search.execplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(testplan, index) in execplanList" :key="index">
+              <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
+            </div>
+          </el-select>
+        </el-form-item>
+          <el-form-item label="批次" prop="batchname" >
+            <el-select v-model="search.batchname" placeholder="批次">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(planbatch, index) in planbatchList" :key="index">
+              <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
+            </div>
+          </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -41,7 +51,7 @@
       <el-table-column label="执行机" align="center" prop="slavername" width="120"/>
       <el-table-column label="执行计划" align="center" prop="execplanname" width="100"/>
       <el-table-column label="执行批次" align="center" prop="batchname" width="100"/>
-      <el-table-column label="执行用例" align="center" prop="testcasename" width="80"/>
+      <el-table-column label="执行用例" align="center" prop="testcasename" width="120"/>
       <el-table-column label="状态" align="center" prop="status" width="60"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -145,6 +155,8 @@
 <script>
   import { getdispatchList as getdispatchList, search, adddispatch, updatedispatch, removedispatch } from '@/api/dispatch/dispatch'
   import { unix2CurrentTime } from '@/utils'
+  import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
+  import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
 
   export default {
     filters: {
@@ -159,7 +171,9 @@
     },
     data() {
       return {
-        dispatchList: [], // 字典列表
+        dispatchList: [], // 调度列表
+        execplanList: [], // 计划列表
+        planbatchList: [], // 批次列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
@@ -184,21 +198,42 @@
           stype: '',
           memo: ''
         },
+        tmpbatchquery: {
+          executeplanid: ''
+        },
         search: {
           page: null,
           size: null,
-          dispatchname: null,
-          ip: null
+          execplanname: null,
+          batchname: null
         }
       }
     },
 
     created() {
+      this.getallexplan()
+
       this.getdispatchList()
     },
 
     methods: {
       unix2CurrentTime,
+
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      testplanselectChanged(e) {
+        for (let i = 0; i < this.execplanList.length; i++) {
+          if (this.execplanList[i].executeplanname === e) {
+            this.tmpbatchquery.executeplanid = this.execplanList[i].id
+          }
+        }
+        getbatchbyplan(this.tmpbatchquery).then(response => {
+          this.planbatchList = response.data
+        }).catch(res => {
+          this.$message.error('加载批次列表失败')
+        })
+      },
 
       /**
        * 获取字典列表
@@ -213,6 +248,18 @@
           this.$message.error('加载字典列表失败')
         })
       },
+
+      /**
+       * 执行计划
+       */
+      getallexplan() {
+        getallexplan().then(response => {
+          this.execplanList = response.data
+        }).catch(res => {
+          this.$message.error('加载执行计划列表失败')
+        })
+      },
+
       searchBy() {
         this.btnLoading = true
         this.listLoading = true

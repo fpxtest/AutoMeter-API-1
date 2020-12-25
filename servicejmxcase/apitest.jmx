@@ -67,15 +67,15 @@
         <stringProp name="checkQuery">Select 1</stringProp>
         <stringProp name="connectionAge">5000</stringProp>
         <stringProp name="dataSource">testcenter</stringProp>
-        <stringProp name="dbUrl">jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;characterEncoding=utf-8&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</stringProp>
+        <stringProp name="dbUrl">jdbc:mysql://rm-uf6e4665t6ou14m3m.mysql.rds.aliyuncs.com/testcenter?useUnicode=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;characterEncoding=utf-8&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</stringProp>
         <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
         <boolProp name="keepAlive">true</boolProp>
-        <stringProp name="password">test</stringProp>
+        <stringProp name="password">Centeradmin!@#$</stringProp>
         <stringProp name="poolMax">10</stringProp>
         <stringProp name="timeout">10000</stringProp>
         <stringProp name="transactionIsolation">DEFAULT</stringProp>
         <stringProp name="trimInterval">60000</stringProp>
-        <stringProp name="username">test</stringProp>
+        <stringProp name="username">centeradmin</stringProp>
         <boolProp name="preinit">false</boolProp>
         <stringProp name="initQuery"></stringProp>
         <stringProp name="connectionProperties"></stringProp>
@@ -111,11 +111,15 @@
         <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="获取casetype" enabled="true">
           <stringProp name="BeanShellSampler.query"> 
 String casetype=&quot;&quot;;
+String apiid=&quot;&quot;;
  if(vars.getObject(&quot;testcaseresult&quot;).size()&gt;0)
  {
  	casetype=vars.getObject(&quot;testcaseresult&quot;).get(0).get(&quot;casetype&quot;);
+ 	apiid=vars.getObject(&quot;testcaseresult&quot;).get(0).get(&quot;apiid&quot;).toString();
  }
  vars.put(&quot;casetype&quot;,casetype);
+ vars.put(&quot;apiid&quot;,apiid);
+ log.error(&quot;===apiid-------------------------------------&quot;+apiid);
  props.setProperty(&quot;casetype&quot;,casetype);
  log.error(&quot;===casetype-------------------------------------&quot;+casetype);
 
@@ -220,6 +224,19 @@ props.setProperty(&quot;newstatus&quot;,status);
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="获取case-api的参数类型sql" enabled="true">
+            <stringProp name="dataSource">testcenter</stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select propertytype from api_params where apiid=${apiid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">apiparamsprosult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCSampler>
+          <hashTree/>
           <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="获取用例结果sql" enabled="true">
             <stringProp name="dataSource">testcenter</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
@@ -286,15 +303,13 @@ props.setProperty(&quot;newstatus&quot;,status);
           </JDBCSampler>
           <hashTree/>
           <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="获取run的参数" enabled="true">
-            <stringProp name="BeanShellSampler.query"> import java.util; 
- import com.alibaba.fastjson.JSON;
-
-
-
-long start = new Date().getTime();
-String starttime=String.valueOf(start);
+            <stringProp name="BeanShellSampler.query">import java.util; 
+ import com.alibaba.fastjson.JSON; 
+ 
+ long startnums = new Date().getTime();
+String starttime=String.valueOf(startnums);
 props.setProperty(&quot;start&quot;,starttime);
-log.error(&quot;===start-------------------------------------&quot;+start);
+log.error(&quot;===starttime-------------------------------------&quot;+starttime);
 
 
  String executeplanname=&quot;&quot;;
@@ -407,38 +422,45 @@ String port=&quot;&quot;;
 
  String testserver = &quot;&quot;;
  String resource = &quot;&quot;;
-        if(deployunitvisittype.equals(new String(&quot;ip&quot;)))
-        {
+ if(deployunitvisittype.equals(new String(&quot;ip&quot;)))
+ {
             testserver = ip;
             resource = protocal + &quot;://&quot; + testserver + &quot;:&quot; + port + path;
-        }
-        else
-        {
+ }
+ else
+ {
             testserver= domain;
             resource = protocal + &quot;://&quot; + testserver  + path;
-        }
-     props.setProperty(&quot;resource&quot;,resource);  
-     log.error(&quot;===resource-------------------------------------&quot;+resource);  
+ }
+ props.setProperty(&quot;resource&quot;,resource);  
+ log.error(&quot;===resource-------------------------------------&quot;+resource);  
 
 Map paramsmap = new HashMap();
 Map headmap = new HashMap();
 Map bodymap = new HashMap();
 Map dubbomap = new HashMap();
 
- int casedatalistsize=vars.getObject(&quot;casedataresult&quot;).size();
- log.error(&quot;===casedatalistsize-------------------------------------&quot;+casedatalistsize);
-   String paramjson=&quot;&quot;;
-   String headjson=&quot;&quot;;
-   String bodyjson=&quot;&quot;;
-   String dubbojson=&quot;&quot;;
-   for (int i=0;i&lt;casedatalistsize;i++) {
-   	 String propertytype= vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;propertytype&quot;);
+ 
+   String paramjson=&quot;paramjson&quot;;
+   String headjson=&quot;headjson&quot;;
+   String bodyjson=&quot;bodyjson&quot;;
+   String dubbojson=&quot;dubbojson&quot;;
+   int casedatalistsize=vars.getObject(&quot;casedataresult&quot;).size();
+   log.error(&quot;===casedatalistsize-------------------------------------&quot;+casedatalistsize);
+
+   if(casedatalistsize&gt;0)
+   {
+   log.error(&quot;===00000000000000000000000000-------------------------------------&quot;);
+   	for (int i=0; i&lt;1; i++)
+   	{
+	    String propertytype= vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;propertytype&quot;);
+         log.error(&quot;===pppppppppppppppppppppppppppp-------------------------------------&quot;);
       // 获取Header，params，Body，Dubbo不同数据后，开始组装请求数据       
         if (propertytype.equals(new String(&quot;Params&quot;))) {
-        		String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
-        		 log.error(&quot;=Params==apiparam-------------------------------------&quot;+apiparam);
-        	 	String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
-        	 	 log.error(&quot;==Params=apiparamvalue-------------------------------------&quot;+apiparamvalue);
+          String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
+           log.error(&quot;=Params==apiparam-------------------------------------&quot;+apiparam);
+           String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
+            log.error(&quot;==Params=apiparamvalue-------------------------------------&quot;+apiparamvalue);
              paramsmap.put(apiparam, apiparamvalue);
             } 
        paramjson=JSON.toJSONString(paramsmap); 
@@ -446,10 +468,10 @@ Map dubbomap = new HashMap();
        log.error(&quot;==paramjson-------------------------------------&quot;+paramjson);
 
         if (propertytype.equals(new String(&quot;Header&quot;))) {
-        		String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
-        		 log.error(&quot;===Header---apiparam-------------------------------------&quot;+apiparam);
-        	 	String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
-        	 	 log.error(&quot;===Header---apiparamvalue-------------------------------------&quot;+apiparamvalue);
+          String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
+           log.error(&quot;===Header---apiparam-------------------------------------&quot;+apiparam);
+           String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
+            log.error(&quot;===Header---apiparamvalue-------------------------------------&quot;+apiparamvalue);
              headmap.put(apiparam, apiparamvalue);
             }
        headjson=JSON.toJSONString(headmap); 
@@ -457,10 +479,10 @@ Map dubbomap = new HashMap();
        log.error(&quot;==headjson-------------------------------------&quot;+headjson);
 
         if (propertytype.equals(new String(&quot;Body&quot;))) {
-        		String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
-        		 log.error(&quot;===Body---apiparam-------------------------------------&quot;+apiparam);
-        	 	String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
-        	 	 log.error(&quot;===Body---apiparamvalue-------------------------------------&quot;+apiparamvalue);
+          String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
+           log.error(&quot;===Body---apiparam-------------------------------------&quot;+apiparam);
+           String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
+            log.error(&quot;===Body---apiparamvalue-------------------------------------&quot;+apiparamvalue);
              bodymap.put(apiparam, apiparamvalue);
             }
 
@@ -469,17 +491,66 @@ Map dubbomap = new HashMap();
        log.error(&quot;==bodyjson-------------------------------------&quot;+bodyjson);
 
         if (propertytype.equals(new String(&quot;Dubbo&quot;))) {
-        		String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
-        		 log.error(&quot;===Dubbo---apiparam-------------------------------------&quot;+apiparam);
-        	 	String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
-        	 	 log.error(&quot;===Dubbo---apiparamvalue-------------------------------------&quot;+apiparamvalue);
+          String apiparam=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparam&quot;).trim();
+           log.error(&quot;===Dubbo---apiparam-------------------------------------&quot;+apiparam);
+           String apiparamvalue=vars.getObject(&quot;casedataresult&quot;).get(i).get(&quot;apiparamvalue&quot;).trim();
+            log.error(&quot;===Dubbo---apiparamvalue-------------------------------------&quot;+apiparamvalue);
              dubbomap.put(apiparam, apiparamvalue);
             }
 
        dubbojson=JSON.toJSONString(dubbomap); 
        props.setProperty(&quot;dubbojson&quot;,dubbojson);
        log.error(&quot;==dubbojson-------------------------------------&quot;+dubbojson);
-}
+   	}
+   }	
+   //}
+   //else
+   //{
+   //遍历用例的api参数期望有对应的用例数据,如果没有表示遗漏用例参数数据
+   	 int apiparamssize=vars.getObject(&quot;apiparamsprosult&quot;).size();
+   	  log.error(&quot;===apiparamssize-------------------------------------&quot;+apiparamssize);
+   	 for (int i=0;i&lt;apiparamssize;i++) {
+         String Propery=vars.getObject(&quot;apiparamsprosult&quot;).get(i).get(&quot;propertytype&quot;);
+   	  log.error(&quot;===Propery-------------------------------------&quot;+Propery);
+	if (Propery.equals(new String(&quot;Params&quot;)))
+	{
+		if(paramjson==&quot;paramjson&quot;)
+		{
+			paramjson=&quot;nocasedatas&quot;;
+			props.setProperty(&quot;paramjson&quot;,paramjson);
+		}
+	}
+   	  log.error(&quot;===headjson-------------------------------------&quot;+headjson);
+	if (Propery.equals(new String(&quot;Header&quot;)))
+	{
+		if(headjson==&quot;headjson&quot;)
+		{
+			headjson=&quot;nocasedatas&quot;;
+			props.setProperty(&quot;headjson&quot;,headjson);
+		}
+	}
+	   	  log.error(&quot;===paramjson-------------------------------------&quot;+paramjson);
+	if (Propery.equals(new String(&quot;Body&quot;)))
+	{
+		if(bodyjson==&quot;bodyjson&quot;)
+		{
+			bodyjson=&quot;nocasedatas&quot;;
+			props.setProperty(&quot;bodyjson&quot;,bodyjson);
+		}	
+	}
+	if (Propery.equals(new String(&quot;Dubbo&quot;)))
+	{
+		if(dubbojson==&quot;dubbojson&quot;)
+		{
+			dubbojson=&quot;nocasedatas&quot;;
+			props.setProperty(&quot;dubbojson&quot;,dubbojson);
+		}
+	}
+         	   	
+    }
+
+  // }
+   
 
 
 
@@ -657,7 +728,7 @@ Map dubbomap = new HashMap();
                 </elementProp>
               </collectionProp>
             </elementProp>
-            <stringProp name="classname">com.api.autotest.test.marketingservice.${testclass}</stringProp>
+            <stringProp name="classname">com.api.autotest.test.${testdeployunit}.${testclass}</stringProp>
           </JavaSampler>
           <hashTree/>
         </hashTree>
