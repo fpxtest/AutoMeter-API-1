@@ -68,10 +68,6 @@
             配置和testcenterservice一样
         4.admin（后台）
         在目录admin/config/prod.env.js中修改配置BASE_API项，为调用testcenterservice的ip和端口，或者使用域名
-        module.exports = {
-          NODE_ENV: '"production"',
-          BASE_API: '"http://xxxxxxxxxx"'
-        }
         5.api-jmeter-autotest (编写测试用例类)
         配置src/resource/app.properties中配置mysql.host，username，password
         
