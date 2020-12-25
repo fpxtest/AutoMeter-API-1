@@ -34,7 +34,8 @@
 
 ## Demo
 
-   [Demo]: http://centeradmin.cdmtzz.com/#/login
+  2. MyBatis（[官方中文文档](http://www.mybatis.org/mybatis-3/zh/index.html)）
+  1 [Demo]: http://centeradmin.cdmtzz.com/#/login
     
     账号hellotest 密码：123456
 
