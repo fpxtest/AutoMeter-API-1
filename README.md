@@ -108,13 +108,13 @@
        
    二，用例开发步骤
    
-       用例的开发是基于Jmeter的java-Sample来运行用例的，所以在创建用例的时候，我们需要设置Jmeter-Class，在Jmeter的java-Sample中一个class对应一个用例的测试
-       
+       用例的开发是基于Jmeter的java-Sample来运行用例的，所以我们在平台上在创建用例的时候，我们需要设置Jmeter-Class，在Jmeter的Java工程中一个class对应一个用例的测试，平台是通过：发布单元名+Jmeter-Class类的方式找到具体的Java用例类来运行
+
        1.用例的开发是一个java工程，使用maven来打包成api-jmeter-autotest-1.0.jar，打包后放到jmeter的lib/exts/目录下后，平台执行会通过Jmeter-Class名来调用用例类
-       2.java工程中的main/java/test/目录下面创建和平台相同的发布单元名的目录，假设我们在平台上要测试的发布单元为helloworldservice，则在main/java/test/下也创建helloworldservice，然后在          此目录下创建用例类
-       3.在目录下创建用例类，只需要拷贝main/java/test/helloworldservice/目录下的HelloWorld例子类，改名成新的用例类名，然后在新的用例类中编写断言
+       2.java工程中的main/java/test/目录下面创建和平台相同的发布单元名的目录，假设我们在平台上要测试的发布单元为helloworldservice，则在main/java/test/下也创建helloworldservice
+       3.在第二步创建发布单元目录下创建用例类，只需要拷贝main/java/test/helloworldservice/目录下的HelloWorld例子类，改名成新的用例类名，然后在新的用例类中编写断言
        
-       平台是通过：发布单元名+Jmeter-Class类的方式找到具体的java用例类，再运行起来的
+       
        
        具体测试用例类的编写断言方法：
        
