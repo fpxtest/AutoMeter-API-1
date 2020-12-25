@@ -106,21 +106,24 @@
        14.报告中心，报告中心选择功能或者性能的报告页面查看用例的执行结果
        
        
-   二，用例开发
+   二，用例开发步骤
    
        用例的开发是基于Jmeter的java-Sample来运行用例的，所以在创建用例的时候，我们需要设置Jmeter-Class，在Jmeter的java-Sample中一个class对应一个用例的测试
-       1.用例的开发是一个java工程，使用maven来打包成api-jmeter-autotest-1.0.jar，然后放到jmeter的lib/exts/目录下后，平台执行执行计划会调用对应的用例
-       2.假设我们在平台上要测试的发布单元为helloworldservice，则在用例java工程中的main/java/test/下面创建相同的发布单元名helloworldservice的目录，然后在此目录下创建用例类
-       3.在目录下创建用例类，只需要拷贝main/java/test/helloworldservice/目录下的HelloWorld类，改名成新的用例类名，然后在新的用例类中编写断言
        
-       具体测试用例类的编写方法：
+       1.用例的开发是一个java工程，使用maven来打包成api-jmeter-autotest-1.0.jar，打包后放到jmeter的lib/exts/目录下后，平台执行会通过Jmeter-Class名来调用用例类
+       2.java工程中的main/java/test/目录下面创建和平台相同的发布单元名的目录，假设我们在平台上要测试的发布单元为helloworldservice，则在main/java/test/下也创建helloworldservice，然后在          此目录下创建用例类
+       3.在目录下创建用例类，只需要拷贝main/java/test/helloworldservice/目录下的HelloWorld例子类，改名成新的用例类名，然后在新的用例类中编写断言
+       
+       平台是通过：发布单元名+Jmeter-Class类的方式找到具体的java用例类，再运行起来的
+       
+       具体测试用例类的编写断言方法：
        
                1.在新建的用例类中，在方法runTest中的“用例断言区”按照例子编写断言:
                2.actualResult=sendCaseRequest(),actualResult为用例请求返回的结果，根据返回类型自己解析，例子为json，转换为JSONObject解析
                3.getCaseExpectValue方法获取在平台上编写用例的期望字段值，例如code=100001,getCaseExpectValue("code")既可以获取值100001
                4.获取到实际值和期望值后，再使用AssertEqual(expect,actual)做断言，并且返回断言的结果，用例支持多字段断言，例如断言中先判断code是否正确，再判断status是否正确，再判断其他
 
-    代码例子：
+    helloworld代码例子：
     
     public SampleResult runTest(JavaSamplerContext ctx) {
         SampleResult results = new SampleResult();
@@ -175,8 +178,3 @@
 ## 系统操作指南
 
    1.[测试平台定位和使用思路](../../wiki/测试平台定位和使用思路)
-
-
-
-
-
