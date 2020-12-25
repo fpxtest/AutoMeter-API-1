@@ -118,10 +118,10 @@
        
        具体测试用例类的编写断言方法：
        
-               1.在新建的用例类中，在方法runTest中的“用例断言区”按照例子编写断言:
-               2.actualResult=sendCaseRequest(),actualResult为用例请求返回的结果，根据返回类型自己解析，例子为json，转换为JSONObject解析
-               3.getCaseExpectValue方法获取在平台上编写用例的期望字段值，例如code=100001,getCaseExpectValue("code")既可以获取值100001
-               4.获取到实际值和期望值后，再使用AssertEqual(expect,actual)做断言，并且返回断言的结果，用例支持多字段断言，例如断言中先判断code是否正确，再判断status是否正确，再判断其他
+       1.在新建的用例类中，在方法runTest中的“用例断言区”按照例子编写断言:
+       2.actualResult=sendCaseRequest(),actualResult为用例请求返回的结果，根据返回类型自己解析，例子为json，转换为JSONObject解析
+       3.getCaseExpectValue方法获取在平台上编写用例的期望字段值，例如code=100001,getCaseExpectValue("code")既可以获取值100001
+       4.获取到实际值和期望值后，再使用AssertEqual(expect,actual)做断言，并且返回断言的结果，用例支持多字段断言，例如断言中先判断code是否正确，再判断status是否正确，再判断其他
 
     helloworld代码例子：
     
