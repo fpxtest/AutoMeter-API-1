@@ -35,7 +35,7 @@
 
 ## demo
 
-    http://centeradmin.cdmtzz.com/#/login
+    [Demo](http://centeradmin.cdmtzz.com/#/login)
 
     账号hellotest 密码：123456
 
