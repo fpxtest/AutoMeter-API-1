@@ -9,8 +9,8 @@
     4.做什么样的测试？
     5.得到什么样的结果？
 
+### 设计思路：
 ## AutoMeter测试平台定位是希望解决在使用分布式服务，微服务架构的个人或者公司，API的自动化测试工作
-### 使用思路：
     1.对于测试整体活动围绕人员(测试人员，开发人员)，机器(服务器，移动设备)，用例(功能，性能)，可以认为这些是个人或者公司核心的测试资产
     2.有了上述的测试资产，来开展测试活动，比如说使用服务器来搭建测试环境，在测试环境上执行测试用例，获取响应的测试反馈报告
 ### 开展具体的测试活动，需要解决4个问题
@@ -62,42 +62,21 @@
     1.testcenterservice （测试中心服务）
      配置：
         1.applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
-        spring:
-          devtools:
-            restart:
-              # 修改代码后自动重启
-              enabled: true
-          # 数据源（应该全部加密）
-          datasource:
-            url: jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
-            # 用户名 test
-            username: MyEnc({Qjn8FaKnAiApiz6g3RM5Ow==})
-            # 密码 test
-            password: MyEnc({w5CeK9tnNUROTUGdRRmd1Q==})
-          redis:
-            # 数据库索引（默认为0）
-            database: 0
-            # 服务器地址
-            host: 127.0.0.1
-            # 服务器连接端口
-            port: 6379
-    2.slaverservice  （执行服务）
-        配置和testcenterservice一样
-    3.dispatchservice （调度服务）
-        配置和testcenterservice一样
-    4.admin（后台）
+       
+        2.slaverservice  （执行服务）
+            配置和testcenterservice一样
+        3.dispatchservice （调度服务）
+            配置和testcenterservice一样
+        4.admin（后台）
         在目录admin/config/prod.env.js中修改配置BASE_API项，为调用testcenterservice的ip和端口，或者使用域名
         module.exports = {
           NODE_ENV: '"production"',
           BASE_API: '"http://xxxxxxxxxx"'
         }
-    5.api-jmeter-autotest (编写测试用例类)
-        配置src/resource/app.properties,数据库访问连接字
-        mysql.host=jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
-        username=xxxxxx
-        password=xxxxxx
+        5.api-jmeter-autotest (编写测试用例类)
+        配置src/resource/app.properties中配置mysql.host，username，password
         
-    6.系统字典表配置
+        6.系统字典表配置
         如果需要部署多个slaver集群运行测试，则需要在字典表中配置调度服务的访问地址
         增加字典项：调度服务，字典编码：dispatchservice，字典项名：调度服务器地址,字典项值：替换成你的调度服务的访问地址
 
