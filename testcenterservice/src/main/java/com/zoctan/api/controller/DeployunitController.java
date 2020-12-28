@@ -57,6 +57,12 @@ public class DeployunitController {
         return ResultGenerator.genOkResult(deployunit);
     }
 
+    @GetMapping("/getdeploynum")
+    public Result getdeploynum() {
+        Integer deployunitnum = deployunitService.getdeploynum();
+        return ResultGenerator.genOkResult(deployunitnum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

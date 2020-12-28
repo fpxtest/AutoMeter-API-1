@@ -8,6 +8,13 @@ export function getslaverList(params) {
   })
 }
 
+export function getslavernum() {
+  return request({
+    url: '/slaver/getslavernum',
+    method: 'get'
+  })
+}
+
 export function search(slaverForm) {
   return request({
     url: '/slaver/search',

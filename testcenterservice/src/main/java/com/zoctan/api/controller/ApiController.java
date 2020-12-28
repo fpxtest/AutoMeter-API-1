@@ -57,6 +57,12 @@ public class ApiController {
         return ResultGenerator.genOkResult(api);
     }
 
+    @GetMapping("/getapinum")
+    public Result getapinum() {
+        Integer apinum = apiService.getapinum();
+        return ResultGenerator.genOkResult(apinum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

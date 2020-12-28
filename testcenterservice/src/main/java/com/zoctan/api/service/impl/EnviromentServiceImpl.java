@@ -43,4 +43,9 @@ private EnviromentMapper enviromentMapper;
     public int ifexist(Condition con) {
         return countByCondition(con);
     }
+
+    @Override
+    public Integer getenviromentnum() {
+        return enviromentMapper.getenviromentnum();
+    }
 }

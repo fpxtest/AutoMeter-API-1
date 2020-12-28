@@ -39,6 +39,11 @@ private ApiMapper apiMapper;
     }
 
     @Override
+    public Integer getapinum() {
+        return apiMapper.getapinum();
+    }
+
+    @Override
     public List<Api> listAllbydeploy(String deployunitname) {
         return apiMapper.listAllbydeploy(deployunitname);
     }

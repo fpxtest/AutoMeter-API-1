@@ -20,6 +20,18 @@ export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('errorPage/404'), hidden: true },
   { path: '/401', component: _import('errorPage/401'), hidden: true },
+  // {
+  //   path: '/',
+  //   component: Layout,
+  //   redirect: '/dashboard',
+  //   children: [
+  //     {
+  //       path: 'dashboard', component: () => import('dashboard/index'),
+  //       name: 'Dashboard',
+  //       meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+  //     }
+  //   ]
+  // }
   {
     path: '',
     component: Layout,
@@ -46,7 +58,7 @@ export const asyncRouterMap = [
     path: '/assets',
     component: Layout,
     name: '资产管理',
-    icon: 'dashboard',
+    icon: 'asset',
     children: [
       { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { permission: ['machine:list'] }},
       //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
@@ -59,7 +71,7 @@ export const asyncRouterMap = [
     path: '/enviroment',
     component: Layout,
     name: '环境管理',
-    icon: 'dashboard',
+    icon: 'enviroment',
     children: [
       { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { permission: ['enviroment:list'] }},
       { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { permission: ['envmachine:list'] }},
@@ -73,7 +85,7 @@ export const asyncRouterMap = [
     path: '/deployunit',
     component: Layout,
     name: '发布单元',
-    icon: 'dashboard',
+    icon: 'deploy',
     children: [
       { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { permission: ['depunit:list'] }},
       { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { permission: ['api:list'] }},
@@ -85,7 +97,7 @@ export const asyncRouterMap = [
     path: '/dispatch',
     component: Layout,
     name: '调度中心',
-    icon: 'dashboard',
+    icon: 'dispatch',
     children: [
       { path: 'slaver/list', name: '执行节点', component: _import('dispatch/slaver/index'), meta: { permission: ['slaver:list'] }},
       { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { permission: ['dispatch:list'] }}
@@ -96,7 +108,7 @@ export const asyncRouterMap = [
     path: '/executecenter',
     component: Layout,
     name: '执行中心',
-    icon: 'dashboard',
+    icon: 'execute',
     children: [
       { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { permission: ['executeplan:list'] }}
       //  { path: 'apiparams/list', name: '执行监控', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
@@ -107,7 +119,7 @@ export const asyncRouterMap = [
     path: '/reportcenter',
     component: Layout,
     name: '报告中心',
-    icon: 'dashboard',
+    icon: 'report',
     children: [
       { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
       //  { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
@@ -161,7 +173,7 @@ export const asyncRouterMap = [
     path: '/system',
     component: Layout,
     name: '系统管理',
-    icon: 'dashboard',
+    icon: 'sys',
     children: [
       { path: 'account/list', name: '账户管理', component: _import('system/account/list'), meta: { permission: ['account:detail'] }},
       { path: 'role/list', name: '角色管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},

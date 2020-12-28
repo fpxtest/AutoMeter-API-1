@@ -31,4 +31,9 @@ private SlaverMapper slaverMapper;
     public void updateSlaver(Slaver params) {
         this.slaverMapper.updateSlaver(params);
     }
+
+    @Override
+    public Integer getslavernum() {
+        return slaverMapper.getslavernum();
+    }
 }

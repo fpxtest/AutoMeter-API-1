@@ -69,7 +69,7 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
             // 初始化用例数据
             initalTestData(ctx);
             // 发送用例请求
-            sendCaseRequest();
+            actualResult=sendCaseRequest();
 
             //获取请求返回值actualResult转换成JSONObject对象
             JSONObject actualResultObject = JSONObject.parseObject(actualResult);
@@ -117,11 +117,12 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private void sendCaseRequest() throws Exception {
-        actualResult = core.request(ob);
+    private String sendCaseRequest() throws Exception {
+        String Result = core.request(ob);
         getLogger().info(TestCore.logplannameandcasename + "请求结果 is:" + actualResult);
         // 用例结束时间
         end = new Date().getTime();
+        return Result;
     }
 
     //用例运行过程中的异常信息处理

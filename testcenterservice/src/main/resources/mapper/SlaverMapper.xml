@@ -31,6 +31,11 @@
     where stype = #{stype}
   </select>
 
+  <select id="getslavernum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM slaver a
+  </select>
+
   <update id="updateSlaver" parameterType="com.zoctan.api.entity.Slaver">
     update slaver set slavername = #{slavername}, ip = #{ip}, port= #{port},stype= #{stype},
     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')

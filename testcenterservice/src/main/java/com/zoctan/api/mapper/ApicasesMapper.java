@@ -33,5 +33,6 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
 
     List<Apicases> getapicasebyName(@Param("deployunitname")String deployunitname,@Param("apiname") String apiname);
 
+    Integer getcasenum(@Param("casetype")String casetype);
 
 }

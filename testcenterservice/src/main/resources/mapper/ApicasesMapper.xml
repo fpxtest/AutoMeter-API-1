@@ -57,6 +57,11 @@
 
   </select>
 
+  <select id="getcasenum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM apicases  where casetype=#{casetype}
+  </select>
+
   <update id="updateApicase" parameterType="com.zoctan.api.entity.Apicases">
     update apicases set casename = #{casename},casejmxname = #{casejmxname}, apiname = #{apiname}, deployunitname = #{deployunitname}, casecontent = #{casecontent},expect = #{expect},
     memo = #{memo},casetype=#{casetype},threadnum=#{threadnum},loops=#{loops},middleparam=#{middleparam}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')

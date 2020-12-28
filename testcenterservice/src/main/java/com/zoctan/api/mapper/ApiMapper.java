@@ -28,5 +28,6 @@ public interface ApiMapper extends MyMapper<Api> {
     List<Api> listAllbydeploy(@Param("deployunitname") String deployunitname);
 
     int ifexist(Condition condition);
+    Integer getapinum();
 
 }

@@ -54,4 +54,9 @@ private ApicasesMapper apicasesMapper;
     public List<Apicases> getapicasebyName(String deployunitname, String apiname) {
         return apicasesMapper.getapicasebyName(deployunitname,apiname);
     }
+
+    @Override
+    public Integer getcasenum(String casetype) {
+        return apicasesMapper.getcasenum(casetype);
+    }
 }

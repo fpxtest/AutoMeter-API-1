@@ -46,6 +46,12 @@ public class SlaverController {
         return ResultGenerator.genOkResult(slaver);
     }
 
+    @GetMapping("/getslavernum")
+    public Result getslavernum() {
+        Integer slavernum = slaverService.getslavernum();
+        return ResultGenerator.genOkResult(slavernum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

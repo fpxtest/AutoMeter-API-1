@@ -40,4 +40,7 @@ public interface EnviromentService extends Service<Enviroment> {
 
     int ifexist(Condition condition);
 
+    Integer getenviromentnum();
+
+
 }

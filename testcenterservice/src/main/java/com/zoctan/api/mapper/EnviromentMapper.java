@@ -32,4 +32,7 @@ public interface EnviromentMapper extends MyMapper<Enviroment> {
      * @return 发布单元列表
      */
     void updateEnviroment(Enviroment params);
+
+    Integer getenviromentnum();
+
 }

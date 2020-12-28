@@ -61,6 +61,11 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
     }
 
     @Override
+    public Integer getexecuteplannum() {
+        return executeplanMapper.getexecuteplannum();
+    }
+
+    @Override
     public void executeplancase(List<Testplanandbatch> testplanlist) {
         for (Testplanandbatch plan : testplanlist) {
             Long execplanid = plan.getPlanid();

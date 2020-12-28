@@ -43,4 +43,9 @@ private DeployunitMapper deployunitMapper;
         return countByCondition(condition);
     }
 
+    @Override
+    public Integer getdeploynum() {
+        return deployunitMapper.getdeploynum();
+    }
+
 }

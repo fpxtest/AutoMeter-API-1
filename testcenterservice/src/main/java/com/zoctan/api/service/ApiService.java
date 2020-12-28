@@ -31,4 +31,7 @@ public interface ApiService extends Service<Api> {
 
     int ifexist(Condition condition);
 
+    Integer getapinum();
+
+
 }

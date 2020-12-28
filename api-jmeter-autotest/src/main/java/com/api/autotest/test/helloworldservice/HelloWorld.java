@@ -68,8 +68,8 @@ public class HelloWorld extends AbstractJavaSamplerClient {
         try {
             // 初始化用例数据
             initalTestData(ctx);
-            // 发送用例请求
-            sendCaseRequest();
+            // 发送用例请求，并返回结果
+            actualResult=sendCaseRequest();
             // ===========================用例断言区，新开发一个用例，需要在此编写用例断言======================================
             // 此例子返回类型为json格式，把请求返回值actualResult转换成JSONObject对象，新的用例开发根据实际返回类型做相应断言处理
             JSONObject actualResultObject = JSONObject.parseObject(actualResult);
@@ -116,11 +116,12 @@ public class HelloWorld extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private void sendCaseRequest() throws Exception {
-        actualResult = core.request(ob);
+    private String sendCaseRequest() throws Exception {
+        String Result = core.request(ob);
         getLogger().info(TestCore.logplannameandcasename + "请求结果 is:" + actualResult);
         // 用例结束时间
         end = new Date().getTime();
+        return Result;
     }
 
     //用例运行过程中的异常信息处理

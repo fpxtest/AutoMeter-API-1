@@ -26,4 +26,7 @@ public interface SlaverMapper extends MyMapper<Slaver> {
      * @return 用户列表
      */
     void updateSlaver(Slaver params);
+
+    Integer getslavernum();
+
 }

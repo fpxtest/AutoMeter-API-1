@@ -64,6 +64,12 @@ public class MachineController {
         return ResultGenerator.genOkResult(machine);
     }
 
+    @GetMapping("/getmachinenum")
+    public Result getmachinenum() {
+        Integer machinenum = machineService.getmachinenum();
+        return ResultGenerator.genOkResult(machinenum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {
