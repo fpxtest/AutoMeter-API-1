@@ -56,6 +56,12 @@ public class EnviromentController {
         return ResultGenerator.genOkResult(enviroment);
     }
 
+    @GetMapping("/getenviromentnum")
+    public Result getenviromentnum() {
+        Integer enviromentnum = enviromentService.getenviromentnum();
+        return ResultGenerator.genOkResult(enviromentnum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

@@ -31,6 +31,11 @@
     where a.machinename =#{machinename}
   </select>
 
+  <select id="getmachinenum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM Machine a
+  </select>
+
   <select id="findmachinebyip" resultMap="BaseResultMap">
     SELECT *
     FROM Machine a

@@ -66,6 +66,12 @@ public class ApicasesController {
         return ResultGenerator.genOkResult(apicases);
     }
 
+    @GetMapping("/getcasenum")
+    public Result getcasenum(@RequestParam String casetype) {
+        Integer apicasesnum = apicasesService.getcasenum(casetype);
+        return ResultGenerator.genOkResult(apicasesnum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

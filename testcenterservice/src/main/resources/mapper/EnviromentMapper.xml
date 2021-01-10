@@ -31,6 +31,11 @@
     </where>
   </select>
 
+  <select id="getenviromentnum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM enviroment a
+  </select>
+
   <update id="updateEnviroment" parameterType="com.zoctan.api.entity.Enviroment">
     update enviroment set enviromentname = #{enviromentname},envtype=#{envtype},
     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')

@@ -132,6 +132,13 @@ public class ExecuteplanController {
         return ResultGenerator.genOkResult(executeplan);
     }
 
+
+    @GetMapping("/getexecuteplannum")
+    public Result detail() {
+        Integer executeplannum = executeplanService.getexecuteplannum();
+        return ResultGenerator.genOkResult(executeplannum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

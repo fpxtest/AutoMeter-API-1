@@ -8,6 +8,13 @@ export function getenviromentList(params) {
   })
 }
 
+export function getenviromentnum() {
+  return request({
+    url: '/enviroment/getenviromentnum',
+    method: 'get'
+  })
+}
+
 export function getenviromentallList() {
   return request({
     url: '/enviroment/ens',

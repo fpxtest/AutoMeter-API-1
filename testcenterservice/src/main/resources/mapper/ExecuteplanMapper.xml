@@ -37,6 +37,10 @@
     SELECT a.id, a.executeplanname FROM executeplan a where usetype=#{usetype}
   </select>
 
+  <select id="getexecuteplannum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM executeplan a
+  </select>
 
   <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
     update executeplan set executeplanname = #{executeplanname},envid = #{envid},enviromentname=#{enviromentname}, usetype=#{usetype}, memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')

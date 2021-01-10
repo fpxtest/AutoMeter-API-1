@@ -2,7 +2,7 @@ package com.api.autotest.test.marketingservice;
 
 import com.alibaba.fastjson.JSONObject;
 import com.api.autotest.core.TestAssert;
-import com.api.autotest.core.Testcore;
+import com.api.autotest.core.TestCore;
 import com.api.autotest.dto.RequestObject;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
@@ -10,24 +10,27 @@ import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
-    HashMap<String, String> expect = new HashMap<>();
-    String errorinfo = "";
-    String actualresult = "";
-    Testcore core = null;
-    RequestObject ob=null;
-    long start = 0;
-    long end = 0;
+    //测试核心
+    private TestCore core;
+    //API请求数据对象
+    private RequestObject ob;
+    //运行用例错误信息
+    private String errorInfo="";
+    //运行API用例返回值
+    private String actualResult="";
+    //用例运行开始时间
+    private long start = 0;
+    //用例运行结束时间
+    private long end = 0;
 
-    // 初始化方法，实际运行时每个线程仅执行一次，在测试方法运行前执行，类似于LoadRunner中的init方法
+    // 初始化方法，实际运行时每个线程仅执行一次
     public void setupTest(JavaSamplerContext context) {
         super.setupTest(context);
-        getLogger().info( "retrySendSmsOrFindShortUrl setupTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
     }
 
-    // 设置传入的参数，可以设置多个，已设置的参数会显示到Jmeter的参数列表中
+    // 设置传入的参数，已设置的参数会显示到Jmeter的参数列表中
     public Arguments getDefaultParameters() {
         Arguments params = new Arguments();
         //定义一个参数，显示到Jmeter的参数列表中，第一个参数为参数默认的显示名称，第二个参数为默认值
@@ -55,115 +58,103 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
 
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
-        getLogger().info( "retrySendSmsOrFindShortUrl runTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
         SampleResult results = new SampleResult();
+        //Jmeter java实例开始执行
         results.sampleStart();
-        String assertinfo = ""; //断言信息
-        TestAssert testAssert= new TestAssert();
-        core=new Testcore(getLogger());
+        //用例多次断言信息汇总
+        String assertInfo = "";
+        //断言对象
+        TestAssert testAssert = new TestAssert();
         try {
-            // 获得请求响应
-            start = new Date().getTime();
-            ob =core.InitHttpDatabyJmeter(ctx);
-            //获取期望值数据
-            //expect = core.getExpectmap();
-            getLogger().info(Testcore.logplannameandcasename + "开始请求.............");
-            actualresult = core.request(ob);
-            getLogger().info(Testcore.logplannameandcasename + "请求结果 is:" + actualresult);
-            // 结束时间
-            end = new Date().getTime();
-            // 解析请求响应内容，使用期望值expect开始断言
-            String expectcode = core.getExpectValue("code");
-            getLogger().info(Testcore.logplannameandcasename + "expectcode is:" + expectcode);
-            JSONObject jsonObject = JSONObject.parseObject(actualresult);
+            // 初始化用例数据
+            initalTestData(ctx);
+            // 发送用例请求
+            actualResult=sendCaseRequest();
 
-            String actualcode = jsonObject.get("code").toString();
-            getLogger().info(Testcore.logplannameandcasename + "actualcode is:" + expectcode);
+            //获取请求返回值actualResult转换成JSONObject对象
+            JSONObject actualResultObject = JSONObject.parseObject(actualResult);
+
+            // 断言code
+            String expectCode = getCaseExpectValue("code");
+            String actualCode = actualResultObject.get("code").toString();
+            getLogger().info(TestCore.logplannameandcasename + "actualcode is:" + expectCode);
             // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertinfo = testAssert.AssertEqual(expectcode, actualcode);
+            assertInfo = testAssert.AssertEqual(expectCode, actualCode);
 
-
-            // 解析请求响应内容，使用期望值expect开始断言
-            String expectmessage = core.getExpectValue("message");
-            getLogger().info(Testcore.logplannameandcasename + "expectmessage is:" + expectmessage);
-            JSONObject jsonObjectmessage = JSONObject.parseObject(actualresult);
-
-            String actualmessage = jsonObjectmessage.get("message").toString();
-            getLogger().info(Testcore.logplannameandcasename + "actualcode is:" + actualmessage);
+            // 断言message
+            String expectMessage = getCaseExpectValue("message");
+            String actualMessage = actualResultObject.get("message").toString();
+            getLogger().info(TestCore.logplannameandcasename + "actualMessage is:" + actualMessage);
             // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertinfo = testAssert.AssertEqual(expectmessage, actualmessage);
+            assertInfo = testAssert.AssertEqual(expectMessage, actualMessage);
 
-
-            // 解析请求响应内容，使用期望值expect开始断言
-            String expectresult = core.getExpectValue("result");
-            getLogger().info(Testcore.logplannameandcasename + "expectresult is:" + expectresult);
-            JSONObject jsonObjectexpectresult = JSONObject.parseObject(actualresult);
-
-            String actualresult = jsonObjectmessage.get("result").toString();
-            getLogger().info(Testcore.logplannameandcasename + "actualresult is:" + actualresult);
+            // 断言result
+            String expectResult = getCaseExpectValue("result");
+            String actualResult = actualResultObject.get("result").toString();
+            getLogger().info(TestCore.logplannameandcasename + "actualResult is:" + actualResult);
             // 完成期望值和实际值的比较代码，并且收集断言结果
-            assertinfo = testAssert.AssertEqual(expectresult, actualresult);
+            assertInfo = testAssert.AssertEqual(expectResult, actualResult);
 
         } catch (Exception ex) {
-            testAssert.setCaseresult(false);
-            errorinfo = ex.getMessage().replace("'","");
-            end = new Date().getTime();
-            getLogger().error(Testcore.logplannameandcasename + "用例执行发生异常，请检查!" + ex.toString());
+            caseException(results, testAssert, ex.getMessage());
         } finally {
-            // 保存用例运行结果，jmeter的sample运行结果
-            results.setSuccessful(testAssert.isCaseresult());
-            core.savetestcaseresult(testAssert.isCaseresult(), end - start, actualresult, assertinfo, errorinfo);
+            // 保存用例运行结果，Jmeter的sample运行结果
+            caseFinish(results, testAssert, assertInfo);
         }
-        //定义一个事务，表示这是事务的结束点，类似于LoadRunner的lr.end_transaction
+        //Jmeter事务，表示这是事务的结束点
         results.sampleEnd();
         return results;
     }
 
-    //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
+
+    //初始化用例的基础数据
+    private void initalTestData(JavaSamplerContext ctx) throws Exception {
+        getLogger().info("Hello World runTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
+        core = new TestCore(getLogger());
+        ob = core.InitHttpDatabyJmeter(ctx);
+        //用例开始运行时间
+        start = new Date().getTime();
+    }
+
+    //用例发送请求
+    private String sendCaseRequest() throws Exception {
+        String Result = core.request(ob);
+        getLogger().info(TestCore.logplannameandcasename + "请求结果 is:" + actualResult);
+        // 用例结束时间
+        end = new Date().getTime();
+        return Result;
+    }
+
+    //用例运行过程中的异常信息处理
+    private void caseException(SampleResult results, TestAssert testAssert, String exceptionMessage) {
+        // 断言用例运行结果为失败
+        testAssert.setCaseresult(false);
+        errorInfo = exceptionMessage.replace("'", "");
+        end = new Date().getTime();
+        getLogger().error(TestCore.logplannameandcasename + "用例执行发生异常，请检查!" + exceptionMessage);
+    }
+
+    //用例运行结束收集信息
+    private void caseFinish(SampleResult results, TestAssert testAssert, String assertInfo) {
+        //jmeter java实例执行完成，记录结果
+        results.setSuccessful(testAssert.isCaseresult());
+        core.savetestcaseresult(testAssert.isCaseresult(), end - start, actualResult, assertInfo, errorInfo);
+    }
+
+    //获取用例期望值
+    private String getCaseExpectValue(String expectKey) throws Exception {
+        String expectValue = core.getExpectValue(expectKey);
+        getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
+        return expectValue;
+    }
+
+    //结束方法，实际运行时每个线程仅执行一次
     public void teardownTest(JavaSamplerContext ctx) {
         super.teardownTest(ctx);
-        getLogger().info( "retrySendSmsOrFindShortUrl teardownTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
-//        //后置条件
-//        try {
-//            core.fixpostcondition();
-//        } catch (Exception e) {
-//            getLogger().info(Testcore.logplannameandcasename + "后置条件处理发生异常，刷新用例状态为失败");
-//            core.updatetestcaseresultfail(errorinfo+" 后置条件处理异常："+e.getMessage().replace("'",""));
-//        }
-//        getLogger().info(Testcore.logplannameandcasename + "处理后置条件完成");
-//        //更新调度表状态
-//        core.updatedispatchcasestatus();
-//        //通知slaver性能测试解析报告，生成数据入库
-//        try {
-//            getLogger().info(Testcore.logplannameandcasename + "开始通知slaverservice处理性能结果");
-//            core.genealperformacestaticsreport();
-//            getLogger().info(Testcore.logplannameandcasename + "通知slaverservice处理性能结果完成");
-//        } catch (Exception e) {
-//            getLogger().info(Testcore.logplannameandcasename + "解析性能结果文件出错：" + e.getMessage());
-//        }
     }
 
 
-    public void checkpreconditionright() throws Exception {
-        if (errorinfo != "") {
-            throw new Exception(errorinfo);
-        }
-    }
 
-
-    public void setuphelp(JavaSamplerContext context) {
-//        core = new Testcore(getLogger());
-//        //初始化用例请求数据
-//        ob=core.InitHttpData(context);
-//        getLogger().info(Testcore.logplannameandcasename + "数据库初始化完成");
-//        //前置条件
-//        try {
-//            core.fixprecondition();
-//        } catch (Exception e) {
-//            errorinfo ="前置条件处理异常："+ e.getMessage().replace("'","");
-//        }
-//        getLogger().info(Testcore.logplannameandcasename + "处理前置条件完成");
-    }
 
 
     // 本地调试

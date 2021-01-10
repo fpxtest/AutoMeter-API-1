@@ -50,7 +50,7 @@ public class postcondition extends AbstractJavaSamplerClient {
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
         super.teardownTest(ctx);
-        Testcore core = new Testcore(getLogger());
+        TestCore core = new TestCore(getLogger());
         String errorinfo = "";
         String status="";
         String caseid = ctx.getParameter("caseid");
@@ -73,20 +73,20 @@ public class postcondition extends AbstractJavaSamplerClient {
         } catch (Exception e) {
             status="失败";
             errorinfo ="后置条件处理异常："+ e.getMessage().replace("'","");
-            getLogger().info(Testcore.logplannameandcasename + "后置条件处理发生异常:"+e.getMessage());
+            getLogger().info(TestCore.logplannameandcasename + "后置条件处理发生异常:"+e.getMessage());
         }
         finally {
             String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"后置",casetype);
-            getLogger().info(Testcore.logplannameandcasename + "处理后置条件完成");
+            getLogger().info(TestCore.logplannameandcasename + "处理后置条件完成");
         }
         //更新调度表状态
         try {
             core.updatedispatchcasestatus(testplanid,batchid,slaverid,caseid);
-            getLogger().info(Testcore.logplannameandcasename + "更新调度表状态完成");
+            getLogger().info(TestCore.logplannameandcasename + "更新调度表状态完成");
         }
         catch (Exception ex)
         {
-            getLogger().info(Testcore.logplannameandcasename + "更新调度表状态异常："+ex.getMessage());
+            getLogger().info(TestCore.logplannameandcasename + "更新调度表状态异常："+ex.getMessage());
         }
         //通知slaver性能测试解析报告，生成数据入库
         try {
@@ -96,23 +96,23 @@ public class postcondition extends AbstractJavaSamplerClient {
                 if(!file1.exists()) {
                     System.out.println("性能报告文件未生成。。。。。。。。。。。。。。。");
                 }
-                getLogger().info(Testcore.logplannameandcasename + "开始处理性能报告结果");
+                getLogger().info(TestCore.logplannameandcasename + "开始处理性能报告结果");
 
-                getLogger().info(Testcore.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
+                getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
 
                 long end = new Date().getTime();
-                getLogger().info(Testcore.logplannameandcasename + "处理性能报告出错获取的结束时间：" + end);
+                getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的结束时间：" + end);
 
                 long starttime=Long.parseLong(start);
-                getLogger().info(Testcore.logplannameandcasename + "处理性能报告出错获取的结束时间：" + end);
+                getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的结束时间：" + end);
 
                 double costtime=(double)(end-starttime)/1000;
 
                 core.genealperformacestaticsreport(testclass,batchname,testplanid,batchid,slaverid,caseid,casereportfolder,costtime);
-                getLogger().info(Testcore.logplannameandcasename + "处理性能报告结果完成");
+                getLogger().info(TestCore.logplannameandcasename + "处理性能报告结果完成");
             }
         } catch (Exception e) {
-            getLogger().info(Testcore.logplannameandcasename + "处理性能报告出错：" + e.getMessage());
+            getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错：" + e.getMessage());
         }
     }
 

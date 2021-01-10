@@ -229,7 +229,7 @@
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
-          size: 20, // 每页数量
+          size: 10, // 每页数量
           listLoading: true
         },
         dialogStatus: 'add',

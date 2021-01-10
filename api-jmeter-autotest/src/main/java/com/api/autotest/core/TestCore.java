@@ -23,7 +23,7 @@ import java.util.Map;
  @DESCRIPTION 
  @create 2020/10/17
 */
-public class Testcore {
+public class TestCore {
     public static String logplannameandcasename="";
     Logger logger=null;
     String testplanid = "";
@@ -32,15 +32,8 @@ public class Testcore {
     String slaverid = "";
     String batchname = "";
     String casetype = "";
-    //String casereportfolder="";
     String expect = "";
-    //String protocal ="";
-    //String resource ="";
-    //String method="";
-    //String apistyle="";
-    //String requestcontenttype="";
-    //HttpHeader header;
-    //HttpParamers paramers;
+
     ArrayList<HashMap<String, String>> caselist;
     ArrayList<HashMap<String, String>> planlist;
     ArrayList<HashMap<String, String>> deployunitmachineiplist;
@@ -56,15 +49,13 @@ public class Testcore {
     HashMap<String, String> dubbomap ;
     HashMap<String, String> expectmap;
 
-
-    public  Testcore()
+    public TestCore()
     {
 
     }
-    public Testcore(Logger log)
+    public TestCore(Logger log)
     {
         logger=log;
-
     }
 
     // 获取期望值
@@ -202,53 +193,66 @@ public class Testcore {
         newob.setApistyle(apistyle);
         newob.setProtocal(protocal);
 
-
-        HttpHeader header=null;
-        if(headjson.isEmpty())
+        if(headjson.equals(new String("nocasedatas")))
         {
-            header=new HttpHeader();
+            //表示api设置了header参数，但是用例未赋值
+            throw new Exception("用例的Header参数未设置数据，请设置完整再运行");
         }
         else
         {
-            try {
-                Map headermaps = (Map) JSON.parse(headjson);
+            HttpHeader header=null;
+            if(headjson.equals(new String("headjson")))
+            {
                 header=new HttpHeader();
-                for (Object map : headermaps.entrySet()){
-                    System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
-                    header.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+            }
+            else
+            {
+                try {
+                    Map headermaps = (Map) JSON.parse(headjson);
+                    header=new HttpHeader();
+                    for (Object map : headermaps.entrySet()){
+                        System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
+                        header.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+                    }
+                    newob.setHeader(header);
+                }
+                catch (Exception ex)
+                {
+                    throw  new Exception("Header参数用例数据异常："+headjson);
                 }
             }
-            catch (Exception ex)
-            {
-                throw  new Exception("Head 参数异常："+headjson);
-            }
         }
-        newob.setHeader(header);
-
-        HttpParamers params=null;
-        if(paramsjson.isEmpty())
+        if(paramsjson.equals(new String("nocasedatas")))
         {
-            params=new HttpParamers();
+            throw new Exception("用例的Params参数未设置数据，请设置完整再运行");
         }
         else
         {
-            try {
-                Map paramsmaps = (Map) JSON.parse(paramsjson);
+            HttpParamers params=null;
+
+            if(paramsjson.equals(new String("paramjson")))
+            {
                 params=new HttpParamers();
-                for (Object map : paramsmaps.entrySet()){
-                    System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
-                    params.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+            }
+            else
+            {
+                try {
+                    Map paramsmaps = (Map) JSON.parse(paramsjson);
+                    params=new HttpParamers();
+                    for (Object map : paramsmaps.entrySet()){
+                        System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
+                        params.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+                    }
+                    newob.setParamers(params);
+                }
+                catch (Exception ex)
+                {
+                    throw  new Exception("Paras参数用例数据异常："+paramsjson);
                 }
             }
-            catch (Exception ex)
-            {
-                throw  new Exception("Paras 参数异常："+paramsjson);
-            }
         }
-        newob.setParamers(params);
         return newob;
     }
-
 
     // 拼装请求需要的用例数据
     public RequestObject getcaserequestdata(String planid, String testcaseid) throws Exception {
@@ -531,19 +535,6 @@ public class Testcore {
 
     //生产性能报告目录
     public void genealperformacestaticsreport(String testclass,String batchname,String testplanid,String batchid,String slaverid,String caseid,String casereportfolder,double costtime) throws Exception {
-//        PropertiesUtil pUtil = PropertiesUtil.getInstance("app.properties");
-//        String url = pUtil.getProperty("slaverservice").trim();
-//        logger.info(logplannameandcasename+"slaverservice接口url：。。。。。。"+url);
-//        HttpParamers paramersperformance = new  HttpParamers();
-//        paramers.addParam("planid",testplanid);
-//        paramers.addParam("caseid",caseid);
-//        paramers.addParam("batchname",batchname);
-//        paramers.addParam("folder",casereportfolder);
-//        HttpHeader header=new HttpHeader();
-//        String result= Httphelp.doPost("http",url,paramers,"json",header,10,10);
-//        logger.info(logplannameandcasename+"slaverservice接口返回：。。。。。。"+result);
-
-
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
@@ -552,95 +543,5 @@ public class Testcore {
                 " values(" + testplanid + "," + batchid + ", '"+batchname+"', "+slaverid+", " +caseid+ " , '" + testclass+"' ,"+costtime+ " , '" + casereportfolder + "', '待解析', '"+ dateNowStr + "', '" + dateNowStr +"')";
         logger.info(logplannameandcasename+"保存性能结果 sql is...........: " + sql);
         logger.info(logplannameandcasename+"保存性能结果 is...........: " +MysqlConnectionUtils.update(sql));
-
-
-//        String casereport=casereportfolder+"/content/js/dashboard.js";
-//        logger.info(logplannameandcasename+"casereportfolder is:"+casereportfolder);
-//
-//
-//        logger.info(logplannameandcasename+"参数为 is:"+testclass+"，"+batchname+"，"+testplanid+"，"+batchid+","+slaverid+","+caseid+","+casereportfolder+","+costtime);
-//
-//
-//        BufferedReader reader = null;
-//        try {
-//            reader = new BufferedReader(new FileReader(casereport));
-//        } catch (FileNotFoundException e) {
-//            throw  new Exception(e.getMessage());
-//        }
-//        StringBuilder sb = new StringBuilder();
-//        String line;
-//        try {
-//            while ((line = reader.readLine()) != null) {
-//                sb.append(line);
-//            }
-//        } catch (IOException e) {
-//            throw  new Exception(e.getMessage());
-//        }
-//        try {
-//            reader.close();
-//        } catch (IOException e) {
-//            throw  new Exception(e.getMessage());
-//        }
-//        String statisticsTableStr="";
-//        String sourceStr = sb.substring(sb.indexOf("{"), sb.lastIndexOf("}") + 1);
-//        if (sourceStr != null && sourceStr.contains("statisticsTable")) {
-//            statisticsTableStr = (sourceStr.substring(sourceStr.indexOf("createTable($(\"#statisticsTable\"), ") + 35, sourceStr.length())).split(", function")[0];
-//        } else {
-//            logger.info(logplannameandcasename+"There is no statisticsTable!,未找到性能数据");
-//        }
-//
-//        logger.info(logplannameandcasename+"statisticsTableStr is:"+statisticsTableStr);
-//
-//        JSONObject statisticsTableJson = JSONObject.parseObject(statisticsTableStr);
-//        JSONArray titlesArr = statisticsTableJson.getJSONArray("titles");
-//        JSONArray dataArr = statisticsTableJson.getJSONObject("overall").getJSONArray("data");
-//        JSONArray itemArr = statisticsTableJson.getJSONArray("items");
-//
-//        JSONArray testclassdataarray=null;
-//        for (int i = 0; i < itemArr.size(); i++) {
-//            JSONObject data=(JSONObject)itemArr.get(i);
-//            JSONArray itemdataArr = data.getJSONArray("data");
-//            for (int j = 0; j < itemdataArr.size(); j++) {
-//                if(String.valueOf(itemdataArr.get(j)).equals(testclass))
-//                {
-//                    testclassdataarray =itemdataArr;
-//                    break;
-//                }
-//            }
-//        }
-//        Map<String, String> reportMap = new HashMap<>();
-//        for (int i = 0; i < titlesArr.size(); i++) {
-//            //reportMap.put(String.valueOf(titlesArr.get(i)), String.valueOf(dataArr.get(i)));
-//            reportMap.put(String.valueOf(titlesArr.get(i)), String.valueOf(testclassdataarray.get(i)));
-//
-//        }
-//        String Samples=reportMap.get("#Samples");
-//        String KO=reportMap.get("KO");
-//        String Error=reportMap.get("Error %");
-//        String Average=reportMap.get("Average");
-//        String Min=reportMap.get("Min");
-//        String Max=reportMap.get("Max");
-//        String Median=reportMap.get("Median");
-//        String nzth=reportMap.get("90th pct");
-//        String nfth=reportMap.get("95th pct");
-//        String nnth=reportMap.get("99th pct");
-//        String Throughput=reportMap.get("Transactions/s");
-//        if(Throughput.contains("."))
-//        {
-//            Throughput=Throughput.substring(0,Throughput.indexOf('.')+2);
-//        }
-//        String Received=reportMap.get("Received");
-//        String Sent=reportMap.get("Sent");
-//
-//        Date d = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        String dateNowStr = sdf.format(d);
-//        String sql = "";
-//        sql = "insert apicases_performancestatistics (caseid,testplanid,batchname,runtime,slaverid,samples,errorcount,errorrate,average,min,max,median,nzpct,nfpct,nnpct,tps,receivekbsec,sendkbsec,create_time,lastmodify_time,creator)" +
-//                " values(" + caseid + "," + testplanid + ", '"+batchname+"' , " + costtime+", "+slaverid+", " + Samples+", " +KO+", " +Error+", " +Average+", " +Min+", " +Max+", " +Median+", " +nzth+", " +nnth+", " +nfth+", " +Throughput+", " +Received+", " +Sent+", '"+ dateNowStr + "', '" + dateNowStr +"','admin')";
-//        logger.info(logplannameandcasename+"保存性能统计结果 sqlis...........: " +sql);
-//
-//        logger.info(logplannameandcasename+"保存性能统计结果 is...........: " +MysqlConnectionUtils.update(sql));
-
     }
 }

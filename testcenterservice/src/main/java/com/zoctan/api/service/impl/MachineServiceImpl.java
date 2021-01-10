@@ -42,4 +42,9 @@ private MachineMapper machineMapper;
         return machineMapper.findMachineWithName(params);
     }
 
+    @Override
+    public Integer getmachinenum() {
+        return machineMapper.getmachinenum();
+    }
+
 }

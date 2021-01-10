@@ -35,6 +35,11 @@
     where a.deployunitname=#{deployunitname}
   </select>
 
+  <select id="getapinum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM api a
+  </select>
+
   <update id="updateApi" parameterType="com.zoctan.api.entity.Api">
     update api set apiname = #{apiname}, deployunitname = #{deployunitname}, visittype = #{visittype}, apistyle=#{apistyle}, path = #{path},
     memo = #{memo}, requestcontenttype = #{requestcontenttype}, responecontenttype =#{responecontenttype},  lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')

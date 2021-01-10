@@ -15,6 +15,13 @@ export function getmachineLists() {
   })
 }
 
+export function getmachinenum() {
+  return request({
+    url: '/machine/getmachinenum',
+    method: 'get'
+  })
+}
+
 export function search(machineForm) {
   return request({
     url: '/machine/search',

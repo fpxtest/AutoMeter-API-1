@@ -8,6 +8,13 @@ export function getexecuteplanList(params) {
   })
 }
 
+export function getexecuteplannum() {
+  return request({
+    url: '/executeplan/getexecuteplannum',
+    method: 'get'
+  })
+}
+
 export function getallexplanbytype(params) {
   return request({
     url: '/executeplan/getallexplanbytype',

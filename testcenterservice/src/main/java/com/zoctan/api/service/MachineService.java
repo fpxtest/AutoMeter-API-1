@@ -18,6 +18,7 @@ public interface MachineService extends Service<Machine> {
     int ifexist(Condition condition);
     List<Machine> findMachineWithName(final Map<String, Object> params);
 
+    Integer getmachinenum();
 
 
 }

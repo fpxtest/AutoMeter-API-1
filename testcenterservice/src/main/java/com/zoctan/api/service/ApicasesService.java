@@ -38,6 +38,7 @@ public interface ApicasesService extends Service<Apicases> {
 
     List<Apicases> getapicasebyName(String deployunitname,String apiname);
 
+    Integer getcasenum(String casetype);
 
 
 

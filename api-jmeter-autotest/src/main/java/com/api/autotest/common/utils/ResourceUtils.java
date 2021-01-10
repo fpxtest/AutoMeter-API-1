@@ -16,9 +16,6 @@ public class ResourceUtils {
         // 获取jar包内文件路径
         String filePath = String.valueOf(new ClassPathResource(path).getAsURL());
 
-        // 获取本地文件路径
-//        String filePath = ClassLoader.getSystemResource("").toString().replace("file:/", "").replace("/target/test-classes/", "").replace("/target/classes/", "")
-//                + "/src/main/resources/" + path + "/";
         System.out.println("filePath = " + filePath);
         return filePath;
     }

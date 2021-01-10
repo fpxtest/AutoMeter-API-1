@@ -41,5 +41,6 @@ public interface ExecuteplanService extends Service<Executeplan> {
     List<Executeplan> getallexplan();
     List<Executeplan> getallexplanbytype(String usetype);
 
+    Integer getexecuteplannum();
 
 }

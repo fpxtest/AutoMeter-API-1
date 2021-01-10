@@ -33,6 +33,11 @@
     </where>
   </select>
 
+  <select id="getdeploynum" resultType="java.lang.Integer">
+    SELECT count(*)
+    FROM deployunit a
+  </select>
+
   <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">
     update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},
     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')

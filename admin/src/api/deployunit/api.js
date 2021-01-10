@@ -8,6 +8,13 @@ export function getapiList(params) {
   })
 }
 
+export function getapinum() {
+  return request({
+    url: '/api/getapinum',
+    method: 'get'
+  })
+}
+
 export function getapiListbydeploy(params) {
   return request({
     url: 'api/apibydeploy',

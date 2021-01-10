@@ -8,6 +8,14 @@ export function getapicasesList(params) {
   })
 }
 
+export function getcasenum(params) {
+  return request({
+    url: '/apicases/getcasenum',
+    method: 'get',
+    params
+  })
+}
+
 export function search(apicasesForm) {
   return request({
     url: '/apicases/search',

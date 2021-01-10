@@ -37,4 +37,7 @@ public interface DeployunitMapper extends MyMapper<Deployunit> {
 
     int ifexist(Condition condition);
 
+    Integer getdeploynum();
+
+
 }

@@ -29,4 +29,7 @@ public interface SlaverService extends Service<Slaver> {
      */
     void updateSlaver(Slaver params);
 
+    Integer getslavernum();
+
+
 }

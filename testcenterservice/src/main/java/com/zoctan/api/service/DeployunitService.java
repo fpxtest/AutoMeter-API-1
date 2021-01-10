@@ -39,6 +39,7 @@ public interface DeployunitService extends Service<Deployunit> {
     int ifexist(Condition condition);
 
 
+    Integer getdeploynum();
 
 
 }

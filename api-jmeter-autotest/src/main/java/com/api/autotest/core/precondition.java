@@ -19,7 +19,7 @@ public class precondition extends AbstractJavaSamplerClient {
         super.setupTest(context);
         getLogger().info( "precondition setupTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
         String status="";
-        Testcore core = new Testcore(getLogger());
+        TestCore core = new TestCore(getLogger());
         String errorinfo = "";
         String caseid = context.getParameter("caseid");
         String testplanid = context.getParameter("testplanid");
@@ -37,7 +37,7 @@ public class precondition extends AbstractJavaSamplerClient {
         }
         finally {
            String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"前置",casetype);
-           getLogger().info(Testcore.logplannameandcasename + "处理前置条件完成:"+result);
+           getLogger().info(TestCore.logplannameandcasename + "处理前置条件完成:"+result);
         }
     }
 
