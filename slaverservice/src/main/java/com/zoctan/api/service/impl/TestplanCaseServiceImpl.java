@@ -25,13 +25,13 @@ private ApicasesMapper apicaseMapper;
 
 
     @Override
-    public void executeplancase(String casetype, long slaverid,long batchid,long planid, long caseid, Long thread,Long loop,String deployname, String jmeterpath, String jmxpath, String jmxcasename, String batchname,String jmeterperformancereportpath) {
+    public void executeplancase(String casetype, long slaverid,long batchid,long planid, long caseid, Long thread,Long loop,String deployname, String jmeterpath, String jmxpath, String jmxcasename, String batchname,String jmeterperformancereportpath,String mysqlurl,String mysqlusername,String mysqlpassword) {
         //Apicases apicase = apicaseMapper.getjmetername(caseid);
         //String jmx = jmxcasename;
         String jmetercmd="";
         if(casetype.equals(new String("功能")))
         {
-             jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath  + "/apitest.jmx -Jthread=1 -Jloops=1 -Jtestplanid=" + planid + " -Jcaseid=" + caseid+ " -Jslaverid=" + slaverid+ " -Jbatchid=" + batchid+" -Jbatchname=" +batchname+" -Jtestdeployunit=" +deployname+" -Jtestclass=" +jmxcasename;
+             jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath  + "/apitest.jmx -Jmysqlurl="+mysqlurl+" -Jmysqlusername="+mysqlusername+" -Jmysqlpassword="+mysqlpassword+" -Jthread=1 -Jloops=1 -Jtestplanid=" + planid + " -Jcaseid=" + caseid+ " -Jslaverid=" + slaverid+ " -Jbatchid=" + batchid+" -Jbatchname=" +batchname+" -Jtestdeployunit=" +deployname+" -Jtestclass=" +jmxcasename;
             TestPlanCaseServiceImpl.log.info("jmetercmd 功能 is :"+jmetercmd);
         }
         if(casetype.equals(new String("性能")))
@@ -42,7 +42,7 @@ private ApicasesMapper apicaseMapper;
                 TestPlanCaseServiceImpl.log.info("创建目录 :"+casereportfolder);
                 dir.mkdir();
             }
-            jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath  + "/apitest.jmx -Jthread="+thread+" -Jloops="+loop+" -Jtestplanid=" + planid + " -Jcaseid=" + caseid+ " -Jslaverid=" + slaverid+ " -Jbatchid=" + batchid+" -Jbatchname=" +batchname+" -Jtestdeployunit=" +deployname+" -Jcasereportfolder=" +casereportfolder+" -Jtestclass=" +jmxcasename+ " -l  "+casereportfolder+"/"+caseid+".jtl -e -o "+casereportfolder;
+            jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath  + "/apitest.jmx  -Jmysqlurl="+mysqlurl+" -Jmysqlusername="+mysqlusername+" -Jmysqlpassword="+mysqlpassword+" -Jthread="+thread+" -Jloops="+loop+" -Jtestplanid=" + planid + " -Jcaseid=" + caseid+ " -Jslaverid=" + slaverid+ " -Jbatchid=" + batchid+" -Jbatchname=" +batchname+" -Jtestdeployunit=" +deployname+" -Jcasereportfolder=" +casereportfolder+" -Jtestclass=" +jmxcasename+ " -l  "+casereportfolder+"/"+caseid+".jtl -e -o "+casereportfolder;
             TestPlanCaseServiceImpl.log.info("jmetercmd 性能 is :"+jmetercmd);
         }
         TestPlanCaseServiceImpl.log.info("jmetercmd is :"+jmetercmd);

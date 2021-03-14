@@ -27,7 +27,10 @@ public interface ApiMapper extends MyMapper<Api> {
 
     List<Api> listAllbydeploy(@Param("deployunitname") String deployunitname);
 
+    Api getresponetypebydeployandapiname(@Param("deployunitname")String deployunitname,@Param("apiname")String apiname);
+
     int ifexist(Condition condition);
+
     Integer getapinum();
 
 }

@@ -174,6 +174,7 @@
     },
     data() {
       return {
+        tmpassembletype: '',
         enviroment_assembleList: [], // 环境列表
         assembleypeList: [], // 环境列表
         listLoading: false, // 数据加载等待动画
@@ -181,7 +182,8 @@
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          assembletype: ''
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -204,8 +206,8 @@
           memo: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           assembletype: null
         }
       }
@@ -248,9 +250,22 @@
       searchBy() {
         this.btnLoading = true
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         searchenviroment_assemble(this.search).then(response => {
+          this.enviroment_assembleList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.listLoading = false
+        this.btnLoading = false
+        this.tmpassembletype = this.search.assembletype
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.assembletype = this.tmpassembletype
+        searchenviroment_assemble(this.listQuery).then(response => {
           this.enviroment_assembleList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -267,7 +282,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getenviroment_assembleList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -275,7 +290,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getenviroment_assembleList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

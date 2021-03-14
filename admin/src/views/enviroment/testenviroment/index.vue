@@ -156,13 +156,15 @@
     },
     data() {
       return {
+        tmpenviromentname: '',
         enviromentList: [], // 环境列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          enviromentname: ''
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -179,8 +181,8 @@
           memo: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           enviromentname: null
         }
       }
@@ -206,12 +208,26 @@
           this.$message.error('加载测试环境列表失败')
         })
       },
+
       searchBy() {
         this.btnLoading = true
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.enviromentList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.tmpenviromentname = this.search.enviromentname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.enviromentname = this.tmpenviromentname
+        search(this.listQuery).then(response => {
           this.enviromentList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -228,7 +244,8 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getenviromentList()
+        this.searchBypageing()
+        // this.getenviromentList()
       },
       /**
        * 改变页码
@@ -236,7 +253,8 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getenviromentList()
+        this.searchBypageing()
+        // this.getenviromentList()
       },
       /**
        * 表格序号

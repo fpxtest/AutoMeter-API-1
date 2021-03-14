@@ -194,13 +194,17 @@
     },
     data() {
       return {
+        tmpmachinename: null,
+        tmpip: null,
         machineList: [], // 服务器列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          machinename: null,
+          ip: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -258,6 +262,23 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpmachinename = this.search.machinename
+        this.tmpip = this.search.ip
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.machinename = this.tmpmachinename
+        this.listQuery.ip = this.tmpip
+        search(this.listQuery).then(response => {
+          this.machineList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -269,7 +290,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getmachineList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -277,7 +298,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getmachineList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

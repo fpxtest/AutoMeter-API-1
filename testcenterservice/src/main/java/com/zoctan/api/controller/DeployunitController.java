@@ -78,6 +78,11 @@ public class DeployunitController {
         return ResultGenerator.genOkResult(list);
     }
 
+    @GetMapping("/findDeployNameValueWithCode")
+    public Result findDeployNameValueWithCode(@RequestParam String deployunitname) {
+        Deployunit dep = deployunitService.findDeployNameValueWithCode(deployunitname);
+        return ResultGenerator.genOkResult(dep);
+    }
 
     /**
      * 更新自己的资料
@@ -95,6 +100,7 @@ public class DeployunitController {
         {
             this.deployunitService.updateDeploy(deployunit);
             return ResultGenerator.genOkResult();
+
         }
     }
 

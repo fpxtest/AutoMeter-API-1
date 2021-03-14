@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api" />
+        <module name="api-jmeter-autotest" />
         <module name="dispatchservice" />
         <module name="security" />
         <module name="slaverservice" />
@@ -15,6 +16,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api" target="1.8" />
+      <module name="api-jmeter-autotest" target="1.7" />
       <module name="dispatchservice" target="1.8" />
       <module name="security" target="1.8" />
       <module name="slaverservice" target="1.8" />

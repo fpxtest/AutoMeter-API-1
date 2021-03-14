@@ -192,6 +192,8 @@
     },
     data() {
       return {
+        tmpapiname: null,
+        tmpdeployunitname: null,
         apiparamsList: [], // apiparams列表
         apiList: [], // api列表
         deployunitList: [], // 发布单元列表
@@ -203,7 +205,9 @@
         listQuery: {
           page: 1, // 页码
           size: 20, // 每页数量
-          listLoading: true
+          listLoading: true,
+          apiname: null,
+          deployunitname: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -223,8 +227,8 @@
           keyname: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           apiname: null,
           deployunitname: null
         },
@@ -328,9 +332,24 @@
       searchBy() {
         this.btnLoading = true
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.apiparamsList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.listLoading = false
+        this.btnLoading = false
+        this.tmpapiname = this.search.apiname
+        this.tmpdeployunitname = this.search.deployunitname
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.apiname = this.tmpapiname
+        this.listQuery.deployunitname = this.tmpdeployunitname
+        search(this.listQuery).then(response => {
           this.apiparamsList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -347,7 +366,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getapiparamsList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -355,7 +374,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getapiparamsList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

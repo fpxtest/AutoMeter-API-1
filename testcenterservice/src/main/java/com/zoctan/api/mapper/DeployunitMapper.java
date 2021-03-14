@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Deployunit;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
@@ -12,11 +13,10 @@ public interface DeployunitMapper extends MyMapper<Deployunit> {
     /**
      * 按条件获取发布单元名
      *
-     * @param params 参数
+     * @param deployunitname 参数
      * @return 发布单元列表
      */
-    List<Deployunit> findDeployNameValueWithCode(String params);
-
+    Deployunit findDeployNameValueWithCode(@Param("deployunitname") String deployunitname);
 
     /**
      * 按发布单元名或者协议名获取发布单元内容

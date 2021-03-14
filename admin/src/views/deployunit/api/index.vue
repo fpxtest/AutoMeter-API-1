@@ -213,6 +213,8 @@
     },
     data() {
       return {
+        tmpapiname: '',
+        tmpdeployunitname: '',
         apiList: [], // api列表
         visittypeList: [], // api访问方式列表
         deployunitList: [], // 发布单元列表
@@ -239,7 +241,9 @@
         listQuery: {
           page: 1, // 页码
           size: 20, // 每页数量
-          listLoading: true
+          listLoading: true,
+          apiname: '',
+          deployunitname: ''
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -262,8 +266,8 @@
           memo: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           apiname: null,
           deployunitname: null
         }
@@ -368,10 +372,25 @@
       searchBy() {
         this.btnLoading = true
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
           this.apiList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.listLoading = false
+        this.btnLoading = false
+        this.tmpapiname = this.search.apiname
+        this.tmpdeployunitname = this.search.deployunitname
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.apiname = this.tmpapiname
+        this.listQuery.deployunitname = this.tmpdeployunitname
+        search(this.listQuery).then(response => {
+          this.enviroment_assembleList = response.data.list
           this.total = response.data.total
         }).catch(res => {
           this.$message.error('搜索失败')
@@ -387,7 +406,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getapiList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -395,7 +414,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getapiList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

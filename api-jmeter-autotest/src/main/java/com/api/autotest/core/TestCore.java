@@ -47,7 +47,7 @@ public class TestCore {
     HashMap<String, String> paramsmap ;
     HashMap<String, String> bodymap ;
     HashMap<String, String> dubbomap ;
-    HashMap<String, String> expectmap;
+    public HashMap<String, String> expectmap;
 
     public TestCore()
     {
@@ -80,7 +80,7 @@ public class TestCore {
         {
             //expect = getcaseValue("expect", caselist).trim();
             logger.info(logplannameandcasename+"期望值all为 ....." + expect);
-            String[] exparr = expect.split(",");
+            String[] exparr = expect.split("\\|");
             for (String str : exparr) {
                 logger.info(logplannameandcasename+"期望值为 ....." + str);
                 String[] value=null;
@@ -177,13 +177,13 @@ public class TestCore {
         expect=context.getParameter("expect");
         logger.info(logplannameandcasename+"expect is :  " + expect );
 
-        getExpectmap();
-
         casetype=context.getParameter("casetype");
         logger.info(logplannameandcasename+"casetype is :  " + casetype );
 
         String protocal = context.getParameter("protocal");
         logger.info(logplannameandcasename+"protocal is :  " + protocal );
+
+        getExpectmap();
 
         RequestObject newob= new RequestObject();
         newob.setResponecontenttype(responecontenttype);
@@ -204,6 +204,7 @@ public class TestCore {
             if(headjson.equals(new String("headjson")))
             {
                 header=new HttpHeader();
+                newob.setHeader(header);
             }
             else
             {
@@ -233,6 +234,7 @@ public class TestCore {
             if(paramsjson.equals(new String("paramjson")))
             {
                 params=new HttpParamers();
+                newob.setParamers(params);
             }
             else
             {

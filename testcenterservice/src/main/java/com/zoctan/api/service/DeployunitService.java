@@ -18,7 +18,7 @@ public interface DeployunitService extends Service<Deployunit> {
      * @param params 参数
      * @return 用户列表
      */
-    List<Deployunit> findDeployNameValueWithCode(String params);
+    Deployunit findDeployNameValueWithCode(String params);
 
     /**
      * 按条件查询字典内容

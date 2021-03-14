@@ -3,6 +3,7 @@
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/HttpUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/model/AutoTestTaskInfoModel.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/SSLClient.java
+/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCore.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/JarToolUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/SshUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/core/precondition.java
@@ -19,7 +20,6 @@
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/dto/SshConnectDto.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Httphelp.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/DateUtils.java
-/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/core/Testcore.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/ArrayUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/MD5Utils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java
@@ -32,3 +32,4 @@
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/RandomUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/ResourceUtils.java
 /Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/HttpHeader.java
+/Users/fanseasn/Work/QAP/testplantform/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/httpapi.java

@@ -179,7 +179,7 @@ export default {
       total: 0,
       listQuery: {
         page: 1,
-        size: 9
+        size: 10
       },
       dialogStatus: 'add',
       dialogFormVisible: false,

@@ -288,6 +288,11 @@
     },
     data() {
       return {
+        tmpexecuteplanname: '',
+        tmpcasedeployunitname: null,
+        tmpcaseapiname: null,
+        tmpcaseexecuteplanid: null,
+        tmpcasecasetype: null,
         show: false,
         enviromentnameList: [], // 环境列表
         apiList: [], // api列表
@@ -314,12 +319,17 @@
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          executeplanname: ''
         },
         caselistQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          deployunitname: null,
+          apiname: null,
+          executeplanid: null,
+          casetype: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -366,13 +376,13 @@
           creator: 'admin'
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           executeplanname: null
         },
         searchcase: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           deployunitname: null,
           apiname: null,
           executeplanid: null,
@@ -526,6 +536,21 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpexecuteplanname = this.search.executeplanname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.execplanname = this.tmpexecplanname
+        search(this.listQuery).then(response => {
+          this.executeplanList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -537,7 +562,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getexecuteplanList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -545,7 +570,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getexecuteplanList()
+        this.searchBypageing()
       },
       /**
        * 表格序号
@@ -722,7 +747,30 @@
             })
           }
         })
+        this.tmpcasedeployunitname = this.searchcase.deployunitname
+        this.tmpcaseapiname = this.searchcase.apiname
+        this.tmpcaseexecuteplanid = this.searchcase.executeplanid
+        this.tmpcasecasetype = this.searchcase.casetype
       },
+
+      searchcaseBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.caselistQuery.deployunitname = this.tmpcasedeployunitname
+        this.caselistQuery.apiname = this.tmpcaseapiname
+        this.caselistQuery.executeplanid = this.tmpcaseexecuteplanid
+        this.caselistQuery.casetype = this.tmpcasecasetype
+
+        search(this.listQuery).then(response => {
+          this.testcaselastList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
       /**
        * 改变每页数量
        * @param size 页大小
@@ -730,7 +778,7 @@
       casehandleSizeChange(size) {
         this.caselistQuery.size = size
         this.caselistQuery.page = 1
-        this.searchtestplanexistcase()
+        this.searchcaseBypageing()
       },
       /**
        * 改变页码
@@ -738,7 +786,7 @@
        */
       casehandleCurrentChange(page) {
         this.caselistQuery.page = page
-        this.searchtestplanexistcase()
+        this.searchcaseBypageing()
       },
       /**
        * 表格序号

@@ -170,13 +170,17 @@
     },
     data() {
       return {
+        tmpslavername: null,
+        tmpip: null,
         slaverList: [], // 字典列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          slavername: null,
+          ip: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -196,8 +200,8 @@
           memo: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           slavername: null,
           ip: null
         }
@@ -235,6 +239,23 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpslavername = this.search.slavername
+        this.tmpip = this.search.ip
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.slavername = this.tmpslavername
+        this.listQuery.ip = this.tmpip
+        search(this.listQuery).then(response => {
+          this.slaverList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -246,7 +267,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getslaverList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -254,7 +275,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getslaverList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

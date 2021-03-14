@@ -76,7 +76,7 @@ export const asyncRouterMap = [
       { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { permission: ['enviroment:list'] }},
       { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { permission: ['envmachine:list'] }},
       { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { permission: ['enviroment_assemble:list'] }},
-      { path: 'macdepunit/list', name: '组件部署', component: _import('enviroment/macdepunit/index'), meta: { permission: ['macdepunit:list'] }
+      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { permission: ['macdepunit:list'] }
       }
     ]
   },
@@ -155,19 +155,15 @@ export const asyncRouterMap = [
   //   ]
   // },
   //
-  // {
-  //   path: '/test',
-  //   component: Layout,
-  //   name: '测试分析管理',
-  //   icon: 'dashboard',
-  //   children: [
-  //     { path: 'account/list', name: '静态扫描分析', component: _import('system/account/list'), meta: { permission: ['account:list'] }},
-  //     { path: 'role/list', name: '单元测试覆盖分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-  //     { path: 'role/list', name: '测试覆盖分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-  //     { path: 'role/list', name: '测试智能分析', component: _import('system/role/list'), meta: { permission: ['role:detail'] }}
-  //
-  //   ]
-  // },
+  {
+    path: '/test',
+    component: Layout,
+    name: '测试',
+    icon: 'dashboard',
+    children: [
+      { path: 'testdynamicinput', name: '测试', component: _import('test/testdynamicinput') }
+    ]
+  },
 
   {
     path: '/system',
@@ -177,6 +173,7 @@ export const asyncRouterMap = [
     children: [
       { path: 'account/list', name: '账户管理', component: _import('system/account/list'), meta: { permission: ['account:detail'] }},
       { path: 'role/list', name: '角色管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      // { path: 'deploytestcase/list', name: '发布用例', component: _import('system/deploytestcase/index'), meta: { permission: ['deploytestcase:list'] }},
       { path: 'dictionary/list', name: '字典管理', component: _import('system/dictionary/index'), meta: { permission: ['dictionary:list'] }}
     ]
   },

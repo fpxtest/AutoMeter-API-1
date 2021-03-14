@@ -194,6 +194,9 @@
     },
     data() {
       return {
+        tmptestername: null,
+        tmptestertitle: null,
+        tmptesterorg: null,
         testerList: [], // 测试人员列表
         testertitleList: [], // 测试人员职务列表
         testerorgList: [], // 测试人员职务列表
@@ -212,7 +215,10 @@
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          testername: null,
+          testertitle: null,
+          testerorg: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -295,6 +301,25 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmptestername = this.search.testername
+        this.tmptestertitle = this.search.testertitle
+        this.tmptesterorg = this.search.testerorg
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.testername = this.tmptestername
+        this.listQuery.testertitle = this.tmptestertitle
+        this.listQuery.testerorg = this.tmptesterorg
+        search(this.listQuery).then(response => {
+          this.testerList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -306,7 +331,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.gettesterList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -314,7 +339,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.gettesterList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

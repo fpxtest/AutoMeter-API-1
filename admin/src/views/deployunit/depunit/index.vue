@@ -171,13 +171,17 @@
     },
     data() {
       return {
+        tmpdeployunitname: null,
+        tmpprotocal: null,
         depunitList: [], // 字典列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          deployunitname: null,
+          protocal: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -195,8 +199,8 @@
           memo: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           deployunitname: null,
           protocal: null
         }
@@ -234,6 +238,23 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpdeployunitname = this.search.deployunitname
+        this.tmpprotocal = this.search.protocal
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.protocal = this.tmpprotocal
+        this.listQuery.deployunitname = this.tmpdeployunitname
+        search(this.listQuery).then(response => {
+          this.depunitList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -245,7 +266,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getdepunitList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -253,7 +274,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getdepunitList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

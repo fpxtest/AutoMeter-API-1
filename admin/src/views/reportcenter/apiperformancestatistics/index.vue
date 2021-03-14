@@ -174,6 +174,9 @@
     },
     data() {
       return {
+        tmptestplanname: '',
+        tmptestplanid: null,
+        tmpbatchname: null,
         apiperformancestatisticsList: [], // api报告列表
         apiList: [], // api列表
         planbatchList: [], // 批次列表
@@ -189,7 +192,10 @@
         listQuery: {
           page: 1, // 页码
           size: 20, // 每页数量
-          listLoading: true
+          listLoading: true,
+          testplanname: '',
+          testplanid: null,
+          batchname: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -214,8 +220,8 @@
           usetype: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           testplanname: '',
           testplanid: null,
           batchname: null
@@ -309,6 +315,25 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmptestplanname = this.search.testplanname
+        this.tmptestplanid = this.search.testplanid
+        this.tmpbatchname = this.search.batchname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.testplanname = this.tmptestplanname
+        this.listQuery.testplanid = this.tmptestplanid
+        this.listQuery.batchname = this.tmpbatchname
+        search(this.listQuery).then(response => {
+          this.apiperformancestatisticsList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -320,7 +345,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getapiperformancestatisticsList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -328,7 +353,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getapiperformancestatisticsList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

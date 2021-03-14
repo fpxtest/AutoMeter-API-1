@@ -23,6 +23,14 @@ export function getapiListbydeploy(params) {
   })
 }
 
+export function getresponetypebydeployandapiname(params) {
+  return request({
+    url: 'api/getresponetypebydeployandapiname',
+    method: 'get',
+    params
+  })
+}
+
 export function search(apiForm) {
   return request({
     url: '/api/search',

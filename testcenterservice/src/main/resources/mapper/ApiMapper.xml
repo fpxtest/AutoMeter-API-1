@@ -35,6 +35,12 @@
     where a.deployunitname=#{deployunitname}
   </select>
 
+  <select id="getresponetypebydeployandapiname" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api a
+    where a.deployunitname=#{deployunitname} and a.apiname=#{apiname}
+  </select>
+
   <select id="getapinum" resultType="java.lang.Integer">
     SELECT count(*)
     FROM api a

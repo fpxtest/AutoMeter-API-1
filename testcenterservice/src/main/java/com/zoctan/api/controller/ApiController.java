@@ -79,6 +79,12 @@ public class ApiController {
         return ResultGenerator.genOkResult(list);
     }
 
+    @GetMapping("/getresponetypebydeployandapiname")
+    public Result getresponetypebydeployandapiname(@RequestParam String deployunitname,@RequestParam String apiname) {
+        Api apilist = apiService.getresponetypebydeployandapiname(deployunitname,apiname);
+        return ResultGenerator.genOkResult(apilist);
+    }
+
     /**
      * 更新自己的资料
      */

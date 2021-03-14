@@ -171,6 +171,8 @@
     },
     data() {
       return {
+        tmpexecplanname: null,
+        tmpbatchname: null,
         dispatchList: [], // 调度列表
         execplanList: [], // 计划列表
         planbatchList: [], // 批次列表
@@ -179,7 +181,9 @@
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          execplanname: null,
+          batchname: null
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -202,8 +206,8 @@
           executeplanid: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           execplanname: null,
           batchname: null
         }
@@ -271,6 +275,23 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpexecplanname = this.search.execplanname
+        this.tmpbatchname = this.search.batchname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.execplanname = this.tmpexecplanname
+        this.listQuery.batchname = this.tmpbatchname
+        search(this.listQuery).then(response => {
+          this.dispatchList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -282,7 +303,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getdispatchList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -290,7 +311,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getdispatchList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

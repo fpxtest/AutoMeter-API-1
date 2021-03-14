@@ -333,6 +333,9 @@
     },
     data() {
       return {
+        tmpcasedeployunitname: null,
+        tmpcasename: null,
+        tmpcaseapiname: null,
         execplanList: [], // 计划列表
         assembleList: [], // 环境组件列表
         casebaseconditionList: [], // 用例前后置基本类型列表
@@ -351,7 +354,10 @@
         listQuery: {
           page: '', // 页码
           size: '', // 每页数量
-          listLoading: true
+          listLoading: true,
+          casedeployunitname: null,
+          casename: null,
+          caseapiname: null
         },
         apiQuery: {
           deployunitname: '' // 获取字典表入参
@@ -668,6 +674,25 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpcasedeployunitname = this.search.casedeployunitname
+        this.tmpcasename = this.search.casename
+        this.tmpcaseapiname = this.search.caseapiname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.casedeployunitname = this.tmpcasedeployunitname
+        this.listQuery.casename = this.tmpcasename
+        this.listQuery.caseapiname = this.tmpcaseapiname
+        search(this.listQuery).then(response => {
+          this.apicases_conditionList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -679,7 +704,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getapicases_conditionList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -687,7 +712,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getapicases_conditionList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

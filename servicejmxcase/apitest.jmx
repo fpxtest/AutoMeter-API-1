@@ -57,6 +57,21 @@
             <stringProp name="Argument.value">${__P(casereportfolder,/Users/fanseasn/Desktop/testresult/13-2-vvvvvv1111111)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="mysqlurl" elementType="Argument">
+            <stringProp name="Argument.name">mysqlurl</stringProp>
+            <stringProp name="Argument.value">${__P(mysqlurl,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="mysqlusername" elementType="Argument">
+            <stringProp name="Argument.name">mysqlusername</stringProp>
+            <stringProp name="Argument.value">${__P(mysqlusername,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="mysqlpassword" elementType="Argument">
+            <stringProp name="Argument.name">mysqlpassword</stringProp>
+            <stringProp name="Argument.value">${__P(mysqlpassword,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -67,15 +82,15 @@
         <stringProp name="checkQuery">Select 1</stringProp>
         <stringProp name="connectionAge">5000</stringProp>
         <stringProp name="dataSource">testcenter</stringProp>
-        <stringProp name="dbUrl">jdbc:mysql://rm-uf6e4665t6ou14m3m.mysql.rds.aliyuncs.com/testcenter?useUnicode=true&amp;useSSL=false&amp;allowMultiQueries=true&amp;characterEncoding=utf-8&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC</stringProp>
+        <stringProp name="dbUrl">${mysqlurl}</stringProp>
         <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
         <boolProp name="keepAlive">true</boolProp>
-        <stringProp name="password">Centeradmin!@#$</stringProp>
+        <stringProp name="password">${mysqlpassword}</stringProp>
         <stringProp name="poolMax">10</stringProp>
         <stringProp name="timeout">10000</stringProp>
         <stringProp name="transactionIsolation">DEFAULT</stringProp>
         <stringProp name="trimInterval">60000</stringProp>
-        <stringProp name="username">centeradmin</stringProp>
+        <stringProp name="username">${mysqlusername}</stringProp>
         <boolProp name="preinit">false</boolProp>
         <stringProp name="initQuery"></stringProp>
         <stringProp name="connectionProperties"></stringProp>

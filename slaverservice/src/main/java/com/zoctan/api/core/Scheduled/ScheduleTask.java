@@ -7,10 +7,12 @@ import com.zoctan.api.mapper.DictionaryMapper;
 import com.zoctan.api.mapper.DispatchMapper;
 import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ApicasesReportService;
+import com.zoctan.api.service.DeployunitService;
 import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.TestPlanCaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,6 +42,18 @@ import java.util.jar.JarFile;
 @EnableScheduling   // 2.开启定时任务
 @Component
 public class ScheduleTask {
+
+    @Value("${spring.datasource.url}")
+    private String url;
+
+    @Value("${spring.datasource.username}")
+    private String username;
+
+    @Value("${spring.datasource.password}")
+    private String password;
+
+
+
     @Autowired(required = false)
     private DictionaryMapper dictionaryMapper;
 
@@ -57,6 +71,8 @@ public class ScheduleTask {
     private ExecuteplanService epservice;
     @Autowired(required = false)
     private TestPlanCaseService tpcservice;
+    @Autowired(required = false)
+    private DeployunitService deployunitService;
 
     //3.添加定时任务
     @Scheduled(cron = "0/5 * * * * ?")
@@ -101,7 +117,6 @@ public class ScheduleTask {
                         ScheduleTask.log.info("获取待执行的用例：。。。。。。。。" +runlist.size());
                         for (Dispatch dis : runlist) {
                             // 判断用例调用的jmx文件是否存在，如果未找到，返回客户端
-
                             Apicases apicases= apicasesMapper.getjmetername(dis.getTestcaseid());
 
                             String jmxcasename = dis.getCasejmxname();
@@ -110,7 +125,25 @@ public class ScheduleTask {
                             String jmeterextjarpath = jmeterpath.replace("bin", "lib");
                             String jarpath = jmeterextjarpath + "/ext/api-jmeter-autotest-1.0.jar";
                             ScheduleTask.log.info("jarpath 路径 is......." + jarpath);
-                            String jmeterclassname = "com.api.autotest.test." + dis.getDeployunitname() + "." + jmxcasename;
+
+                            String deployname=dis.getDeployunitname();
+                            Deployunit deployunit= deployunitService.findDeployNameValueWithCode(deployname);
+                            String protocal = deployunit.getProtocal();
+                            ScheduleTask.log.info("发布单元协议类型为......." + protocal);
+
+                            String jmeterclassname ="";
+                            //如果是http,https，直接使用httpapitestcase下的httpapi来执行测试
+                            String DeployUnitNameForJmeter="";
+                            if(protocal.equals(new String("http"))||protocal.equals(new String("https")))
+                            {
+                                DeployUnitNameForJmeter="httpapitestcase";
+                                 jmeterclassname = "com.api.autotest.test.httpapitestcase." + jmxcasename;
+                            }
+                            else
+                            {
+                                DeployUnitNameForJmeter=dis.getDeployunitname();
+                                jmeterclassname = "com.api.autotest.test." + dis.getDeployunitname() + "." + jmxcasename;
+                            }
                             ScheduleTask.log.info("jmeterclassname 类名......." + jmeterclassname);
                             if (!jmeterclassexistornot(jarpath, jmeterclassname)) {
                                 // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态
@@ -131,7 +164,7 @@ public class ScheduleTask {
                                 //return ResultGenerator.genFailedResult("执行用例："+casename+" |未找到用例对应的jmeter-class类："+jmeterclassname+" 请检查是否已经开发提交");
                             } else {
                                 // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
-                                tpcservice.executeplancase(apicases.getCasetype(), dis.getSlaverid(),dis.getBatchid(), dis.getExecplanid(), dis.getTestcaseid(),apicases.getThreadnum(),apicases.getLoops(),  dis.getDeployunitname(), jmeterpath, jmxpath, jmxcasename, dis.getBatchname(),jmeterperformancereportpath);
+                                tpcservice.executeplancase(apicases.getCasetype(), dis.getSlaverid(),dis.getBatchid(), dis.getExecplanid(), dis.getTestcaseid(),apicases.getThreadnum(),apicases.getLoops(),  DeployUnitNameForJmeter, jmeterpath, jmxpath, jmxcasename, dis.getBatchname(),jmeterperformancereportpath,url,username,password);
 
                                 // 更新调度表对应用例状态为已分配
                                 dispatchMapper.updatedispatchstatus("已分配",dis.getSlaverid(),dis.getExecplanid(),dis.getBatchid(),dis.getTestcaseid());

@@ -24,8 +24,8 @@ public class RedisTemplaterConfig {
     Integer minIdle;
     @Value("${spring.redis.host}")
     String hostname;
-    @Value("${spring.redis.password}")
-    String password;
+    //@Value("${spring.redis.password}")
+    //String password;
     @Value("${spring.redis.port}")
     String port;
     @Value("${spring.redis.database}")
@@ -49,7 +49,7 @@ public class RedisTemplaterConfig {
         JedisPoolConfig config = getRedisConfig();
         factory.setPoolConfig(config);
         factory.setHostName(hostname);
-        factory.setPassword(password);
+        //factory.setPassword(password);
         factory.setPort(Integer.parseInt(port));
         factory.setDatabase(Integer.parseInt(database));
         factory.setTimeout(Integer.parseInt(timeout));

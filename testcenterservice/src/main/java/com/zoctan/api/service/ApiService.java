@@ -29,6 +29,8 @@ public interface ApiService extends Service<Api> {
     void updateApi(Api params);
     List<Api> listAllbydeploy(String deployunitname);
 
+    Api getresponetypebydeployandapiname(String deployunitname,String apiname);
+
     int ifexist(Condition condition);
 
     Integer getapinum();

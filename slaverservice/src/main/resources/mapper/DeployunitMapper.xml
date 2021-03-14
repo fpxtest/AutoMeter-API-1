@@ -13,4 +13,9 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
+
+  <select id="findDeployNameValueWithCode" resultMap="BaseResultMap">
+    SELECT a.deployunitname,a.protocal,a.port
+    FROM deployunit a where a.deployunitname = #{deployunitname}
+  </select>
 </mapper>

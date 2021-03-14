@@ -165,20 +165,12 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="180px"
+        label-width="80px"
         style="width: 500px; margin-left:50px;"
         :model="tmpapicases"
         ref="tmpapicases"
       >
-        <el-form-item label="用例名" prop="casename" required>
-          <el-input
-            type="text"
-            maxlength="40"
-            prefix-icon="el-icon-edit"
-            auto-complete="off"
-            v-model="tmpapicases.casename"
-          />
-        </el-form-item>
+
         <el-form-item label="发布单元" prop="deployunitname" required >
           <el-select v-model="tmpapicases.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
@@ -201,6 +193,15 @@
             <el-option label="性能" value="性能"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="用例名" prop="casename" required>
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpapicases.casename"
+          />
+        </el-form-item>
 
         <div v-if="threadloopvisible">
         <el-form-item label="线程数" prop="threadnum" required>
@@ -212,7 +213,7 @@
           />
         </el-form-item>
 
-        <el-form-item label="线程循环数" prop="loops" required>
+        <el-form-item label="线程循环" prop="loops" required>
           <el-input
             maxlength="40"
             prefix-icon="el-icon-edit"
@@ -222,7 +223,8 @@
         </el-form-item>
         </div>
 
-        <el-form-item label="Jmeter-Class(英文小写)" prop="casejmxname" required>
+        <div v-if="JmeterClassVisible">
+        <el-form-item label="Jmeter" prop="casejmxname" required>
           <el-input
             type="text"
             maxlength="40"
@@ -231,6 +233,8 @@
             v-model="tmpapicases.casejmxname"
           />
         </el-form-item>
+        </div>
+
         <el-form-item label="用例描述" prop="casecontent" required>
           <el-input
             type="text"
@@ -240,14 +244,17 @@
             v-model="tmpapicases.casecontent"
           />
         </el-form-item>
-        <el-form-item label="期望值(英文逗号隔开)" prop="expect" required>
+        <el-form-item label="期望值" prop="expect" required>
           <el-input
             type="textarea"
+            rows="5"
+            cols="10"
             maxlength="400"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapicases.expect"
-            placeholder="例如age=20,pass=123456,tmplist[0].count=10"
+            placeholder="如果api返回是json类型使用jsonpath表示期望值,多个值用英文逗号隔开，例如：$.store.book[0].title:value,$.store.people[0].name:value
+如果api返回是html，xml则使用xpath表示期望值，多个值用英文逗号隔开 例如：//div/h3//text():value"
           />
         </el-form-item>
         <el-form-item label="中间变量" prop="middleparam" >
@@ -363,7 +370,7 @@
   import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype } from '@/api/assets/apicasesdata'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getcaseparatype as getcaseparatype } from '@/api/deployunit/apiparams'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdepunitList as getdepunitList, findDeployNameValueWithCode as findDeployNameValueWithCode } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
 
   export default {
@@ -379,6 +386,9 @@
     },
     data() {
       return {
+        tmpprotocal: null,
+        tmpdeployunitname: null,
+        tmpapiname: null,
         paraList: [], // paraList参数值列表
         paravaluemap: [], // 参数值map
         multipleSelection: [], // 用例表格被选中的内容
@@ -389,12 +399,19 @@
         tmpcaseparamslist: [], // 获取用例参数临时列表，getcaseparamsbytype（）调用
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
+        JmeterClassVisible: false, // JmeterClassVisible显示
         caseindex: '',
         total: 0, // 数据总数
         listQuery: {
           page: '', // 页码
           size: '', // 每页数量
-          listLoading: true
+          listLoading: true,
+          deployunitname: null,
+          apiname: null
+        },
+        apiSearchQuery: {
+          deployunitname: '', // 发布单元名
+          apiname: '' // api名
         },
         apiQuery: {
           deployunitname: '' // 获取字典表入参
@@ -568,12 +585,25 @@
         }).catch(res => {
           this.$message.error('加载api列表失败')
         })
+        // 获取发布单元对应的协议，是http或者https则不需要显示JmeterClass，其余显示
+        findDeployNameValueWithCode(this.apiQuery).then(response => {
+          this.tmpprotocal = response.data.protocal
+          if (this.tmpprotocal === 'http' || this.tmpprotocal === 'https') {
+            this.JmeterClassVisible = false
+          } else {
+            this.JmeterClassVisible = true
+            this.tmpapicases.casejmxname = ''
+          }
+        }).catch(res => {
+          this.$message.error('加载发布单元信息失败')
+        })
       },
 
       /**
        * api下拉选择事件获取apiid  e的值为options的选值
        */
       apiselectChanged(e) {
+        this.apiSearchQuery.apiname = e
         for (let i = 0; i < this.apiList.length; i++) {
           console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwww')
           console.log(e)
@@ -621,6 +651,23 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmpdeployunitname = this.search.deployunitname
+        this.tmpapiname = this.search.apiname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.apiname = this.tmpapiname
+        this.listQuery.deployunitname = this.tmpdeployunitname
+        search(this.listQuery).then(response => {
+          this.apicasesList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -632,7 +679,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getapicasesList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -640,7 +687,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getapicasesList()
+        this.searchBypageing()
       },
       /**
        * 表格序号
@@ -679,6 +726,9 @@
           if (valid) {
             this.btnLoading = true
             this.tmpapicases.expect = this.tmpapicases.expect.trim()
+            if (this.tmpprotocal === 'http' || this.tmpprotocal === 'https') {
+              this.tmpapicases.casejmxname = 'httpapi'
+            }
             addapicases(this.tmpapicases).then(() => {
               this.$message.success('添加成功')
               this.getapicasesList()
@@ -798,6 +848,9 @@
         this.$refs.tmpapicases.validate(valid => {
           if (valid) {
             this.tmpapicases.expect = this.tmpapicases.expect.trim()
+            if (this.tmpprotocal === 'http' || this.tmpprotocal === 'https') {
+              this.tmpapicases.casejmxname = 'httpapi'
+            }
             updateapicases(this.tmpapicases).then(() => {
               this.$message.success('更新成功')
               this.getapicasesList()

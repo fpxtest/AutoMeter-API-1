@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('macdepunit:add')"
             @click.native.prevent="showAddmacdepunitDialog"
-          >添加服务器部署</el-button>
+          >添加环境部署</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('macdepunit:search')">
@@ -200,6 +200,8 @@
     },
     data() {
       return {
+        tmpenviromentname: '',
+        tmpdeployunitname: '',
         assembleList: [], // 环境组件列表
         macdepunitList: [], // 环境服务器列表
         enviromentnameList: [], // 环境列表
@@ -210,7 +212,9 @@
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true
+          listLoading: true,
+          enviromentname: '',
+          deployunitname: ''
         },
         dialogStatus: 'add',
         deployunitVisible: false,
@@ -237,8 +241,8 @@
           visittype: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           enviromentname: null,
           deployunitname: null
         }
@@ -393,9 +397,24 @@
       searchBy() {
         this.btnLoading = true
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.macdepunitList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.tmpenviromentname = this.search.enviromentname
+        this.tmpdeployunitname = this.search.deployunitname
+        this.listLoading = false
+        this.btnLoading = false
+      },
+
+      searchBypageing() {
+        this.btnLoading = true
+        this.listLoading = true
+        this.listQuery.enviromentname = this.tmpenviromentname
+        this.listQuery.deployunitname = this.tmpdeployunitname
+        search(this.listQuery).then(response => {
           this.macdepunitList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -412,7 +431,7 @@
       handleSizeChange(size) {
         this.listQuery.size = size
         this.listQuery.page = 1
-        this.getmacdepunitList()
+        this.searchBypageing()
       },
       /**
        * 改变页码
@@ -420,7 +439,7 @@
        */
       handleCurrentChange(page) {
         this.listQuery.page = page
-        this.getmacdepunitList()
+        this.searchBypageing()
       },
       /**
        * 表格序号

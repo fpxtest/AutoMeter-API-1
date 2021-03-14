@@ -8,6 +8,14 @@ export function getdepunitList(params) {
   })
 }
 
+export function findDeployNameValueWithCode(params) {
+  return request({
+    url: '/deployunit/findDeployNameValueWithCode',
+    method: 'get',
+    params
+  })
+}
+
 export function getdeploynum() {
   return request({
     url: '/deployunit/getdeploynum',
