@@ -1,6 +1,7 @@
 package com.zoctan.api.core.config;
 
 import com.zoctan.api.core.rsa.RsaUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
  * @date 2018/07/21
  */
 @Configuration
+@Slf4j
 public class JasyptConfig {
   @Value("${jasypt.encryptor.password}")
   private String passwordEncryptedByBase64AndRSA;
@@ -27,6 +29,7 @@ public class JasyptConfig {
   @Bean
   public StringEncryptor myStringEncryptor() throws Exception {
     // Base64 + RSA 加密的密码
+    log.info("{jasypt.encryptor.password}:{}",passwordEncryptedByBase64AndRSA);
     final byte[] passwordEncryptedByRSA =
         Base64Utils.decodeFromString(this.passwordEncryptedByBase64AndRSA);
     final String password = new String(this.rsaUtils.decrypt(passwordEncryptedByRSA));

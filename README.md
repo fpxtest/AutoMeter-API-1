@@ -58,20 +58,15 @@
     
 2.应用配置：
 
-    1.testcenterservice （测试中心服务）
+    1.testcenterservice（测试中心服务），slaverservice（执行服务），dispatchservice（调度服务）三个服务配置相同
      配置：
-        1.applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
-       
-        2.slaverservice  （执行服务）
-            配置和testcenterservice一样
-        3.dispatchservice （调度服务）
-            配置和testcenterservice一样
-        4.admin（后台）
+        applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
+    2.testcenterapp（后台）
+     配置：
         在目录admin/config/prod.env.js中修改配置BASE_API项，为调用testcenterservice的ip和端口，或者使用域名
-        5.api-jmeter-autotest (编写测试用例类)
-        配置src/resource/app.properties中配置mysql.host，username，password
-        
-        6.系统字典表配置
+    3.api-jmeter-autotest (用例执行器)
+        配置src/resource/app.properties中配置mysql.host，username，password   
+    4.系统字典表配置
         如果需要部署多个slaver集群运行测试，则需要在字典表中配置调度服务的访问地址
         增加字典项：调度服务，字典编码：dispatchservice，字典项名：调度服务器地址,字典项值：替换成你的调度服务的访问地址
 
@@ -104,74 +99,3 @@
        12.装载用例，新建好的执行计划中可以装载需要运行的用例，在执行计划页面管理列中-装载用例，勾选需要运行的用例
        13.运行执行计划，执行中心-勾选执行计划，点运行，设置当前运行的批次号，保存即开始运行
        14.报告中心，报告中心选择功能或者性能的报告页面查看用例的执行结果
-       
-       
-   二，用例开发步骤
-   
-       用例的开发是基于Jmeter的java-Sample来运行用例的，所以我们在平台上在创建用例的时候，我们需要设置Jmeter-Class，在Jmeter的Java工程中一个class对应一个用例的测试，平台是通过：发布单元名+Jmeter-Class类的方式找到具体的Java用例类来运行
-
-       1.用例的开发使用api-jmeter-autotest工程，使用maven来打包成api-jmeter-autotest-1.0.jar，打包后放到jmeter的lib/exts/目录下后，平台执行会通过Jmeter-Class名来调用用例类
-       2.java工程中的main/java/test/目录下面创建和平台相同的发布单元名的目录，假设我们在平台上要测试的发布单元为helloworldservice，则在main/java/test/下也创建helloworldservice
-       3.在第二步创建发布单元目录下创建用例类，只需要拷贝main/java/test/helloworldservice/目录下的HelloWorld例子类，改名成新的用例类名，然后在新的用例类中编写断言
-       
-       
-       
-       具体测试用例类的编写断言方法：
-       
-       1.在新建的用例类中，在方法runTest中的“用例断言区”按照例子编写断言:
-       2.actualResult=sendCaseRequest(),actualResult为用例请求返回的结果，根据返回类型自己解析，例子为json，转换为JSONObject解析
-       3.getCaseExpectValue方法获取在平台上编写用例的期望字段值，例如code=100001,getCaseExpectValue("code")既可以获取值100001
-       4.获取到实际值和期望值后，再使用AssertEqual(expect,actual)做断言，并且返回断言的结果，用例支持多字段断言，例如断言中先判断code是否正确，再判断status是否正确，再判断其他
-
-    helloworld代码例子：
-    
-    public SampleResult runTest(JavaSamplerContext ctx) {
-        SampleResult results = new SampleResult();
-        //Jmeter java实例开始执行
-        results.sampleStart();
-        //用例多次断言信息汇总
-        String assertInfo = "";
-        //断言对象
-        TestAssert testAssert = new TestAssert();
-        try {
-            // 初始化用例数据
-            initalTestData(ctx);
-            // 发送用例请求，并返回结果
-            actualResult=sendCaseRequest();
-            // ===========================用例断言区，新开发一个用例，需要在此编写用例断言======================================
-            // 此例子返回类型为json格式，把请求返回值actualResult转换成JSONObject对象，新的用例开发根据实际返回类型做相应断言处理
-            JSONObject actualResultObject = JSONObject.parseObject(actualResult);
-            // ---------------断言status步骤开始-------------------------------------
-            //获取期望值的status结果
-            String expectStatus = getCaseExpectValue("status");
-            //获取实际值status结果
-            String actualStatus = actualResultObject.get("status").toString();
-            //日志记录实际值
-            getLogger().info(TestCore.logplannameandcasename + "actualStatus is:" + actualStatus);
-            // 完成期望值status和实际值status的比较，并且收集断言结果到assertInfo中
-            assertInfo = testAssert.AssertEqual(expectStatus, actualStatus);
-            // ---------------断言status步骤结束-------------------------------------
-
-            // ---------------断言msg步骤开始----------------------------------------
-            //获取期望值的msg结果
-            String expectMsg = getCaseExpectValue("msg");
-            //获取实际值msg结果
-            String actualMsg = actualResultObject.get("msg").toString();
-            //日志记录实际值
-            getLogger().info(TestCore.logplannameandcasename + "actualMsg is:" + actualMsg);
-            // 完成期望值和实际值msg的比较，并且收集断言结果到assertInfo中
-            assertInfo = testAssert.AssertEqual(expectMsg, actualMsg);
-            // ---------------断言msg步骤结束----------------------------------------
-            // ===========================用例断言区========================================================================
-        } catch (Exception ex) {
-            caseException(results, testAssert, ex.getMessage());
-        } finally {
-            // 保存用例运行结果，Jmeter的sample运行结果
-            caseFinish(results, testAssert, assertInfo);
-        }
-        //Jmeter事务，表示这是事务的结束点
-        results.sampleEnd();
-        return results;
-    }
-       
-       

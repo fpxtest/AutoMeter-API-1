@@ -47,7 +47,6 @@ public class RedisConfig {
             this.redisProperties.getHost(), this.redisProperties.getPort());
     redisStandaloneConfiguration.setDatabase(this.redisProperties.getDatabase());
     redisStandaloneConfiguration.setPassword(this.redisProperties.getPassword());
-
     // 获得默认的连接池构造器
     final JedisClientConfiguration.JedisPoolingClientConfigurationBuilder jpcb =
         (JedisClientConfiguration.JedisPoolingClientConfigurationBuilder)
@@ -83,7 +82,6 @@ public class RedisConfig {
 
     redisTemplate.setValueSerializer(fastSerializer);
     redisTemplate.setHashValueSerializer(fastSerializer);
-
     // 如果 KeySerializer 或者 ValueSerializer 没有配置
     // 则对应的 KeySerializer、ValueSerializer 才使用 fastjson serializer
     redisTemplate.setDefaultSerializer(fastSerializer);

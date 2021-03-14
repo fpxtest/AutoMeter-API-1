@@ -22,8 +22,10 @@ public class JasyptStringEncryptor {
 
   @Test
   public void encode() {
-    final String name = this.stringEncryptor.encrypt("centeradmin");
-    final String password = this.stringEncryptor.encrypt("Centeradmin!@#$");
+    final String name = this.stringEncryptor.encrypt("AGqbroDL");
+    System.out.println(this.stringEncryptor.decrypt(name));
+    final String password = this.stringEncryptor.encrypt("0NjH#FJv=sOjDy!B");
+    System.out.println(this.stringEncryptor.decrypt(password));
 
     System.err.println("name = " + name);
     System.err.println("password = " + password);

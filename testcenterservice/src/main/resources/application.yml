@@ -27,10 +27,18 @@ spring:
     # 数据库索引（默认为0）
     database: 0
     # 服务器地址
+<<<<<<< HEAD
     host: 127.0.0.1
     # 服务器连接端口
     port: 6379
     # 服务器连接密码 root
+=======
+    host: 81.69.0.136
+    # 服务器连接端口
+    port: 6379
+    # 服务器连接密码 root
+    #password: MyEnc({GuNvqa47CNCxot2hgjVF6YEwEkzQNsJ4C7UsShorwu4=})
+>>>>>>> eb5c8f44807ac0f043df7bfaecff11f44c84e62b
     jedis.pool:
       # 连接池最大连接数（使用负值表示没有限制）
       max-active: 8
@@ -40,7 +48,11 @@ spring:
       max-idle: 8
       # 连接池中的最小空闲连接
       min-idle: 0
+<<<<<<< HEAD
       testOnBorrow: false
+=======
+
+>>>>>>> eb5c8f44807ac0f043df7bfaecff11f44c84e62b
 
   profiles:
     # 激活的配置
@@ -108,6 +120,28 @@ pagehelper:
 
 
 
+<<<<<<< HEAD
+=======
+logging:
+  # 日志级别
+  level.com.zoctan.api: debug
+
+# Json web token
+jwt:
+  # 管理后台过期时间
+  admin-expire-time: 1d
+  # 小程序前台过期时间
+  wechat-expire-time: 30d
+  # claim 权限 key
+  claim-key-auth: auth
+  # 请求头或请求参数的 key
+  header: Authorization
+  # token 类型
+  token-type: Bearer
+
+
+# 日志
+>>>>>>> eb5c8f44807ac0f043df7bfaecff11f44c84e62b
 #logging:
   # 日志级别
   level.com.zoctan.api: debug
