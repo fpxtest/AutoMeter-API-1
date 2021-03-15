@@ -47,4 +47,9 @@ private ApiMapper apiMapper;
     public List<Api> listAllbydeploy(String deployunitname) {
         return apiMapper.listAllbydeploy(deployunitname);
     }
+
+    @Override
+    public Api getresponetypebydeployandapiname(String deployunitname, String apiname) {
+        return apiMapper.getresponetypebydeployandapiname(deployunitname,apiname);
+    }
 }

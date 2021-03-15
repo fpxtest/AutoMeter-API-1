@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 
 /**
 * @author Zoctan
@@ -42,7 +44,23 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
             jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath + "/apitest.jmx  -Jmysqlurl=" + mysqlurl + " -Jmysqlusername=" + mysqlusername + " -Jmysqlpassword=" + mysqlpassword + " -Jthread=" + thread + " -Jloops=" + loop + " -Jtestplanid=" + planid + " -Jcaseid=" + caseid + " -Jslaverid=" + slaverid + " -Jbatchid=" + batchid + " -Jbatchname=" + batchname + " -Jtestdeployunit=" + deployname + " -Jcasereportfolder=" + casereportfolder + " -Jtestclass=" + jmxcasename + " -l  " + casereportfolder + "/" + caseid + ".jtl -e -o " + casereportfolder;
             TestPlanCaseServiceImpl.log.info("jmetercmd 性能 is :" + jmetercmd);
         }
-        TestPlanCaseServiceImpl.log.info("jmetercmd is :" + jmetercmd);
+        TestPlanCaseServiceImpl.log.info("JmeterCmd is :" + jmetercmd);
+        ExecShell(jmetercmd);
+    }
+
+    public void ExecShell(String ShellCmd)
+    {
+        try {
+            Process pro = Runtime.getRuntime().exec(ShellCmd);
+            String line;
+            BufferedReader buf = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+            while ((line = buf.readLine()) != null)
+                TestPlanCaseServiceImpl.log.info("调用jmeter命令返回: "+line);
+        } catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            TestPlanCaseServiceImpl.log.info("调用jmeter命令异常: "+e.getMessage());
+        }
     }
 }
 
