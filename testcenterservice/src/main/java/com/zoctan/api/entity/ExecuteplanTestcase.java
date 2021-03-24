@@ -64,6 +64,30 @@ public class ExecuteplanTestcase {
      */
     private Long testcaseid;
 
+    public Long getThreadnum() {
+        return threadnum;
+    }
+
+    public void setThreadnum(Long threadnum) {
+        this.threadnum = threadnum;
+    }
+
+    public Long getLoops() {
+        return loops;
+    }
+
+    public void setLoops(Long loops) {
+        this.loops = loops;
+    }
+
+    private Long threadnum;
+    private Long loops;
+
+
+
+
+
+
     public String getCasename() {
         return casename;
     }

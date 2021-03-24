@@ -33,6 +33,9 @@ public class TestCore {
     String batchname = "";
     String casetype = "";
     String expect = "";
+    String MysqlUrl="";
+    String MysqlUserName="";
+    String MysqlPass="";
 
     ArrayList<HashMap<String, String>> caselist;
     ArrayList<HashMap<String, String>> planlist;
@@ -49,13 +52,14 @@ public class TestCore {
     HashMap<String, String> dubbomap ;
     public HashMap<String, String> expectmap;
 
-    public TestCore()
-    {
-
-    }
-    public TestCore(Logger log)
+    public TestCore(JavaSamplerContext context,Logger log)
     {
         logger=log;
+        MysqlUrl=context.getParameter("mysqlurl");
+        MysqlUserName=context.getParameter("mysqlusername");
+        MysqlPass=context.getParameter("mysqlpassword");
+        logger.info("connectstr is :  " + MysqlUrl+"   "+ MysqlUserName+"   "+MysqlPass);
+        getdbconnection();
     }
 
     // 获取期望值
@@ -110,28 +114,6 @@ public class TestCore {
             }
         }
         //return expectmap;
-    }
-
-    // 获取用例名 已废弃
-    public String getcaseName() {
-        //String casename = getcaseValue("casename", caselist);
-        //return casename;
-        return "";
-    }
-
-    //初始化api请求需要的用例,环境数据,,已废弃
-    public RequestObject InitHttpData(JavaSamplerContext context) throws Exception {
-//        getdbconnection();
-//        testplanid = context.getParameter("testplanid");
-//        caseid = context.getParameter("caseid");
-//        slaverid = context.getParameter("slaverid");
-//        batchid = context.getParameter("batchid");
-//        batchname = context.getParameter("batchname");
-//        casereportfolder = context.getParameter("casereportfolder");
-        //preconditionlist =getcaseData("select * from apicases_condition where basetype ='前置条件' and target='用例' and  caseid=" + caseid);
-        //postconditionlist =getcaseData("select * from apicases_condition where basetype ='后置条件' and target='用例' and  caseid=" + caseid);
-        //RequestObject newob= getcaserequestdata(testplanid,caseid);
-        return null;
     }
 
     //根据jmeter传递下来的数据拼装用例请求的数据
@@ -258,7 +240,7 @@ public class TestCore {
 
     // 拼装请求需要的用例数据
     public RequestObject getcaserequestdata(String planid, String testcaseid) throws Exception {
-        getdbconnection();
+        //getdbconnection();
         RequestObject ro=new RequestObject();
         planlist = getcaseData("select * from executeplan where id=" + planid);
         deployunitmachineiplist=getcaseData("select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id="+testcaseid+" and c.id="+planid);
@@ -343,7 +325,7 @@ public class TestCore {
 
     //初始化数据库连接
     public void getdbconnection() {
-        MysqlConnectionUtils.initDbResource();
+        MysqlConnectionUtils.initDbResource(MysqlUrl,MysqlUserName,MysqlPass);
     }
 
     //获取数据库用例相关数据
@@ -392,7 +374,7 @@ public class TestCore {
 
     // 记录用例测试结果
     public void savetestcaseresult(boolean status, long time, String respone, String assertvalue,String errorinfo) {
-        getdbconnection();
+        //getdbconnection();
         String resulttable="";
         if(casetype.equals(new String("功能")))
         {
@@ -415,19 +397,17 @@ public class TestCore {
         }
         logger.info(logplannameandcasename+"测试结果 result sql is...........: " + sql);
         System.out.println("case result sql is: " + sql);
-        MysqlConnectionUtils.update(sql);
+        logger.info(logplannameandcasename+"记录用例测试结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
 
     //处理前置条件
     public void fixprecondition(String planid,String testcaseid) throws Exception {
-        getdbconnection();
         preconditionlist =getcaseData("select * from apicases_condition where basetype ='前置条件' and target='用例' and  caseid=" + testcaseid);
         fixcondition(preconditionlist,"前置",planid);
     }
 
     //处理后置条件
     public void fixpostcondition(String planid,String testcaseid) throws Exception {
-        getdbconnection();
         postconditionlist =getcaseData("select * from apicases_condition where basetype ='后置条件' and target='用例' and  caseid=" + testcaseid);
         fixcondition(postconditionlist,"后置",planid);
     }
@@ -500,28 +480,10 @@ public class TestCore {
         sql = "insert apicases_condition_report (caseid,testplanid,batchid,batchname,slaverid,conditiontype,casetype,status,errorinfo,create_time,lastmodify_time,creator)" +
                 " values(" + testcaseid + "," + planid +", "+batchnameid+ ", '"+batchnames+"', "+ slaverids + ", '"+condition+ "', '"+testcasetype + "', '"+status+  "','" +error+ "','"+ dateNowStr + "', '" + dateNowStr + "','admin')";
         logger.info(logplannameandcasename+"前后置条件测试结果 result sql is...........: " + sql);
-        System.out.println("前后置条件测试结果 sql is: " + sql);
+        logger.info(logplannameandcasename+"前后置条件测试结果 result  is...........: " + MysqlConnectionUtils.update(sql));
         return MysqlConnectionUtils.update(sql);
     }
 
-    //更新用例结果为失败,已废弃
-    public void updatetestcaseresultfail(String errorinfo) {
-
-        String resulttable="";
-        if(casetype.equals(new String("功能")))
-        {
-            resulttable="apicases_report";
-        }
-        if(casetype.equals(new String("性能")))
-        {
-            resulttable="apicases_report_performance";
-        }
-
-        String sql="update "+ resulttable+" set status='失败',errorinfo='"+errorinfo+"' where testplanid="+testplanid+" and caseid="+caseid+" and batchname='"+batchname+"'";
-        logger.info(logplannameandcasename+"更新用例状态为失败的sql：...........: " + sql);
-        MysqlConnectionUtils.update(sql);
-
-    }
 
     // 更新用例调度结果
     public void updatedispatchcasestatus(String testplanid,String batchid,String slaverid,String caseid) {
@@ -532,7 +494,7 @@ public class TestCore {
         sql = "update dispatch set status='已完成',lastmodify_time='"+dateNowStr+"' where slaverid="+slaverid+" and execplanid="+testplanid+" and batchid="+batchid+" and testcaseid="+caseid;
         logger.info(logplannameandcasename+"更新调度用例状态 result sql is...........: " + sql);
         System.out.println("case result sql is: " + sql);
-        MysqlConnectionUtils.update(sql);
+        logger.info(logplannameandcasename+"更新用例调度结果 is...........: " +MysqlConnectionUtils.update(sql));
     }
 
     //生产性能报告目录

@@ -18,9 +18,14 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
-    Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid, @Param("testcaseid") long testcaseid);
+    List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);
 
+    Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
 
-    void removeexecuteplantestcase(@Param("executeplanid") long executeplanid, @Param("testcaseid") long testcaseid);
+    Integer findcasenumbyplanid(@Param("executeplanid") long executeplanid);
+
+    void removeexecuteplantestcase(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
+
+    List<ExecuteplanTestcase> finddeployunitbyplanid(final @Param("executeplanid") long executeplanid);
 
 }

@@ -90,29 +90,6 @@ public class TestplanCase  {
 
   private String expect;
 
-
-
-
-  //  public String getJmeterpath() {
-//    return jmeterpath;
-//  }
-//
-//  public void setJmeterpath(String jmeterpath) {
-//    this.jmeterpath = jmeterpath;
-//  }
-//
-//  private String jmeterpath;
-//
-//  public String getJmxpath() {
-//    return jmxpath;
-//  }
-//
-//  public void setJmxpath(String jmxpath) {
-//    this.jmxpath = jmxpath;
-//  }
-//
-//  private String jmxpath;
-//
   public String getCasejmxname() {
     return casejmxname;
   }
@@ -133,16 +110,6 @@ public class TestplanCase  {
 
   private String casename;
 
-  //  public String getDeployname() {
-//    return deployname;
-//  }
-//
-//  public void setDeployname(String deployname) {
-//    this.deployname = deployname;
-//  }
-//
-//  private String deployname;
-//
   public String getBatchname() {
     return batchname;
   }
@@ -152,16 +119,34 @@ public class TestplanCase  {
   }
 
   private String batchname;
-//
-//  public String getExpect() {
-//    return expect;
-//  }
-//
-//  public void setExpect(String expect) {
-//    this.expect = expect;
-//  }
-//
-//  private String expect;
+
+  public String getPlantype() {
+    return plantype;
+  }
+
+  public void setPlantype(String plantype) {
+    this.plantype = plantype;
+  }
+
+  private String plantype;
 
 
+  public Long getThreadnum() {
+    return threadnum;
+  }
+
+  public void setThreadnum(Long threadnum) {
+    this.threadnum = threadnum;
+  }
+
+  public Long getLoops() {
+    return loops;
+  }
+
+  public void setLoops(Long loops) {
+    this.loops = loops;
+  }
+
+  private Long threadnum;
+  private Long loops;
 }

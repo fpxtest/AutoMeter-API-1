@@ -25,10 +25,16 @@
     </where>
   </select>
 
-  <select id="findslaverbyip" resultType="java.lang.Integer">
-    SELECT count(*)
+  <select id="findslaverbyip" resultMap="BaseResultMap">
+    SELECT *
     FROM slaver
     where ip=#{ip}
+  </select>
+
+  <select id="findslaverbytype" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where stype=#{stype}
   </select>
 
   <insert id="addslaver">

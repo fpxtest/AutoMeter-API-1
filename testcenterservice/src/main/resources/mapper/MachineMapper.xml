@@ -18,7 +18,7 @@
 
   <select id="findMachineWithName" resultMap="BaseResultMap">
     SELECT a.*
-    FROM Machine a
+    FROM machine a
     <where>
       <if test="machinename != null and machinename != ''">a.machinename like CONCAT('%',#{machinename},'%')</if>
       <if test="ip != null  and ip != ''">and a.ip like CONCAT('%',#{ip},'%')</if>
@@ -27,18 +27,18 @@
 
   <select id="findmachinebymachinename" resultMap="BaseResultMap">
     SELECT *
-    FROM Machine a
+    FROM machine a
     where a.machinename =#{machinename}
   </select>
 
   <select id="getmachinenum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM Machine a
+    FROM machine a
   </select>
 
   <select id="findmachinebyip" resultMap="BaseResultMap">
     SELECT *
-    FROM Machine a
+    FROM machine a
     where a.ip =#{ip}
   </select>
 </mapper>

@@ -109,7 +109,7 @@ public class HelloWorld extends AbstractJavaSamplerClient {
     //初始化用例的基础数据
     private void initalTestData(JavaSamplerContext ctx) throws Exception {
         getLogger().info("Hello World runTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
-        core = new TestCore(getLogger());
+        core = new TestCore(ctx,getLogger());
         ob = core.InitHttpDatabyJmeter(ctx);
         //用例开始运行时间
         start = new Date().getTime();

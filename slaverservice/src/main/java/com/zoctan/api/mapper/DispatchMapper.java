@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface DispatchMapper extends MyMapper<Dispatch> {
 
-    Integer findbusythreadnums(@Param("status") String status);
+    void insertBatchDispatch(@Param("dispatchList") final List<Dispatch> dispatchList);
 
-    List<Dispatch> getcasebyslaverid(@Param("slaverid") Long slaverid , @Param("status") String status, @Param("maxthread")Long maxthread);
+    Integer findbusythreadnums(@Param("slaverid") Long slaverid ,@Param("status") String status);
+
+    List<Dispatch> getcasebyslaverid(@Param("slaverid") Long slaverid , @Param("status") String status , @Param("plantype") String plantype, @Param("maxthread")Long maxthread);
 
     void updatedispatchstatus(@Param("status") String status,@Param("slaverid")Long slaverid,@Param("execplanid")Long execplanid,@Param("batchid")Long batchid,@Param("testcaseid")Long testcaseid);
 }

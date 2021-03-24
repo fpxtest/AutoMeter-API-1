@@ -30,4 +30,10 @@
   <update id="updatetestplanstatus">
     update  executeplan set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where id = #{id}
   </update>
+
+  <select id="findexplanWithid" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplan a
+    where a.id=#{id}
+  </select>
 </mapper>

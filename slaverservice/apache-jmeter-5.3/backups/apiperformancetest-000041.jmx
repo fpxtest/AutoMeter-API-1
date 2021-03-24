@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="apitest" enabled="true">
+      <stringProp name="TestPlan.comments">例子接口</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="threads" elementType="Argument">
+            <stringProp name="Argument.name">threads</stringProp>
+            <stringProp name="Argument.value">${__P(thread,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="loops" elementType="Argument">
+            <stringProp name="Argument.name">loops</stringProp>
+            <stringProp name="Argument.value">${__P(loops,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="caseid" elementType="Argument">
+            <stringProp name="Argument.name">caseid</stringProp>
+            <stringProp name="Argument.value">${__P(caseid,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="testplanid" elementType="Argument">
+            <stringProp name="Argument.name">testplanid</stringProp>
+            <stringProp name="Argument.value">${__P(testplanid,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="batchname" elementType="Argument">
+            <stringProp name="Argument.name">batchname</stringProp>
+            <stringProp name="Argument.value">${__P(batchname,test)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="testclass" elementType="Argument">
+            <stringProp name="Argument.name">testclass</stringProp>
+            <stringProp name="Argument.value">${__P(testclass,getInfoDetailById)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="testdeployunit" elementType="Argument">
+            <stringProp name="Argument.name">testdeployunit</stringProp>
+            <stringProp name="Argument.value">${__P(testdeployunit,cornerservice)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="slaverid" elementType="Argument">
+            <stringProp name="Argument.name">slaverid</stringProp>
+            <stringProp name="Argument.value">${__P(slaverid,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="batchid" elementType="Argument">
+            <stringProp name="Argument.name">batchid</stringProp>
+            <stringProp name="Argument.value">${__P(batchid,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="casereportfolder" elementType="Argument">
+            <stringProp name="Argument.name">casereportfolder</stringProp>
+            <stringProp name="Argument.value">${__P(casereportfolder,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="数据库连接配置" enabled="true">
+        <boolProp name="autocommit">true</boolProp>
+        <stringProp name="checkQuery">Select 1</stringProp>
+        <stringProp name="connectionAge">5000</stringProp>
+        <stringProp name="dataSource">mysql</stringProp>
+        <stringProp name="dbUrl">jdbc:mysql://127.0.0.1:3306/admin_test</stringProp>
+        <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
+        <boolProp name="keepAlive">true</boolProp>
+        <stringProp name="password">root</stringProp>
+        <stringProp name="poolMax">10</stringProp>
+        <stringProp name="timeout">10000</stringProp>
+        <stringProp name="transactionIsolation">DEFAULT</stringProp>
+        <stringProp name="trimInterval">60000</stringProp>
+        <stringProp name="username">root</stringProp>
+        <boolProp name="preinit">false</boolProp>
+        <stringProp name="initQuery"></stringProp>
+        <stringProp name="connectionProperties"></stringProp>
+      </JDBCDataSource>
+      <hashTree/>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="处理前置条件" enabled="true">
+          <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="testplanid" elementType="Argument">
+                <stringProp name="Argument.name">testplanid</stringProp>
+                <stringProp name="Argument.value">${testplanid}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="caseid" elementType="Argument">
+                <stringProp name="Argument.name">caseid</stringProp>
+                <stringProp name="Argument.value">${caseid}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="batchid" elementType="Argument">
+                <stringProp name="Argument.name">batchid</stringProp>
+                <stringProp name="Argument.value">${batchid}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="slaverid" elementType="Argument">
+                <stringProp name="Argument.name">slaverid</stringProp>
+                <stringProp name="Argument.value">${slaverid}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="batchname" elementType="Argument">
+                <stringProp name="Argument.name">batchname</stringProp>
+                <stringProp name="Argument.value">${batchname}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="casereportfolder" elementType="Argument">
+                <stringProp name="Argument.name">casereportfolder</stringProp>
+                <stringProp name="Argument.value">${casereportfolder}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="classname">com.api.autotest.core.precondition</stringProp>
+        </JavaSampler>
+        <hashTree/>
+        <JDBCPostProcessor guiclass="TestBeanGUI" testclass="JDBCPostProcessor" testname="查询前置条件处理结果" enabled="true">
+          <stringProp name="dataSource"></stringProp>
+          <stringProp name="query">select status from apicases_condition_report where testplanid=${testplanid} and caseid =${caseid} and batchname=${batchname} and conditiontype=&apos;前置&apos;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultVariable">caseconditionresult</stringProp>
+          <stringProp name="variableNames"></stringProp>
+        </JDBCPostProcessor>
+        <hashTree/>
+        <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="解析数据库前置数据,保存变量" enabled="true">
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="script">int size = vars.getObject(&quot;caseconditionresult&quot;).size();
+if(size&gt;0)
+{
+	for(int i=0;i&lt;size;i++) {
+	String status=vars.getObject(&quot;caseconditionresult&quot;).get(i).get(&quot;status&quot;);
+	vars.put(&quot;status&quot;,status);
+}
+}
+else
+{
+	vars.put(&quot;status&quot;,&quot;成功&quot;);
+}
+
+log.info(&quot;===status===&quot;+status);</stringProp>
+        </BeanShellPostProcessor>
+        <hashTree/>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="判断前置条件是否正常完成" enabled="true">
+          <stringProp name="IfController.condition">&quot;${status}&quot;==&quot;成功&quot;</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取计划" enabled="true">
+            <stringProp name="dataSource"></stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select * from executeplan where id=${testplanid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">execplanresult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取用例" enabled="true">
+            <stringProp name="dataSource"></stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select * from apicases where id=${caseid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">caseresult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取用例数据" enabled="true">
+            <stringProp name="dataSource"></stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select * from api_casedata where id=${caseid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">casedataresult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取api" enabled="true">
+            <stringProp name="dataSource"></stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select b.visittype,b.apistyle,b.path,b.requestcontenttype,b.responecontenttype from apicases a inner join api b on a.apiid=b.id where a.id=${caseid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">apiresult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取deployunit" enabled="true">
+            <stringProp name="dataSource"></stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select b.protocal,b.port from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=${caseid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">deployunitresult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取deployunitmachineip" enabled="true">
+            <stringProp name="dataSource"></stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id=${caseid} and c.id=${testplanid}</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames"></stringProp>
+            <stringProp name="resultVariable">deployunitmachineipresult</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetMaxRows"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="准备执行用例的请求数据" enabled="true">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">int caseresultsize = vars.getObject(&quot;caseresult&quot;).size();
+if(caseresultsize&gt;0)
+{
+	for(int i=0;i&lt;caseresultsize;i++) {
+	String casetype=vars.getObject(&quot;caseresult&quot;).get(i).get(&quot;casetype&quot;);
+	vars.put(&quot;casetype&quot;,casetype);
+}
+log.info(&quot;===casetype===&quot;+casetype);
+}
+
+int apiresultsize = vars.getObject(&quot;apiresult&quot;).size();
+if(apiresultsize&gt;0)
+{
+	for(int i=0;i&lt;apiresultsize;i++) {
+	String requestcontenttype=vars.getObject(&quot;apiresult&quot;).get(i).get(&quot;requestcontenttype&quot;);
+	vars.put(&quot;requestcontenttype&quot;,requestcontenttype);
+	
+	String requestcontenttype=vars.getObject(&quot;apiresult&quot;).get(i).get(&quot;responecontenttype&quot;);
+	vars.put(&quot;responecontenttype&quot;,responecontenttype);
+
+	String method=vars.getObject(&quot;apiresult&quot;).get(i).get(&quot;method&quot;);
+	vars.put(&quot;method&quot;,method);
+
+	String apistyle=vars.getObject(&quot;apiresult&quot;).get(i).get(&quot;apistyle&quot;);
+	vars.put(&quot;apistyle&quot;,apistyle);
+
+	String path=vars.getObject(&quot;apiresult&quot;).get(i).get(&quot;path&quot;);
+	vars.put(&quot;path&quot;,path);
+	
+}
+log.info(&quot;===requestcontenttype===&quot;+requestcontenttype);
+log.info(&quot;===responecontenttype===&quot;+responecontenttype);
+log.info(&quot;===method===&quot;+method);
+log.info(&quot;===apistyle===&quot;+apistyle);
+log.info(&quot;===path===&quot;+path);
+}
+
+int deployunitresultsize = vars.getObject(&quot;deployunitresult&quot;).size();
+if(deployunitresultsize&gt;0)
+{
+	for(int i=0;i&lt;deployunitresultsize;i++) {
+	String protocal=vars.getObject(&quot;deployunitresult&quot;).get(i).get(&quot;protocal&quot;);
+	vars.put(&quot;protocal&quot;,protocal);
+
+	String port=vars.getObject(&quot;deployunitresult&quot;).get(i).get(&quot;port&quot;);
+	vars.put(&quot;port&quot;,port);
+}
+log.info(&quot;===protocal===&quot;+protocal);
+log.info(&quot;===port===&quot;+port);
+}
+
+int deployunitmachineipresultsize = vars.getObject(&quot;deployunitmachineipresult&quot;).size();
+if(deployunitmachineipresultsize&gt;0)
+{
+	for(int i=0;i&lt;deployunitmachineipresultsize;i++) {
+	String deployunitvisittype=vars.getObject(&quot;deployunitmachineipresult&quot;).get(i).get(&quot;visittype&quot;);
+
+	String testserver = &quot;&quot;;
+	String resource = &quot;&quot;;
+        if(deployunitvisittype.equals(new String(&quot;ip&quot;)))
+        {
+            testserver = vars.getObject(&quot;deployunitmachineipresult&quot;).get(i).get(&quot;ip&quot;);;
+            resource = vars.get(&quot;protocal&quot;) + &quot;://&quot; +  vars.get(&quot;testserver&quot;) + &quot;:&quot; +  vars.get(&quot;port&quot;) +  vars.get(&quot;path&quot;);
+        }
+        else
+        {
+            testserver= getcaseValue(&quot;domain&quot;, deployunitmachineiplist);
+            resource = vars.get(&quot;protocal&quot;) + &quot;://&quot; +  vars.get(&quot;testserver&quot;)  +  vars.get(&quot;path&quot;);
+        }
+        vars.put(&quot;resource&quot;,resource);	
+}
+log.info(&quot;===resource===&quot;+resource);
+}
+
+
+</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="执行用例" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${loops}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${threads}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1502182031000</longProp>
+        <longProp name="ThreadGroup.end_time">1502182031000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="判断前置条件是否正常完成" enabled="true">
+          <stringProp name="IfController.condition">&quot;${status}&quot;==&quot;成功&quot;</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="${testclass}" enabled="true">
+            <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="testplanid" elementType="Argument">
+                  <stringProp name="Argument.name">testplanid</stringProp>
+                  <stringProp name="Argument.value">${testplanid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="caseid" elementType="Argument">
+                  <stringProp name="Argument.name">caseid</stringProp>
+                  <stringProp name="Argument.value">${caseid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchname" elementType="Argument">
+                  <stringProp name="Argument.name">batchname</stringProp>
+                  <stringProp name="Argument.value">${batchname}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="slaverid" elementType="Argument">
+                  <stringProp name="Argument.name">slaverid</stringProp>
+                  <stringProp name="Argument.value">${slaverid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchid" elementType="Argument">
+                  <stringProp name="Argument.name">batchid</stringProp>
+                  <stringProp name="Argument.value">${batchid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="casereportfolder" elementType="Argument">
+                  <stringProp name="Argument.name">casereportfolder</stringProp>
+                  <stringProp name="Argument.value">${casereportfolder}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="classname">com.api.autotest.test.${testdeployunit}.${testclass}</stringProp>
+          </JavaSampler>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="察看结果树" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="聚合报告" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </PostThreadGroup>
+      <hashTree>
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="判断前置条件是否正常完成" enabled="true">
+          <stringProp name="IfController.condition">&quot;${status}&quot;==&quot;成功&quot;</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="处理后置条件" enabled="true">
+            <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="testplanid" elementType="Argument">
+                  <stringProp name="Argument.name">testplanid</stringProp>
+                  <stringProp name="Argument.value">${testplanid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="caseid" elementType="Argument">
+                  <stringProp name="Argument.name">caseid</stringProp>
+                  <stringProp name="Argument.value">${caseid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchid" elementType="Argument">
+                  <stringProp name="Argument.name">batchid</stringProp>
+                  <stringProp name="Argument.value">${batchid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="slaverid" elementType="Argument">
+                  <stringProp name="Argument.name">slaverid</stringProp>
+                  <stringProp name="Argument.value">${slaverid}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchname" elementType="Argument">
+                  <stringProp name="Argument.name">batchname</stringProp>
+                  <stringProp name="Argument.value">${batchname}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="casereportfolder" elementType="Argument">
+                  <stringProp name="Argument.name">casereportfolder</stringProp>
+                  <stringProp name="Argument.value">${casereportfolder}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="classname">com.api.autotest.core.postcondition</stringProp>
+          </JavaSampler>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
@@ -42,21 +43,14 @@ import java.util.jar.JarFile;
 @EnableScheduling   // 2.开启定时任务
 @Component
 public class ScheduleTask {
-
     @Value("${spring.datasource.url}")
     private String url;
-
     @Value("${spring.datasource.username}")
     private String username;
-
     @Value("${spring.datasource.password}")
     private String password;
-
-
-
     @Autowired(required = false)
     private DictionaryMapper dictionaryMapper;
-
     @Autowired(required = false)
     private ApicasesMapper apicasesMapper;
     @Autowired(required = false)
@@ -84,7 +78,7 @@ public class ScheduleTask {
         try {
             address = InetAddress.getLocalHost();
             ip = address.getHostAddress();
-            String redisKey = "dispatch-RedisLock"+ UUID.randomUUID().toString()+ip;
+            String redisKey = "dispatch-RedisLock" + UUID.randomUUID().toString() + ip;
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
@@ -92,86 +86,94 @@ public class ScheduleTask {
             boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
             if (lock) {
                 System.out.println("============获得redis分布式锁成功=======================");
-                List<Dictionary> jmeterpathdic = dictionaryMapper.findDicNameValueWithCode("jmeterpath");
-                List<Dictionary> jmxpathdic = dictionaryMapper.findDicNameValueWithCode("jmxpath");
-                List<Dictionary> jmeterperformancereportdic = dictionaryMapper.findDicNameValueWithCode("performancereportpath");
-                String jmeterperformancereportpath=jmeterperformancereportdic.get(0).getDicitmevalue();
-                String jmeterpath = jmeterpathdic.get(0).getDicitmevalue();
-                String jmxpath = jmxpathdic.get(0).getDicitmevalue();
+                String ProjectPath = System.getProperty("user.dir");
+                String jmeterpath = ProjectPath + "/apache-jmeter-5.3/bin";
+                String jmxpath = ProjectPath + "/servicejmxcase";
+                String jmeterperformancereportpath = ProjectPath + "/performancereport";
                 ScheduleTask.log.info("jmeter可执行路径  is:" + jmeterpath);
                 ScheduleTask.log.info("jmx文件路径  is:" + jmxpath);
-                Long planid = null;
-                Integer runningcount = dispatchMapper.findbusythreadnums("已分配");
-                if (runningcount.intValue() == 0) {
-                    ScheduleTask.log.info("执行任务全部处于空闲状态，可以开始分配" );
-                    //表示slaver线程都没有运行，开始分配case运行
+                ScheduleTask.log.info("性能报告文件路径  is:" + jmeterperformancereportpath);
+
+                List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
+                if (slaverlist.size() == 0) {
+                    ScheduleTask.log.info("没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
+                    throw new Exception("未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点是否已经配置");
+                } else {
+                    //Long planid = null;
+                    Long SlaverId = slaverlist.get(0).getId();
+                    String SlaverType = slaverlist.get(0).getStype();
+                    //获取单个slaver并发执行jmerter进程个数
                     List<Dictionary> slavermaxthreaddic = dictionaryMapper.findDicNameValueWithCode("slavermaxthread");
-                    String slavermaxthread = slavermaxthreaddic.get(0).getDicitmevalue();
+                    List<Dispatch> runlist=new ArrayList<>();
+                    //字典表未配置，默认取一条
+                    if(slavermaxthreaddic.size()==0)
+                    {
+                        ScheduleTask.log.info("字典表未配置单个slaver并发执行jmerter进程个数，默认为1");
+                        runlist = dispatchMapper.getcasebyslaverid(SlaverId, "待分配", SlaverType, new Long(1));
+                    }
+                    else
+                    {
+                        String slavermaxthread = slavermaxthreaddic.get(0).getDicitmevalue();
+                        ScheduleTask.log.info("获取字典表单个slaver并发执行jmerter进程个数：。。。。。。。。" + slavermaxthread);
+                        runlist = dispatchMapper.getcasebyslaverid(SlaverId, "待分配", SlaverType, Long.parseLong(slavermaxthread));
+                    }
+                    ScheduleTask.log.info("获取待执行的用例数：。。。。。。。。" + runlist.size());
+                    for (Dispatch dis : runlist) {
+                        // 判断用例调用的jmx文件是否存在，如果未找到，返回客户端
+                        Apicases apicases = apicasesMapper.getjmetername(dis.getTestcaseid());
 
-                    List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
-                    if (slaverlist.size() == 0) {
-                        ScheduleTask.log.info("没有找到slaver。。。。。。。。" );
-                        throw new Exception("未找到ip为：" + ip + "的slaver");
-                    } else {
-                        List<Dispatch> runlist = dispatchMapper.getcasebyslaverid(slaverlist.get(0).getId(), "待分配", Long.parseLong(slavermaxthread));
-                        ScheduleTask.log.info("获取待执行的用例：。。。。。。。。" +runlist.size());
-                        for (Dispatch dis : runlist) {
-                            // 判断用例调用的jmx文件是否存在，如果未找到，返回客户端
-                            Apicases apicases= apicasesMapper.getjmetername(dis.getTestcaseid());
+                        String jmxcasename = dis.getCasejmxname();
+                        String casename = dis.getTestcasename();
+                        ScheduleTask.log.info("用例名 is......." + casename);
+                        String jmeterextjarpath = jmeterpath.replace("bin", "lib");
+                        String jarpath = jmeterextjarpath + "/ext/api-jmeter-autotest-1.0.jar";
+                        ScheduleTask.log.info("jarpath 路径 is......." + jarpath);
 
-                            String jmxcasename = dis.getCasejmxname();
-                            String casename = dis.getTestcasename();
-                            ScheduleTask.log.info("用例名 is......." + casename);
-                            String jmeterextjarpath = jmeterpath.replace("bin", "lib");
-                            String jarpath = jmeterextjarpath + "/ext/api-jmeter-autotest-1.0.jar";
-                            ScheduleTask.log.info("jarpath 路径 is......." + jarpath);
+                        String deployname = dis.getDeployunitname();
+                        Deployunit deployunit = deployunitService.findDeployNameValueWithCode(deployname);
+                        String protocal = deployunit.getProtocal();
+                        ScheduleTask.log.info("发布单元协议类型为......." + protocal);
 
-                            String deployname=dis.getDeployunitname();
-                            Deployunit deployunit= deployunitService.findDeployNameValueWithCode(deployname);
-                            String protocal = deployunit.getProtocal();
-                            ScheduleTask.log.info("发布单元协议类型为......." + protocal);
+                        String jmeterclassname = "";
+                        //如果是http,https，直接使用httpapitestcase下的httpapi来执行测试
+                        String DeployUnitNameForJmeter = "";
+                        if (protocal.equals(new String("http")) || protocal.equals(new String("https"))) {
+                            DeployUnitNameForJmeter = "httpapitestcase";
+                            jmeterclassname = "com.api.autotest.test.httpapitestcase." + jmxcasename;
+                        } else {
+                            DeployUnitNameForJmeter = dis.getDeployunitname();
+                            jmeterclassname = "com.api.autotest.test." + dis.getDeployunitname() + "." + jmxcasename;
+                        }
+                        ScheduleTask.log.info("jmeterclassname 类名......." + jmeterclassname);
+                        if (!jmeterclassexistornot(jarpath, jmeterclassname)) {
+                            // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态
+                            ApicasesReport ar = new ApicasesReport();
+                            ar.setTestplanid(dis.getExecplanid());
+                            ar.setCaseid(dis.getTestcaseid());
+                            ar.setCasename(dis.getTestcasename());
+                            ar.setErrorinfo("执行用例：" + casename + " |未找到用例对应的jmeter-class类：" + jmeterclassname + " 请检查是否已经开发提交");
+                            ar.setBatchname(dis.getBatchname());
+                            ar.setExpect(dis.getExpect());
+                            ar.setStatus("失败");
+                            ar.setRuntime(new Long(0));
+                            Long planid = dis.getExecplanid();
 
-                            String jmeterclassname ="";
-                            //如果是http,https，直接使用httpapitestcase下的httpapi来执行测试
-                            String DeployUnitNameForJmeter="";
-                            if(protocal.equals(new String("http"))||protocal.equals(new String("https")))
-                            {
-                                DeployUnitNameForJmeter="httpapitestcase";
-                                 jmeterclassname = "com.api.autotest.test.httpapitestcase." + jmxcasename;
-                            }
-                            else
-                            {
-                                DeployUnitNameForJmeter=dis.getDeployunitname();
-                                jmeterclassname = "com.api.autotest.test." + dis.getDeployunitname() + "." + jmxcasename;
-                            }
-                            ScheduleTask.log.info("jmeterclassname 类名......." + jmeterclassname);
-                            if (!jmeterclassexistornot(jarpath, jmeterclassname)) {
-                                // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态
-                                ApicasesReport ar = new ApicasesReport();
-                                ar.setTestplanid(dis.getExecplanid());
-                                ar.setCaseid(dis.getTestcaseid());
-                                ar.setCasename(dis.getTestcasename());
-                                ar.setErrorinfo("执行用例：" + casename + " |未找到用例对应的jmeter-class类：" + jmeterclassname + " 请检查是否已经开发提交");
-                                ar.setBatchname(dis.getBatchname());
-                                ar.setExpect(dis.getExpect());
-                                ar.setStatus("失败");
-                                ar.setRuntime(new Long(0));
-                                planid = dis.getExecplanid();
+                            apicasereportservice.addcasereport(ar);
+                            epservice.updatetestplanstatus(planid, "fail");
+                            ScheduleTask.log.info("未找到用例对应的jmeter-class类......." + jmeterclassname);
+                            //return ResultGenerator.genFailedResult("执行用例："+casename+" |未找到用例对应的jmeter-class类："+jmeterclassname+" 请检查是否已经开发提交");
+                        } else {
 
-                                apicasereportservice.addcasereport(ar);
-                                epservice.updatetestplanstatus(planid, "fail");
-                                ScheduleTask.log.info("未找到用例对应的jmeter-class类......." + jmeterclassname);
-                                //return ResultGenerator.genFailedResult("执行用例："+casename+" |未找到用例对应的jmeter-class类："+jmeterclassname+" 请检查是否已经开发提交");
-                            } else {
-                                // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
-                                tpcservice.executeplancase(apicases.getCasetype(), dis.getSlaverid(),dis.getBatchid(), dis.getExecplanid(), dis.getTestcaseid(),apicases.getThreadnum(),apicases.getLoops(),  DeployUnitNameForJmeter, jmeterpath, jmxpath, jmxcasename, dis.getBatchname(),jmeterperformancereportpath,url,username,password);
+                            // 更新调度表对应用例状态为已分配
+                            dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
+                            ScheduleTask.log.info("。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dis);
 
-                                // 更新调度表对应用例状态为已分配
-                                dispatchMapper.updatedispatchstatus("已分配",dis.getSlaverid(),dis.getExecplanid(),dis.getBatchid(),dis.getTestcaseid());
-                                ScheduleTask.log.info("调用jmeter完成..更新dispatch状态为已分配....." + dis);
-                            }
+                            // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
+                            tpcservice.executeplancase(apicases.getCasetype(), dis.getSlaverid(), dis.getBatchid(), dis.getExecplanid(), dis.getTestcaseid(), apicases.getThreadnum(), apicases.getLoops(), DeployUnitNameForJmeter, jmeterpath, jmxpath, jmxcasename, dis.getBatchname(), jmeterperformancereportpath, url, username, password);
+                            ScheduleTask.log.info("。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。");
                         }
                     }
+                    // }
                 }
                 //TODO 执行任务结束后需要释放锁
                 //释放锁
@@ -180,11 +182,11 @@ public class ScheduleTask {
             } else {
                 System.out.println("============获得分布式锁失败=======================");
                 ip = (String) redisUtils.getkey(redisKey);
-                System.out.println("============{}机器上占用分布式锁，正在执行中======================="+ip);
+                System.out.println("============{}机器上占用分布式锁，正在执行中=======================" + ip);
                 return;
             }
         } catch (Exception ex) {
-            System.out.println("调度定时器异常: "+ex.getMessage());
+            System.out.println("调度定时器异常: " + ex.getMessage());
         }
     }
 

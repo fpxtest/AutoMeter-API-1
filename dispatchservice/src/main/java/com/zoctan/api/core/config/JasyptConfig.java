@@ -27,8 +27,7 @@ public class JasyptConfig {
   @Bean
   public StringEncryptor myStringEncryptor() throws Exception {
     // Base64 + RSA 加密的密码
-    final byte[] passwordEncryptedByRSA =
-        Base64Utils.decodeFromString(this.passwordEncryptedByBase64AndRSA);
+    final byte[] passwordEncryptedByRSA = Base64Utils.decodeFromString(this.passwordEncryptedByBase64AndRSA);
     final String password = new String(this.rsaUtils.decrypt(passwordEncryptedByRSA));
     // 配置
     final SimpleStringPBEConfig config =

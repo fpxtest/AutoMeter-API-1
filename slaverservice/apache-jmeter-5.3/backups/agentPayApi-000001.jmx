@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="3.1" jmeter="3.1 r1770033">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="agentPayApi" enabled="true">
+      <stringProp name="TestPlan.comments">代付接口</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="threads" elementType="Argument">
+            <stringProp name="Argument.name">threads</stringProp>
+            <stringProp name="Argument.value">${__P(threads,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="loops" elementType="Argument">
+            <stringProp name="Argument.name">loops</stringProp>
+            <stringProp name="Argument.value">${__P(loops,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="ip" elementType="Argument">
+            <stringProp name="Argument.name">ip</stringProp>
+            <stringProp name="Argument.value">${__P(ip,47.101.186.198)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">${__P(port,18161)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="path" elementType="Argument">
+            <stringProp name="Argument.name">path</stringProp>
+            <stringProp name="Argument.value">${__P(path,/agentPay/v1/batch/)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="caseIdList" elementType="Argument">
+            <stringProp name="Argument.name">caseIdList</stringProp>
+            <stringProp name="Argument.value">${__P(caseIdList,(19))}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="batchNo" elementType="Argument">
+            <stringProp name="Argument.name">batchNo</stringProp>
+            <stringProp name="Argument.value">${__P(batchNo,201804202225048047)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="businessName" elementType="Argument">
+            <stringProp name="Argument.name">businessName</stringProp>
+            <stringProp name="Argument.value">${__P(businessName,agentPay)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="数据库连接配置" enabled="true">
+        <boolProp name="autocommit">true</boolProp>
+        <stringProp name="checkQuery">Select 1</stringProp>
+        <stringProp name="connectionAge">5000</stringProp>
+        <stringProp name="dataSource">mysql</stringProp>
+        <stringProp name="dbUrl">jdbc:mysql://47.101.165.17:3306/ifpay_qamp</stringProp>
+        <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
+        <boolProp name="keepAlive">true</boolProp>
+        <stringProp name="password">mysql</stringProp>
+        <stringProp name="poolMax">10</stringProp>
+        <stringProp name="timeout">10000</stringProp>
+        <stringProp name="transactionIsolation">DEFAULT</stringProp>
+        <stringProp name="trimInterval">60000</stringProp>
+        <stringProp name="username">mysql</stringProp>
+      </JDBCDataSource>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="线程组" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${threads}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1502182031000</longProp>
+        <longProp name="ThreadGroup.end_time">1502182031000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${loops}</stringProp>
+        </LoopController>
+        <hashTree>
+          <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="计数器" enabled="true">
+            <stringProp name="CounterConfig.start">0</stringProp>
+            <stringProp name="CounterConfig.end">${loops}</stringProp>
+            <stringProp name="CounterConfig.incr">1</stringProp>
+            <stringProp name="CounterConfig.name">num</stringProp>
+            <stringProp name="CounterConfig.format"></stringProp>
+            <boolProp name="CounterConfig.per_user">false</boolProp>
+          </CounterConfig>
+          <hashTree/>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="获取当前用例编号" enabled="true">
+            <stringProp name="BeanShellSampler.query">String caseIdList = &quot;${caseIdList}&quot;;
+String caseIdStr = caseIdList.replace(&quot;|&quot;,&quot;,&quot;);
+//vars.put(&quot;caseIdStr&quot;,caseIdStr);
+String[] caseIdArr = caseIdStr.replace(&quot;)&quot;,&quot;&quot;).replace(&quot;(&quot;,&quot;&quot;).split(&quot;,&quot;);
+
+log.info(&quot;第  [&quot; + (${num} + 1) + &quot;] 个用例编号： &quot; + caseIdArr[${num}]);
+vars.put(&quot;caseId&quot;,caseIdArr[${num}]);
+
+
+
+
+
+
+
+
+</stringProp>
+            <stringProp name="BeanShellSampler.filename"></stringProp>
+            <stringProp name="BeanShellSampler.parameters"></stringProp>
+            <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <JDBCPreProcessor guiclass="TestBeanGUI" testclass="JDBCPreProcessor" testname="获取用例参数集" enabled="true">
+            <stringProp name="dataSource">mysql</stringProp>
+            <stringProp name="queryType">Select Statement</stringProp>
+            <stringProp name="query">SELECT parameter_key,parameter_value FROM auto_test_parameter WHERE case_id =${caseId};</stringProp>
+            <stringProp name="queryArguments"></stringProp>
+            <stringProp name="queryArgumentsTypes"></stringProp>
+            <stringProp name="variableNames">parameter_column</stringProp>
+            <stringProp name="resultVariable">parameterList</stringProp>
+            <stringProp name="queryTimeout"></stringProp>
+            <stringProp name="resultSetHandler">Store as String</stringProp>
+          </JDBCPreProcessor>
+          <hashTree/>
+          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="获取当前用例参数" enabled="true">
+            <stringProp name="BeanShellSampler.query">int size = vars.getObject(&quot;parameterList&quot;).size();
+for(int i=0;i&lt;size;i++) {
+	key=vars.getObject(&quot;parameterList&quot;).get(i).get(&quot;parameter_key&quot;);
+	value=vars.getObject(&quot;parameterList&quot;).get(i).get(&quot;parameter_value&quot;);
+	log.info(key + &quot; | &quot; + value);
+	vars.put(key,value);
+}</stringProp>
+            <stringProp name="BeanShellSampler.filename"></stringProp>
+            <stringProp name="BeanShellSampler.parameters"></stringProp>
+            <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+          </BeanShellSampler>
+          <hashTree/>
+          <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="代付接口请求" enabled="true">
+            <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="url" elementType="Argument">
+                  <stringProp name="Argument.name">url</stringProp>
+                  <stringProp name="Argument.value">http://${ip}:${port}${path}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchNo" elementType="Argument">
+                  <stringProp name="Argument.name">batchNo</stringProp>
+                  <stringProp name="Argument.value">${batchNo}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="caseId" elementType="Argument">
+                  <stringProp name="Argument.name">caseId</stringProp>
+                  <stringProp name="Argument.value">${caseId}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="businessName" elementType="Argument">
+                  <stringProp name="Argument.name">businessName</stringProp>
+                  <stringProp name="Argument.value">${businessName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="merchantId" elementType="Argument">
+                  <stringProp name="Argument.name">merchantId</stringProp>
+                  <stringProp name="Argument.value">${merchantId}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="key" elementType="Argument">
+                  <stringProp name="Argument.name">key</stringProp>
+                  <stringProp name="Argument.value">${key}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchVersion" elementType="Argument">
+                  <stringProp name="Argument.name">batchVersion</stringProp>
+                  <stringProp name="Argument.value">${batchVersion}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchBiztype" elementType="Argument">
+                  <stringProp name="Argument.name">batchBiztype</stringProp>
+                  <stringProp name="Argument.value">${batchBiztype}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchCount" elementType="Argument">
+                  <stringProp name="Argument.name">batchCount</stringProp>
+                  <stringProp name="Argument.value">${batchCount}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="batchAmount" elementType="Argument">
+                  <stringProp name="Argument.name">batchAmount</stringProp>
+                  <stringProp name="Argument.value">${batchAmount}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="charset" elementType="Argument">
+                  <stringProp name="Argument.name">charset</stringProp>
+                  <stringProp name="Argument.value">${charset}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="signType" elementType="Argument">
+                  <stringProp name="Argument.name">signType</stringProp>
+                  <stringProp name="Argument.value">${signType}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="payeeAcctNo" elementType="Argument">
+                  <stringProp name="Argument.name">payeeAcctNo</stringProp>
+                  <stringProp name="Argument.value">${payeeAcctNo}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="payeeName" elementType="Argument">
+                  <stringProp name="Argument.name">payeeName</stringProp>
+                  <stringProp name="Argument.value">${payeeName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="payeeAcctBankName" elementType="Argument">
+                  <stringProp name="Argument.name">payeeAcctBankName</stringProp>
+                  <stringProp name="Argument.value">${payeeAcctBankName}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="bankBranch" elementType="Argument">
+                  <stringProp name="Argument.name">bankBranch</stringProp>
+                  <stringProp name="Argument.value">${bankBranch}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="payeeAcctType" elementType="Argument">
+                  <stringProp name="Argument.name">payeeAcctType</stringProp>
+                  <stringProp name="Argument.value">${payeeAcctType}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="bankSubbranch" elementType="Argument">
+                  <stringProp name="Argument.name">bankSubbranch</stringProp>
+                  <stringProp name="Argument.value">${bankSubbranch}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="amount" elementType="Argument">
+                  <stringProp name="Argument.name">amount</stringProp>
+                  <stringProp name="Argument.value">${amount}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="currency" elementType="Argument">
+                  <stringProp name="Argument.name">currency</stringProp>
+                  <stringProp name="Argument.value">${currency}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="province" elementType="Argument">
+                  <stringProp name="Argument.name">province</stringProp>
+                  <stringProp name="Argument.value">${province}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="city" elementType="Argument">
+                  <stringProp name="Argument.name">city</stringProp>
+                  <stringProp name="Argument.value">${city}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="mobile" elementType="Argument">
+                  <stringProp name="Argument.name">mobile</stringProp>
+                  <stringProp name="Argument.value">${mobile}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="remark" elementType="Argument">
+                  <stringProp name="Argument.name">remark</stringProp>
+                  <stringProp name="Argument.value">${remark}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+                <elementProp name="expResult" elementType="Argument">
+                  <stringProp name="Argument.name">expResult</stringProp>
+                  <stringProp name="Argument.value">${expResult}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="classname">com.ifvalue.autotest.test.agentPayApi.AgentPay</stringProp>
+          </JavaSampler>
+          <hashTree/>
+        </hashTree>
+        <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler" enabled="true">
+          <boolProp name="displayJMeterProperties">false</boolProp>
+          <boolProp name="displayJMeterVariables">true</boolProp>
+          <boolProp name="displaySystemProperties">false</boolProp>
+        </DebugSampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="察看结果树" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="聚合报告" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

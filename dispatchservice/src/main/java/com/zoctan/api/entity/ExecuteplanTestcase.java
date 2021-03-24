@@ -17,6 +17,27 @@ public class ExecuteplanTestcase {
      */
     private Long executeplanid;
 
+    public Long getApiid() {
+        return apiid;
+    }
+
+    public void setApiid(Long apiid) {
+        this.apiid = apiid;
+    }
+
+    private Long apiid;
+
+    public Long getDeployunitid() {
+        return deployunitid;
+    }
+
+    public void setDeployunitid(Long deployunitid) {
+        this.deployunitid = deployunitid;
+    }
+
+    private Long deployunitid;
+
+
     /**
      * 发布单元
      */
@@ -27,15 +48,68 @@ public class ExecuteplanTestcase {
      */
     private String apiname;
 
+    public String getExpect() {
+        return expect;
+    }
+
+    public void setExpect(String expect) {
+        this.expect = expect;
+    }
+
+    private String expect;
+
+
     /**
      * 用例id
      */
     private Long testcaseid;
 
+    public Long getThreadnum() {
+        return threadnum;
+    }
+
+    public void setThreadnum(Long threadnum) {
+        this.threadnum = threadnum;
+    }
+
+    public Long getLoops() {
+        return loops;
+    }
+
+    public void setLoops(Long loops) {
+        this.loops = loops;
+    }
+
+    private Long threadnum;
+    private Long loops;
+
+
+
+
+
+
+    public String getCasename() {
+        return casename;
+    }
+
+    public void setCasename(String casename) {
+        this.casename = casename;
+    }
+
     /**
      * 用例名
      */
-    private String testcasename;
+    private String casename;
+
+    public String getCasejmxname() {
+        return casejmxname;
+    }
+
+    public void setCasejmxname(String casejmxname) {
+        this.casejmxname = casejmxname;
+    }
+
+    private String casejmxname;
 
     /**
      * 创建时间
@@ -137,24 +211,6 @@ public class ExecuteplanTestcase {
      */
     public void setTestcaseid(Long testcaseid) {
         this.testcaseid = testcaseid;
-    }
-
-    /**
-     * 获取用例名
-     *
-     * @return testcasename - 用例名
-     */
-    public String getTestcasename() {
-        return testcasename;
-    }
-
-    /**
-     * 设置用例名
-     *
-     * @param testcasename 用例名
-     */
-    public void setTestcasename(String testcasename) {
-        this.testcasename = testcasename;
     }
 
     /**

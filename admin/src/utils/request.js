@@ -5,8 +5,10 @@ import { getToken } from '@/utils/token'
 
 // 创建axios实例
 // https://www.kancloud.cn/yunye/axios/234845
+const ApiUrl = window.g.SERVER_URL
+console.log(ApiUrl, 'ApiUrl')
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
+  baseURL: ApiUrl, // api的base_url   baseURL: process.env.BASE_API,
   timeout: 5000, // 请求超时时间
   // 所有请求都以Json形式传送
   // 会有预检请求，服务端需要正常通过OPTIONS请求

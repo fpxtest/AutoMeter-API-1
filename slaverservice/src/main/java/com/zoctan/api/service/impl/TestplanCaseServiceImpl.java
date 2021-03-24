@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 
 /**
 * @author Zoctan
@@ -52,10 +50,10 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
     {
         try {
             Process pro = Runtime.getRuntime().exec(ShellCmd);
-            String line;
-            BufferedReader buf = new BufferedReader(new InputStreamReader(pro.getInputStream()));
-            while ((line = buf.readLine()) != null)
-                TestPlanCaseServiceImpl.log.info("调用jmeter命令返回: "+line);
+//            String line;
+//            BufferedReader buf = new BufferedReader(new InputStreamReader(pro.getInputStream()));
+//            while ((line = buf.readLine()) != null)
+//                TestPlanCaseServiceImpl.log.info("调用jmeter命令返回: "+line);
         } catch (Exception e)
         {
             // TODO Auto-generated catch block

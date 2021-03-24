@@ -19,7 +19,7 @@ public class precondition extends AbstractJavaSamplerClient {
         super.setupTest(context);
         getLogger().info( "precondition setupTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
         String status="";
-        TestCore core = new TestCore(getLogger());
+        TestCore core = new TestCore(context,getLogger());
         String errorinfo = "";
         String caseid = context.getParameter("caseid");
         String testplanid = context.getParameter("testplanid");
@@ -45,13 +45,15 @@ public class precondition extends AbstractJavaSamplerClient {
     public Arguments getDefaultParameters() {
         Arguments params = new Arguments();
         //定义一个参数，显示到Jmeter的参数列表中，第一个参数为参数默认的显示名称，第二个参数为默认值
-        params.addArgument("testplanid", "11");
-        params.addArgument("caseid", "15");
-        params.addArgument("batchid", "11");
-        params.addArgument("slaverid", "15");
-        params.addArgument("batchname", "cornerservice2020-10-21-tag-100");
+        params.addArgument("testplanid", "12");
+        params.addArgument("caseid", "1");
+        params.addArgument("batchid", "41");
+        params.addArgument("slaverid", "5");
+        params.addArgument("batchname", "xxxxxxxxxxxxxxxxxxxxx");
         params.addArgument("casetype", "性能");
-
+        params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        params.addArgument("mysqlusername", "root");
+        params.addArgument("mysqlpassword", "root");
         return params;
     }
 

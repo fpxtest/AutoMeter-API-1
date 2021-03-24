@@ -54,6 +54,10 @@ public class httpapi extends AbstractJavaSamplerClient {
         params.addArgument("paramsjson", "/opt/");
         params.addArgument("bodyjson", "/opt/");
         params.addArgument("dubbojson", "/opt/");
+        params.addArgument("mysqlurl", "/opt/");
+        params.addArgument("mysqlusername", "/opt/");
+        params.addArgument("mysqlpassword", "/opt/");
+
         return params;
     }
 
@@ -68,7 +72,7 @@ public class httpapi extends AbstractJavaSamplerClient {
         String AssertInfo = "";
         String ErrorInfo="";
         String ActualResult="";
-        TestCore Core = new TestCore(getLogger());
+        TestCore Core = new TestCore(ctx,getLogger());
         RequestObject requestObject=null;
         TestAssert TestAssert = new TestAssert();
         try {
@@ -165,9 +169,9 @@ public class httpapi extends AbstractJavaSamplerClient {
         Arguments params = new Arguments();
         params.addArgument("testplanid", "12");
         params.addArgument("caseid", "1");
-        params.addArgument("batchid", "25");
+        params.addArgument("batchid", "41");
         params.addArgument("slaverid", "5");
-        params.addArgument("batchname", "2021-3-10");
+        params.addArgument("batchname", "xxxxxxxxxxxxxxxxxxxxx");
 
         params.addArgument("executeplanname", "兑换服务回归测试");
         params.addArgument("casename", "获取用户信息正确");
@@ -183,6 +187,11 @@ public class httpapi extends AbstractJavaSamplerClient {
         params.addArgument("paramsjson", "{\"goodsThirdPartyType\":\"ALIPAY\"}");
         params.addArgument("bodyjson", "");
         params.addArgument("dubbojson", "");
+
+        params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        params.addArgument("mysqlusername", "root");
+        params.addArgument("mysqlpassword", "root");
+
         JavaSamplerContext ctx = new JavaSamplerContext(params);
         httpapi test = new httpapi();
         test.setupTest(ctx);

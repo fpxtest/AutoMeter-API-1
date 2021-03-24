@@ -14,6 +14,37 @@ public class Apicases {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getThreadnum() {
+        return threadnum;
+    }
+
+    public void setThreadnum(Long threadnum) {
+        this.threadnum = threadnum;
+    }
+
+    private Long threadnum;
+
+    public Long getLoops() {
+        return loops;
+    }
+
+    public void setLoops(Long loops) {
+        this.loops = loops;
+    }
+
+    private Long loops;
+
+
+    public String getCasetype() {
+        return casetype;
+    }
+
+    public void setCasetype(String casetype) {
+        this.casetype = casetype;
+    }
+
+    private String casetype;
+
     /**
      * API
      */

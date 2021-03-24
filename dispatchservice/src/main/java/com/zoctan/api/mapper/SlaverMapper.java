@@ -16,7 +16,10 @@ public interface SlaverMapper extends MyMapper<Slaver> {
      */
     List<Slaver> findslaverWithName(final Map<String, Object> params);
 
-    Integer findslaverbyip(@Param("ip") final String ip);
+    List<Slaver> findslaverbyip(@Param("ip") final String ip);
+
+    List<Slaver> findslaverbytype(@Param("stype") final String stype);
+
     /**
      * 更新字典内容
      *

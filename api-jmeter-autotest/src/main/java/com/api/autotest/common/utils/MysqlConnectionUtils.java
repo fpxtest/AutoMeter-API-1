@@ -18,13 +18,13 @@ public class MysqlConnectionUtils {
     public static ResultSet rs;
     public static Statement st;
 
-    public static void initDbResource() {
-        PropertiesUtil pUtil = PropertiesUtil.getInstance("app.properties");
-        url = pUtil.getProperty("mysql.host");
+    public static void initDbResource(String mysqluel,String mysqlusername,String mysqlpass ) {
+        //PropertiesUtil pUtil = PropertiesUtil.getInstance("app.properties");
+        url =mysqluel;// pUtil.getProperty("mysql.host");
         System.out.println(url);
-        user = pUtil.getProperty("username");
+        user =mysqlusername;// pUtil.getProperty("username");
         System.out.println(user);
-        password = pUtil.getProperty("password");
+        password = mysqlpass;// pUtil.getProperty("password");
         System.out.println(password);
 
 
@@ -125,7 +125,7 @@ public class MysqlConnectionUtils {
         String result="";
         try {
             st = conn.createStatement();
-            st.executeUpdate(sql);
+            st.execute(sql);
         }  catch (Exception e) {
             result=e.getMessage();
         } finally {

@@ -4,6 +4,8 @@ import com.zoctan.api.core.jwt.JwtUtil;
 import com.zoctan.api.util.IpUtils;
 import com.zoctan.api.util.UrlUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,9 +28,14 @@ import java.util.Set;
  * @author Zoctan
  * @date 2018/05/27
  */
+@Configuration
 @Slf4j
 @Component
 public class AuthenticationFilter implements Filter {
+
+  @Value("${spring.domain.allowdomain}")
+  private String allowdomain;
+
   @Resource private JwtUtil jwtUtil;
 
   @Override
@@ -52,7 +59,9 @@ public class AuthenticationFilter implements Filter {
         UrlUtils.getMappingUrl(request));
 
     // 设置允许多个域名请求
-    String[] allowDomains = {"http://localhost:9999","http://81.69.0.136", "http://127.0.0.1:8080","http://centeradmin.cdmtzz.com"};
+
+    String[] allowDomains =allowdomain.split(",");
+    //String[] allowDomains = {"http://localhost:9999","http://81.69.0.136", "http://127.0.0.1:8080","http://centeradmin.cdmtzz.com"};
     Set<String> allowOrigins = new HashSet<>(Arrays.asList(allowDomains));
     String origin = request.getHeader("Origin");
     if (allowOrigins.contains(origin)) {

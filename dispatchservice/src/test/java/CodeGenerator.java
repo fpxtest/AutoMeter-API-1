@@ -31,11 +31,11 @@ class CodeGenerator {
   private static final String PROJECT_PATH = System.getProperty("user.dir");
   // 模板位置
   private static final String TEMPLATE_FILE_PATH =
-      CodeGenerator.PROJECT_PATH + "/api/src/test/resources/generator/template";
+      CodeGenerator.PROJECT_PATH + "/slaverservice/src/test/resources/generator/template";
   // java文件路径
-  private static final String JAVA_PATH = "/api/src/main/java";
+  private static final String JAVA_PATH = "/slaverservice/src/main/java";
   // 资源文件路径
-  private static final String RESOURCES_PATH = "/api/src/main/resources";
+  private static final String RESOURCES_PATH = "/slaverservice/src/main/resources";
   // 生成的Service存放路径
   private static final String PACKAGE_PATH_SERVICE =
       CodeGenerator.packageConvertPath(SERVICE_PACKAGE);
@@ -47,7 +47,7 @@ class CodeGenerator {
       CodeGenerator.packageConvertPath(CONTROLLER_PACKAGE);
 
   // @author
-  private static final String AUTHOR = "Zoctan";
+  private static final String AUTHOR = "Season";
   // @date
   private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
   private static final boolean isRestful = true;
@@ -60,7 +60,7 @@ class CodeGenerator {
 //    }
     System.out.print("start!!!");
 
-    CodeGenerator.genCode("dispatch");
+    CodeGenerator.genCode("apicases_performancestatistics");
     System.out.print("finish!!!");
 
     // genCodeByCustomModelName("输入表名","输入自定义Model名称");

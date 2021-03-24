@@ -19,6 +19,17 @@ public class Dispatch {
      */
     private Long execplanid;
 
+
+    public String getPlantype() {
+        return plantype;
+    }
+
+    public void setPlantype(String plantype) {
+        this.plantype = plantype;
+    }
+
+    private String plantype;
+
     /**
      * 执行计划名
      */
@@ -50,23 +61,6 @@ public class Dispatch {
 
     private Long batchid;
 
-
-
-    /**
-     * 执行机名
-     */
-    private String slavername;
-
-    /**
-     * 用例Id
-     */
-    private Long testcaseid;
-
-    /**
-     * 用例名
-     */
-    private String testcasename;
-
     public String getCasejmxname() {
         return casejmxname;
     }
@@ -96,6 +90,21 @@ public class Dispatch {
     }
 
     private String deployunitname;
+
+    /**
+     * 执行机名
+     */
+    private String slavername;
+
+    /**
+     * 用例Id
+     */
+    private Long testcaseid;
+
+    /**
+     * 用例名
+     */
+    private String testcasename;
 
     /**
      * 待分配，已分配，已结束
@@ -293,4 +302,24 @@ public class Dispatch {
     public void setLastmodifyTime(Date lastmodifyTime) {
         this.lastmodifyTime = lastmodifyTime;
     }
+
+
+    public Long getThreadnum() {
+        return threadnum;
+    }
+
+    public void setThreadnum(Long threadnum) {
+        this.threadnum = threadnum;
+    }
+
+    public Long getLoops() {
+        return loops;
+    }
+
+    public void setLoops(Long loops) {
+        this.loops = loops;
+    }
+
+    private Long threadnum;
+    private Long loops;
 }
