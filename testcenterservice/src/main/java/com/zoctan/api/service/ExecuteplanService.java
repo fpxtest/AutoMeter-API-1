@@ -43,4 +43,7 @@ public interface ExecuteplanService extends Service<Executeplan> {
 
     Integer getexecuteplannum();
 
+    List<String> getstaticsplan();
+
+
 }

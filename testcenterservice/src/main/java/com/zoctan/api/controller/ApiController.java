@@ -4,12 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.entity.Api;
 import com.zoctan.api.service.ApiService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +72,19 @@ public class ApiController {
         List<Api> list = apiService.listAll();
         PageInfo<Api> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @GetMapping("/getstaticsdeployapi")
+    public Result getstaticsdeployapi() {
+        List<Api> list = apiService.getstaticsdeployapi();
+        List<StaticsDataForPie> result=new ArrayList<>();
+        for (Api api: list) {
+            StaticsDataForPie staticsDataForPie =new StaticsDataForPie();
+            staticsDataForPie.setValue(api.getId());
+            staticsDataForPie.setName(api.getDeployunitname());
+            result.add(staticsDataForPie);
+        }
+        return ResultGenerator.genOkResult(result);
     }
 
 

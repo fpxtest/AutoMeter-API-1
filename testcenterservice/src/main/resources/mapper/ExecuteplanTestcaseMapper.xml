@@ -53,5 +53,12 @@
     DELETE from executeplan_testcase where executeplanid = #{executeplanid} and testcaseid=#{testcaseid}
   </insert>
 
+  <select id="getstaticsplancases" resultMap="BaseResultMap">
+  SELECT b.executeplanname as deployunitname ,count(*) as id
+  FROM executeplan_testcase a
+  inner JOIN executeplan b on a.executeplanid=b.id group by a.executeplanid
+</select>
+
+
 
 </mapper>

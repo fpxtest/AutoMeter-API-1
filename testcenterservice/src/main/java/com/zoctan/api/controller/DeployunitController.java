@@ -78,6 +78,13 @@ public class DeployunitController {
         return ResultGenerator.genOkResult(list);
     }
 
+
+    @GetMapping("/getstaticsdeploynames")
+    public Result getstaticsdeploynames() {
+        List<String> list = deployunitService.getstaticsdeploynames();
+        return ResultGenerator.genOkResult(list);
+    }
+
     @GetMapping("/findDeployNameValueWithCode")
     public Result findDeployNameValueWithCode(@RequestParam String deployunitname) {
         Deployunit dep = deployunitService.findDeployNameValueWithCode(deployunitname);

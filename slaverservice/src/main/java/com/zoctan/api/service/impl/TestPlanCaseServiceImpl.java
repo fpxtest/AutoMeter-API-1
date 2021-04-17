@@ -12,9 +12,9 @@ import javax.annotation.Resource;
 import java.io.File;
 
 /**
-* @author Zoctan
-* @date 2020/04/17
-*/
+ * @author Zoctan
+ * @date 2020/04/17
+ */
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -24,40 +24,33 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
 
 
     @Override
-    public void executeplancase(String casetype, long slaverid, long batchid, long planid, long caseid, Long thread, Long loop, String deployname, String jmeterpath, String jmxpath, String jmxcasename, String batchname, String jmeterperformancereportpath, String mysqlurl, String mysqlusername, String mysqlpassword) {
-        //Apicases apicase = apicaseMapper.getjmetername(caseid);
-        //String jmx = jmxcasename;
-        String jmetercmd = "";
-        if (casetype.equals(new String("功能"))) {
-            jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath + "/apitest.jmx -Jmysqlurl=" + mysqlurl + " -Jmysqlusername=" + mysqlusername + " -Jmysqlpassword=" + mysqlpassword + " -Jthread=1 -Jloops=1 -Jtestplanid=" + planid + " -Jcaseid=" + caseid + " -Jslaverid=" + slaverid + " -Jbatchid=" + batchid + " -Jbatchname=" + batchname + " -Jtestdeployunit=" + deployname + " -Jtestclass=" + jmxcasename;
-            TestPlanCaseServiceImpl.log.info("jmetercmd 功能 is :" + jmetercmd);
+    public void ExecuteHttpPerformancePlanCase(String CaseType, long SlaverId, long BatchId, long PlanId, long CaseId, Long Thread, Long Loop, String DeployName, String JmeterPath, String JmxPath, String JmxCaseName, String BatchName, String JmeterPerformanceReportPath, String MysqlUrl, String MysqlUserName, String MysqlPassword) {
+        String CaseReportFolder = JmeterPerformanceReportPath + "/" + PlanId + "-" + CaseId + "-" + BatchName;
+        File dir = new File(CaseReportFolder);
+        if (!dir.exists()) {// 判断目录是否存在
+            dir.mkdir();
+            TestPlanCaseServiceImpl.log.info("创建性能报告目录完成 :" + CaseReportFolder);
         }
-        if (casetype.equals(new String("性能"))) {
-            String casereportfolder = jmeterperformancereportpath + "/" + planid + "-" + caseid + "-" + batchname;
-            File dir = new File(casereportfolder);
-            if (!dir.exists()) {// 判断目录是否存在
-                TestPlanCaseServiceImpl.log.info("创建目录 :" + casereportfolder);
-                dir.mkdir();
-            }
-            jmetercmd = jmeterpath + "/jmeter -n -t " + jmxpath + "/apitest.jmx  -Jmysqlurl=" + mysqlurl + " -Jmysqlusername=" + mysqlusername + " -Jmysqlpassword=" + mysqlpassword + " -Jthread=" + thread + " -Jloops=" + loop + " -Jtestplanid=" + planid + " -Jcaseid=" + caseid + " -Jslaverid=" + slaverid + " -Jbatchid=" + batchid + " -Jbatchname=" + batchname + " -Jtestdeployunit=" + deployname + " -Jcasereportfolder=" + casereportfolder + " -Jtestclass=" + jmxcasename + " -l  " + casereportfolder + "/" + caseid + ".jtl -e -o " + casereportfolder;
-            TestPlanCaseServiceImpl.log.info("jmetercmd 性能 is :" + jmetercmd);
-        }
-        TestPlanCaseServiceImpl.log.info("JmeterCmd is :" + jmetercmd);
-        ExecShell(jmetercmd);
+        String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName + " -Jtestdeployunit=" + DeployName + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder;
+        TestPlanCaseServiceImpl.log.info("性能JmeterCmd is :" + JmeterCmd);
+        ExecShell(JmeterCmd);
+        TestPlanCaseServiceImpl.log.info("性能JmeterCmd finish。。。。。。。。。。。。。。。。。。。。。。。。。。。。。 :");
     }
 
-    public void ExecShell(String ShellCmd)
-    {
+    @Override
+    public void ExecuteHttpPlanFunctionCase(String JmeterPath, String JmxPath, String DispatchIds, String MysqlUrl, String MysqlUserName, String MysqlPassword) {
+        String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HTTPFunction.jmx -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds;
+        TestPlanCaseServiceImpl.log.info("功能JmeterCmd  is :" + JmeterCmd);
+        ExecShell(JmeterCmd);
+        TestPlanCaseServiceImpl.log.info("功能JmeterCmd finish。。。。。。。。。。。。。。。。。。。。。。。。。。。。。 :");
+    }
+
+    public void ExecShell(String ShellCmd) {
         try {
             Process pro = Runtime.getRuntime().exec(ShellCmd);
-//            String line;
-//            BufferedReader buf = new BufferedReader(new InputStreamReader(pro.getInputStream()));
-//            while ((line = buf.readLine()) != null)
-//                TestPlanCaseServiceImpl.log.info("调用jmeter命令返回: "+line);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            TestPlanCaseServiceImpl.log.info("调用jmeter命令异常: "+e.getMessage());
+            TestPlanCaseServiceImpl.log.info("调用jmeter命令异常: " + e.getMessage());
         }
     }
 }

@@ -37,4 +37,7 @@ public interface ExecuteplanMapper extends MyMapper<Executeplan> {
 
     Integer getexecuteplannum();
 
+    List<String> getstaticsplan();
+
+
 }

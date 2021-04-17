@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zoctan.api.core.config.RedisUtils;
 import com.zoctan.api.entity.ApicasesPerformancestatistics;
-import com.zoctan.api.entity.Dictionary;
 import com.zoctan.api.entity.Performancereportsource;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.DictionaryMapper;
 import com.zoctan.api.mapper.PerformancereportsourceMapper;
 import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ApicasesPerformancestatisticsService;
+import com.zoctan.api.service.ExecuteplanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -50,6 +49,8 @@ public class GeneralPerformancestatisticsScheduleTask {
     @Autowired(required = false)
     private SlaverMapper slaverMapper;
     @Autowired(required = false)
+    private ExecuteplanService epservice;
+    @Autowired(required = false)
     private PerformancereportsourceMapper performancereportsourceMapper;
 
 
@@ -63,35 +64,48 @@ public class GeneralPerformancestatisticsScheduleTask {
         try {
             address = InetAddress.getLocalHost();
             ip = address.getHostAddress();
-            String redisKey = "Performancestatistics"+ UUID.randomUUID().toString()+ip;
+            String redisKey = "Performancestatistics"+ UUID.randomUUID().toString()+ip+"GeneralPerformancestatistics";
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
             // redis_default_expire_time 不能设置为永久，避免死锁
             boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
             if (lock) {
-                List<Dictionary> dic = dictionaryMapper.findDicNameValueWithCode("dispatchservice");
-                if(dic.size()==0) //表示没有调度服务，直接本地处理
-                {
-                    List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
-
-                    if (slaverlist.size() > 0)
-                    {
-                        List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(slaverlist.get(0).getId());
-                        for (Performancereportsource per:performancereportsourcelist)
-                        {
-                            fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
-                        }
-                    }
-                    else
-                    {
-                        GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============当前机器的ip未能获得的对应的slaverid："+ip);
-                    }
+                List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
+                if (slaverlist.size() == 0) {
+                    GeneralPerformancestatisticsScheduleTask.log.error("性能报告解析任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
+                    return;
                 }
-                else  //表示集群，通知dispatchservice
+                Long SlaverId = slaverlist.get(0).getId();
+                List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(SlaverId);
+                for (Performancereportsource per:performancereportsourcelist)
                 {
+                    fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
+                    GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务-ID："+per.getId()+" 解析完成");
 
                 }
+//                List<Dictionary> dic = dictionaryMapper.findDicNameValueWithCode("dispatchservice");
+//                if(dic.size()==0) //表示没有调度服务，直接本地处理
+//                {
+//                    List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
+//
+//                    if (slaverlist.size() > 0)
+//                    {
+//                        List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(slaverlist.get(0).getId());
+//                        for (Performancereportsource per:performancereportsourcelist)
+//                        {
+//                            fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
+//                        }
+//                    }
+//                    else
+//                    {
+//                        GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============当前机器的ip未能获得的对应的slaverid："+ip);
+//                    }
+//                }
+//                else  //表示集群，通知dispatchservice
+//                {
+//
+//                }
                 //TODO 执行任务结束后需要释放锁
                 //释放锁
                 redisUtils.deletekey(redisKey);
@@ -112,12 +126,12 @@ public class GeneralPerformancestatisticsScheduleTask {
         try {
             String casereport=casereportfolder+"/content/js/dashboard.js";
             GeneralPerformancestatisticsScheduleTask.log.info("参数为 is:"+testclass+"，"+batchname+"，"+testplanid+"，"+batchid+","+slaverid+","+caseid+","+casereportfolder+","+costtime);
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new FileReader(casereport));
-            } catch (FileNotFoundException e) {
-                GeneralPerformancestatisticsScheduleTask.log.info(e.getMessage());
-            }
+            BufferedReader reader = new BufferedReader(new FileReader(casereport));
+//            try {
+//                reader = new BufferedReader(new FileReader(casereport));
+//            } catch (FileNotFoundException e) {
+//                GeneralPerformancestatisticsScheduleTask.log.info(e.getMessage());
+//            }
             StringBuilder sb = new StringBuilder();
             String line;
             try {
@@ -125,12 +139,12 @@ public class GeneralPerformancestatisticsScheduleTask {
                     sb.append(line);
                 }
             } catch (IOException e) {
-                GeneralPerformancestatisticsScheduleTask.log.info(e.getMessage());
+                GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务- "+e.getMessage());
             }
             try {
                 reader.close();
             } catch (IOException e) {
-                GeneralPerformancestatisticsScheduleTask.log.info(e.getMessage());
+                GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务- "+e.getMessage());
             }
             String statisticsTableStr="";
             String sourceStr = sb.substring(sb.indexOf("{"), sb.lastIndexOf("}") + 1);
@@ -208,11 +222,11 @@ public class GeneralPerformancestatisticsScheduleTask {
             apicasesPerformancestatisticsService.save(apicasesPerformancestatistics);
 
             performancereportsourceMapper.updateperformancereportsourcedone(Long.parseLong(testplanid),Long.parseLong(slaverid),Long.parseLong(batchid),Long.parseLong(caseid));
-            GeneralPerformancestatisticsScheduleTask.log.info(testclass+" ：保存性能统计结果完成...........: ");
+            GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务- "+testclass+" ：保存性能统计结果完成...........: ");
         }
         catch (Exception ex)
         {
-            GeneralPerformancestatisticsScheduleTask.log.info(testclass+" ：保存性能统计结果异常...........: "+ex.getMessage());
+            GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务- "+testclass+" ：保存性能统计结果异常...........: "+ex.getMessage());
         }
 
 

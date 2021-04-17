@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.StaticsPlanandcasesMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.StaticsPlanandcases">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="testplanid" jdbcType="BIGINT" property="testplanid" />
+    <result column="testplanname" jdbcType="VARCHAR" property="testplanname" />
+    <result column="passrate" jdbcType="DOUBLE" property="passrate" />
+    <result column="totalcases" jdbcType="BIGINT" property="totalcases" />
+    <result column="totalpasscases" jdbcType="BIGINT" property="totalpasscases" />
+    <result column="totalfailcases" jdbcType="BIGINT" property="totalfailcases" />
+    <result column="runtime" jdbcType="BIGINT" property="runtime" />
+    <result column="statics_date" jdbcType="DATE" property="staticsDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="getplanstatics" resultMap="BaseResultMap">
+    SELECT *
+    FROM statics_planandcases
+    where statics_date>=#{statics_date}
+  </select>
+
+
+  <insert id="savestaticsplanandcases">
+    INSERT INTO statics_planandcases (testplanid,testplanname,passrate, totalcases,totalpasscases,totalfailcases,runtime,statics_date,create_time,lastmodify_time)
+    VALUES
+    <foreach collection="casedataList" item="item" index="index" separator=",">
+      (#{item.testplanid}, #{item.testplanname}, #{item.passrate}, #{item.totalcases}, #{item.totalpasscases}, #{item.totalfailcases}, #{item.runtime},DATE_FORMAT(#{item.staticsDate},'%Y-%m-%d'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+    </foreach>
+  </insert>
+</mapper>

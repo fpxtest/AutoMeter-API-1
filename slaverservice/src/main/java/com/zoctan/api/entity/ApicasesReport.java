@@ -33,6 +33,17 @@ public class ApicasesReport extends Apicases {
      */
     private Long testplanid;
 
+    public Long getSlaverid() {
+        return slaverid;
+    }
+
+    public void setSlaverid(Long slaverid) {
+        this.slaverid = slaverid;
+    }
+
+    private Long slaverid;
+
+
     /**
      * 运行结果，成功，失败，异常
      */

@@ -20,6 +20,14 @@
             @click.native.prevent="showAddapicasesDialog"
           >添加API用例
           </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            v-if="hasPermission('apicases:add')"
+            @click.native.prevent="showAddapicasesDialog"
+          >复制API用例
+          </el-button>
         </el-form-item>
 
         <span v-if="hasPermission('apicases:search')">

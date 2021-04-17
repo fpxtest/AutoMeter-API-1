@@ -67,4 +67,10 @@
     memo = #{memo},casetype=#{casetype},threadnum=#{threadnum},loops=#{loops},middleparam=#{middleparam}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
+
+  <select id="getstaticsdeployunitcases" resultMap="BaseResultMap">
+    SELECT deployunitname ,count(*) as apiid
+    FROM apicases group by deployunitname
+  </select>
+
 </mapper>

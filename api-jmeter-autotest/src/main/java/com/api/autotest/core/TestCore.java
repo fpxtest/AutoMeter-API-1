@@ -10,10 +10,7 @@ import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.log.Logger;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fanseasn on 2020/10/17.
@@ -238,9 +235,25 @@ public class TestCore {
         return newob;
     }
 
+    //通过调度IDs获取请求拼装数据列表
+    public List<RequestObject> GetDispatchOBList(JavaSamplerContext context)  {
+        List<RequestObject> FunctionROList=new ArrayList<>();
+        String DispatchIds=context.getParameter("DispatchIds");
+        String[] DispatchArray=DispatchIds.split(",");
+        for (String DispatchID : DispatchArray)
+        {
+            ArrayList<HashMap<String, String>> DispatchList = getcaseData("select * from dispatch where id=" + DispatchID);
+            String PlanId= getcaseValue("execplanid", DispatchList);
+            String CaseId= getcaseValue("testcaseid", DispatchList);
+            RequestObject ro= getcaserequestdata(PlanId,CaseId);
+            FunctionROList.add(ro);
+        }
+        return FunctionROList;
+    }
+
     // 拼装请求需要的用例数据
-    public RequestObject getcaserequestdata(String planid, String testcaseid) throws Exception {
-        //getdbconnection();
+    public RequestObject getcaserequestdata(String planid, String testcaseid) {
+        //GetDBConnection();
         RequestObject ro=new RequestObject();
         planlist = getcaseData("select * from executeplan where id=" + planid);
         deployunitmachineiplist=getcaseData("select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id="+testcaseid+" and c.id="+planid);
@@ -329,9 +342,14 @@ public class TestCore {
     }
 
     //获取数据库用例相关数据
-    public ArrayList<HashMap<String, String>> getcaseData(String Sql) throws Exception {
+    public ArrayList<HashMap<String, String>> getcaseData(String Sql)  {
         logger.info(logplannameandcasename+"Sql is:  "+Sql);
-        ArrayList<HashMap<String, String>> list=MysqlConnectionUtils.query(Sql);
+        ArrayList<HashMap<String, String>> list= null;
+        try {
+            list = MysqlConnectionUtils.query(Sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename+"Sql is:  "+Sql+"  数据库异常："+e.getMessage());
+        }
         logger.info(logplannameandcasename+"list size is:  "+list.size());
         for (HashMap<String, String> li: list)
         {
@@ -374,7 +392,7 @@ public class TestCore {
 
     // 记录用例测试结果
     public void savetestcaseresult(boolean status, long time, String respone, String assertvalue,String errorinfo) {
-        //getdbconnection();
+        //GetDBConnection();
         String resulttable="";
         if(casetype.equals(new String("功能")))
         {

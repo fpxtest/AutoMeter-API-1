@@ -4,11 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.dto.CaseReportStatics;
 import com.zoctan.api.entity.ApicasesReport;
 import com.zoctan.api.service.ApicasesReportService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +19,7 @@ import java.util.Map;
  * @author SeasonFan
  * @date 2020/10/16
  */
+@Slf4j
 @RestController
 @RequestMapping("/apicases/report")
 public class ApicasesReportController {
@@ -63,6 +67,34 @@ public class ApicasesReportController {
         PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
         final List<ApicasesReport> list = this.apicasesReportService.findApicasereportWithName(param);
         final PageInfo<ApicasesReport> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+
+    /**
+     * 输入框查询
+     */
+    @PostMapping("/getstaticsreport")
+    public Result getstaticsreport(@RequestBody final Map<String, Object> param) {
+        //ApicasesReportController.log.info(param);
+        CaseReportStatics caseReportStatics=new CaseReportStatics();
+
+        Long casetotals = this.apicasesReportService.getApicasetotalsWithName(param);
+        Map<String, Object> statusparams=param;
+        statusparams.put("status","成功");
+        Long passcasetotals = this.apicasesReportService.getApicasenumbystatus(statusparams);
+        Long costtimes = this.apicasesReportService.getApicasecosttimes(param);
+        caseReportStatics.setBatchname(param.get("batchname").toString());
+        caseReportStatics.setPlanname(param.get("testplanname").toString());
+        caseReportStatics.setTestcasenums(casetotals);
+        caseReportStatics.setPassnums(passcasetotals);
+        caseReportStatics.setFailnums(casetotals-passcasetotals);
+        caseReportStatics.setCosttimes(costtimes);
+
+        final List<CaseReportStatics> list=new ArrayList<>();
+        list.add(caseReportStatics);
+        final PageInfo<CaseReportStatics> pageInfo = new PageInfo<>(list);
+
         return ResultGenerator.genOkResult(pageInfo);
     }
 }

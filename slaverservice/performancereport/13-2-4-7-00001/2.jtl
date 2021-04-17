@@ -1,0 +1,14 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1617757789916,1290,获取用例sql,200,OK,前置条件线程 1-1,text,true,,409,0,1,1,null,1288,0,1281
+1617757791210,33,获取casetype,200,OK,前置条件线程 1-1,text,true,,0,0,1,1,null,0,0,0
+1617757791296,1,获取前置条件结果sql,200,OK,前置条件线程 1-1,text,true,,21,0,1,1,null,1,0,0
+1617757791298,4,获取条件状态,200,OK,前置条件线程 1-1,text,true,,9,0,1,1,null,0,0,0
+1617757794975,5,获取计划结果sql,200,OK,前置条件线程 1-1,text,true,,196,0,1,1,null,4,0,0
+1617757794980,2,获取case-api的参数类型sql,200,OK,前置条件线程 1-1,text,true,,20,0,1,1,null,1,0,0
+1617757794982,4,获取用例结果sql,200,OK,前置条件线程 1-1,text,true,,409,0,1,1,null,1,0,0
+1617757794987,10,获取用例数据结果sql,200,OK,前置条件线程 1-1,text,true,,409,0,1,1,null,4,0,0
+1617757795014,1,获取api结果sql,200,OK,前置条件线程 1-1,text,true,,122,0,1,1,null,1,0,0
+1617757795016,1,获取被测服务器ip结果sql,200,OK,前置条件线程 1-1,text,true,,65,0,1,1,null,1,0,0
+1617757795018,1,获取发布单元结果sql,200,OK,前置条件线程 1-1,text,true,,23,0,1,1,null,1,0,0
+1617757795019,244,获取run的参数,200,OK,前置条件线程 1-1,text,true,,0,0,1,1,null,0,0,0
+1617757795540,1755,HttpApiPerformance,,,执行用例 1-1,,true,,0,0,1,1,null,0,0,0

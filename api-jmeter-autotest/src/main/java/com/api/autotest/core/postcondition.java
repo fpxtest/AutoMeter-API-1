@@ -54,7 +54,7 @@ public class postcondition extends AbstractJavaSamplerClient {
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
         super.teardownTest(ctx);
-        TestCore core = new TestCore(ctx,getLogger());
+        TestCorebak core = new TestCorebak(ctx,getLogger());
         String errorinfo = "";
         String status="";
         String caseid = ctx.getParameter("caseid");
@@ -98,22 +98,14 @@ public class postcondition extends AbstractJavaSamplerClient {
             {
                 File file1 = new File(casereportfolder+"/index.html");
                 if(!file1.exists()) {
-                    System.out.println("性能报告文件未生成。。。。。。。。。。。。。。。");
+                    getLogger().info(TestCore.logplannameandcasename + "性能报告文件未生成。。。。。。。。。。。。。。。");
                 }
-                getLogger().info(TestCore.logplannameandcasename + "开始处理性能报告结果");
-
                 getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
-
                 long end = new Date().getTime();
-                getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的结束时间：" + end);
-
                 long starttime=Long.parseLong(start);
-                getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的结束时间：" + end);
-
                 double costtime=(double)(end-starttime)/1000;
-
                 core.genealperformacestaticsreport(testclass,batchname,testplanid,batchid,slaverid,caseid,casereportfolder,costtime);
-                getLogger().info(TestCore.logplannameandcasename + "处理性能报告结果完成");
+                getLogger().info(TestCore.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
             }
         } catch (Exception e) {
             getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错：" + e.getMessage());

@@ -29,6 +29,35 @@
     </where>
   </select>
 
+
+  <select id="getApicasetotalsWithName" resultType="java.lang.Long">
+    SELECT count(*) as totalcasenums
+    FROM apicases_report a
+    <where>
+      <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+    </where>
+  </select>
+
+  <select id="getApicasenumbystatus" resultType="java.lang.Long">
+    SELECT count(*) as totalcasenums
+    FROM apicases_report a
+    <where>
+      <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+      <if test="status != null  and status != ''">and a.status =#{status}</if>
+    </where>
+  </select>
+
+  <select id="getApicasecosttimes" resultType="java.lang.Long">
+    SELECT sum(runtime) as totalrumtimes
+    FROM apicases_report a
+    <where>
+      <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+    </where>
+  </select>
+
   <select id="listallresult" resultMap="BaseResultMap">
     SELECT b.casename,b.apiname,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time
     FROM apicases_report a inner join apicases b on a.caseid=b.id

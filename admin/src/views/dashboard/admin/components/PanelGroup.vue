@@ -243,10 +243,10 @@ export default {
 
 <style lang="scss" scoped>
 .panel-group {
-  margin-top: 18px;
+  margin-top: 10px;
 
   .card-panel-col {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .card-panel {

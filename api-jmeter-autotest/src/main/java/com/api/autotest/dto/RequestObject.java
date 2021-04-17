@@ -13,6 +13,97 @@ import com.api.autotest.common.utils.HttpParamers;
 */
 public class RequestObject {
 
+
+    public String getTestplanid() {
+        return testplanid;
+    }
+
+    public void setTestplanid(String testplanid) {
+        this.testplanid = testplanid;
+    }
+
+    public String getCaseid() {
+        return caseid;
+    }
+
+    public void setCaseid(String caseid) {
+        this.caseid = caseid;
+    }
+
+    public String getBatchid() {
+        return batchid;
+    }
+
+    public void setBatchid(String batchid) {
+        this.batchid = batchid;
+    }
+
+    public String getSlaverid() {
+        return slaverid;
+    }
+
+    public void setSlaverid(String slaverid) {
+        this.slaverid = slaverid;
+    }
+
+    public String getBatchname() {
+        return batchname;
+    }
+
+    public void setBatchname(String batchname) {
+        this.batchname = batchname;
+    }
+
+    public String getCasetype() {
+        return casetype;
+    }
+
+    public void setCasetype(String casetype) {
+        this.casetype = casetype;
+    }
+
+    public String getExpect() {
+        return expect;
+    }
+
+    public void setExpect(String expect) {
+        this.expect = expect;
+    }
+
+    private String testplanid = "";
+
+    public String getDeployunitid() {
+        return deployunitid;
+    }
+
+    public void setDeployunitid(String deployunitid) {
+        this.deployunitid = deployunitid;
+    }
+
+    private String deployunitid = "";
+
+    private String caseid = "";
+    private String batchid = "";
+    private String slaverid = "";
+    private String batchname = "";
+
+    public String getTestplanname() {
+        return testplanname;
+    }
+
+    public void setTestplanname(String testplanname) {
+        this.testplanname = testplanname;
+    }
+
+    private String testplanname = "";
+
+    private String casetype = "";
+    private String expect = "";
+
+
+
+
+
     public String getRequestmMthod() {
         return RequestmMthod;
     }

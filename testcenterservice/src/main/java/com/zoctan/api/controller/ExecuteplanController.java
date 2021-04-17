@@ -154,6 +154,12 @@ public class ExecuteplanController {
         return ResultGenerator.genOkResult(list);
     }
 
+    @GetMapping("/getstaticsplan")
+    public Result getstaticsplan() {
+        List<String> list = executeplanService.getstaticsplan();
+        return ResultGenerator.genOkResult(list);
+    }
+
     @GetMapping("/getallexplanbytype")
     public Result getallexplanbytype(@RequestParam String usetype) {
         List<Executeplan> list = executeplanService.getallexplanbytype(usetype);

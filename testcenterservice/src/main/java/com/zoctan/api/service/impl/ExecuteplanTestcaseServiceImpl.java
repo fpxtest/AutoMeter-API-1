@@ -59,4 +59,9 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
     public Integer findcasenumbyplanid(long executeplanid) {
         return executeplanTestcaseMapper.findcasenumbyplanid(executeplanid);
     }
+
+    @Override
+    public List<ExecuteplanTestcase> getstaticsplancases() {
+        return executeplanTestcaseMapper.getstaticsplancases();
+    }
 }

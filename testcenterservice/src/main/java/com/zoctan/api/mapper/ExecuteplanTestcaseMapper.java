@@ -28,5 +28,6 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> finddeployunitbyplanid(final @Param("executeplanid") long executeplanid);
 
+    List<ExecuteplanTestcase> getstaticsplancases();
 
 }

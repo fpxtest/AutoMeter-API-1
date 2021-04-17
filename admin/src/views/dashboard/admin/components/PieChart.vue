@@ -14,6 +14,10 @@ export default {
       type: String,
       default: 'chart'
     },
+    BusinessName: {
+      type: String,
+      default: 'service'
+    },
     width: {
       type: String,
       default: '100%'
@@ -21,8 +25,30 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    typeData: {
+      type: Array,
+      required: true
+    },
+    typeValueData: {
+      type: Array,
+      required: true
     }
   },
+
+  watch: {
+    // 监听的变量名
+    typeData(val) {
+      this.typeData = val
+      this.initChart()
+    },
+    typeValueData(val) {
+      console.error(val)
+      this.typeValueData = val
+      this.initChart()
+    }
+  },
+
   data() {
     return {
       chart: null
@@ -52,22 +78,16 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: this.typeData
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: this.BusinessName,
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: this.typeValueData,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

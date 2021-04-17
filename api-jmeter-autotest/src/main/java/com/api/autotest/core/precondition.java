@@ -19,7 +19,7 @@ public class precondition extends AbstractJavaSamplerClient {
         super.setupTest(context);
         getLogger().info( "precondition setupTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
         String status="";
-        TestCore core = new TestCore(context,getLogger());
+        TestCorebak core = new TestCorebak(context,getLogger());
         String errorinfo = "";
         String caseid = context.getParameter("caseid");
         String testplanid = context.getParameter("testplanid");

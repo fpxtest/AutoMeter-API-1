@@ -5,10 +5,10 @@ com/api/autotest/common/utils/Md5Encrypt.class
 com/api/autotest/common/utils/SSLClient$1.class
 com/api/autotest/common/utils/HttpUtils.class
 com/api/autotest/core/TestAssert.class
-com/api/autotest/test/httpapitestcase/httpapi.class
 com/api/autotest/common/utils/HttpParamers.class
 com/api/autotest/service/ResultCheck.class
 com/api/autotest/common/utils/OracleConnectionUtils.class
+com/api/autotest/dto/ApicasesReportstatics.class
 com/api/autotest/common/utils/RSAUtils.class
 com/api/autotest/core/precondition.class
 com/api/autotest/common/utils/RandomUtils.class
@@ -24,11 +24,14 @@ com/api/autotest/dto/SshConnectDto.class
 com/api/autotest/common/utils/Httphelp.class
 com/api/autotest/core/postcondition.class
 com/api/autotest/service/DbHandler.class
+com/api/autotest/core/TestCorebak.class
 com/api/autotest/common/utils/MD5Utils.class
 com/api/autotest/common/utils/SSLClient.class
 com/api/autotest/common/utils/ReportHelper.class
 com/api/autotest/test/helloworldservice/HelloWorld.class
+com/api/autotest/test/httpapitestcase/HttpApiFunction.class
 com/api/autotest/common/utils/MysqlConnectionUtils.class
+com/api/autotest/test/httpapitestcase/HttpApiPerformance.class
 com/api/autotest/common/utils/JsonUtils.class
 com/api/autotest/model/AutoTestTaskInfoModel.class
 com/api/autotest/model/AutoTestTaskModel.class

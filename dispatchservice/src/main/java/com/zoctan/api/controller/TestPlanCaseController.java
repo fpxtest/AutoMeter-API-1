@@ -62,7 +62,7 @@ public class TestPlanCaseController {
 
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.info("未注册类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
-            throw new Exception("未注册类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
+            return ResultGenerator.genOkResult("未注册类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
         } else {
             dispatchList=FunctionDispatch(slaverlist,caselist,ep,epb);
         }

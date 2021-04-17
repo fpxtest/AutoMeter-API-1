@@ -10,8 +10,17 @@ package com.api.autotest.core;
 */
 public  class TestAssert {
 
+    private boolean flag=true;
+
     public boolean isCaseresult() {
-        return caseresult;
+        if(flag)
+        {
+            return caseresult;
+        }
+        else
+        {
+            return flag;
+        }
     }
 
     public void setCaseresult(boolean caseresult) {
@@ -24,7 +33,12 @@ public  class TestAssert {
 
     private   String collectioninfo(String expect,String actual,boolean result)
     {
-        return "expect value is ："+expect+", actual value is ：" +actual+ " assert result is: "+result+" || ";
+        String ResultDesc="通过";
+        if(!result)
+        {
+            ResultDesc="失败";
+        }
+        return "Expect Value is："+expect+" , Actual Value is：" +actual+ " 【断言结果】: "+ResultDesc+" || ";
     }
 
     private   String collectioninfomore(String expect,String actual,boolean result)
@@ -46,6 +60,7 @@ public  class TestAssert {
         else
         {
             caseresult = false;
+            flag=false;
         }
         assertinfo =assertinfo +  collectioninfo(expect, actual, caseresult);
         return assertinfo;

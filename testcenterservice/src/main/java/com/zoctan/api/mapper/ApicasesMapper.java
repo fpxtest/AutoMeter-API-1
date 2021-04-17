@@ -35,4 +35,7 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
 
     Integer getcasenum(@Param("casetype")String casetype);
 
+    List<Apicases> getstaticsdeployunitcases();
+
+
 }

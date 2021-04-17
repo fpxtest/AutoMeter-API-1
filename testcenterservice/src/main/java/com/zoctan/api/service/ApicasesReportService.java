@@ -19,6 +19,12 @@ public interface ApicasesReportService extends Service<ApicasesReport> {
      */
     List<ApicasesReport> findApicasereportWithName(final Map<String, Object> params);
 
+    Long getApicasetotalsWithName(final Map<String, Object> params);
+
+    Long getApicasenumbystatus(final Map<String, Object> params);
+
+    Long getApicasecosttimes(final Map<String, Object> params);
+
     List<ApicasesReport> listallresult();
 
 

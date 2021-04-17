@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.ApicasewithStatu;
+import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.service.ApicasesService;
@@ -68,6 +69,20 @@ public class ExecuteplanTestcaseController {
         List<ExecuteplanTestcase> list = executeplanTestcaseService.listAll();
         PageInfo<ExecuteplanTestcase> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+
+    @GetMapping("/getstaticsplancases")
+    public Result getstaticsplancases() {
+        List<ExecuteplanTestcase> list = executeplanTestcaseService.getstaticsplancases();
+        List<StaticsDataForPie> result=new ArrayList<>();
+        for (ExecuteplanTestcase executeplanTestcase: list) {
+            StaticsDataForPie staticsDataForPie =new StaticsDataForPie();
+            staticsDataForPie.setValue(executeplanTestcase.getId());
+            staticsDataForPie.setName(executeplanTestcase.getDeployunitname());
+            result.add(staticsDataForPie);
+        }
+        return ResultGenerator.genOkResult(result);
     }
 
     /**

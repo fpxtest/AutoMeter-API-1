@@ -32,19 +32,29 @@ export const constantRouterMap = [
   //     }
   //   ]
   // }
+
   {
     path: '',
     component: Layout,
-    redirect: 'dashboard',
+    name: 'dashboard',
     icon: 'dashboard',
-    noDropDown: true,
-    children: [{
-      path: 'dashboard',
-      name: '控制台',
-      component: _import('dashboard/index'),
-      meta: { title: 'dashboard', noCache: true }
-    }]
+    children: [
+      { path: 'dashboard', name: '首页', component: _import('dashboard/index'), meta: { title: '首页', noCache: true }}
+    ]
   }
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   redirect: 'dashboard',
+  //   icon: 'dashboard',
+  //   noDropDown: true,
+  //   children: [{
+  //     path: 'dashboard',
+  //     name: '控制台',
+  //     component: _import('dashboard/index'),
+  //     meta: { title: 'dashboard', noCache: true }
+  //   }]
+  // }
 ]
 
 export default new Router({
@@ -60,10 +70,10 @@ export const asyncRouterMap = [
     name: '资产管理',
     icon: 'asset',
     children: [
-      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { permission: ['machine:list'] }},
+      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
       //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { permission: ['apicases:list'] }},
-      { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { permission: ['apicases_condition:list'] }}
+      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }},
+      { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { title: '前后置条件', permission: ['apicases_condition:list'] }}
     ]
   },
 
@@ -73,10 +83,10 @@ export const asyncRouterMap = [
     name: '环境管理',
     icon: 'enviroment',
     children: [
-      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { permission: ['enviroment:list'] }},
-      { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { permission: ['envmachine:list'] }},
-      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { permission: ['enviroment_assemble:list'] }},
-      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { permission: ['macdepunit:list'] }
+      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
+      { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
+      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
+      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
       }
     ]
   },
@@ -87,9 +97,9 @@ export const asyncRouterMap = [
     name: '发布单元',
     icon: 'deploy',
     children: [
-      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { permission: ['depunit:list'] }},
-      { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { permission: ['api:list'] }},
-      { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
+      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { title: '发布单元', permission: ['depunit:list'] }},
+      { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { title: 'API管理', permission: ['api:list'] }},
+      { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
     ]
   },
 
@@ -99,8 +109,8 @@ export const asyncRouterMap = [
     name: '调度中心',
     icon: 'dispatch',
     children: [
-      { path: 'slaver/list', name: '执行节点', component: _import('dispatch/slaver/index'), meta: { permission: ['slaver:list'] }},
-      { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { permission: ['dispatch:list'] }}
+      { path: 'slaver/list', name: '执行节点', component: _import('dispatch/slaver/index'), meta: { title: '执行节点', permission: ['slaver:list'] }},
+      { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { title: '调度管理', permission: ['dispatch:list'] }}
     ]
   },
 
@@ -110,7 +120,7 @@ export const asyncRouterMap = [
     name: '执行中心',
     icon: 'execute',
     children: [
-      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { permission: ['executeplan:list'] }}
+      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { title: '执行计划', permission: ['executeplan:list'] }}
       //  { path: 'apiparams/list', name: '执行监控', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
     ]
   },
@@ -121,11 +131,11 @@ export const asyncRouterMap = [
     name: '报告中心',
     icon: 'report',
     children: [
-      { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
+      { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { title: '功能测试报告', permission: ['apireport:list'] }},
+      { path: 'apireportstatics/list', name: '功能统计报告', component: _import('reportcenter/apireportstatics/index'), meta: { title: '功能统计报告', permission: ['apireportstatics:list'] }},
       //  { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},
-      { path: 'apiperformancereport/list', name: '性能测试明细', component: _import('reportcenter/apiperformancereport/index'), meta: { permission: ['apiperformancereport:list'] }},
-      { path: 'apiperformancestatistics/list', name: '性能测试统计', component: _import('reportcenter/apiperformancestatistics/index'), meta: { permission: ['apiperformancestatistics:list'] }}
-
+      { path: 'apiperformancereport/list', name: '性能明细报告', component: _import('reportcenter/apiperformancereport/index'), meta: { title: '性能明细报告', permission: ['apiperformancereport:list'] }},
+      { path: 'apiperformancestatistics/list', name: '性能统计报告', component: _import('reportcenter/apiperformancestatistics/index'), meta: { title: '性能统计报告', permission: ['apiperformancestatistics:list'] }}
     ]
   },
 
@@ -155,15 +165,6 @@ export const asyncRouterMap = [
   //   ]
   // },
   //
-  {
-    path: '/test',
-    component: Layout,
-    name: '测试',
-    icon: 'dashboard',
-    children: [
-      { path: 'testdynamicinput', name: '测试', component: _import('test/testdynamicinput') }
-    ]
-  },
 
   {
     path: '/system',
@@ -171,10 +172,10 @@ export const asyncRouterMap = [
     name: '系统管理',
     icon: 'sys',
     children: [
-      { path: 'account/list', name: '账户管理', component: _import('system/account/list'), meta: { permission: ['account:detail'] }},
-      { path: 'role/list', name: '角色管理', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+      { path: 'account/list', name: '账户管理', component: _import('system/account/list'), meta: { title: '账户管理', permission: ['account:detail'] }},
+      { path: 'role/list', name: '角色管理', component: _import('system/role/list'), meta: { title: '角色管理', permission: ['role:detail'] }},
       // { path: 'deploytestcase/list', name: '发布用例', component: _import('system/deploytestcase/index'), meta: { permission: ['deploytestcase:list'] }},
-      { path: 'dictionary/list', name: '字典管理', component: _import('system/dictionary/index'), meta: { permission: ['dictionary:list'] }}
+      { path: 'dictionary/list', name: '字典管理', component: _import('system/dictionary/index'), meta: { title: '字典管理', permission: ['dictionary:list'] }}
     ]
   },
 

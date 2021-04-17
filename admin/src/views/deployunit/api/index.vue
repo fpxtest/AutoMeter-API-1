@@ -17,6 +17,13 @@
             v-if="hasPermission('api:add')"
             @click.native.prevent="showAddapiDialog"
           >添加api</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            v-if="hasPermission('api:add')"
+            @click.native.prevent="showAddapiDialog"
+          >复制api</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('api:search')">

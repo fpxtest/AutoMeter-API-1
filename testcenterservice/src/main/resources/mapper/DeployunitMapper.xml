@@ -38,9 +38,21 @@
     FROM deployunit a
   </select>
 
+  <select id="getstaticsdeploynames" resultType="java.lang.String">
+    SELECT deployunitname
+    FROM deployunit a
+  </select>
+
   <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">
     update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},
     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
+
+
+  <select id="findDeployUnitWithid" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM deployunit a
+    where a.id=#{id}
+  </select>
 </mapper>

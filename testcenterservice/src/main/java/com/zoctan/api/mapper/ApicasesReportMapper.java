@@ -10,4 +10,10 @@ public interface ApicasesReportMapper extends MyMapper<ApicasesReport> {
     List<ApicasesReport> findApicasereportWithName(final Map<String, Object> params);
     List<ApicasesReport> listallresult();
 
+    Long getApicasetotalsWithName(final Map<String, Object> params);
+
+    Long getApicasenumbystatus(final Map<String, Object> params);
+
+    Long getApicasecosttimes(final Map<String, Object> params);
+
 }

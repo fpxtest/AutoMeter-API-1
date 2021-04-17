@@ -8,6 +8,13 @@ export function getdepunitList(params) {
   })
 }
 
+export function getstaticsdeploynames() {
+  return request({
+    url: '/deployunit/getstaticsdeploynames',
+    method: 'get'
+  })
+}
+
 export function findDeployNameValueWithCode(params) {
   return request({
     url: '/deployunit/findDeployNameValueWithCode',

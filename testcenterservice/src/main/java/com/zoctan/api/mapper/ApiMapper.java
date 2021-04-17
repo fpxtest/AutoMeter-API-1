@@ -33,4 +33,9 @@ public interface ApiMapper extends MyMapper<Api> {
 
     Integer getapinum();
 
+    List<Api> getstaticsdeployapi();
+
+
+
+
 }

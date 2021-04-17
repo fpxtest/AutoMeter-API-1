@@ -27,6 +27,21 @@ private ApicasesReportMapper apicasesReportMapper;
     }
 
     @Override
+    public Long getApicasetotalsWithName(Map<String, Object> params) {
+        return apicasesReportMapper.getApicasetotalsWithName(params);
+    }
+
+    @Override
+    public Long getApicasenumbystatus(Map<String, Object> params) {
+        return apicasesReportMapper.getApicasenumbystatus(params);
+    }
+
+    @Override
+    public Long getApicasecosttimes(Map<String, Object> params) {
+        return apicasesReportMapper.getApicasecosttimes(params);
+    }
+
+    @Override
     public List<ApicasesReport> listallresult() {
         return apicasesReportMapper.listallresult();
     }

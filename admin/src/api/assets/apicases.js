@@ -8,6 +8,13 @@ export function getapicasesList(params) {
   })
 }
 
+export function getstaticsdeployunitcases() {
+  return request({
+    url: '/apicases/getstaticsdeployunitcases',
+    method: 'get'
+  })
+}
+
 export function getcasenum(params) {
   return request({
     url: '/apicases/getcasenum',

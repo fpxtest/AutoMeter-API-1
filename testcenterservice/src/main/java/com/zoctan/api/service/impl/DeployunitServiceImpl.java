@@ -48,4 +48,9 @@ private DeployunitMapper deployunitMapper;
         return deployunitMapper.getdeploynum();
     }
 
+    @Override
+    public List<String> getstaticsdeploynames() {
+        return deployunitMapper.getstaticsdeploynames();
+    }
+
 }

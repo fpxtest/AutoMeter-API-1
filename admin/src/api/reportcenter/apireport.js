@@ -16,6 +16,14 @@ export function search(apireportForm) {
   })
 }
 
+export function getstaticsreport(apireportForm) {
+  return request({
+    url: '/apicases/report/getstaticsreport',
+    method: 'post',
+    data: apireportForm
+  })
+}
+
 export function addapireport(apireportForm) {
   return request({
     url: '/apicases/report',

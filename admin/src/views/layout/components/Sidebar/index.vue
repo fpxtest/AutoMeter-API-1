@@ -3,7 +3,7 @@
   <!--:default-active="activeMenu"-->
   <!--:collapse="isCollapse"-->
   <el-menu
-    mode="vertical" text-color="#fff">
+    mode="vertical" text-color="rgba(8, 6, 10, 0.94)" unique-opened=true>
     <sidebar-item :routes="permissionRouters" />
   </el-menu>
 </template>
@@ -11,7 +11,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
-import '@/styles/sidebar.scss'
+import '@/styles/sidebar-bak.scss'
+// import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem },

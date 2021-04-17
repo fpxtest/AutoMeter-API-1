@@ -35,5 +35,7 @@ public interface ApiService extends Service<Api> {
 
     Integer getapinum();
 
+    List<Api> getstaticsdeployapi();
+
 
 }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.service.ApiCasedataService;
 import com.zoctan.api.service.ApicasesService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +81,19 @@ public class ApicasesController {
         List<Apicases> list = apicasesService.listAll();
         PageInfo<Apicases> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @GetMapping("/getstaticsdeployunitcases")
+    public Result getstaticsdeployunitcases() {
+        List<Apicases> list = apicasesService.getstaticsdeployunitcases();
+        List<StaticsDataForPie> result=new ArrayList<>();
+        for (Apicases ac: list) {
+            StaticsDataForPie staticsDataForPie =new StaticsDataForPie();
+            staticsDataForPie.setValue(ac.getApiid());
+            staticsDataForPie.setName(ac.getDeployunitname());
+            result.add(staticsDataForPie);
+        }
+        return ResultGenerator.genOkResult(result);
     }
 
     /**

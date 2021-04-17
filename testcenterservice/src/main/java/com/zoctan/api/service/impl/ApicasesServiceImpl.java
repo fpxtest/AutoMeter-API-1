@@ -59,4 +59,9 @@ private ApicasesMapper apicasesMapper;
     public Integer getcasenum(String casetype) {
         return apicasesMapper.getcasenum(casetype);
     }
+
+    @Override
+    public List<Apicases> getstaticsdeployunitcases() {
+        return apicasesMapper.getstaticsdeployunitcases();
+    }
 }

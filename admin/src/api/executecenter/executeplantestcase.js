@@ -8,6 +8,13 @@ export function searchcases(executeplanForm) {
   })
 }
 
+export function getstaticsplancases() {
+  return request({
+    url: '/executeplan/testcase/getstaticsplancases',
+    method: 'get'
+  })
+}
+
 export function addexecuteplantestcase(executeplanForm) {
   return request({
     url: '/executeplan/testcase/addcases',

@@ -3,14 +3,14 @@
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
-    margin-left: 210px;
+    margin-left: $sideBarWidth;
     position: relative;
   }
 
   .sidebar-container {
     transition: width 0.28s;
-    width: 210px !important;
-    background-color: #304156;
+    width: $sideBarWidth !important;
+    background-color: $menuBg;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -18,10 +18,7 @@
     bottom: 0;
     left: 0;
     z-index: 1001;
-    overflow-y: auto;
-    &::-webkit-scrollbar {
-      display: none;
-    }
+    overflow: hidden;
 
     // reset element-ui css
     .horizontal-collapse-transition {
@@ -60,33 +57,36 @@
       margin-right: 16px;
     }
 
+    .sub-el-icon {
+      margin-right: 12px;
+      margin-left: -2px;
+    }
+
     .el-menu {
       border: none;
       height: 100%;
       width: 100% !important;
     }
 
-    // menu hover 父菜单鼠标hover背景色
+    // menu hover
     .submenu-title-noDropdown,
     .el-submenu__title {
       &:hover {
-        background-color: #415056 !important;
+        background-color: $menuHover !important;
       }
     }
 
     .is-active>.el-submenu__title {
-      color: #fffffb !important;
+      color: $subMenuActiveText !important;
     }
 
-    //打开子菜单的背景色
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
-      min-width: 210px !important;
-      background-color: #304156 !important;
+      min-width: $sideBarWidth !important;
+      background-color: $subMenuBg !important;
 
-      //子菜单hover背景色
       &:hover {
-        background-color: #415056 !important;
+        background-color: $subMenuHover !important;
       }
     }
   }
@@ -110,6 +110,10 @@
         .svg-icon {
           margin-left: 20px;
         }
+
+        .sub-el-icon {
+          margin-left: 19px;
+        }
       }
     }
 
@@ -121,6 +125,10 @@
 
         .svg-icon {
           margin-left: 20px;
+        }
+
+        .sub-el-icon {
+          margin-left: 19px;
         }
 
         .el-submenu__icon-arrow {
@@ -145,7 +153,7 @@
   }
 
   .el-menu--collapse .el-menu .el-submenu {
-    min-width: 210px !important;
+    min-width: $sideBarWidth !important;
   }
 
   // mobile responsive
@@ -156,14 +164,14 @@
 
     .sidebar-container {
       transition: transform .28s;
-      width: 210px !important;
+      width: $sideBarWidth !important;
     }
 
     &.hideSidebar {
       .sidebar-container {
         pointer-events: none;
         transition-duration: 0.3s;
-        transform: translate3d(-210px, 0, 0);
+        transform: translate3d(-$sideBarWidth, 0, 0);
       }
     }
   }
@@ -183,13 +191,17 @@
     .svg-icon {
       margin-right: 16px;
     }
+    .sub-el-icon {
+      margin-right: 12px;
+      margin-left: -2px;
+    }
   }
 
   .nest-menu .el-submenu>.el-submenu__title,
   .el-menu-item {
     &:hover {
       // you can use $subMenuHover
-      background-color: #304156 !important;
+      background-color: $menuHover !important;
     }
   }
 

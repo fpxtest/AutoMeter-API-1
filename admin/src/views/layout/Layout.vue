@@ -3,27 +3,33 @@
     <div class="sidebar-wrapper">
       <sidebar class="sidebar-container" />
     </div>
-    <div class="main-container">
+    <div :class="{hasTagsView:needTagsView}" class="main-container">
       <navbar />
+      <tags-view />
       <app-main />
     </div>
   </div>
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { Navbar, Sidebar, AppMain, TagsView } from './components'
+import { mapState } from 'vuex'
 
 export default {
   name: 'layout',
   components: {
     Navbar,
     Sidebar,
-    AppMain
+    AppMain,
+    TagsView
   },
   computed: {
     sidebar() {
       return this.$store.state.app.sidebar
-    }
+    },
+    ...mapState({
+      needTagsView: state => state.settings.tagsViews
+    })
   }
 }
 </script>

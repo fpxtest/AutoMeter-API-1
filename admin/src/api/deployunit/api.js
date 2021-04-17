@@ -8,6 +8,13 @@ export function getapiList(params) {
   })
 }
 
+export function getstaticsdeployapi() {
+  return request({
+    url: '/api/getstaticsdeployapi',
+    method: 'get'
+  })
+}
+
 export function getapinum() {
   return request({
     url: '/api/getapinum',
