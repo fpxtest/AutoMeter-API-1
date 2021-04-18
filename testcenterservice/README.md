@@ -7,7 +7,7 @@
 - [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)
 
 - [Wiki](https://github.com/PanJiaChen/vue-element-admin/wiki)
-- [测试]https://mp.weixin.qq.com/s/7rzBb6jlbJ6UsQkOnOG8ww
+- [测试](https://mp.weixin.qq.com/s/7rzBb6jlbJ6UsQkOnOG8ww)
 
 
 ## 前序准备
