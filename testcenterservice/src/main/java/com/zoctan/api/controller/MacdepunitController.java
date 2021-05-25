@@ -88,7 +88,9 @@ public class MacdepunitController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<Macdepunit> list = this.macdepunitService.findMacAndDepWithName(param);
         final PageInfo<Macdepunit> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);

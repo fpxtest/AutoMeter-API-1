@@ -18,7 +18,7 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
-    List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);
+    List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid,@Param("casetype") String casetype);
 
     Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
 

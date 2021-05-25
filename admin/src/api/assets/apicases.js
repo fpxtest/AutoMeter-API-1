@@ -31,6 +31,22 @@ export function search(apicasesForm) {
   })
 }
 
+export function getcasebydeployunitid(apicasesForm) {
+  return request({
+    url: '/apicases/getcasebydeployunitid',
+    method: 'post',
+    data: apicasesForm
+  })
+}
+
+export function copycases(apicasesForm) {
+  return request({
+    url: '/apicases/copycases',
+    method: 'post',
+    data: apicasesForm
+  })
+}
+
 export function findcasesbyname(apicasesForm) {
   return request({
     url: '/apicases/searchbyname',

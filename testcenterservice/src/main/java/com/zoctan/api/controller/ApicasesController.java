@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.StaticsDataForPie;
+import com.zoctan.api.entity.ApiCasedata;
 import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.service.ApiCasedataService;
 import com.zoctan.api.service.ApicasesService;
@@ -29,7 +30,6 @@ public class ApicasesController {
     @Autowired
     private ApiCasedataService apiCasedataService;
 
-
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
 
@@ -46,6 +46,51 @@ public class ApicasesController {
         {
             apicasesService.save(apicases);
             return ResultGenerator.genOkResult();
+        }
+    }
+
+
+    @PostMapping("/copycases")
+    public Result Copycases(@RequestBody final Map<String, Object> param) {
+        String sourcecaseid=param.get("sourcecaseid").toString();
+        String sourcedeployunitid=param.get("sourcedeployunitid").toString();
+        String sourcedeployunitname=param.get("sourcedeployunitname").toString();
+        String newcasename=param.get("newcasename").toString();
+
+        Condition con=new Condition(Apicases.class);
+        con.createCriteria().andCondition("deployunitid = " + sourcedeployunitid)
+                .andCondition("casename = '" + newcasename + "'");
+        if(apicasesService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult(sourcedeployunitname+"已存在存在此用例名");
+        }
+        else
+        {
+            Apicases Sourcecase =apicasesService.getBy("id",Long.parseLong(sourcecaseid));
+            Condition apcasedatacon=new Condition(Apicases.class);
+            apcasedatacon.createCriteria().andCondition("caseid = " + Long.parseLong(sourcecaseid));
+            List<ApiCasedata> SourceApicasedataList= apiCasedataService.listByCondition(apcasedatacon);
+            if(SourceApicasedataList.size()>0)
+            {
+                Sourcecase.setDeployunitid(Long.parseLong(sourcedeployunitid));
+                Sourcecase.setDeployunitname(sourcedeployunitname);
+                Sourcecase.setCasename(newcasename);
+                Sourcecase.setId(null);
+                apicasesService.save(Sourcecase);
+                Long NewCaseId= Sourcecase.getId();
+
+                for (ApiCasedata apiCasedata:SourceApicasedataList)
+                {
+                    apiCasedata.setCaseid(NewCaseId);
+                    apiCasedata.setId(null);
+                    apiCasedataService.save(apiCasedata);
+                }
+                return ResultGenerator.genOkResult();
+            }
+            else
+            {
+                return ResultGenerator.genFailedResult("当前选择的源用例还未完成用例数据，请完成后再进行复制操作");
+            }
         }
     }
 
@@ -123,10 +168,23 @@ public class ApicasesController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<Apicases> list = this.apicasesService.findApiCaseWithName(param);
         final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+
+    /**
+     * 根据发布单元id获取用例
+     */
+    @PostMapping("/getcasebydeployunitid")
+    public Result getcasebydeployunitid(@RequestBody final Map<String, Object> param) {
+        String deployunitid=param.get("sourcedeployunitid").toString();
+        final List<Apicases> list = this.apicasesService.getcasebydeployunitid(Long.parseLong(deployunitid));
+        return ResultGenerator.genOkResult(list);
     }
 
     /**

@@ -29,6 +29,16 @@ public class Api {
      */
     private String apiname;
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
     /**
      * 访问方式，字典表获取
      */

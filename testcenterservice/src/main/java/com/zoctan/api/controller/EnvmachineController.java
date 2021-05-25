@@ -84,7 +84,9 @@ public class EnvmachineController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<Envmachine> list = this.envmachineService.findEnvAndMacWithName(param);
         final PageInfo<Envmachine> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);

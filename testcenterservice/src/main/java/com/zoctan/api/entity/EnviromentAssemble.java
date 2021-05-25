@@ -38,6 +38,7 @@ public class EnviromentAssemble {
      */
     private String memo;
 
+
     /**
      * 创建时间
      */

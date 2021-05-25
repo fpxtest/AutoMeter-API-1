@@ -5,6 +5,7 @@ import com.zoctan.api.entity.Executeplanbatch;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author SeasonFan
@@ -14,4 +15,10 @@ public interface ExecuteplanbatchService extends Service<Executeplanbatch> {
     int ifexist(Condition condition);
 
     List<Executeplanbatch> getbatchbyplan(Long executeplanid);
+
+    List<Executeplanbatch> getallexplanbatch();
+
+    List<Executeplanbatch> findexplanbatchWithName(final Map<String, Object> params);
+
+
 }

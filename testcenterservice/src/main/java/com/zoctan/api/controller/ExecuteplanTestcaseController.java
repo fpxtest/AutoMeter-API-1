@@ -85,13 +85,29 @@ public class ExecuteplanTestcaseController {
         return ResultGenerator.genOkResult(result);
     }
 
+    public List<Apicases> GetApiCase(final Map<String, Object> param)
+    {
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
+
+        List<Apicases> apicaselist = this.apicaseservice.findApiCasebynameandcasetype(param);
+        return apicaselist;
+
+    }
+
     /**
      * 根据caseid和参数类型返回参数值
      */
     @PostMapping("/getcasebydeployandapi")
     public Result casevalue(@RequestBody final Map<String, Object> param) {
-        final List<ExecuteplanTestcase> plancaselist = this.executeplanTestcaseService.findcasebydeployandapi(param);
-        final List<Apicases> apicaselist = this.apicaseservice.findApiCasebynameandcasetype(param);
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
+         List<ExecuteplanTestcase> plancaselist = this.executeplanTestcaseService.findcasebydeployandapi(param);
+
+         List<Apicases> apicaselist =GetApiCase(param); //this.apicaseservice.findApiCasebynameandcasetype(param);
+
         List<ApicasewithStatu> lastresult = new ArrayList<ApicasewithStatu>();
         for (Apicases ac : apicaselist) {
             Boolean flag = false;
@@ -128,7 +144,7 @@ public class ExecuteplanTestcaseController {
                 lastresult.add(et);
             }
         }
-        final PageInfo<ApicasewithStatu> pageInfo = new PageInfo<>(lastresult);
+        PageInfo<ApicasewithStatu> pageInfo = new PageInfo<>(lastresult);
         return ResultGenerator.genOkResult(pageInfo);
     }
 
@@ -136,6 +152,19 @@ public class ExecuteplanTestcaseController {
     public Result removeplancase(@RequestBody final List<ExecuteplanTestcase> executeplanTestcase) {
         executeplanTestcaseService.removeexecuteplantestcase(executeplanTestcase);
         return ResultGenerator.genOkResult();
+    }
+
+    /**
+     * 输入框查询
+     */
+    @PostMapping("/search")
+    public Result search(@RequestBody final Map<String, Object> param) {
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
+        final List<ExecuteplanTestcase> list = this.executeplanTestcaseService.findexplanWithName(param);
+        final PageInfo<ExecuteplanTestcase> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
     }
 
 }

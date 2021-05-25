@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ExecuteplanbatchMapper extends MyMapper<Executeplanbatch> {
     int ifexist(Condition condition);
@@ -14,5 +15,8 @@ public interface ExecuteplanbatchMapper extends MyMapper<Executeplanbatch> {
 
     Executeplanbatch getbatchidbyplanidandbatchname(@Param("executeplanid") Long executeplanid,@Param("batchname") String batchname);
 
+    List<Executeplanbatch> getallexplanbatch();
+
+    List<Executeplanbatch> findexplanbatchWithName(final Map<String, Object> params);
 
 }

@@ -43,6 +43,17 @@ public class ExecuteplanTestcase {
      */
     private String deployunitname;
 
+    public String getExecuteplanname() {
+        return executeplanname;
+    }
+
+    public void setExecuteplanname(String executeplanname) {
+        this.executeplanname = executeplanname;
+    }
+
+    private String executeplanname;
+
+
     /**
      * API名
      */
@@ -110,6 +121,19 @@ public class ExecuteplanTestcase {
     }
 
     private String casejmxname;
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * 创建者
+     */
+    private String creator;
 
     /**
      * 创建时间

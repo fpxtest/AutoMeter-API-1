@@ -10,6 +10,7 @@
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="machineid" jdbcType="BIGINT" property="machineid" />
     <result column="machinename" jdbcType="VARCHAR" property="machinename" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -39,7 +40,8 @@
   </select>
 
   <update id="updateEnvAndMac" parameterType="com.zoctan.api.entity.Envmachine">
-    update envmachine set envid = #{envid}, machineid = #{machineid},machinename= #{machinename},enviromentname= #{enviromentname},
+    update envmachine set envid = #{envid}, machineid = #{machineid},machinename= #{machinename},
+    enviromentname= #{enviromentname},creator = #{creator},
     lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>

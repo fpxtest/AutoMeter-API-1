@@ -15,7 +15,7 @@
         <span v-if="hasPermission('apireport:search')">
           <el-form-item label="执行计划" prop="testplanname" >
           <el-select v-model="search.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
-            <el-option label="请选择" value="''" style="display: none" />
+            <el-option label="请选择"/>
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
             </div>
@@ -37,6 +37,7 @@
     </div>
     <el-table
       :data="apireportList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -110,8 +111,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -196,7 +197,7 @@
   }
 </style>
 <script>
-  import { getapireportList as getapireportList, search, addapireport, updateapireport, removeapireport } from '@/api/reportcenter/apireport'
+  import { search, addapireport, updateapireport, removeapireport } from '@/api/reportcenter/apireport'
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
   import { getallexplanbytype as getallexplanbytype } from '@/api/executecenter/executeplan'
   import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
@@ -280,11 +281,14 @@
       unix2CurrentTime,
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 计划下拉选择事件获取发布单元id  e的值为options的选值
        */
       testplanselectChanged(e) {
+        this.search.batchname = null
+        this.tmptestplanid = null
         for (let i = 0; i < this.execplanList.length; i++) {
           if (this.execplanList[i].executeplanname === e) {
+            this.tmptestplanid = this.execplanList[i].id
             this.tmpapireport.executeplanid = this.execplanList[i].id
           }
         }
@@ -312,7 +316,9 @@
        */
       getapireportList() {
         this.listLoading = true
-        getapireportList(this.listQuery).then(response => {
+        this.search.testplanname = this.tmptestplanname
+        this.search.batchname = this.tmpbatchname
+        search(this.search).then(response => {
           this.apireportList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -345,36 +351,18 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
+        this.search.testplanid = this.tmptestplanid
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
-        this.search.testplanid = this.tmpapireport.executeplanid
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.apireportList = response.data.list
           this.total = response.data.total
         }).catch(res => {
           this.$message.error('搜索失败')
         })
         this.tmptestplanname = this.search.testplanname
-        this.tmptestplanid = this.search.testplanid
         this.tmpbatchname = this.search.batchname
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.testplanname = this.tmptestplanname
-        this.listQuery.testplanid = this.tmptestplanid
-        this.listQuery.batchname = this.tmpbatchname
-        search(this.listQuery).then(response => {
-          this.apireportList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
         this.listLoading = false
         this.btnLoading = false
       },
@@ -384,8 +372,8 @@
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
+        this.search.page = 1
+        this.search.size = size
         this.searchBypageing()
       },
       /**
@@ -393,7 +381,7 @@
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
+        this.search.page = page
         this.searchBypageing()
       },
       /**
@@ -404,7 +392,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加apireport对话框

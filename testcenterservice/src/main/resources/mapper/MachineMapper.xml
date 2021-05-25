@@ -11,6 +11,7 @@
     <result column="cpu" jdbcType="VARCHAR" property="cpu" />
     <result column="disk" jdbcType="VARCHAR" property="disk" />
     <result column="mem" jdbcType="VARCHAR" property="mem" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>

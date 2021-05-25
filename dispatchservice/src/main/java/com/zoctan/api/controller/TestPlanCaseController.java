@@ -47,24 +47,38 @@ public class TestPlanCaseController {
         Long execplanid = planbatch.getPlanid();
         String batchname = planbatch.getBatchname();
         Executeplanbatch epb = executeplanbatchMapper.getbatchidbyplanidandbatchname(execplanid, batchname);
+        if(epb==null)
+        {
+            return ResultGenerator.genOkResult("无此计划id下" + execplanid+" 未找到执行批次名 "+batchname);
+        }
         // 检查plan当前的状态，如果状态为new，stop，finish继续执行
         Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
-        List<ExecuteplanTestcase> caselist = executeplanTestcaseMapper.findcasebytestplanid(execplanid);
+        if(ep==null)
+        {
+            return ResultGenerator.genOkResult("无此计划id" + execplanid+" 执行计划");
+        }
+        List<ExecuteplanTestcase> caselist = executeplanTestcaseMapper.findcasebytestplanid(execplanid,ep.getUsetype());
         TestPlanCaseController.log.info("计划id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
 
         if (caselist.size() == 0) {
-            throw new Exception("计划id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
+            return ResultGenerator.genOkResult("计划id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
         }
         //获取对应计划类型的所有slaver
         List<Slaver> slaverlist = slaverMapper.findslaverbytype(ep.getUsetype());
-        TestPlanCaseController.log.info("获取计划类型为"+ep.getUsetype()+"执行机数量："+slaverlist.size());
         List<List<Dispatch>> dispatchList=new ArrayList<>();
 
         if (slaverlist.size() == 0) {
-            TestPlanCaseController.log.info("未注册类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
-            return ResultGenerator.genOkResult("未注册类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
+            TestPlanCaseController.log.info("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
+            return ResultGenerator.genOkResult("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
         } else {
-            dispatchList=FunctionDispatch(slaverlist,caselist,ep,epb);
+            if(ep.getUsetype().equals(new String("功能")))
+            {
+                dispatchList=FunctionDispatch(slaverlist,caselist,ep,epb);
+            }
+            if(ep.getUsetype().equals(new String("性能")))
+            {
+                dispatchList=PerformanceDispatch(slaverlist,caselist,ep,epb);
+            }
         }
         for (List<Dispatch> li:dispatchList) {
             dispatchMapper.insertBatchDispatch(li);
@@ -76,7 +90,7 @@ public class TestPlanCaseController {
 
 
 
-    //caselist平均分配给slaverlist，多余的分给最后一个list，性能用例拆分线程和循环
+    //功能caselist平均分配给slaverlist，多余的分给最后一个list
     public  List<List<Dispatch>> FunctionDispatch(List<Slaver> slaverlist,List<ExecuteplanTestcase> caselist,Executeplan ep,Executeplanbatch epb)
     {
         int slavernums=slaverlist.size();
@@ -96,7 +110,7 @@ public class TestPlanCaseController {
                 Long slaverid=slaverlist.get(i).getId();
                 String slavername=slaverlist.get(i).getSlavername();
                 ExecuteplanTestcase testcase=caselist.get(j);
-                Dispatch dis =getdispatch(slaverid,slavername,testcase,ep,epb);
+                Dispatch dis =getdispatch(slaverid,slavername,testcase,ep,epb,testcase.getThreadnum(),testcase.getLoops());
                 splitdispatchList.add(dis);
             }
             x = j;
@@ -106,14 +120,15 @@ public class TestPlanCaseController {
             for (int y = 1; y < sizeleft + 1; y++) {
                 Long slaverid=slaverlist.get(slavernums-1).getId();
                 String slavername=slaverlist.get(slavernums-1).getSlavername();
-                Dispatch dis =getdispatch(slaverid,slavername,caselist.get(caselist.size() - y),ep,epb);
+                ExecuteplanTestcase testcase=caselist.get(caselist.size() - y);
+                Dispatch dis =getdispatch(slaverid,slavername,testcase,ep,epb,testcase.getThreadnum(),testcase.getLoops());
                 LastDispatchList.get(LastDispatchList.size()-1).add(dis);
             }
         }
         return LastDispatchList;
     }
 
-    public Dispatch getdispatch(Long slaverid,String slavername,ExecuteplanTestcase testcase,Executeplan ep,Executeplanbatch epb)
+    public Dispatch getdispatch(Long slaverid,String slavername,ExecuteplanTestcase testcase,Executeplan ep,Executeplanbatch epb,Long ThreadNum,Long Loops)
     {
         Dispatch dis = new Dispatch();
         dis.setExpect(testcase.getExpect());
@@ -129,8 +144,8 @@ public class TestPlanCaseController {
         dis.setSlavername(slavername);
         dis.setTestcasename(testcase.getCasename());
         dis.setPlantype(ep.getUsetype());
-        dis.setThreadnum(testcase.getThreadnum());
-        dis.setLoops(testcase.getLoops());
+        dis.setThreadnum(ThreadNum);
+        dis.setLoops(Loops);
         return dis;
     }
 
@@ -166,9 +181,36 @@ public class TestPlanCaseController {
         return eList;
     }
 
-    public void PerformanceDispatch()
+    //性能用例拆分线程和循环
+    public List<List<Dispatch>> PerformanceDispatch(List<Slaver> slaverlist,List<ExecuteplanTestcase> caselist,Executeplan ep,Executeplanbatch epb)
     {
-
+        int slavernums=slaverlist.size();
+        List<List<Dispatch>> LastDispatchList = new ArrayList<List<Dispatch>>();
+        List<Dispatch> splitdispatchList=new ArrayList<>();
+        for (ExecuteplanTestcase testcase: caselist) {
+            Long ThreadNUms=testcase.getThreadnum();
+            Long Loops=testcase.getLoops();
+            Long Threadmode = ThreadNUms / slavernums;
+            Long Loopsmode = Loops / slavernums;
+            Long Threadleft = ThreadNUms % slavernums;
+            Long Loopleft = Loops % slavernums;
+            //拆分每个case线程和循环取模平均分配到slaver
+            for(int i=0;i<slaverlist.size();i++)
+            {
+                Dispatch dis =getdispatch(slaverlist.get(i).getId(),slaverlist.get(i).getSlavername(),testcase,ep,epb,Threadmode,Loopsmode);
+                splitdispatchList.add(dis);
+            }
+            //如果线程数或者循环数取余不为0，则把剩余的都分给最后一个slaver
+            if(Threadleft!=0 || Loopleft!=0)
+            {
+                Dispatch dis=splitdispatchList.get(slaverlist.size()-1);
+                dis.setThreadnum(dis.getThreadnum()+Threadleft);
+                dis.setLoops(dis.getLoops()+Loopleft);
+                splitdispatchList.set(slaverlist.size()-1,dis);
+            }
+        }
+        LastDispatchList.add(splitdispatchList);
+        return LastDispatchList;
     }
 
 

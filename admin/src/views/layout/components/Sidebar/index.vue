@@ -3,7 +3,7 @@
   <!--:default-active="activeMenu"-->
   <!--:collapse="isCollapse"-->
   <el-menu
-    mode="vertical" text-color="rgba(8, 6, 10, 0.94)" unique-opened=true>
+    mode="vertical" default-active="activeMenu" text-color="rgba(8, 6, 10, 0.94)" unique-opened=true>
     <sidebar-item :routes="permissionRouters" />
   </el-menu>
 </template>

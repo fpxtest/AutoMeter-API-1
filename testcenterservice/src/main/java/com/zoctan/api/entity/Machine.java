@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Machine {
     /**
@@ -35,6 +38,17 @@ public class Machine {
      * 内存
      */
     private String mem;
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
 
     /**
      * 创建时间

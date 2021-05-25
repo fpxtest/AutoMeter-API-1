@@ -16,6 +16,7 @@
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="domain" jdbcType="VARCHAR" property="domain" />
     <result column="visittype" jdbcType="VARCHAR" property="visittype" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -34,7 +35,9 @@
   </select>
 
   <update id="updateMacAndDep" parameterType="com.zoctan.api.entity.Envmachine">
-    update macdepunit set depunitid =#{depunitid}, assembleid = #{assembleid}, machineid = #{machineid}, envid = #{envid}, enviromentname = #{enviromentname}, deployunitname = #{deployunitname},assembletype = #{assembletype}, machinename= #{machinename},visittype = #{visittype},domain= #{domain},
+    update macdepunit set depunitid =#{depunitid}, assembleid = #{assembleid}, machineid = #{machineid}, envid = #{envid},
+     enviromentname = #{enviromentname}, deployunitname = #{deployunitname},assembletype = #{assembletype}, machinename= #{machinename},
+     visittype = #{visittype},domain= #{domain},creator = #{creator},
     lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>

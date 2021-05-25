@@ -8,6 +8,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="envtype" jdbcType="VARCHAR" property="envtype" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -38,7 +39,7 @@
 
   <update id="updateEnviroment" parameterType="com.zoctan.api.entity.Enviroment">
     update enviroment set enviromentname = #{enviromentname},envtype=#{envtype},
-    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 </mapper>

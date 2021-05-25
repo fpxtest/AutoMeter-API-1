@@ -64,7 +64,9 @@ public class ApicasesReportController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<ApicasesReport> list = this.apicasesReportService.findApicasereportWithName(param);
         final PageInfo<ApicasesReport> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
@@ -78,7 +80,6 @@ public class ApicasesReportController {
     public Result getstaticsreport(@RequestBody final Map<String, Object> param) {
         //ApicasesReportController.log.info(param);
         CaseReportStatics caseReportStatics=new CaseReportStatics();
-
         Long casetotals = this.apicasesReportService.getApicasetotalsWithName(param);
         Map<String, Object> statusparams=param;
         statusparams.put("status","成功");

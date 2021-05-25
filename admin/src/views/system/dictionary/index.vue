@@ -81,7 +81,7 @@
       :current-page="listQuery.page"
       :page-size="listQuery.size"
       :total="total"
-      :page-sizes="[9, 18, 36, 72]"
+      :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
@@ -178,7 +178,7 @@
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
-          size: 9, // 每页数量
+          size: 10, // 每页数量
           listLoading: true,
           dicname: null,
           dicitemname: null
@@ -250,7 +250,7 @@
         this.listQuery.dicname = this.tmpdicname
         this.listQuery.dicitemname = this.tmpdicitemname
         search(this.listQuery).then(response => {
-          this.apiperformancestatisticsList = response.data.list
+          this.dictionaryList = response.data.list
           this.total = response.data.total
         }).catch(res => {
           this.$message.error('搜索失败')

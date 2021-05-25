@@ -12,11 +12,9 @@ import java.util.Map;
 */
 public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase> {
 
-    /**
-     *
-     *
-     * @param testcase 用例参数数据
-     */
+
+    List<ExecuteplanTestcase> findexplanWithName(final Map<String, Object> params);
+
     void savetestplancase(final List<ExecuteplanTestcase> testcase);
 
     List<ExecuteplanTestcase> finddeployunitbyplanid(final long executeplanid);

@@ -60,7 +60,9 @@ public class DispatchController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<Dispatch> list = this.dispatchService.findDispatchWithName(param);
         final PageInfo<Dispatch> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);

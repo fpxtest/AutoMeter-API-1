@@ -14,6 +14,8 @@ public interface DispatchMapper extends MyMapper<Dispatch> {
 
     List<Dispatch> getcasebyslaverid(@Param("slaverid") Long slaverid , @Param("status") String status , @Param("plantype") String plantype, @Param("maxthread")Long maxthread);
 
+    List<Dispatch> getcasebyslaveridandrunmode(@Param("slaverid") Long slaverid , @Param("status") String status , @Param("plantype") String plantype, @Param("runmode") String runmode, @Param("maxthread")Long maxthread);
+
     List<Dispatch> getdoingcasebyslaverid(@Param("slaverid") Long slaverid , @Param("status") String status , @Param("plantype") String plantype);
 
     void updatedispatchstatus(@Param("status") String status,@Param("slaverid")Long slaverid,@Param("execplanid")Long execplanid,@Param("batchid")Long batchid,@Param("testcaseid")Long testcaseid);

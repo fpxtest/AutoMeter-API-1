@@ -21,10 +21,10 @@
 
         <span v-if="hasPermission('macdepunit:search')">
           <el-form-item>
-            <el-input v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
+            <el-input clearable v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元,组件名"></el-input>
+            <el-input clearable v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元,组件名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -34,6 +34,7 @@
     </div>
     <el-table
       :data="macdepunitList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -47,9 +48,10 @@
       </el-table-column>
       <el-table-column label="测试环境" align="center" prop="enviromentname" width="120"/>
       <el-table-column label="服务器" align="center" prop="machinename" width="100"/>
-      <el-table-column label="组件名" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="发布单元,组件名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="组件类型" align="center" prop="assembletype" width="80"/>
       <el-table-column label="访问域名" align="center" prop="domain" width="120"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -79,8 +81,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -180,12 +182,13 @@
   </div>
 </template>
 <script>
-  import { getmacdepunitList as getmacdepunitList, search, addmacdepunit, updatemacdepunit, removemacdepunit } from '@/api/enviroment/macdepunit'
+  import { search, addmacdepunit, updatemacdepunit, removemacdepunit } from '@/api/enviroment/macdepunit'
   import { getmachineLists as getmachineLists } from '@/api/assets/machine'
   import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
   import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
   import { getassembleallnameList as getassembleallnameList } from '@/api/enviroment/enviromentassemble'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -200,6 +203,7 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpenviromentname: '',
         tmpdeployunitname: '',
         assembleList: [], // 环境组件列表
@@ -209,13 +213,6 @@
         deployUnitList: [], // 服务器列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
-        listQuery: {
-          page: 1, // 页码
-          size: 10, // 每页数量
-          listLoading: true,
-          enviromentname: '',
-          deployunitname: ''
-        },
         dialogStatus: 'add',
         deployunitVisible: false,
         assembleVisible: false,
@@ -238,7 +235,8 @@
           machinename: '',
           deployunitname: '',
           domain: '',
-          visittype: ''
+          visittype: '',
+          creator: ''
         },
         search: {
           page: 1,
@@ -247,6 +245,10 @@
           deployunitname: null
         }
       }
+    },
+
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
     },
 
     created() {
@@ -336,16 +338,18 @@
       },
 
       /**
-       * 获取服务器环境列表
+       * 获取环境服务器部署列表
        */
       getmacdepunitList() {
         this.listLoading = true
-        getmacdepunitList(this.listQuery).then(response => {
+        this.search.enviromentname = this.tmpenviromentname
+        this.search.deployunitname = this.tmpdeployunitname
+        search(this.search).then(response => {
           this.macdepunitList = response.data.list
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载测试环境服务器列表失败')
+          this.$message.error('加载环境部署列表失败')
         })
       },
 
@@ -395,9 +399,10 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.macdepunitList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -409,37 +414,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.enviromentname = this.tmpenviromentname
-        this.listQuery.deployunitname = this.tmpdeployunitname
-        search(this.listQuery).then(response => {
-          this.macdepunitList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getassembleLists()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getassembleLists()
       },
       /**
        * 表格序号
@@ -449,7 +439,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加测试环境对话框
@@ -469,6 +459,7 @@
         this.tmpmacdepunit.assembletype = ''
         this.tmpmacdepunit.domain = ''
         this.tmpmacdepunit.visittype = ''
+        this.tmpmacdepunit.creator = this.name
         this.deployunitVisible = false
         this.assembleVisible = false
         this.domianVisible = false
@@ -510,6 +501,7 @@
         this.tmpmacdepunit.domain = this.macdepunitList[index].domain
         this.tmpmacdepunit.assembleid = this.macdepunitList[index].assembleid
         this.tmpmacdepunit.visittype = this.macdepunitList[index].visittype
+        this.tmpmacdepunit.creator = this.name
         if (this.tmpmacdepunit.assembletype === '组件') {
           this.deployunitVisible = false
           this.assembleVisible = true

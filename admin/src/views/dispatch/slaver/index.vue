@@ -14,10 +14,10 @@
 
         <span v-if="hasPermission('slaver:search')">
           <el-form-item>
-            <el-input v-model="search.slavername" @keyup.enter.native="searchBy" placeholder="执行机名"></el-input>
+            <el-input clearable v-model="search.slavername" @keyup.enter.native="searchBy" placeholder="执行机名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
+            <el-input clearable v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -27,6 +27,7 @@
     </div>
     <el-table
       :data="slaverList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -72,8 +73,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -154,7 +155,7 @@
   </div>
 </template>
 <script>
-  import { getslaverList as getslaverList, search, addslaver, updateslaver, removeslaver } from '@/api/dispatch/slaver'
+  import { search, addslaver, updateslaver, removeslaver } from '@/api/dispatch/slaver'
   import { unix2CurrentTime } from '@/utils'
 
   export default {
@@ -170,18 +171,12 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpslavername: null,
         tmpip: null,
         slaverList: [], // 字典列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
-        listQuery: {
-          page: 1, // 页码
-          size: 10, // 每页数量
-          listLoading: true,
-          slavername: null,
-          ip: null
-        },
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
@@ -219,8 +214,10 @@
        * 获取字典列表
        */
       getslaverList() {
+        this.search.slavername = this.tmpslavername
+        this.search.ip = this.tmpip
         this.listLoading = true
-        getslaverList(this.listQuery).then(response => {
+        search(this.search).then(response => {
           this.slaverList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -228,12 +225,12 @@
           this.$message.error('加载字典列表失败')
         })
       },
+
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.slaverList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -245,37 +242,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.slavername = this.tmpslavername
-        this.listQuery.ip = this.tmpip
-        search(this.listQuery).then(response => {
-          this.slaverList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getslaverList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getslaverList()
       },
       /**
        * 表格序号
@@ -285,7 +267,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加执行机对话框

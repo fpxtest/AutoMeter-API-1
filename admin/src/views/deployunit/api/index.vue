@@ -22,7 +22,7 @@
             size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('api:add')"
-            @click.native.prevent="showAddapiDialog"
+            @click.native.prevent="showCopyapiDialog"
           >复制api</el-button>
         </el-form-item>
 
@@ -41,6 +41,7 @@
     </div>
     <el-table
       :data="apiList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -59,6 +60,7 @@
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
       <el-table-column label="请求数据格式" align="center" prop="requestcontenttype" width="100"/>
       <el-table-column label="响应数据格式" align="center" prop="responecontenttype" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -88,8 +90,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -199,13 +201,74 @@
         >修改</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="CopyApi" :visible.sync="CopydialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 350px; margin-left:50px;"
+        :model="tmpcopyapi"
+        ref="tmpcopyapi"
+      >
+        <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
+        <el-select v-model="tmpcopyapi.sourcedeployunitname" placeholder="发布单元" @change="CopyAPISourceDeployselectChanged($event)">
+          <el-option label="请选择" value="''" style="display: none" />
+          <div v-for="(depunitname, index) in deployunitList" :key="index">
+            <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+          </div>
+        </el-select>
+      </el-form-item>
+
+        <el-form-item label="API来源名" prop="sourceapiname" required >
+          <el-select v-model="tmpcopyapi.sourceapiname" placeholder="api" @change="CopySourceAPIChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(testapi, index) in sourceapiList" :key="index">
+              <el-option :label="testapi.apiname" :value="testapi.apiname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="目标发布单元" prop="objectdeployunitname" required >
+          <el-select v-model="tmpcopyapi.objectdeployunitname" placeholder="发布单元" @change="CopyObjectAPIDeployUnitChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(depunitname, index) in deployunitList" :key="index">
+              <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="目标API名" prop="newapiname" required>
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpcopyapi.newapiname"
+          />
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="CopydialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="copyapi"
+        >保存
+        </el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
-  import { getapiList as getapiList, search, addapi, updateapi, removeapi } from '@/api/deployunit/api'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { search, addapi, updateapi, removeapi, getapisbydeployunitid, copyapi } from '@/api/deployunit/api'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -220,9 +283,11 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpapiname: '',
         tmpdeployunitname: '',
         apiList: [], // api列表
+        sourceapiList: [],
         visittypeList: [], // api访问方式列表
         deployunitList: [], // 发布单元列表
         requestcontentList: [], // 字典表获取api请求数据格式
@@ -253,6 +318,8 @@
           deployunitname: ''
         },
         dialogStatus: 'add',
+        CopyApi: '复制API',
+        CopydialogFormVisible: false,
         dialogFormVisible: false,
         textMap: {
           updateRole: '修改api',
@@ -270,7 +337,17 @@
           path: '',
           requestcontenttype: '',
           responecontenttype: '',
-          memo: ''
+          memo: '',
+          creator: ''
+        },
+        tmpcopyapi: {
+          sourceapiid: '',
+          sourceapiname: '',
+          sourcedeployunitid: '',
+          sourcedeployunitname: '',
+          objectdeployunitid: '',
+          objectdeployunitname: '',
+          newapiname: ''
         },
         search: {
           page: 1,
@@ -281,12 +358,16 @@
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
+    },
+
     created() {
       this.getapiList()
       this.getvisittypeList()
       this.getrequestcontenttypeList()
       this.getresponecontenttypeList()
-      this.getdepunitList()
+      this.getdepunitLists()
     },
 
     methods: {
@@ -302,6 +383,64 @@
           }
           console.log(this.deployunitList[i].id)
         }
+      },
+
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       */
+      CopyAPISourceDeployselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpcopyapi.sourcedeployunitid = this.deployunitList[i].id
+          }
+        }
+        getapisbydeployunitid(this.tmpcopyapi).then(response => {
+          this.sourceapiList = response.data
+        }).catch(res => {
+          this.$message.error('根据发布单元id获取api列表失败')
+        })
+      },
+
+      /**
+       * 源API下拉选择事件获取用例id  e的值为options
+       */
+      CopySourceAPIChanged(e) {
+        for (let i = 0; i < this.sourceapiList.length; i++) {
+          if (this.sourceapiList[i].apiname === e) {
+            this.tmpcopyapi.sourceapiid = this.sourceapiList[i].id
+          }
+        }
+      },
+
+      /**
+       * 目标发布单元下拉选择事件获取发布单元id  e的值为options
+       */
+      CopyObjectAPIDeployUnitChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpcopyapi.objectdeployunitid = this.deployunitList[i].id
+          }
+        }
+      },
+
+      /**
+       * 复制API
+       */
+      copyapi() {
+        this.$refs.tmpcopyapi.validate(valid => {
+          if (valid) {
+            this.btnLoading = true
+            copyapi(this.tmpcopyapi).then(() => {
+              this.$message.success('复制成功')
+              this.getapiList()
+              this.CopydialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.$message.error('复制失败')
+              this.btnLoading = false
+            })
+          }
+        })
       },
 
       /**
@@ -321,7 +460,9 @@
        */
       getapiList() {
         this.listLoading = true
-        getapiList(this.listQuery).then(response => {
+        this.search.apiname = this.tmpapiname
+        this.search.deployunitname = this.tmpdeployunitname
+        search(this.search).then(response => {
           this.apiList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -365,10 +506,10 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
+      getdepunitLists() {
         this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
+        getdepunitLists().then(response => {
+          this.deployunitList = response.data
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
@@ -377,9 +518,10 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.apiList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -391,37 +533,22 @@
         this.tmpdeployunitname = this.search.deployunitname
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.apiname = this.tmpapiname
-        this.listQuery.deployunitname = this.tmpdeployunitname
-        search(this.listQuery).then(response => {
-          this.enviroment_assembleList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getapiList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getapiList()
       },
       /**
        * 表格序号
@@ -431,7 +558,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加api对话框
@@ -450,7 +577,24 @@
         this.tmpapi.requestcontenttype = ''
         this.tmpapi.responecontenttype = ''
         this.tmpapi.memo = ''
+        this.tmpapi.creator = this.name
       },
+
+      /**
+       * 显示添加复制api对话框
+       */
+      showCopyapiDialog() {
+        // 显示新增对话框
+        this.CopydialogFormVisible = true
+        this.tmpcopyapi.sourceapiid = ''
+        this.tmpcopyapi.sourceapiname = ''
+        this.tmpcopyapi.sourcedeployunitid = ''
+        this.tmpcopyapi.sourcedeployunitname = ''
+        this.tmpcopyapi.objectdeployunitid = ''
+        this.tmpcopyapi.objectdeployunitname = ''
+        this.tmpcopyapi.newapiname = ''
+      },
+
       /**
        * 添加api
        */
@@ -487,6 +631,7 @@
         this.tmpapi.apistyle = this.apiList[index].apistyle
         this.tmpapi.responecontenttype = this.apiList[index].responecontenttype
         this.tmpapi.memo = this.apiList[index].memo
+        this.tmpapi.creator = this.name
         if (this.tmpapi.visittype === 'get') {
           this.requestcontenttypeVisible = false
           this.tmpapi.requestcontenttype = ''

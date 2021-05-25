@@ -10,6 +10,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author SeasonFan
@@ -29,6 +30,16 @@ private ExecuteplanbatchMapper executeplanbatchMapper;
     @Override
     public List<Executeplanbatch> getbatchbyplan(Long executeplanid) {
         return executeplanbatchMapper.getbatchbyplan(executeplanid);
+    }
+
+    @Override
+    public List<Executeplanbatch> getallexplanbatch() {
+        return executeplanbatchMapper.getallexplanbatch();
+    }
+
+    @Override
+    public List<Executeplanbatch> findexplanbatchWithName(Map<String, Object> params) {
+        return executeplanbatchMapper.findexplanbatchWithName(params);
     }
 
 }

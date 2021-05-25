@@ -6,7 +6,10 @@ import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.entity.Api;
+import com.zoctan.api.entity.ApiParams;
+import com.zoctan.api.service.ApiParamsService;
 import com.zoctan.api.service.ApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -24,6 +27,8 @@ import java.util.Map;
 public class ApiController {
     @Resource
     private ApiService apiService;
+    @Autowired
+    private ApiParamsService apiParamsService;
 
     @PostMapping
     public Result add(@RequestBody Api api) {
@@ -72,6 +77,16 @@ public class ApiController {
         List<Api> list = apiService.listAll();
         PageInfo<Api> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 根据发布单元id获取apis
+     */
+    @PostMapping("/getapibydeployunitid")
+    public Result getapibydeployunitid(@RequestBody final Map<String, Object> param) {
+        String deployunitid=param.get("sourcedeployunitid").toString();
+        final List<Api> list = this.apiService.getapibydeployunitid(Long.parseLong(deployunitid));
+        return ResultGenerator.genOkResult(list);
     }
 
     @GetMapping("/getstaticsdeployapi")
@@ -125,9 +140,56 @@ public class ApiController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<Api> list = this.apiService.findApiWithName(param);
         final PageInfo<Api> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+
+    @PostMapping("/copyapi")
+    public Result copyapi(@RequestBody final Map<String, Object> param) {
+        String sourceapiid=param.get("sourceapiid").toString();
+        String sourcedeployunitid=param.get("sourcedeployunitid").toString();
+        String sourcedeployunitname=param.get("sourcedeployunitname").toString();
+        String objectdeployunitid=param.get("objectdeployunitid").toString();
+        String objectdeployunitname=param.get("objectdeployunitname").toString();
+        String newapiname=param.get("newapiname").toString();
+
+        Condition con=new Condition(Api.class);
+        con.createCriteria().andCondition("deployunitid = " + objectdeployunitid)
+                .andCondition("apiname = '" + newapiname + "'");
+        if(apiService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult(objectdeployunitname+"已存在存在此API名");
+        }
+        else
+        {
+            Api api =apiService.getBy("id",Long.parseLong(sourceapiid));
+
+            Condition apiparamscon=new Condition(ApiParams.class);
+            apiparamscon.createCriteria().andCondition("apiid = " + Long.parseLong(sourceapiid));
+            List<ApiParams> apiParamsList= apiParamsService.listByCondition(apiparamscon);
+
+            api.setDeployunitid(Long.parseLong(objectdeployunitid));
+            api.setDeployunitname(objectdeployunitname);
+            api.setApiname(newapiname);
+            api.setId(null);
+            apiService.save(api);
+            Long ApiId= api.getId();
+
+            for (ApiParams apiParams:apiParamsList)
+            {
+                apiParams.setApiid(ApiId);
+                apiParams.setApiname(newapiname);
+                apiParams.setDeployunitid(Long.parseLong(objectdeployunitid));
+                apiParams.setDeployunitname(objectdeployunitname);
+                apiParams.setId(null);
+                apiParamsService.save(apiParams);
+            }
+            return ResultGenerator.genOkResult();
+        }
     }
 }

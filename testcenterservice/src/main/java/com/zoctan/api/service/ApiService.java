@@ -37,5 +37,6 @@ public interface ApiService extends Service<Api> {
 
     List<Api> getstaticsdeployapi();
 
+    List<Api> getapibydeployunitid(Long deployunitid);
 
 }

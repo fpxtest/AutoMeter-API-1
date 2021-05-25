@@ -37,6 +37,7 @@
     </div>
     <el-table
       :data="dispatchList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -49,9 +50,9 @@
         </template>
       </el-table-column>
       <el-table-column label="执行机" align="center" prop="slavername" width="120"/>
-      <el-table-column label="执行计划" align="center" prop="execplanname" width="100"/>
-      <el-table-column label="执行批次" align="center" prop="batchname" width="100"/>
-      <el-table-column label="执行用例" align="center" prop="testcasename" width="120"/>
+      <el-table-column label="执行计划" align="center" prop="execplanname" width="150"/>
+      <el-table-column label="执行批次" align="center" prop="batchname" width="150"/>
+      <el-table-column label="执行用例" align="center" prop="testcasename" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="60"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -64,8 +65,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -153,7 +154,7 @@
   </div>
 </template>
 <script>
-  import { getdispatchList as getdispatchList, search, adddispatch, updatedispatch, removedispatch } from '@/api/dispatch/dispatch'
+  import { search, adddispatch, updatedispatch, removedispatch } from '@/api/dispatch/dispatch'
   import { unix2CurrentTime } from '@/utils'
   import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
   import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
@@ -171,6 +172,7 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpexecplanname: null,
         tmpbatchname: null,
         dispatchList: [], // 调度列表
@@ -178,13 +180,6 @@
         planbatchList: [], // 批次列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
-        listQuery: {
-          page: 1, // 页码
-          size: 10, // 每页数量
-          listLoading: true,
-          execplanname: null,
-          batchname: null
-        },
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
@@ -216,7 +211,6 @@
 
     created() {
       this.getallexplan()
-
       this.getdispatchList()
     },
 
@@ -234,17 +228,20 @@
         }
         getbatchbyplan(this.tmpbatchquery).then(response => {
           this.planbatchList = response.data
+          this.search.batchname = null
         }).catch(res => {
           this.$message.error('加载批次列表失败')
         })
       },
 
       /**
-       * 获取字典列表
+       * 获取调度列表
        */
       getdispatchList() {
+        this.search.execplanname = this.tmpexecplanname
+        this.search.batchname = this.tmpbatchname
         this.listLoading = true
-        getdispatchList(this.listQuery).then(response => {
+        search(this.search).then(response => {
           this.dispatchList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -265,11 +262,10 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.dispatchList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -281,37 +277,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.execplanname = this.tmpexecplanname
-        this.listQuery.batchname = this.tmpbatchname
-        search(this.listQuery).then(response => {
-          this.dispatchList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getdispatchList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getdispatchList()
       },
       /**
        * 表格序号
@@ -321,7 +302,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加执行机对话框

@@ -37,60 +37,76 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         results.sampleStart();
         //用例运行开始时间
         TestCorebak Core = new TestCorebak(ctx, getLogger());
-        Map<String,List<RequestObject>> DeployUnitrequestObjectMap = new HashMap<>();
+        Map<String,List<RequestObject>> BatchRequestObjectMap = new HashMap<>();
         // 初始化用例数据
-        DeployUnitrequestObjectMap = InitalTestData(Core, ctx);
-        for(String DeployUnitID:DeployUnitrequestObjectMap.keySet())
+        BatchRequestObjectMap = InitalTestData(Core, ctx);
+
+        for(String BatchName:BatchRequestObjectMap.keySet())
         {
-            ApicasesReportstatics apicasesReportstatics=new ApicasesReportstatics();
-            getLogger().info("DeployUnitID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+DeployUnitID);
-            apicasesReportstatics.setDeployunitid(DeployUnitID);
-            int TotalCaseNums=DeployUnitrequestObjectMap.get(DeployUnitID).size();
-            int TotalPassNums=0;
-            int TotalFailNUms=0;
-            long AllCostTime=0;
-            // 发送用例请求，并返回结果
-            for (RequestObject requestObject : DeployUnitrequestObjectMap.get(DeployUnitID)) {
-                apicasesReportstatics.setBatchname(requestObject.getBatchname());
-                apicasesReportstatics.setTestplanid(requestObject.getTestplanid());
-                apicasesReportstatics.setTestplanname(requestObject.getTestplanname());
-                apicasesReportstatics.setSlaverid(requestObject.getSlaverid());
-                long Start = new Date().getTime();
-                //断言信息汇总
-                String AssertInfo = "";
-                String ErrorInfo = "";
-                String ActualResult = "";
-                TestAssert TestAssert = new TestAssert();
-                try {
-                    ActualResult = SendCaseRequest(requestObject, Core);
-                    String ResponeContentType = requestObject.getResponecontenttype();
-                    if (ResponeContentType.equals(new String("json"))) {
-                        AssertInfo = ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
-                    }
-                    if (ResponeContentType.equals(new String("xml"))) {
-                        //处理xml
-                    }
-                } catch (Exception ex) {
-                    ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
-                } finally {
-                    // 保存用例运行结果，Jmeter的sample运行结果
-                    long End = new Date().getTime();
-                    long CostTime=End-Start;
-                    AllCostTime= AllCostTime+CostTime;
-                    if(TestAssert.isCaseresult())
-                    {
-                        TotalPassNums=TotalPassNums+1;
-                    }
-                    else
-                    {
-                        TotalFailNUms=TotalFailNUms+1;
-                    }
-                    CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult,requestObject);
-                }
+            getLogger().info("BatchName 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+BatchName+" size is"+BatchRequestObjectMap.get(BatchName).size());
+            if(BatchRequestObjectMap.get(BatchName).size()>0)
+            {
+                String TestPlanID=BatchRequestObjectMap.get(BatchName).get(0).getTestplanid();
+                getLogger().info("TestPlanID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+TestPlanID);
+                Core.UpdateReportStatics(TestPlanID,BatchName,"运行中");
             }
-            //收集本次运行的功能用例统计结果
-            CollectionReportStatics(Core,apicasesReportstatics,TotalCaseNums,TotalPassNums,TotalFailNUms,AllCostTime);
+            Map<String,List<RequestObject>> DeployUnitrequestObjectMap=GetGroupMap(BatchRequestObjectMap.get(BatchName),"DeployID");
+            for(String DeployUnitID:DeployUnitrequestObjectMap.keySet())
+            {
+                ApicasesReportstatics apicasesReportstatics=new ApicasesReportstatics();
+                getLogger().info("DeployUnitID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+DeployUnitID+" size is:"+DeployUnitrequestObjectMap.get(DeployUnitID).size());
+                apicasesReportstatics.setDeployunitid(DeployUnitID);
+                int BatchDeployTotalCaseNums=DeployUnitrequestObjectMap.get(DeployUnitID).size();
+                int BatchDeployTotalPassNums=0;
+                int BatchDeployTotalFailNUms=0;
+                long AllCostTime=0;
+                // 发送用例请求，并返回结果
+                for (RequestObject requestObject : DeployUnitrequestObjectMap.get(DeployUnitID)) {
+                    getLogger().info("Deployid:"+DeployUnitID+" requestObject case id is 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+requestObject.getCaseid());
+                    apicasesReportstatics.setTestplanid(requestObject.getTestplanid());
+                    apicasesReportstatics.setTestplanname(requestObject.getTestplanname());
+                    apicasesReportstatics.setSlaverid(requestObject.getSlaverid());
+                    long Start = new Date().getTime();
+                    //断言信息汇总
+                    String AssertInfo = "";
+                    String ErrorInfo = "";
+                    String ActualResult = "";
+                    TestAssert TestAssert = new TestAssert();
+                    try {
+                        ActualResult = SendCaseRequest(requestObject, Core);
+                        String ResponeContentType = requestObject.getResponecontenttype();
+                        if (ResponeContentType.equals(new String("json"))) {
+                            AssertInfo = ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
+                        }
+                        if (ResponeContentType.equals(new String("xml"))) {
+                            //处理xml
+                        }
+                    } catch (Exception ex) {
+                        ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
+                    } finally {
+                        // 保存用例运行结果，Jmeter的sample运行结果
+                        long End = new Date().getTime();
+                        long CostTime=End-Start;
+                        AllCostTime= AllCostTime+CostTime;
+                        if(TestAssert.isCaseresult())
+                        {
+                            BatchDeployTotalPassNums=BatchDeployTotalPassNums+1;
+                        }
+                        else
+                        {
+                            BatchDeployTotalFailNUms=BatchDeployTotalFailNUms+1;
+                        }
+                        CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult,requestObject);
+                    }
+                }
+                //收集本次运行的功能用例统计结果
+                CollectionReportStatics(Core,apicasesReportstatics,BatchName, BatchDeployTotalCaseNums,BatchDeployTotalPassNums,BatchDeployTotalFailNUms,AllCostTime);
+                //
+            }
         }
+
+
+
         //Jmeter事务，表示这是事务的结束点
         results.sampleEnd();
         return results;
@@ -100,23 +116,36 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     private Map<String,List<RequestObject>> InitalTestData(TestCorebak core, JavaSamplerContext ctx)  {
         getLogger().info("根据调度ids获取请求数据列表 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
         List<RequestObject> objectList = core.GetDispatchOBList(ctx);
+        Map<String,List<RequestObject>> BatchObject=GetGroupMap(objectList,"BatchName");
+        return BatchObject;
+    }
 
-        Map<String,List<RequestObject>> DeployUnitObject=new HashMap<>();
+
+    private Map<String,List<RequestObject>> GetGroupMap(List<RequestObject> objectList,String ObjectName)
+    {
+        Map<String,List<RequestObject>> GroupObject=new HashMap<>();
+        String KeyName="";
         for (RequestObject ob:objectList) {
-            String DeployUnitID= ob.getDeployunitid();
-            if(!DeployUnitObject.containsKey(DeployUnitID))
+            if(ObjectName.equals(new String("BatchName")))
+            {
+                KeyName= ob.getBatchname();
+            }
+            if(ObjectName.equals(new String("DeployID")))
+            {
+                KeyName=ob.getDeployunitid();
+            }
+            if(!GroupObject.containsKey(KeyName))
             {
                 List<RequestObject> tmp=new ArrayList<>();
                 tmp.add(ob);
-                DeployUnitObject.put(DeployUnitID,tmp);
+                GroupObject.put(KeyName,tmp);
             }
             else
             {
-                DeployUnitObject.get(DeployUnitID).add(ob);
+                GroupObject.get(KeyName).add(ob);
             }
         }
-
-        return DeployUnitObject;
+        return GroupObject;
     }
 
     //用例发送请求
@@ -140,17 +169,23 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     private void CaseFinish(TestCorebak core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult,RequestObject ob) {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
+        ActualResult = ActualResult.replace("'", "");
+        assertInfo = assertInfo.replace("'", "");
+        ErrorInfo = ErrorInfo.replace("'", "");
         core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,ob);
         core.updatedispatchcasestatus(ob.getTestplanid(),ob.getBatchid(),ob.getSlaverid(),ob.getCaseid());
     }
 
     //功能用例统计收集信息
-    private void CollectionReportStatics(TestCorebak core, ApicasesReportstatics apicasesReportstatics,int TotalCaseNums,int TotalPassNums,int TotalFailNUms,long AllCostTime) {
+    private void CollectionReportStatics(TestCorebak core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums,int TotalPassNums,int TotalFailNUms,long AllCostTime) {
+        apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));
         apicasesReportstatics.setTotalpasscases(String.valueOf(TotalPassNums));
         apicasesReportstatics.setTotalfailcases(String.valueOf(TotalFailNUms));
         apicasesReportstatics.setRuntime(String.valueOf(AllCostTime));
         core.SaveReportStatics(apicasesReportstatics);
+        //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
+        core.PlanBatchAllDipatchFinish(apicasesReportstatics);
         getLogger().info("功能用例统计收集信息 完成。。。。。。。。。。。。。。。。");
     }
 

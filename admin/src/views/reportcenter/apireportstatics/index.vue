@@ -1,29 +1,39 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form :inline="true">
+
+      <el-form :inline="true" :model="searchcase" ref="searchcase" >
         <span v-if="hasPermission('apireportstatics:search')">
-          <el-form-item label="执行计划" prop="testplanname" >
-          <el-select v-model="search.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
-            <el-option label="请选择" value="''" style="display: none" />
+
+          <el-form-item label="执行计划" prop="testplanname" requied>
+
+          <el-select v-model="searchcase.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+              <el-option label="请选择" value />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
             </div>
           </el-select>
+
         </el-form-item>
-          <el-form-item label="批次" prop="batchname" >
-            <el-select v-model="search.batchname" placeholder="批次">
-            <el-option label="请选择" value="''" style="display: none" />
+          <el-form-item label="批次" prop="batchname" requied>
+
+            <el-select v-model="searchcase.batchname" placeholder="批次">
+              <el-option label="请选择" value />
             <div v-for="(planbatch, index) in planbatchList" :key="index">
               <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
             </div>
           </el-select>
+
           </el-form-item>
+
           <el-form-item>
-            <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
+            <el-button type="primary" @click="searchBy" :loading="btnLoading"
+            >查询</el-button>
           </el-form-item>
+
         </span>
       </el-form>
+
     </div>
     <el-table
       :data="apireportstaticsList"
@@ -133,10 +143,10 @@
         tmpexecplantype: {
           usetype: ''
         },
-        search: {
+        searchcase: {
           page: 1,
           size: 10,
-          testplanname: '',
+          testplanname: null,
           testplanid: null,
           batchname: null
         }
@@ -218,21 +228,23 @@
       },
 
       searchBy() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.search.testplanid = this.tmpapireportstatics.executeplanid
-        getstaticsreport(this.search).then(response => {
-          this.apireportstaticsList = response.data.list
-          console.log('111111111111111111111111')
-          console.log(this.apireportstaticsList)
-        }).catch(res => {
-          this.$message.error('搜索失败')
+        this.$refs.searchcase.validate(valid => {
+          if (valid) {
+            this.btnLoading = true
+            this.listLoading = true
+            this.searchcase.testplanid = this.tmpapireportstatics.executeplanid
+            getstaticsreport(this.searchcase).then(response => {
+              this.apireportstaticsList = response.data.list
+            }).catch(res => {
+              this.$message.error('搜索失败')
+            })
+            this.tmptestplanname = this.searchcase.testplanname
+            this.tmptestplanid = this.searchcase.testplanid
+            this.tmpbatchname = this.searchcase.batchname
+            this.listLoading = false
+            this.btnLoading = false
+          }
         })
-        this.tmptestplanname = this.search.testplanname
-        this.tmptestplanid = this.search.testplanid
-        this.tmpbatchname = this.search.batchname
-        this.listLoading = false
-        this.btnLoading = false
       },
 
       /**

@@ -16,6 +16,8 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
      */
     void savetestplancase(@Param("casedataList") final List<ExecuteplanTestcase> testcase);
 
+    List<ExecuteplanTestcase> findexplanWithName(final Map<String, Object> params);
+
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
     List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);

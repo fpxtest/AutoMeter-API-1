@@ -43,15 +43,25 @@ public class Executeplan {
     private String memo;
 
 
-    public String getIp() {
-        return ip;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    private String ip;
+    private String creator;
+
+    public String getRunmode() {
+        return runmode;
+    }
+
+    public void setRunmode(String runmode) {
+        this.runmode = runmode;
+    }
+
+    private String runmode;
 
     /**
      * 创建时间

@@ -428,6 +428,59 @@ public class TestCorebak {
         logger.info(logplannameandcasename+"功能测试统计结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
 
+    //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
+    public void PlanBatchAllDipatchFinish(ApicasesReportstatics apicasesReportstatics) {
+        long DispatchNotFinishNums =0;
+        try {
+            String sql = "select count(*) as nums from dispatch where execplanid="+apicasesReportstatics.getTestplanid() + " and batchname= '"+apicasesReportstatics.getBatchname()+"' and status in('待分配','已分配')";
+            logger.info(logplannameandcasename+"查询计划下的批次调度是否已经全部完成 result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result= MysqlConnectionUtils.query(sql);
+            DispatchNotFinishNums= Long.parseLong(getcaseValue("nums",result));
+        } catch (Exception e) {
+            logger.info(logplannameandcasename+"查询计划下的批次调度是否已经全部完成异常...........: " + e.getMessage());
+        }
+        if(DispatchNotFinishNums>0)
+        {
+            logger.info(logplannameandcasename+"查询计划下的批次调度未完成数量："+DispatchNotFinishNums);
+        }
+        else
+        {
+            UpdateReportStatics(apicasesReportstatics.getTestplanid(),apicasesReportstatics.getBatchname(),"已完成");
+        }
+    }
+
+
+    //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
+    public void PlanBatchAllDipatchFinish(String Testplanid,String batchname) {
+        long DispatchNotFinishNums =0;
+        try {
+            String sql = "select count(*) as nums from dispatch where execplanid="+Testplanid + " and batchname= '"+batchname+"' and status in('待分配','已分配')";
+            logger.info(logplannameandcasename+"查询计划下的批次调度是否已经全部完成 result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result= MysqlConnectionUtils.query(sql);
+            DispatchNotFinishNums= Long.parseLong(getcaseValue("nums",result));
+        } catch (Exception e) {
+            logger.info(logplannameandcasename+"查询计划下的批次调度是否已经全部完成异常...........: " + e.getMessage());
+        }
+        if(DispatchNotFinishNums>0)
+        {
+            logger.info(logplannameandcasename+"查询计划下的批次调度未完成数量："+DispatchNotFinishNums);
+        }
+        else
+        {
+            UpdateReportStatics(Testplanid,batchname,"已完成");
+        }
+    }
+
+
+    // 更新计划批次状态
+    public void UpdateReportStatics(String Planid,String BatchName,String status) {
+        String UpdateSql="update  executeplanbatch set status='"+status+"' where executeplanid="+Planid + " and batchname= '"+BatchName+"'";
+        logger.info(logplannameandcasename+"更新计划批次状态结果完成  sql is...........: " + UpdateSql);
+        logger.info(logplannameandcasename+"更新计划批次状态结果完成 result sql is...........: " + MysqlConnectionUtils.update(UpdateSql));
+    }
+
+
+
     //处理前置条件
     public void fixprecondition(String planid,String testcaseid) throws Exception {
         ArrayList<HashMap<String, String>> preconditionlist =getcaseData("select * from apicases_condition where basetype ='前置条件' and target='用例' and  caseid=" + testcaseid);

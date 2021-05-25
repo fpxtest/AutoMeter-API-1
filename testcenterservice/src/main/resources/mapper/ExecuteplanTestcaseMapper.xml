@@ -15,7 +15,18 @@
     <result column="casename" jdbcType="VARCHAR" property="casename" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
   </resultMap>
+
+  <select id="findexplanWithName" resultMap="BaseResultMap">
+    SELECT a.*, b.executeplanname
+    FROM executeplan_testcase a join executeplan b on a.executeplanid=b.id
+    <where>
+      <if test="deployunitid != null and deployunitid != ''">a.deployunitid = #{deployunitid} </if>
+      <if test="executeplanid != null and executeplanid != ''">and a.executeplanid = #{executeplanid}</if>
+      <if test="apiid != null and apiid != ''">and a.apiid = #{apiid}</if>
+    </where>
+  </select>
 
   <select id="findcasebydeployandapi" resultMap="BaseResultMap">
     select testcaseid from executeplan_testcase c
@@ -42,16 +53,23 @@
   </select>
 
   <insert id="savetestplancase">
-    INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time)
+    INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time,creator)
     VALUES
     <foreach collection="casedataList" item="item" index="index" separator=",">
-    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), #{item.creator})
     </foreach>
   </insert>
 
-  <insert id="removeexecuteplantestcase">
+  <delete id="removeexecuteplantestcase">
     DELETE from executeplan_testcase where executeplanid = #{executeplanid} and testcaseid=#{testcaseid}
-  </insert>
+  </delete>
+
+  <delete id="removebatchexecuteplantestcase">
+    DELETE from executeplan_testcase
+    <foreach collection="casedataList" item="item" index="index" separator=",">
+      (where executeplanid = #{executeplanid} and testcaseid=#{testcaseid})
+    </foreach>
+  </delete>
 
   <select id="getstaticsplancases" resultMap="BaseResultMap">
   SELECT b.executeplanname as deployunitname ,count(*) as id

@@ -24,6 +24,11 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
 
 
     @Override
+    public List<ExecuteplanTestcase> findexplanWithName(Map<String, Object> params) {
+        return executeplanTestcaseMapper.findexplanWithName(params);
+    }
+
+    @Override
     public void savetestplancase(List<ExecuteplanTestcase> testcase) {
         List<ExecuteplanTestcase> caselist = new ArrayList<ExecuteplanTestcase>();
         for (ExecuteplanTestcase tc : testcase) {

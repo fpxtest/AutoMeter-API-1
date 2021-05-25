@@ -10,6 +10,7 @@
     <result column="protocal" jdbcType="VARCHAR" property="protocal" />
     <result column="port" jdbcType="VARCHAR" property="port" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -45,7 +46,7 @@
 
   <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">
     update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},
-    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 

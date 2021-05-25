@@ -64,4 +64,9 @@ private ApicasesMapper apicasesMapper;
     public List<Apicases> getstaticsdeployunitcases() {
         return apicasesMapper.getstaticsdeployunitcases();
     }
+
+    @Override
+    public List<Apicases> getcasebydeployunitid(Long deployunitid) {
+        return apicasesMapper.getcasebydeployunitid(deployunitid);
+    }
 }

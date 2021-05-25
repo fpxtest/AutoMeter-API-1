@@ -24,6 +24,18 @@ public class Enviroment {
      */
     private String memo;
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
+
+
     public String getEnvtype() {
         return envtype;
     }

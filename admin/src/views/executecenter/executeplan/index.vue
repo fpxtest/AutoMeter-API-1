@@ -29,6 +29,16 @@
           <el-form-item>
             <el-input v-model="search.executeplanname" @keyup.enter.native="searchBy" placeholder="执行计划名"></el-input>
           </el-form-item>
+
+          <el-form-item>
+            <el-select v-model="search.businesstype" placeholder="业务类型">
+              <el-option label="请选择" value />
+              <div v-for="(businessdicitem, index) in planbusinessdiclist" :key="index">
+                <el-option :label="businessdicitem.dicitmevalue" :value="businessdicitem.dicitmevalue"/>
+              </div>
+            </el-select>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
           </el-form-item>
@@ -38,6 +48,7 @@
     <el-table
       ref="fileTable"
       :data="executeplanList"
+      :key="itemplanKey"
       @row-click="handleClickTableRow"
       @selection-change="handleSelectionChange"
       v-loading.body="listLoading"
@@ -57,10 +68,13 @@
       </el-table-column>
       <el-table-column label="执行计划名" align="center" prop="executeplanname" width="100"/>
       <el-table-column label="envid" align="center" v-if="show" prop="envid" width="50"/>
-      <el-table-column label="状态" align="center" prop="status" width="50"/>
-      <el-table-column label="执行环境" align="center" prop="enviromentname" width="120"/>
+      <el-table-column label="状态" align="center" prop="status" v-if="show" width="50"/>
+      <el-table-column label="业务类型" align="center" prop="businesstype" width="100"/>
+      <el-table-column label="执行环境" align="center" prop="enviromentname" width="100"/>
       <el-table-column label="类型" align="center" prop="usetype" width="60"/>
-      <el-table-column label="描述" align="center" prop="memo" width="100"/>
+      <el-table-column label="运行模式" align="center" prop="runmode" width="80"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="80"/>
+      <el-table-column label="描述" align="center" prop="memo" width="80"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -79,12 +93,6 @@
             @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
           >修改计划</el-button>
           <el-button
-            type="primary"
-            size="mini"
-            v-if="hasPermission('executeplan:update') && scope.row.id !== id"
-            @click.native.prevent="showTestCaseDialog(scope.$index)"
-          >装载用例</el-button>
-          <el-button
             type="danger"
             size="mini"
             v-if="hasPermission('executeplan:delete') && scope.row.id !== id"
@@ -96,8 +104,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -121,7 +129,7 @@
           />
         </el-form-item>
         <el-form-item label="类型" prop="usetype" required>
-          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型">
+          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型" @change="ustypeChanged($event)">
             <el-option label="功能" value="功能" />
             <el-option label="性能" value="性能" />
           </el-select>
@@ -134,6 +142,24 @@
             </div>
           </el-select>
         </el-form-item>
+        <el-form-item label="业务类型" prop="businesstype"  required>
+          <el-select v-model="tmpexecuteplan.businesstype" placeholder="业务类型">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(dicitem, index) in planbusinessdiclist" :key="index">
+              <el-option :label="dicitem.dicitmevalue" :value="dicitem.dicitmevalue" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <div v-if="PerformanceVisible">
+          <el-form-item label="运行模式" prop="runmode" required>
+            <el-select v-model="tmpexecuteplan.runmode" placeholder="运行模式">
+              <el-option label="单机运行" value="单机运行" />
+              <el-option label="多机并行" value="多机并行" />
+            </el-select>
+          </el-form-item>
+        </div>
+
         <el-form-item label="备注" prop="memo">
           <el-input
             type="text"
@@ -190,6 +216,7 @@
       <el-table
         ref="caseTable"
         :data="testcaselastList"
+        :key="itemcaseKey"
         @row-click="casehandleClickTableRow"
         @selection-change="casehandleSelectionChange"
         v-loading.body="listLoading"
@@ -216,8 +243,8 @@
       <el-pagination
         @size-change="casehandleSizeChange"
         @current-change="casehandleCurrentChange"
-        :current-page="caselistQuery.page"
-        :page-size="caselistQuery.size"
+        :current-page="searchcase.page"
+        :page-size="searchcase.size"
         :total="casetotal"
         :page-sizes="[10, 20, 30, 40]"
         layout="total, sizes, prev, pager, next, jumper"
@@ -259,7 +286,6 @@
         >提交</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 <script>
@@ -271,9 +297,11 @@
   import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
   import { addexecuteplanbatch as addexecuteplanbatch } from '@/api/executecenter/executeplanbatch'
   import { searchcases as searchtestplancases, addexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
-  import { checkplancondition as checkplancondition, getexecuteplanList as getexecuteplanList, search, addexecuteplan, updateexecuteplan, removeexecuteplan, executeplan, updateexecuteplanstatus } from '@/api/executecenter/executeplan'
+  import { checkplancondition as checkplancondition, search, addexecuteplan, updateexecuteplan, removeexecuteplan, executeplan, updateexecuteplanstatus } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
   import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
+  import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -288,12 +316,16 @@
     },
     data() {
       return {
+        itemplanKey: null,
+        itemcaseKey: null,
+        planbusinessdiclist: [], // 执行计划字典表业务类型列表
         tmpexecuteplanname: '',
         tmpcasedeployunitname: null,
         tmpcaseapiname: null,
         tmpcaseexecuteplanid: null,
         tmpcasecasetype: null,
         show: false,
+        PerformanceVisible: false, // 显示性能运行模式
         enviromentnameList: [], // 环境列表
         apiList: [], // api列表
         deployunitList: [], // 发布单元列表
@@ -313,7 +345,7 @@
         casetotal: 0, // 用例数据总数
         apiQuery: {
           page: 1, // 页码
-          size: 30, // 每页数量
+          size: 10, // 每页数量
           deployunitname: '' // 获取字典表入参
         },
         listQuery: {
@@ -342,6 +374,11 @@
           update: '修改执行计划',
           add: '添加执行计划'
         },
+        diclevelQuery: {
+          page: 1, // 页码
+          size: 100, // 每页数量
+          diccode: 'planbusinesstype' // 获取字典表入参
+        },
         btnLoading: false, // 按钮等待动画
         casebtnLoading: false, // 按钮等待动画
         tmpexecuteplan: {
@@ -351,12 +388,17 @@
           envid: '',
           status: '',
           usetype: '',
+          businesstype: '',
           ip: '',
-          memo: ''
+          memo: '',
+          creator: '',
+          runmode: ''
         },
         tmpplanbatch: {
           executeplanid: '',
-          batchname: ''
+          executeplanname: '',
+          batchname: '',
+          creator: ''
         },
         tmpplanenv: {
           id: '',
@@ -378,7 +420,8 @@
         search: {
           page: 1,
           size: 10,
-          executeplanname: null
+          executeplanname: null,
+          businesstype: ''
         },
         searchcase: {
           page: 1,
@@ -391,14 +434,30 @@
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
+    },
+
     created() {
       this.getexecuteplanList()
       this.getapiList()
       this.getdepunitList()
       this.getenviromentallList()
+      this.getdatabydiccodeList()
     },
 
     methods: {
+      /**
+       * 获取组件名字典列表
+       */
+      getdatabydiccodeList() {
+        getdatabydiccodeList(this.diclevelQuery).then(response => {
+          this.planbusinessdiclist = response.data.list
+        }).catch(res => {
+          this.$message.error('加载组件名字典列表失败')
+        })
+      },
+
       unix2CurrentTime,
       /**
        * 停止执行计划
@@ -435,6 +494,15 @@
         this.$refs.tmpplanbatch.validate(valid => {
           if (valid) {
             this.btnLoading = true
+            if (this.multipleSelection.length === 0) {
+              this.$message.error('未选择执行计划,或者所选计划已经在执行中')
+              return
+            }
+            if (this.multipleSelection.length > 1) {
+              this.$message.error('不支持多执行计划一起提交，单个提交')
+              return
+            }
+            this.tmpplanbatch.executeplanname = this.multipleSelection[0].executeplanname
             addexecuteplanbatch(this.tmpplanbatch).then(() => {
               this.executeplancase()
               this.batchdialogFormVisible = false
@@ -459,7 +527,7 @@
       executeplancase() {
         this.tmpplanbatchList = []
         this.$refs.tmpplanbatch.validate(valid => {
-          if (valid && this.isUniqueDetail(this.tmpplanbatch)) {
+          if (valid) {
             for (let i = 0; i < this.multipleSelection.length; i++) {
               if (this.multipleSelection[i].status === 'running') {
                 this.multipleSelection.splice(i)
@@ -513,11 +581,26 @@
       },
 
       /**
+       * 性能选择  e的值为options的选值
+       */
+      ustypeChanged(e) {
+        if (e === '性能') {
+          this.PerformanceVisible = true
+          this.tmpexecuteplan.runmode = ''
+        } else {
+          this.PerformanceVisible = false
+          this.tmpexecuteplan.runmode = '多机执行'
+        }
+      },
+
+      /**
        * 获取执行计划列表
        */
       getexecuteplanList() {
+        this.search.execplanname = this.tmpexecplanname
+        this.search.batchname = this.tmpbatchname
         this.listLoading = true
-        getexecuteplanList(this.listQuery).then(response => {
+        search(this.search).then(response => {
           this.executeplanList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -525,12 +608,12 @@
           this.$message.error('加载字典列表失败')
         })
       },
+
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.executeplanList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -541,36 +624,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.execplanname = this.tmpexecplanname
-        search(this.listQuery).then(response => {
-          this.executeplanList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getexecuteplanList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getexecuteplanList()
       },
       /**
        * 表格序号
@@ -580,7 +649,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
 
       /**
@@ -603,8 +672,8 @@
         this.apiQuery.deployunitname = e
         getapiList(this.apiQuery).then(response => {
           this.apiList = response.data.list
-          console.log(this.apiList)
-          this.casetotal = response.data.total
+          // console.log(this.apiList)
+          // this.casetotal = response.data.total
         }).catch(res => {
           this.$message.error('加载api列表失败')
         })
@@ -616,7 +685,7 @@
         this.caselistLoading = true
         getapiList(this.listQuery).then(response => {
           this.apiList = response.data.list
-          this.casetotal = response.data.total
+          // this.casetotal = response.data.total
           this.caselistLoading = false
         }).catch(res => {
           this.$message.error('加载api列表失败')
@@ -655,7 +724,7 @@
         this.caselistLoading = true
         getapicasesList(this.listQuery).then(response => {
           this.apicasesList = response.data.list
-          this.casetotal = response.data.total
+          // this.casetotal = response.data.total
           this.caselistLoading = false
         }).catch(res => {
           this.$message.error('加载用例列表失败')
@@ -667,10 +736,9 @@
        */
       searchcaseBy() {
         this.searchtestplanexistcase()
-        // this.searchcaseBydepandapi()
-        // this.gettestcaselastList()
       },
 
+      // 已废弃
       async gettestcaselastList() {
         console.log(this.testcaseList.length)
         console.log(this.executeplancaseexistList.length)
@@ -699,7 +767,7 @@
       },
 
       /**
-       * 获取发布单元和api的用例
+       * 获取发布单元和api的用例，已废弃
        */
       async searchcaseBydepandapi() {
         this.$refs.searchcase.validate(valid => {
@@ -730,8 +798,9 @@
           if (valid) {
             this.searchcase.executeplanid = this.tmpexecuteplan.id
             this.searchcase.casetype = this.tmpexecuteplan.usetype
-            this.searchcase.page = this.caselistQuery.page
-            this.searchcase.size = this.caselistQuery.size
+            // this.searchcase.page = this.caselistQuery.page
+            // this.searchcase.size = this.caselistQuery.size
+            this.searchcase.page = 1
             searchtestplancases(this.searchcase).then(response => {
               this.testcaselastList = response.data.list
               this.casetotal = response.data.total
@@ -753,40 +822,22 @@
         this.tmpcasecasetype = this.searchcase.casetype
       },
 
-      searchcaseBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.caselistQuery.deployunitname = this.tmpcasedeployunitname
-        this.caselistQuery.apiname = this.tmpcaseapiname
-        this.caselistQuery.executeplanid = this.tmpcaseexecuteplanid
-        this.caselistQuery.casetype = this.tmpcasecasetype
-
-        search(this.listQuery).then(response => {
-          this.testcaselastList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       casehandleSizeChange(size) {
-        this.caselistQuery.size = size
-        this.caselistQuery.page = 1
-        this.searchcaseBypageing()
+        this.searchcase.page = 1
+        this.searchcase.size = size
+        this.searchtestplanexistcase()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       casehandleCurrentChange(page) {
-        this.caselistQuery.page = page
-        this.searchcaseBypageing()
+        this.searchcase.page = page
+        this.searchtestplanexistcase()
       },
       /**
        * 表格序号
@@ -796,7 +847,7 @@
        * @returns 表格序号
        */
       casegetIndex(index) {
-        return (this.caselistQuery.page - 1) * this.caselistQuery.size + index + 1
+        return (this.searchcase.page - 1) * this.searchcase.size + index + 1
       },
       /**
        * 显示添加执行计划对话框
@@ -811,6 +862,9 @@
         this.tmpexecuteplan.memo = ''
         this.tmpexecuteplan.usetype = ''
         this.tmpexecuteplan.enviromentname = ''
+        this.tmpexecuteplan.businesstype = ''
+        this.tmpexecuteplan.creator = this.name
+        this.tmpexecuteplan.runmode = ''
       },
 
       /**
@@ -825,8 +879,6 @@
             this.multipleSelection.splice(i)
           }
         }
-        console.log('222222222222')
-        console.log(this.multipleSelection.length)
         if (this.multipleSelection.length === 0) {
           this.$message.error('未选择执行计划,或者所选计划已经在执行中')
         } else {
@@ -837,9 +889,9 @@
             this.tmpplanenv.envid = this.multipleSelection[0].envid
             this.tmpplanenv.enviromentname = this.multipleSelection[0].enviromentname
             checkplancondition(this.tmpplanenv).then(() => {
-              console.log('3333333333333333333')
               this.batchdialogFormVisible = true
               this.tmpplanbatch.executeplanid = this.multipleSelection[0].id
+              this.tmpplanbatch.creator = this.name
               this.tmpplanbatch.batchname = ''
             }).catch(res => {
               // this.$message.error('执行失败')
@@ -854,6 +906,9 @@
         this.$refs.tmpexecuteplan.validate(valid => {
           if (valid) {
             this.btnLoading = true
+            if (this.tmpexecuteplan.usetype === '功能') {
+              this.tmpexecuteplan.runmode = '多机执行'
+            }
             addexecuteplan(this.tmpexecuteplan).then(() => {
               this.$message.success('添加成功')
               this.getexecuteplanList()
@@ -879,7 +934,16 @@
         this.tmpexecuteplan.usetype = this.executeplanList[index].usetype
         this.tmpexecuteplan.memo = this.executeplanList[index].memo
         this.tmpexecuteplan.enviromentname = this.executeplanList[index].enviromentname
-
+        this.tmpexecuteplan.businesstype = this.executeplanList[index].businesstype
+        this.tmpexecuteplan.creator = this.name
+        this.tmpexecuteplan.runmode = this.executeplanList[index].runmode
+        console.log(this.tmpexecuteplan.runmode)
+        if (this.tmpexecuteplan.usetype === '性能') {
+          this.PerformanceVisible = true
+        } else {
+          this.PerformanceVisible = false
+          this.tmpexecuteplan.runmode = '多机执行'
+        }
         for (let i = 0; i < this.enviromentnameList.length; i++) {
           if (this.enviromentnameList[i].enviromentname === this.tmpexecuteplan.enviromentname) {
             this.tmpexecuteplan.envid = this.enviromentnameList[i].id

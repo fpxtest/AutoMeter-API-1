@@ -49,4 +49,16 @@
     </foreach>
   </insert>
 
+  <select id="getcasebyrunmode" resultMap="BaseResultMap">
+    select * from dispatch a JOIN executeplan b on a.execplanid=b.id where a.status =#{status} and b.usetype=#{usetype}
+    and b.runmode=#{runmode} order by a.id ASC
+  </select>
+
+
+  <select id="findbusyslavernums" resultType="java.lang.Integer">
+    select COUNT(*) from dispatch a where a.status = #{status} and a.slaverid IN
+  <foreach collection="slaverlist" item="slaver" index="index" open="(" close=")" separator=",">
+    #{slaver.slaverid}
+  </foreach>
+  </select>
 </mapper>

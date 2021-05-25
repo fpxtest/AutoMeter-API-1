@@ -15,6 +15,7 @@
     <result column="requestcontenttype" jdbcType="VARCHAR" property="requestcontenttype" />
     <result column="responecontenttype" jdbcType="VARCHAR" property="responecontenttype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -48,12 +49,17 @@
 
   <update id="updateApi" parameterType="com.zoctan.api.entity.Api">
     update api set apiname = #{apiname}, deployunitname = #{deployunitname}, visittype = #{visittype}, apistyle=#{apistyle}, path = #{path},
-    memo = #{memo}, requestcontenttype = #{requestcontenttype}, responecontenttype =#{responecontenttype},  lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo}, requestcontenttype = #{requestcontenttype}, responecontenttype =#{responecontenttype},creator = #{creator},  lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 
   <select id="getstaticsdeployapi" resultMap="BaseResultMap">
     SELECT deployunitname ,count(*) as id
     FROM api group by deployunitname
+  </select>
+
+  <select id="getapibydeployunitid" resultMap="BaseResultMap">
+    SELECT *
+    FROM api WHERE deployunitid = #{deployunitid}
   </select>
 </mapper>

@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('envmachine:search')">
           <el-form-item>
-            <el-input v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
+            <el-input clearable v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -31,6 +31,7 @@
     </div>
     <el-table
       :data="envmachineList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -45,6 +46,7 @@
       <el-table-column label="测试环境" align="center" prop="enviromentname" width="120"/>
       <el-table-column label="服务器" align="center" prop="machinename" width="120"/>
       <el-table-column label="ip" align="center" prop="ip" width="120"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -74,8 +76,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -132,10 +134,11 @@
   </div>
 </template>
 <script>
-  import { getenvmachineList as getenvmachineList, search, addenvmachine, updateenvmachine, removeenvmachine } from '@/api/enviroment/envmachine'
-  import { getmachineList as getmachineList } from '@/api/assets/machine'
-  import { getenviromentList as getenviromentList } from '@/api/enviroment/testenviroment'
+  import { search, addenvmachine, updateenvmachine, removeenvmachine } from '@/api/enviroment/envmachine'
+  import { getmachineLists as getmachineLists } from '@/api/assets/machine'
+  import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -150,6 +153,7 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpenviromentname: '',
         envmachineList: [], // 环境服务器列表
         enviromentnameList: [], // 环境列表
@@ -175,7 +179,8 @@
           envid: '',
           machineid: '',
           enviromentname: '',
-          machinename: ''
+          machinename: '',
+          creator: ''
         },
         search: {
           page: 1,
@@ -185,10 +190,14 @@
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
+    },
+
     created() {
       this.getenvmachineList()
-      this.getenviromentList()
-      this.getmachineList()
+      this.getenviromentallList()
+      this.getmachineLists()
     },
 
     methods: {
@@ -223,7 +232,8 @@
        */
       getenvmachineList() {
         this.listLoading = true
-        getenvmachineList(this.listQuery).then(response => {
+        this.search.enviromentname = this.tmpenviromentname
+        search(this.search).then(response => {
           this.envmachineList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -235,10 +245,10 @@
       /**
        * 获取环境列表
        */
-      getenviromentList() {
+      getenviromentallList() {
         this.listLoading = true
-        getenviromentList(this.listQuery).then(response => {
-          this.enviromentnameList = response.data.list
+        getenviromentallList().then(response => {
+          this.enviromentnameList = response.data
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
@@ -249,10 +259,10 @@
       /**
        * 获取服务器列表
        */
-      getmachineList() {
+      getmachineLists() {
         this.listLoading = true
-        getmachineList(this.listQuery).then(response => {
-          this.machinenameList = response.data.list
+        getmachineLists().then(response => {
+          this.machinenameList = response.data
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
@@ -261,9 +271,10 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.envmachineList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -274,36 +285,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.enviromentname = this.tmpenviromentname
-        search(this.listQuery).then(response => {
-          this.envmachineList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getenvmachineList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getenvmachineList()
       },
       /**
        * 表格序号
@@ -313,7 +310,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加测试环境对话框
@@ -327,6 +324,7 @@
         this.tmpenvmachine.machineid = ''
         this.tmpenvmachine.machinename = ''
         this.tmpenvmachine.enviromentname = ''
+        this.tmpenvmachine.creator = this.name
       },
       /**
        * 添加测试环境
@@ -359,6 +357,7 @@
         this.tmpenvmachine.machineid = this.envmachineList[index].machineid
         this.tmpenvmachine.machinename = this.envmachineList[index].machinename
         this.tmpenvmachine.enviromentname = this.envmachineList[index].enviromentname
+        this.tmpenvmachine.creator = this.name
       },
       /**
        * 更新测试环境

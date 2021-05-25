@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('enviroment:search')">
           <el-form-item>
-            <el-input maxlength="40" v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
+            <el-input clearable maxlength="40" v-model="search.enviromentname" @keyup.enter.native="searchBy" placeholder="测试环境名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -31,6 +31,7 @@
     </div>
     <el-table
       :data="enviromentList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -42,9 +43,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="测试环境名" align="center" prop="enviromentname" width="120"/>
-      <el-table-column label="环境类型" align="center" prop="envtype" width="120"/>
-      <el-table-column label="描述" align="center" prop="memo" width="250"/>
+      <el-table-column label="测试环境名" align="center" prop="enviromentname" width="100"/>
+      <el-table-column label="环境类型" align="center" prop="envtype" width="80"/>
+      <el-table-column label="描述" align="center" prop="memo" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -74,8 +76,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -140,8 +142,9 @@
   </div>
 </template>
 <script>
-  import { getenviromentList as getenviromentList, search, addenviroment, updateenviroment, removeenviroment } from '@/api/enviroment/testenviroment'
+  import { search, addenviroment, updateenviroment, removeenviroment } from '@/api/enviroment/testenviroment'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -156,29 +159,25 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpenviromentname: '',
         enviromentList: [], // 环境列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
-        listQuery: {
-          page: 1, // 页码
-          size: 10, // 每页数量
-          listLoading: true,
-          enviromentname: ''
-        },
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改测试环境',
-          update: '修改测试环境',
-          add: '添加测试环境'
+          updateRole: '修改环境',
+          update: '修改环境',
+          add: '添加环境'
         },
         btnLoading: false, // 按钮等待动画
         tmpenviroment: {
           id: '',
           enviromentname: '',
           envtype: '',
-          memo: ''
+          memo: '',
+          creator: ''
         },
         search: {
           page: 1,
@@ -192,27 +191,33 @@
       this.getenviromentList()
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
+    },
+
     methods: {
       unix2CurrentTime,
 
       /**
-       * 获取字典列表
+       * 获取环境列表
        */
       getenviromentList() {
         this.listLoading = true
-        getenviromentList(this.listQuery).then(response => {
+        this.search.enviromentname = this.tmpenviromentname
+        search(this.search).then(response => {
           this.enviromentList = response.data.list
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载测试环境列表失败')
+          this.$message.error('加载环境列表失败')
         })
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.enviromentList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -223,38 +228,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.enviromentname = this.tmpenviromentname
-        search(this.listQuery).then(response => {
-          this.enviromentList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
-        // this.getenviromentList()
+        this.search.page = 1
+        this.search.size = size
+        this.getenviromentList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
-        // this.getenviromentList()
+        this.search.page = page
+        this.getenviromentList()
       },
       /**
        * 表格序号
@@ -264,7 +253,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加测试环境对话框
@@ -277,6 +266,7 @@
         this.tmpenviroment.enviromentname = ''
         this.tmpenviroment.memo = ''
         this.tmpenviroment.envtype = ''
+        this.tmpenviroment.creator = this.name
       },
       /**
        * 添加测试环境
@@ -308,6 +298,7 @@
         this.tmpenviroment.enviromentname = this.enviromentList[index].enviromentname
         this.tmpenviroment.envtype = this.enviromentList[index].envtype
         this.tmpenviroment.memo = this.enviromentList[index].memo
+        this.tmpenviroment.creator = this.name
       },
       /**
        * 更新测试环境

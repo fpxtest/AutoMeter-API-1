@@ -6,30 +6,29 @@
           <el-button
             type="success"
             size="mini"
+            :loading="btnLoading"
             icon="el-icon-refresh"
             v-if="hasPermission('apicases:list')"
             @click.native.prevent="getapicasesList"
           >刷新
           </el-button>
-
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('apicases:add')"
             @click.native.prevent="showAddapicasesDialog"
-          >添加API用例
+          >添加用例
           </el-button>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('apicases:add')"
-            @click.native.prevent="showAddapicasesDialog"
-          >复制API用例
+            @click.native.prevent="showCopyapicasesDialog"
+          >复制用例
           </el-button>
         </el-form-item>
-
         <span v-if="hasPermission('apicases:search')">
           <el-form-item>
             <el-select v-model="search.deployunitname" placeholder="发布单元" @change="deployunitselectChanged($event)">
@@ -48,50 +47,25 @@
               </div>
             </el-select>
           </el-form-item>
+
+           <el-form-item >
+          <el-select v-model="search.casetype" placeholder="用例类型">
+            <el-option label="请选择" value />
+            <el-option label="功能" value="功能"></el-option>
+            <el-option label="性能" value="性能"></el-option>
+          </el-select>
+        </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
-          </el-form-item>
-        </span>
-        <span>
-          <el-form-item>
-            <el-button
-              type="primary"
-              size="mini"
-              v-if="hasPermission('apicases:preconditions')"
-              @click.native.prevent="showpreconditionDialog"
-            >前置条件
-        </el-button>
-        <el-button
-          type="primary"
-          size="mini"
-          v-if="hasPermission('apicases:postcondition')"
-          @click.native.prevent="showpostconditionDialog"
-        >后置条件
-        </el-button>
-        <el-button
-          type="primary"
-          size="mini"
-          v-if="hasPermission('apicases:preconditions')"
-          @click.native.prevent="deleteprecondition"
-        >取消前置条件
-        </el-button>
-        <el-button
-          type="primary"
-          size="mini"
-          v-if="hasPermission('apicases:postcondition')"
-          @click.native.prevent="deletepostcondition"
-        >取消后置条件
-        </el-button>
           </el-form-item>
         </span>
       </el-form>
     </div>
     <el-table
-      ref="fileTable"
       :data="apicasesList"
+      :key="itemKey"
       v-loading.body="listLoading"
-      @row-click="handleClickTableRow"
-      @selection-change="handleSelectionChange"
       element-loading-text="loading"
       border
       fit
@@ -110,13 +84,13 @@
       <el-table-column label="用例名" align="center" prop="casename" width="80"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="80"/>
       <el-table-column label="API" align="center" prop="apiname" width="80"/>
-      <el-table-column label="jmeter-class" align="center" prop="casejmxname" width="100"/>
+      <el-table-column label="Jmeter-Class" align="center" prop="casejmxname" width="100"/>
       <el-table-column label="类型" align="center" prop="casetype" width="50"/>
       <el-table-column label="线程" align="center" prop="threadnum" width="50"/>
       <el-table-column label="循环" align="center" prop="loops" width="50"/>
       <el-table-column label="用例描述" align="center" prop="casecontent" width="120"/>
       <el-table-column label="期望值" align="center" prop="expect" width="60">
-      <template slot-scope="scope">
+        <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.expect }}</p>
           <div slot="reference" class="name-wrapper">
@@ -125,6 +99,7 @@
         </el-popover>
       </template>
       </el-table-column>
+      <el-table-column label="操作人" align="center" prop="creator" width="80"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="100">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -162,8 +137,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -365,21 +340,71 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="CopyApiCase" :visible.sync="CopydialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 350px; margin-left:50px;"
+        :model="tmpcopycase"
+        ref="tmpcopycase"
+      >      <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
+        <el-select v-model="tmpcopycase.sourcedeployunitname" placeholder="发布单元" @change="CopyCasesSourceDeployselectChanged($event)">
+          <el-option label="请选择" value="''" style="display: none" />
+          <div v-for="(depunitname, index) in deployunitList" :key="index">
+            <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+          </div>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="用例来源" prop="sourcecasename" required >
+        <el-select v-model="tmpcopycase.sourcecasename" placeholder="用例" @change="CopySourceCasesChanged($event)">
+          <el-option label="请选择" value="''" style="display: none" />
+          <div v-for="(testcase, index) in sourcetestcaseList" :key="index">
+            <el-option :label="testcase.casename" :value="testcase.casename" required/>
+          </div>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="新用例名" prop="newcasename" required>
+        <el-input
+          type="text"
+          maxlength="40"
+          prefix-icon="el-icon-edit"
+          auto-complete="off"
+          v-model="tmpcopycase.newcasename"
+        />
+      </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="CopydialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="copycases"
+        >保存
+        </el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
   import {
-    getapicasesList as getapicasesList,
     search,
     addapicases,
     updateapicases,
-    removeapicases
+    removeapicases,
+    copycases,
+    getcasebydeployunitid
   } from '@/api/assets/apicases'
   import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype } from '@/api/assets/apicasesdata'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getcaseparatype as getcaseparatype } from '@/api/deployunit/apiparams'
-  import { getdepunitList as getdepunitList, findDeployNameValueWithCode as findDeployNameValueWithCode } from '@/api/deployunit/depunit'
+  import { getdepunitLists as getdepunitLists, findDeployNameValueWithCode as findDeployNameValueWithCode } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -394,9 +419,11 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpprotocal: null,
         tmpdeployunitname: null,
         tmpapiname: null,
+        tmpcasetype: null,
         paraList: [], // paraList参数值列表
         paravaluemap: [], // 参数值map
         multipleSelection: [], // 用例表格被选中的内容
@@ -405,18 +432,12 @@
         caseparamtypelist: [], // 用例参数类型列表
         caseparamsbytypelist: [], // 根据类型获取用例参数名列表
         tmpcaseparamslist: [], // 获取用例参数临时列表，getcaseparamsbytype（）调用
+        sourcetestcaseList: [],
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
         JmeterClassVisible: false, // JmeterClassVisible显示
         caseindex: '',
         total: 0, // 数据总数
-        listQuery: {
-          page: '', // 页码
-          size: '', // 每页数量
-          listLoading: true,
-          deployunitname: null,
-          apiname: null
-        },
         apiSearchQuery: {
           deployunitname: '', // 发布单元名
           apiname: '' // api名
@@ -426,7 +447,9 @@
         },
         dialogStatus: 'add',
         paramtitle: '用例参数值',
+        CopyApiCase: '复制用例',
         dialogFormVisible: false,
+        CopydialogFormVisible: false,
         paramdialogFormVisible: false,
         textMap: {
           updateRole: '修改API用例',
@@ -435,7 +458,7 @@
         },
         diclevelQuery: {
           page: 1, // 页码
-          size: 30, // 每页数量
+          size: 10, // 每页数量
           diccode: 'casecondition' // 获取字典表入参
         },
         btnLoading: false, // 按钮等待动画
@@ -455,7 +478,7 @@
           middleparam: '',
           level: '',
           memo: '',
-          creator: 'admin'
+          creator: ''
         },
         tmpapicasesdata: {
           id: '',
@@ -465,6 +488,13 @@
           memo: '',
           casedataMap: []
         },
+        tmpcopycase: {
+          sourcecaseid: '',
+          sourcedeployunitid: '',
+          sourcedeployunitname: '',
+          sourcecasename: '',
+          newcasename: ''
+        },
         casevalue: {
           caseid: '',
           propertytype: ''
@@ -473,15 +503,20 @@
           page: 1,
           size: 10,
           deployunitname: null,
-          apiname: null
+          apiname: null,
+          casetype: null
         }
       }
     },
 
     created() {
       this.getapicasesList()
-      this.getdepunitList()
+      this.getdepunitLists()
       this.getcaseconditionList()
+    },
+
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
     },
 
     methods: {
@@ -492,15 +527,10 @@
       },
 
       handleClickTableRow(row, event, column) {
-        // console.log(row)
-        // console.log(column)
         // this.$refs.fileTable.toggleRowSelection(row)
       },
       handleSelectionChange(rows) {
-        // console.log(rows)
         this.multipleSelection = rows
-        console.log('apicase00000000000000000000000000')
-        console.log(this.multipleSelection)
       },
 
       /**
@@ -508,7 +538,6 @@
        */
       funorperformChanged(e) {
         if (e === '性能') {
-          console.log('111111111111111111111')
           this.threadloopvisible = true
           this.tmpapicases.threadnum = ''
           this.tmpapicases.loops = ''
@@ -567,7 +596,10 @@
        */
       getapicasesList() {
         this.listLoading = true
-        getapicasesList(this.listQuery).then(response => {
+        this.search.deployunitname = this.tmpdeployunitname
+        this.search.apiname = this.tmpapiname
+        this.search.tmpcasetype = this.tmpcasetype
+        search(this.search).then(response => {
           this.apicasesList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -608,15 +640,39 @@
       },
 
       /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       */
+      CopyCasesSourceDeployselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpcopycase.sourcedeployunitid = this.deployunitList[i].id
+          }
+        }
+        getcasebydeployunitid(this.tmpcopycase).then(response => {
+          this.sourcetestcaseList = response.data
+        }).catch(res => {
+          this.$message.error('根据发布单元id获取用例列表失败')
+        })
+      },
+
+      /**
+       * 源用例下拉选择事件获取用例id  e的值为options
+       */
+      CopySourceCasesChanged(e) {
+        for (let i = 0; i < this.sourcetestcaseList.length; i++) {
+          if (this.sourcetestcaseList[i].casename === e) {
+            this.tmpcopycase.sourcecaseid = this.sourcetestcaseList[i].id
+          }
+        }
+      },
+
+      /**
        * api下拉选择事件获取apiid  e的值为options的选值
        */
       apiselectChanged(e) {
         this.apiSearchQuery.apiname = e
         for (let i = 0; i < this.apiList.length; i++) {
-          console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwww')
-          console.log(e)
           if (this.apiList[i].apiname === e) {
-            console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxx')
             console.log(this.tmpapicases.apiid)
             this.tmpapicases.apiid = this.apiList[i].id
           }
@@ -640,44 +696,28 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
-        this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
-          this.listLoading = false
+      getdepunitLists() {
+        getdepunitLists().then(response => {
+          this.deployunitList = response.data
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
         })
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.apicasesList = response.data.list
           this.total = response.data.total
+          this.listLoading = false
         }).catch(res => {
           this.$message.error('搜索失败')
         })
         this.tmpdeployunitname = this.search.deployunitname
         this.tmpapiname = this.search.apiname
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.apiname = this.tmpapiname
-        this.listQuery.deployunitname = this.tmpdeployunitname
-        search(this.listQuery).then(response => {
-          this.apicasesList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
+        this.tmpcasetype = this.search.tmpcasetype
       },
 
       /**
@@ -685,17 +725,17 @@
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getapicasesList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getapicasesList()
       },
       /**
        * 表格序号
@@ -705,7 +745,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加用例对话框
@@ -725,7 +765,42 @@
         this.tmpapicases.middleparam = ''
         this.tmpapicases.level = ''
         this.tmpapicases.memo = ''
+        this.tmpapicases.creator = this.name
+        console.log(this.name)
       },
+      /**
+       * 显示Copy用例对话框
+       */
+      showCopyapicasesDialog() {
+        // 显示新增对话框
+        this.CopydialogFormVisible = true
+        this.tmpcopycase.newcasename = ''
+        this.tmpcopycase.sourcedeployunitname = ''
+        this.tmpcopycase.sourcecasename = ''
+        this.tmpcopycase.sourcedeployunitid = ''
+        this.tmpcopycase.sourcecaseid = ''
+      },
+
+      /**
+       * 复制用例
+       */
+      copycases() {
+        this.$refs.tmpcopycase.validate(valid => {
+          if (valid) {
+            this.btnLoading = true
+            copycases(this.tmpcopycase).then(() => {
+              this.$message.success('复制成功')
+              this.getapicasesList()
+              this.CopydialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.$message.error('复制失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+
       /**
        * 添加用例
        */
@@ -799,6 +874,7 @@
         this.tmpapicases.middleparam = this.apicasesList[index].middleparam
         this.tmpapicases.level = this.apicasesList[index].level
         this.tmpapicases.memo = this.apicasesList[index].memo
+        this.tmpapicases.creator = this.name
         if (this.tmpapicases.casetype === '性能') {
           this.threadloopvisible = true
           this.tmpapicases.threadnum = this.apicasesList[index].threadnum

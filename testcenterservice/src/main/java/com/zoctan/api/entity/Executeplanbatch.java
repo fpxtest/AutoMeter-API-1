@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Executeplanbatch {
     /**
@@ -16,9 +19,40 @@ public class Executeplanbatch {
      */
     private Long executeplanid;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     /**
      * 状态，new，waiting，running，pause，finish
      */
+    private String status;
+
+    private String source;
+
+    public String getExecuteplanname() {
+        return executeplanname;
+    }
+
+    public void setExecuteplanname(String executeplanname) {
+        this.executeplanname = executeplanname;
+    }
+
+    private String executeplanname;
+
+
     private String batchname;
 
     /**

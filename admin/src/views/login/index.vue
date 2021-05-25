@@ -10,7 +10,7 @@
       label-position="left"
       label-width="0px"
     >
-      <h3 class="title">后台登录</h3>
+      <h3 class="title">AutoMeter</h3>
       <el-form-item prop="nameOrEmail">
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="name" />

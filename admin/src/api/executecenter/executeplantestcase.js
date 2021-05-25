@@ -8,6 +8,14 @@ export function searchcases(executeplanForm) {
   })
 }
 
+export function search(executeplanForm) {
+  return request({
+    url: '/executeplan/testcase/search',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function getstaticsplancases() {
   return request({
     url: '/executeplan/testcase/getstaticsplancases',
@@ -31,10 +39,17 @@ export function executeplantestcase(executeplanForm) {
   })
 }
 
-export function removeexecuteplantestcase(executeplanForm) {
+export function removebatchexecuteplantestcase(executeplanForm) {
   return request({
     url: '/executeplan/testcase/removecases',
     method: 'post',
     data: executeplanForm
+  })
+}
+
+export function removeexecuteplantestcase(executeplantestcaseId) {
+  return request({
+    url: '/executeplan/testcase/' + executeplantestcaseId,
+    method: 'delete'
   })
 }

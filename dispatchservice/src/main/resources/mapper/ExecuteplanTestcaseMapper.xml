@@ -40,7 +40,9 @@
   </insert>
 
   <select id="findcasebytestplanid" resultMap="BaseResultMap">
-    select a.testcaseid, c.deployunitname,b.casejmxname,b.casename,b.expect,b.threadnum,b.loops from executeplan_testcase a join apicases b join deployunit c on a.testcaseid = b.id and c.id = a.deployunitid  where a.executeplanid = #{executeplanid}
+    select a.testcaseid, c.deployunitname,b.casejmxname,b.casename,b.expect,b.threadnum,b.loops from
+    executeplan_testcase a join apicases b join deployunit c on a.testcaseid = b.id and c.id = a.deployunitid
+     where a.executeplanid = #{executeplanid} and b.casetype= #{casetype}
   </select>
 
 

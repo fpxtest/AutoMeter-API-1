@@ -39,7 +39,7 @@ export const constantRouterMap = [
     name: 'dashboard',
     icon: 'dashboard',
     children: [
-      { path: 'dashboard', name: '首页', component: _import('dashboard/index'), meta: { title: '首页', noCache: true }}
+      { path: 'dashboard', name: '首页', component: _import('dashboard/index'), meta: { title: '首页', icon: 'dashboard', noCache: true }}
     ]
   }
   // {
@@ -68,6 +68,8 @@ export const asyncRouterMap = [
     path: '/assets',
     component: Layout,
     name: '资产管理',
+    alwaysShow: true,
+    activeMenu: '/assets',
     icon: 'asset',
     children: [
       { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
@@ -120,8 +122,9 @@ export const asyncRouterMap = [
     name: '执行中心',
     icon: 'execute',
     children: [
-      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { title: '执行计划', permission: ['executeplan:list'] }}
-      //  { path: 'apiparams/list', name: '执行监控', component: _import('deployunit/apiparams/index'), meta: { permission: ['apiparams:list'] }}
+      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { title: '执行计划', permission: ['executeplan:list'] }},
+      { path: 'executeplancase/list', name: '计划用例', component: _import('executecenter/executeplancase/index'), meta: { title: '计划用例', permission: ['executeplan:list'] }},
+      { path: 'executeplanbatch/list', name: '计划批次', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划批次', permission: ['executeplanbatch:list'] }}
     ]
   },
 

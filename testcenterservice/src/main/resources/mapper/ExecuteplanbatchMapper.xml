@@ -7,7 +7,10 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -19,9 +22,25 @@
     where a.executeplanid=#{executeplanid}
   </select>
 
+
+  <select id="getallexplanbatch" resultMap="BaseResultMap">
+    SELECT b.executeplanname,a.*
+    FROM executeplanbatch a inner JOIN executeplan b on a.executeplanid=b.id
+  </select>
+
   <select id="getbatchidbyplanidandbatchname" resultMap="BaseResultMap">
     SELECT a.*
     FROM executeplanbatch a
     where a.executeplanid=#{executeplanid} and batchname =#{batchname}
+  </select>
+
+
+  <select id="findexplanbatchWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplanbatch a
+    <where>
+      <if test="batchname != null and batchname != ''">a.batchname = #{batchname} </if>
+      <if test="executeplanname != null and executeplanname != ''">and a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>
+    </where>
   </select>
 </mapper>

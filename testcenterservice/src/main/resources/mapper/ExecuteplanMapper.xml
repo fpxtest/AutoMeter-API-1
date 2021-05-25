@@ -7,10 +7,15 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <id column="envid" jdbcType="BIGINT" property="envid" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="usetype" jdbcType="VARCHAR" property="usetype" />
+    <result column="businesstype" jdbcType="VARCHAR" property="businesstype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
+    <result column="runmode" jdbcType="VARCHAR" property="runmode" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -19,7 +24,8 @@
     SELECT a.*
     FROM executeplan a
     <where>
-      <if test="executeplanname != null and executeplanname != ''">a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>
+      <if test="businesstype != null and businesstype != ''">a.businesstype = #{businesstype} </if>
+      <if test="executeplanname != null and executeplanname != ''">and a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>
     </where>
   </select>
 
@@ -43,7 +49,8 @@
   </select>
 
   <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
-    update executeplan set executeplanname = #{executeplanname},envid = #{envid},enviromentname=#{enviromentname}, usetype=#{usetype}, memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    update executeplan set executeplanname = #{executeplanname},envid = #{envid},businesstype=#{businesstype},enviromentname=#{enviromentname},
+     usetype=#{usetype}, memo = #{memo},runmode = #{runmode}, creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 

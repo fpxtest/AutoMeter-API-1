@@ -20,6 +20,9 @@
         </el-form-item>
 
         <span v-if="hasPermission('enviroment_assemble:search')">
+          <el-form-item>
+            <el-input clearable maxlength="40" v-model="search.assemblename" @keyup.enter.native="searchBy" placeholder="组件名"></el-input>
+          </el-form-item>
           <el-form-item label="组件名" prop="assembletype" >
           <el-select v-model="search.assembletype" placeholder="组件名">
             <el-option label="请选择" value="''" style="display: none" />
@@ -37,6 +40,7 @@
     <el-table
       :data="enviroment_assembleList"
       v-loading.body="listLoading"
+      :key="itemKey"
       element-loading-text="loading"
       border
       fit
@@ -51,6 +55,7 @@
       <el-table-column label="组件类型" align="center" prop="assembletype" width="100"/>
       <el-table-column label="连接字" align="center" prop="connectstr" width="250"/>
       <el-table-column label="备注" align="center" prop="memo" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -80,8 +85,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -157,9 +162,10 @@
   </div>
 </template>
 <script>
-  import { getenviroment_assembleList as getenviroment_assembleList, searchenviroment_assemble as searchenviroment_assemble, addenviroment_assemble, updateenviroment_assemble, removeenviroment_assemble } from '@/api/enviroment/enviromentassemble'
+  import { searchenviroment_assemble as searchenviroment_assemble, addenviroment_assemble, updateenviroment_assemble, removeenviroment_assemble } from '@/api/enviroment/enviromentassemble'
   import { unix2CurrentTime } from '@/utils'
   import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -174,7 +180,9 @@
     },
     data() {
       return {
-        tmpassembletype: '',
+        itemKey: null,
+        tmpassemblename: null,
+        tmpassembletype: null,
         enviroment_assembleList: [], // 环境列表
         assembleypeList: [], // 环境列表
         listLoading: false, // 数据加载等待动画
@@ -203,14 +211,20 @@
           assemblename: '',
           assembletype: '',
           connectstr: '',
-          memo: ''
+          memo: '',
+          creator: ''
         },
         search: {
           page: 1,
           size: 10,
-          assembletype: null
+          assembletype: null,
+          assemblename: null
         }
       }
+    },
+
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
     },
 
     created() {
@@ -238,7 +252,9 @@
        */
       getenviroment_assembleList() {
         this.listLoading = true
-        getenviroment_assembleList(this.listQuery).then(response => {
+        this.search.assembletype = this.tmpassembletype
+        this.search.assemblename = this.tmpassemblename
+        searchenviroment_assemble(this.search).then(response => {
           this.enviroment_assembleList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -248,9 +264,10 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         searchenviroment_assemble(this.search).then(response => {
+          this.itemKey = Math.random()
           this.enviroment_assembleList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -259,20 +276,7 @@
         this.listLoading = false
         this.btnLoading = false
         this.tmpassembletype = this.search.assembletype
-      },
-
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.assembletype = this.tmpassembletype
-        searchenviroment_assemble(this.listQuery).then(response => {
-          this.enviroment_assembleList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
+        this.tmpassemblename = this.search.assemblename
       },
 
       /**
@@ -280,17 +284,17 @@
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getenviroment_assembleList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getenviroment_assembleList()
       },
       /**
        * 表格序号
@@ -300,7 +304,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加测试环境对话框
@@ -314,6 +318,7 @@
         this.tmpenviroment_assemble.assembletype = ''
         this.tmpenviroment_assemble.connectstr = ''
         this.tmpenviroment_assemble.memo = ''
+        this.tmpenviroment_assemble.creator = this.name
       },
       /**
        * 添加测试环境
@@ -346,6 +351,7 @@
         this.tmpenviroment_assemble.assembletype = this.enviroment_assembleList[index].assembletype
         this.tmpenviroment_assemble.connectstr = this.enviroment_assembleList[index].connectstr
         this.tmpenviroment_assemble.memo = this.enviroment_assembleList[index].memo
+        this.tmpenviroment_assemble.creator = this.name
       },
       /**
        * 更新测试环境

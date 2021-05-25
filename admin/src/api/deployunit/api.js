@@ -8,6 +8,22 @@ export function getapiList(params) {
   })
 }
 
+export function getapisbydeployunitid(apiForm) {
+  return request({
+    url: '/api/getapibydeployunitid',
+    method: 'post',
+    data: apiForm
+  })
+}
+
+export function copyapi(apiForm) {
+  return request({
+    url: '/api/copyapi',
+    method: 'post',
+    data: apiForm
+  })
+}
+
 export function getstaticsdeployapi() {
   return request({
     url: '/api/getstaticsdeployapi',

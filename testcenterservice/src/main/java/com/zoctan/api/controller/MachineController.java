@@ -29,7 +29,7 @@ public class MachineController {
         con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'").orCondition("ip = '" + machine.getIp() + "'");
         if(machineService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("环境名或者ip已经存在");
+            return ResultGenerator.genFailedResult("机器名或者ip已经存在");
         }
         else {
             machineService.save(machine);
@@ -90,7 +90,9 @@ public class MachineController {
      */
     @PostMapping("/search")
     public Result search(@RequestBody final Map<String, Object> param) {
-        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
         final List<Machine> list = this.machineService.findMachineWithName(param);
         final PageInfo<Machine> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);

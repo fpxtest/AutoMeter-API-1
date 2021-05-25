@@ -20,6 +20,7 @@
     FROM enviroment_assemble a
     <where>
       <if test="assembletype != null and assembletype != ''">a.assembletype =#{assembletype}</if>
+      <if test="assemblename != null and assemblename != ''">and a.assemblename like CONCAT('%',#{assemblename},'%')</if>
     </where>
   </select>
 
@@ -27,7 +28,7 @@
 
   <update id="updateenviromentassemble" parameterType="com.zoctan.api.entity.EnviromentAssemble">
     update enviroment_assemble set assembletype = #{assembletype}, assemblename = #{assemblename},memo = #{memo},
-    connectstr = #{connectstr}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    connectstr = #{connectstr},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 </mapper>

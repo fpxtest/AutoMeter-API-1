@@ -46,6 +46,7 @@
     </div>
     <el-table
       :data="apiparamsList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -60,6 +61,7 @@
       <el-table-column label="api名" align="center" prop="apiname" width="120"/>
       <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -99,8 +101,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -174,10 +176,11 @@
   </div>
 </template>
 <script>
-  import { getapiparamsList as getapiparamsList, search, addapiparams, updateapiparams, removeapiparams } from '@/api/deployunit/apiparams'
+  import { search, addapiparams, updateapiparams, removeapiparams } from '@/api/deployunit/apiparams'
   import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -192,6 +195,7 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpapiname: null,
         tmpdeployunitname: null,
         apiparamsList: [], // apiparams列表
@@ -202,13 +206,6 @@
           deployunitname: ''
         },
         total: 0, // 数据总数
-        listQuery: {
-          page: 1, // 页码
-          size: 20, // 每页数量
-          listLoading: true,
-          apiname: null,
-          deployunitname: null
-        },
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
@@ -224,7 +221,8 @@
           apiname: '',
           deployunitname: '',
           propertytype: '',
-          keyname: ''
+          keyname: '',
+          creator: ''
         },
         search: {
           page: 1,
@@ -245,6 +243,10 @@
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
+    },
+
     created() {
       this.getapiparamsList()
       this.getdepunitLists()
@@ -257,8 +259,10 @@
        * 获取apiparams列表
        */
       getapiparamsList() {
+        this.search.deployunitname = this.tmpdeployunitname
+        this.search.apiname = this.tmpapiname
         this.listLoading = true
-        getapiparamsList(this.listQuery).then(response => {
+        search(this.search).then(response => {
           this.apiparamsList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -330,9 +334,10 @@
       },
 
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.apiparamsList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -344,37 +349,22 @@
         this.tmpdeployunitname = this.search.deployunitname
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.apiname = this.tmpapiname
-        this.listQuery.deployunitname = this.tmpdeployunitname
-        search(this.listQuery).then(response => {
-          this.apiparamsList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getapiparamsList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getapiparamsList()
       },
       /**
        * 表格序号
@@ -384,7 +374,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加apiparams对话框
@@ -399,6 +389,7 @@
         this.tmpapiparams.apiname = ''
         this.tmpapiparams.propertytype = ''
         this.tmpapiparams.deployunitid = ''
+        this.tmpapiparams.creator = this.name
       },
       /**
        * 添加apiparams
@@ -433,6 +424,7 @@
         this.tmpapiparams.keyname = this.apiparamsList[index].keyname
         this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
         this.tmpapiparams.propertytype = this.apiparamsList[index].propertytype
+        this.tmpapiparams.creator = this.name
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === this.tmpapiparams.deployunitname) {
             this.tmpapiparams.deployunitid = this.deployunitList[i].id

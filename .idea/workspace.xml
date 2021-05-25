@@ -5,94 +5,104 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_base_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_core_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_boot_autoconfigure_2_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_boot_starter_2_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_weekend_1_1_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/httpapi.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/MyTimeTask.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/ScheduleTask.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/httpapi.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiPerformance.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestAssert.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestAssert.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/Testcore.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/Testcore.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestCorebak.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestCorebak.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/postcondition.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/postcondition.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/precondition.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/precondition.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/dto/RequestObject.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/dto/RequestObject.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/HttpApiFunction.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/HttpApiFunction.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/testplantform.iml" afterPath="$PROJECT_DIR$/.idea/testplantform.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/package-lock.json" afterPath="$PROJECT_DIR$/admin/package-lock.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/package.json" afterPath="$PROJECT_DIR$/admin/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/index.html" afterPath="$PROJECT_DIR$/admin/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/assets/apicases.js" afterPath="$PROJECT_DIR$/admin/src/api/assets/apicases.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/deployunit/api.js" afterPath="$PROJECT_DIR$/admin/src/api/deployunit/api.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/deployunit/depunit.js" afterPath="$PROJECT_DIR$/admin/src/api/deployunit/depunit.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js" afterPath="$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js" afterPath="$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/api/reportcenter/apireport.js" afterPath="$PROJECT_DIR$/admin/src/api/reportcenter/apireport.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/router/index.js" afterPath="$PROJECT_DIR$/admin/src/router/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/store/getters.js" afterPath="$PROJECT_DIR$/admin/src/store/getters.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/store/index.js" afterPath="$PROJECT_DIR$/admin/src/store/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/styles/sidebar.scss" afterPath="$PROJECT_DIR$/admin/src/styles/sidebar.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/styles/variables.scss" afterPath="$PROJECT_DIR$/admin/src/styles/variables.scss" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/utils/request.js" afterPath="$PROJECT_DIR$/admin/src/utils/request.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/dashboard/admin/components/PanelGroup.vue" afterPath="$PROJECT_DIR$/admin/src/views/dashboard/admin/components/PanelGroup.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/dashboard/admin/components/PieChart.vue" afterPath="$PROJECT_DIR$/admin/src/views/dashboard/admin/components/PieChart.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/assets/machine/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/assets/machine/index.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/dashboard/admin/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/dashboard/admin/index.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/layout/Layout.vue" afterPath="$PROJECT_DIR$/admin/src/views/layout/Layout.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/deployunit/depunit/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/deployunit/depunit/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/dispatch/dispatch/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/dispatch/dispatch/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/enviroment/enviromentassemble/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/enviroment/enviromentassemble/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/enviroment/envmachine/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/enviroment/envmachine/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/enviroment/macdepunit/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/enviroment/macdepunit/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/enviroment/testenviroment/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/enviroment/testenviroment/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/layout/components/Sidebar/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/layout/components/Sidebar/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/layout/components/index.js" afterPath="$PROJECT_DIR$/admin/src/views/layout/components/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/static/config.js" afterPath="$PROJECT_DIR$/admin/static/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCore.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCore.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/login/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/login/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/reportcenter/apireport/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/reportcenter/apireport/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/reportcenter/apireportstatics/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/reportcenter/apireportstatics/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/system/dictionary/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/system/dictionary/index.vue" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/postcondition.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/postcondition.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/precondition.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/precondition.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/dispatchservice.iml" afterPath="$PROJECT_DIR$/dispatchservice/dispatchservice.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/pom.xml" afterPath="$PROJECT_DIR$/dispatchservice/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/application-dev.yml" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/application-dev.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/GeneralPerformancestatisticsScheduleTask.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/GeneralPerformancestatisticsScheduleTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/entity/ApicasesReport.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/entity/ApicasesReport.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/DispatchMapper.xml" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/DispatchMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/entity/Executeplan.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/entity/Executeplan.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/resources/mapper/ApicasesReportMapper.xml" afterPath="$PROJECT_DIR$/slaverservice/src/main/resources/mapper/ApicasesReportMapper.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/resources/mapper/DispatchMapper.xml" afterPath="$PROJECT_DIR$/slaverservice/src/main/resources/mapper/DispatchMapper.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DeployunitController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DeployunitController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DispatchController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DispatchController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentAssembleController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentAssembleController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanbatchController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanbatchController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MachineController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MachineController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/SlaverController.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/SlaverController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Api.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Api.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApiParams.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApiParams.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Deployunit.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Deployunit.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Enviroment.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Enviroment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/EnviromentAssemble.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/EnviromentAssemble.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Envmachine.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Envmachine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Executeplan.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Executeplan.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Executeplanbatch.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Executeplanbatch.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Macdepunit.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Macdepunit.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Machine.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Machine.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanbatchMapper.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanbatchMapper.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApiService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApiService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/DeployunitService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/DeployunitService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanTestcaseService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanTestcaseService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanbatchService.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanbatchService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApiServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApiServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/DeployunitServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/DeployunitServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanTestcaseServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanTestcaseServiceImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanbatchServiceImpl.java" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanbatchServiceImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiParamsMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiParamsMapper.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/DeployunitMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/DeployunitMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentAssembleMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentAssembleMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnvmachineMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnvmachineMapper.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanMapper.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanbatchMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanbatchMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/MacdepunitMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/MacdepunitMapper.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/MachineMapper.xml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/MachineMapper.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/admin/node_modules/" />
     <ignored path="$PROJECT_DIR$/testcenterservice/target/" />
@@ -124,93 +134,80 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GeneralStaticsDatasScheduleTask.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/Scheduled/GeneralStaticsDatasScheduleTask.java">
+      <file leaf-file-name="index.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="980">
-              <caret line="135" column="40" lean-forward="false" selection-start-line="135" selection-start-column="40" selection-end-line="135" selection-end-column="40" />
+            <state relative-caret-position="-3030">
+              <caret line="105" column="22" lean-forward="false" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="22" />
               <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HttpApiFunction.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="53" column="22" lean-forward="false" selection-start-line="53" selection-start-column="22" selection-end-line="53" selection-end-column="22" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/src/router/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="140" column="0" lean-forward="false" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-                <marker date="1618644359000" expanded="true" signature="1944:8581" ph="[...]" />
-                <marker date="1618644359000" expanded="true" signature="4853:5853" ph="{&quot;name&quot;: '报告中心'...}" />
-                <marker date="1618644359000" expanded="true" signature="4957:5849" ph="[...]" />
+                <element signature="n#el-form-item#0;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form-item#1;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form-item#2;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form-item#3;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form-item#4;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#div#0;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form-item#5;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-form-item#6;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-button#1;n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-button#2;n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+                <element signature="n#el-button#3;n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="index.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue">
+        <entry file="file://$PROJECT_DIR$/admin/src/views/dispatch/dispatch/index.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="24" column="23" lean-forward="false" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+            <state relative-caret-position="255">
+              <caret line="17" column="30" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestAssert.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java">
+      <file leaf-file-name="ApicasesController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="54" column="19" lean-forward="false" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
+            <state relative-caret-position="2116">
+              <caret line="192" column="33" lean-forward="false" selection-start-line="192" selection-start-column="33" selection-end-line="192" selection-end-column="33" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApicasesReportstaticsMapper.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportstaticsMapper.xml">
+      <file leaf-file-name="index.vue" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/admin/src/views/reportcenter/apireportstatics/index.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="28" column="48" lean-forward="false" selection-start-line="28" selection-start-column="14" selection-end-line="28" selection-end-column="48" />
-              <folding>
-                <marker date="1618573853000" expanded="true" signature="1338:1598" ph="SELECT testp... apicases_reportstatics" />
-                <marker date="1618573853000" expanded="true" signature="1520:1567" ph="SELECT * FRO... statics_planandcases" />
-                <marker date="1618573853000" expanded="true" signature="1520:1568" ph="SELECT * FRO... statics_planandcases" />
-                <marker date="1618573853000" expanded="true" signature="1520:1578" ph="SELECT * FRO... apicases_reportstatics" />
-                <marker date="1618573853000" expanded="true" signature="1693:1957" ph="SELECT deplo... apicases_reportstatics" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.vue" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="25" column="13" lean-forward="false" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+            <state relative-caret-position="60">
+              <caret line="4" column="68" lean-forward="true" selection-start-line="4" selection-start-column="68" selection-end-line="4" selection-end-column="68" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApicasesReportstaticsService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportstaticsService.java">
+      <file leaf-file-name="ApicasesReportController.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="124">
+              <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EnviromentMapper.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/EnviromentMapper.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccountRoleService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/AccountRoleService.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="120">
               <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
@@ -219,27 +216,39 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApicasesReportstaticsMapper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportstaticsMapper.java">
+      <file leaf-file-name="ApicasesReportServiceImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="11" column="66" lean-forward="false" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="66" />
+            <state relative-caret-position="60">
+              <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApicasesReportstatics.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApicasesReportstatics.java">
+      <file leaf-file-name="ApicasesMapper.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <state relative-caret-position="301">
+              <caret line="29" column="19" lean-forward="false" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
               <folding>
-                <element signature="e#367#368#0" expanded="true" />
-                <element signature="e#402#403#0" expanded="true" />
-                <element signature="e#456#457#0" expanded="true" />
-                <element signature="e#504#505#0" expanded="true" />
+                <marker date="1621094144000" expanded="true" signature="2517:2628" ph="SELECT a.cas... apicases" />
+                <marker date="1621094144000" expanded="true" signature="2706:2965" ph="SELECT id,ap... apicases" />
+                <marker date="1621094144000" expanded="true" signature="3042:3103" ph="SELECT count... apicases" />
+                <marker date="1621094144000" expanded="true" signature="3198:3582" ph="update apica... " />
+                <marker date="1621094144000" expanded="true" signature="3669:3751" ph="SELECT deplo... apicases" />
+                <marker date="1621094144000" expanded="true" signature="3833:3896" ph="SELECT * FRO... apicases" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AccountController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/AccountController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-495">
+              <caret line="29" column="25" lean-forward="false" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="25" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -255,47 +264,43 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Request</find>
-      <find>push</find>
-      <find>PlanList</find>
-      <find>hasTagsView</find>
-      <find>tagsView</find>
-      <find>Chart</find>
-      <find>chartData</find>
-      <find>chart-wrapper</find>
-      <find>PieChart</find>
-      <find>panel-group</find>
-      <find>toggleSideBar</find>
-      <find>piedata</find>
-      <find>backgroundColor</find>
-      <find>menuText</find>
-      <find>acti</find>
-      <find>getstaticsdeploynames</find>
-      <find>piedeployunittypedata</find>
-      <find>getapireportstaticsList</find>
-      <find>PlanList111</find>
-      <find>PlanDateDat</find>
-      <find>PlanCaseData</find>
-      <find>LineList</find>
-      <find>//</find>
-      <find>执行计划</find>
-      <find>getStaticsPlanCasesList</find>
-      <find>Dic</find>
-      <find>LineName</find>
-      <find>apicases_reportstatics</find>
-      <find>findApiWithName</find>
-      <find>staticsDate</find>
+      <find>addexecuteplantestcase</find>
+      <find>executeplancaseList</find>
+      <find>testcaselastList</find>
+      <find>testcaseList</find>
+      <find>adddepunit</find>
+      <find>caseList</find>
+      <find>name</find>
+      <find>removedepunit</find>
+      <find>removeexecuteplan</find>
+      <find>removebatchexecuteplantestcase</find>
+      <find>showplanbatchDialog</find>
+      <find>removeexecuteplantestcase</find>
+      <find>casemultipleSelection</find>
+      <find>getexecuteplanList</find>
+      <find>total</find>
+      <find>listQuery</find>
+      <find>tmpexecuteplanbatch</find>
+      <find>findApicasereportWithName</find>
+      <find>testplanselectChanged</find>
+      <find>tmpapireport</find>
+      <find>searchcaseBy</find>
+      <find>$refs</find>
+      <find>refs</find>
+      <find>searchBy</find>
+      <find>ref</find>
+      <find>searchcase</find>
+      <find>search</find>
+      <find>is requied</find>
+      <find>is required</find>
+      <find>validate</find>
     </findStrings>
     <replaceStrings>
-      <replace>执行机</replace>
-      <replace>executeplan_ext</replace>
-      <replace>执行计划</replace>
       <replace>executeplan</replace>
       <replace>tmpexecuteplan</replace>
       <replace>executeplan_testcase</replace>
       <replace>apicases_report</replace>
       <replace>testcenterservice</replace>
-      <replace>executeplanbatch</replace>
       <replace>enviromentassemble</replace>
       <replace>apicases_condition</replace>
       <replace>enviroment_assemble</replace>
@@ -317,6 +322,10 @@
       <replace>/</replace>
       <replace>StaticsPlanCases</replace>
       <replace>statics_deployunitandcases</replace>
+      <replace>executeplanbatch</replace>
+      <replace>executeplanbatch:</replace>
+      <replace>执行计划批次</replace>
+      <replace>executeplancaseList</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/testcenterservice</dir>
@@ -345,57 +354,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiMapper.xml" />
+        <option value="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/dashboard/admin/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/utils/request.js" />
+        <option value="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" />
+        <option value="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
+        <option value="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
+        <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" />
+        <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiPerformance.java" />
+        <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/postcondition.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MachineController.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentController.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/assets/machine/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/enviroment/testenviroment/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/enviroment/envmachine/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentAssembleController.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/enviroment/enviromentassemble/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentAssembleMapper.xml" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanMapper.xml" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/enviroment/macdepunit/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/deployunit/depunit/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiParamsController.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiParamsMapper.xml" />
+        <option value="$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/SlaverController.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DeployunitController.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DispatchController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java" />
+        <option value="$PROJECT_DIR$/admin/src/router/index.js" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanTestcaseService.java" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanTestcaseServiceImpl.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java" />
-        <option value="$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java" />
         <option value="$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/statics_planandcases.sql" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/StaticsPlanandcasesService.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/StaticsPlanandcasesServiceImpl.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/StaticsData.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/StaticsDataForPie.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/dto/StaticsDataForLine.java" />
-        <option value="$PROJECT_DIR$/admin/src/views/dashboard/admin/components/DeployLineMarker.vue" />
-        <option value="$PROJECT_DIR$/admin/src/views/dashboard/admin/components/LineMarker.vue" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/statics_deployunitandcases.sql" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/pom.xml" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/StaticsDeployunitandcasesService.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/StaticsDeployunitandcasesServiceImpl.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/StaticsDeployunitandcasesController.java" />
-        <option value="$PROJECT_DIR$/admin/src/api/dashboard/StaticsPlanandcases.js" />
-        <option value="$PROJECT_DIR$/admin/src/views/dashboard/admin/index.vue" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportstaticsService.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/StaticsPlanandcasesMapper.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/StaticsPlanandcasesController.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/StaticsPlanandcasesMapper.xml" />
-        <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java" />
-        <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/ApicasesReportstatics.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_reportstatics.sql" />
-        <option value="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" />
-        <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/DeployunitMapper.xml" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/StaticsDeployunitandcasesMapper.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/StaticsDeployunitandcasesMapper.xml" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApicasesReportstatics.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportstaticsMapper.xml" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportstaticsMapper.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/Scheduled/GeneralStaticsDatasScheduleTask.java" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
+        <option value="$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/dispatch/dispatch/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanbatchController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/executecenter/executeplanbatch/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/reportcenter/apireport/index.vue" />
         <option value="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" />
-        <option value="$PROJECT_DIR$/admin/src/router/index.js" />
-        <option value="$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue" />
-        <option value="$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue" />
+        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java" />
+        <option value="$PROJECT_DIR$/admin/src/views/executecenter/executeplancase/index.vue" />
+        <option value="$PROJECT_DIR$/admin/src/views/reportcenter/apireportstatics/index.vue" />
       </list>
     </option>
   </component>
@@ -526,7 +535,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -549,330 +557,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testcenterservice" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="mapper" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api-jmeter-autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api-jmeter-autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api-jmeter-autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api-jmeter-autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="httpapitestcase" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api-jmeter-autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="autotest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="admin" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -939,7 +623,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="deployunit" />
+              <option name="myItemId" value="reportcenter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="apireportstatics" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -965,11 +653,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="deployunit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="api" />
+              <option name="myItemId" value="reportcenter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -995,99 +679,18 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
+              <option name="myItemId" value="reportcenter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cases" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cases" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="apicases" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="testplantform" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="admin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="router" />
+              <option name="myItemId" value="apiperformancestatistics" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="ProjectViewState">
@@ -1103,33 +706,33 @@
     <property name="js.eslint.eslintPackage" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core" />
-      <recent name="$PROJECT_DIR$/admin/src/api" />
-      <recent name="$PROJECT_DIR$/admin/src/styles" />
-      <recent name="$PROJECT_DIR$/admin/src/views/dashboard/admin/components" />
-      <recent name="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.zoctan.api.dto" />
-      <recent name="com.zoctan.api.entity" />
-      <recent name="com.zoctan.api.mapper" />
-      <recent name="com.api.autotest.dto" />
-      <recent name="com.api.autotest.core" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/testcenterservice/src/main/resources" />
       <recent name="$PROJECT_DIR$/admin/src/views/dashboard/admin" />
       <recent name="$PROJECT_DIR$/admin/src/views/dashboard" />
       <recent name="$PROJECT_DIR$/admin/src/views/assets/apicases/testcase" />
       <recent name="$PROJECT_DIR$/admin/src/views/system" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.zoctan.api.core.service" />
+      <recent name="com.zoctan.api.core.config" />
+      <recent name="com.zoctan.api.dto" />
+      <recent name="com.zoctan.api.entity" />
+      <recent name="com.zoctan.api.mapper" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/admin/src/views/executecenter" />
+      <recent name="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core" />
+      <recent name="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core" />
+      <recent name="$PROJECT_DIR$/admin/src/api" />
+      <recent name="$PROJECT_DIR$/admin/src/styles" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.testcenterservice">
@@ -2021,7 +1624,9 @@
       <workItem from="1615107653522" duration="1935000" />
       <workItem from="1615119752049" duration="146332000" />
       <workItem from="1616744413598" duration="163580000" />
-      <workItem from="1618279085070" duration="53487000" />
+      <workItem from="1618279085070" duration="130211000" />
+      <workItem from="1619160983762" duration="7595000" />
+      <workItem from="1619422840400" duration="136786000" />
     </task>
     <servers />
   </component>
@@ -2058,7 +1663,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1325293000" />
+    <option name="totallyTimeSpent" value="1546398000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2070,12 +1675,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="773" extended-state="6" />
-    <editor active="false" />
+    <frame x="0" y="23" width="1280" height="773" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30543318" sideWeight="0.503231" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2716593" sideWeight="0.50646204" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19386107" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -2084,7 +1689,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24959612" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3876652" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4537445" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2092,14 +1697,14 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35095447" sideWeight="0.49676898" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41409692" sideWeight="0.49353796" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32892805" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37738618" sideWeight="0.49676898" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2374798" sideWeight="0.49095023" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2716593" sideWeight="0.49353796" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25201938" sideWeight="0.49095023" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32956383" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31502423" sideWeight="0.5090498" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40088105" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22026432" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2141,12 +1746,6 @@
           <line>171</line>
           <properties />
           <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java</url>
-          <line>59</line>
-          <properties />
-          <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/util/AesUtils.java</url>
@@ -2204,7 +1803,7 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java</url>
-          <line>193</line>
+          <line>228</line>
           <properties />
           <option name="timeStamp" value="29" />
         </line-breakpoint>
@@ -2226,6 +1825,24 @@
           <properties />
           <option name="timeStamp" value="46" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MachineController.java</url>
+          <line>34</line>
+          <properties />
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentController.java</url>
+          <line>34</line>
+          <properties />
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java</url>
+          <line>46</line>
+          <properties />
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
         <line-breakpoint type="java-field">
           <url>file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/filter/AuthenticationFilter.java</url>
           <line>36</line>
@@ -2236,9 +1853,14 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="54" />
+      <option name="time" value="69" />
     </breakpoint-manager>
     <watches-manager>
+      <configuration name="SpringBootApplicationConfigurationType">
+        <watch expression="param.get(&quot;sourcedeployunitid&quot;)" language="JAVA" />
+        <watch expression="ep.getUsetype()" language="JAVA" />
+        <watch expression="ep.getUsetype()==&quot;性能&quot;" language="JAVA" />
+      </configuration>
       <configuration name="Application">
         <watch expression="data" language="JAVA" />
         <watch expression="data.get(&quot;propertytype&quot;)" language="JAVA" />
@@ -2250,408 +1872,452 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/admin/src/views/dashboard/admin/index.vue">
+    <entry file="file://$PROJECT_DIR$/admin/src/views/assets/machine/index.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="90" column="0" lean-forward="false" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+          <caret line="261" column="19" lean-forward="false" selection-start-line="261" selection-start-column="0" selection-end-line="262" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/DispatchController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="65" column="8" lean-forward="false" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="75" column="27" lean-forward="false" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="27" />
           <folding>
-            <element signature="n#style#0;n#el-row#1;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#el-row#2;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#2201#2249#0" expanded="true" />
-            <element signature="e#3068#3571#0" expanded="false" />
-            <marker date="1618470111000" expanded="false" signature="1676:1713" ph="..." />
-            <marker date="1618470111000" expanded="false" signature="1887:1906" ph="..." />
-            <marker date="1618470111000" expanded="false" signature="2072:2091" ph="..." />
+            <element signature="e#5515#5600#0" expanded="true" />
+            <marker date="1620956451000" expanded="true" signature="7254:7394" ph="{...}" />
+            <marker date="1620956451000" expanded="true" signature="7409:7458" ph="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/Scheduled/GeneralPerformancestatisticsScheduleTask.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/SlaverController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="41" column="13" lean-forward="false" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
+        <state relative-caret-position="299">
+          <caret line="77" column="8" lean-forward="false" selection-start-line="77" selection-start-column="8" selection-end-line="79" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java">
+    <entry file="file://$PROJECT_DIR$/admin/src/router/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="40" column="13" lean-forward="false" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="315">
+          <caret line="131" column="26" lean-forward="true" selection-start-line="131" selection-start-column="26" selection-end-line="131" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#21#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/StaticsDeployunitandcasesServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="24" column="78" lean-forward="false" selection-start-line="24" selection-start-column="78" selection-end-line="24" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/StaticsDeployunitandcases.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="80" column="40" lean-forward="false" selection-start-line="80" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/src.zip!/java/util/Calendar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="1610" column="27" lean-forward="false" selection-start-line="1610" selection-start-column="27" selection-end-line="1610" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/StaticsDeployunitandcasesController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="67" column="30" lean-forward="true" selection-start-line="67" selection-start-column="30" selection-end-line="67" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportService.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
-          <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-838">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="24" column="20" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="20" />
           <folding>
-            <marker date="1618281788000" expanded="true" signature="2484:2595" ph="SELECT a.cas... apicases" />
-            <marker date="1618281788000" expanded="true" signature="2673:2932" ph="SELECT id,ap... apicases" />
-            <marker date="1618281788000" expanded="true" signature="3009:3070" ph="SELECT count... apicases" />
-            <marker date="1618281788000" expanded="true" signature="3165:3549" ph="update apica... " />
-            <marker date="1618281788000" expanded="true" signature="3636:3718" ph="SELECT deplo... apicases" />
+            <marker date="1619589415000" expanded="true" signature="1738:1792" ph="SELECT a.* F... executeplan" />
+            <marker date="1619589415000" expanded="true" signature="1865:1914" ph="SELECT a.id,... executeplan" />
+            <marker date="1619589415000" expanded="true" signature="1993:2067" ph="SELECT a.id,... executeplan" />
+            <marker date="1619589415000" expanded="true" signature="2150:2188" ph="SELECT count... executeplan" />
+            <marker date="1619589415000" expanded="true" signature="2294:2595" ph="update execu... " />
+            <marker date="1619589415000" expanded="true" signature="2652:2768" ph="update execu... " />
+            <marker date="1619589415000" expanded="true" signature="2847:2894" ph="SELECT a.exe... executeplan" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="16" column="42" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state relative-caret-position="195">
+          <caret line="18" column="83" lean-forward="false" selection-start-line="18" selection-start-column="83" selection-end-line="18" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="593" column="6" lean-forward="false" selection-start-line="593" selection-start-column="6" selection-end-line="608" selection-end-column="8" />
+          <folding>
+            <element signature="n#el-table-column#9;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-table-column#11;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-table-column#12;n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-dialog#1;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form#0;n#el-dialog#1;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-dialog#2;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form#0;n#el-dialog#2;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#14509#14660#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/api/deployunit/api.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="42" column="25" lean-forward="false" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/deployunit/apiparams/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="290" column="16" lean-forward="true" selection-start-line="290" selection-start-column="0" selection-end-line="291" selection-end-column="0" />
+          <folding>
+            <element signature="e#6992#7091#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/api/executecenter/executeplan.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-53">
+          <caret line="24" column="29" lean-forward="true" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Apicases.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="129" column="4" lean-forward="false" selection-start-line="129" selection-start-column="4" selection-end-line="132" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="132" column="7" lean-forward="true" selection-start-line="132" selection-start-column="7" selection-end-line="132" selection-end-column="7" />
+          <folding>
+            <element signature="e#2075#2076#0" expanded="true" />
+            <element signature="e#2105#2106#0" expanded="true" />
+            <element signature="e#2151#2152#0" expanded="true" />
+            <element signature="e#2189#2190#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/api/deployunit/depunit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="63" column="0" lean-forward="false" selection-start-line="63" selection-start-column="0" selection-end-line="68" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/deployunit/depunit/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="341" column="6" lean-forward="false" selection-start-line="341" selection-start-column="6" selection-end-line="359" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/api/executecenter/executeplantestcase.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="43" column="43" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="43" />
+          <folding>
+            <marker date="1621133532000" expanded="true" signature="1106:1213" ph="{...}" />
+            <marker date="1621133532000" expanded="true" signature="1125:1210" ph="{&quot;method&quot;: 'delete'...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="41" column="44" lean-forward="false" selection-start-line="41" selection-start-column="44" selection-end-line="41" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanTestcaseService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="19" column="20" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state relative-caret-position="184">
+          <caret line="17" column="9" lean-forward="false" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanTestcaseServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="31" column="16" lean-forward="false" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="43" column="2" lean-forward="false" selection-start-line="43" selection-start-column="2" selection-end-line="49" selection-end-column="11" />
+        <state relative-caret-position="134">
+          <caret line="21" column="33" lean-forward="false" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
           <folding>
-            <marker date="1618299113000" expanded="true" signature="1601:1845" ph="select a.tes... executeplan_testcase" />
-            <marker date="1618299113000" expanded="true" signature="1936:2053" ph="select COUNT... executeplan_testcase" />
-            <marker date="1618299113000" expanded="true" signature="2138:2222" ph="select COUNT... executeplan_testcase" />
-            <marker date="1618299113000" expanded="true" signature="2305:2477" ph="select a.dep... executeplan_testcase" />
-            <marker date="1618299113000" expanded="true" signature="3056:3156" ph="DELETE from " />
-            <marker date="1618299113000" expanded="true" signature="3234:3398" ph="SELECT b.exe... executeplan_testcase" />
+            <marker date="1621134902000" expanded="true" signature="2161:2405" ph="select a.tes... executeplan_testcase" />
+            <marker date="1621134902000" expanded="true" signature="2496:2613" ph="select COUNT... executeplan_testcase" />
+            <marker date="1621134902000" expanded="true" signature="2698:2782" ph="select COUNT... executeplan_testcase" />
+            <marker date="1621134902000" expanded="true" signature="2865:3037" ph="select a.dep... executeplan_testcase" />
+            <marker date="1621134902000" expanded="true" signature="3641:3741" ph="DELETE from " />
+            <marker date="1621134902000" expanded="true" signature="3806:4009" ph="DELETE from " />
+            <marker date="1621134902000" expanded="true" signature="4087:4251" ph="SELECT b.exe... executeplan_testcase" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/Executeplan.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-494">
-          <caret line="80" column="8" lean-forward="true" selection-start-line="80" selection-start-column="8" selection-end-line="85" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/StaticsPlanandcasesController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="106" column="44" lean-forward="false" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApiMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="22" column="29" lean-forward="false" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="29" />
-          <folding>
-            <marker date="1618285401000" expanded="true" signature="1660:1730" ph="SELECT a.* F... api" />
-            <marker date="1618285401000" expanded="true" signature="1823:1918" ph="SELECT a.* F... api" />
-            <marker date="1618285401000" expanded="true" signature="1993:2023" ph="SELECT count... api" />
-            <marker date="1618285401000" expanded="true" signature="2109:2431" ph="update api s... " />
-            <marker date="1618285401000" expanded="true" signature="2512:2586" ph="SELECT deplo... api" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="17" column="30" lean-forward="true" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="62" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/StaticsPlanandcases.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="683">
-          <caret line="53" column="28" lean-forward="false" selection-start-line="53" selection-start-column="17" selection-end-line="53" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/src.zip!/java/text/Format.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="155" column="24" lean-forward="false" selection-start-line="155" selection-start-column="24" selection-end-line="155" selection-end-column="24" />
-          <folding>
-            <element signature="e#5542#5543#0" expanded="false" />
-            <element signature="e#5629#5630#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/mybatis/mybatis/3.4.6/mybatis-3.4.6.jar!/org/apache/ibatis/binding/MapperProxy.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="44" column="0" lean-forward="false" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-          <folding>
-            <element signature="e#1405#1406#0" expanded="true" />
-            <element signature="e#1440#1441#0" expanded="true" />
-            <element signature="e#1496#1497#0" expanded="true" />
-            <element signature="e#1544#1545#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/apicases_reportstatics.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="40" column="20" lean-forward="false" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/ApicasesReportstatics.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="5" lean-forward="false" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding>
-            <element signature="e#190#191#0" expanded="true" />
-            <element signature="e#225#226#0" expanded="true" />
-            <element signature="e#281#282#0" expanded="true" />
-            <element signature="e#329#330#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/application.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1678">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanTestcaseController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="95" column="41" lean-forward="true" selection-start-line="95" selection-start-column="41" selection-end-line="95" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="59" column="39" lean-forward="false" selection-start-line="59" selection-start-column="39" selection-end-line="59" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4500">
-          <caret line="311" column="33" lean-forward="false" selection-start-line="311" selection-start-column="33" selection-end-line="311" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="110" column="51" lean-forward="false" selection-start-line="110" selection-start-column="51" selection-end-line="110" selection-end-column="51" />
+        <state relative-caret-position="-75">
+          <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
+        <state relative-caret-position="158">
           <caret line="32" column="9" lean-forward="false" selection-start-line="32" selection-start-column="9" selection-end-line="32" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="47" column="52" lean-forward="false" selection-start-line="47" selection-start-column="52" selection-end-line="47" selection-end-column="52" />
+        <state relative-caret-position="-237">
+          <caret line="74" column="16" lean-forward="false" selection-start-line="74" selection-start-column="16" selection-end-line="74" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/5.1.8.RELEASE/spring-context-5.1.8.RELEASE.jar!/org/springframework/scheduling/support/ScheduledMethodRunnable.class">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+        <state relative-caret-position="221">
+          <caret line="192" column="8" lean-forward="false" selection-start-line="192" selection-start-column="8" selection-end-line="194" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/5.1.8.RELEASE/spring-context-5.1.8.RELEASE.jar!/org/springframework/scheduling/support/DelegatingErrorHandlingRunnable.class">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ExecuteplanbatchController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="22" column="23" lean-forward="false" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
+        <state relative-caret-position="280">
+          <caret line="132" column="8" lean-forward="false" selection-start-line="132" selection-start-column="8" selection-end-line="132" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-context/5.1.8.RELEASE/spring-context-5.1.8.RELEASE.jar!/org/springframework/scheduling/concurrent/ReschedulingRunnable.class">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+        <state relative-caret-position="190">
+          <caret line="142" column="8" lean-forward="false" selection-start-line="142" selection-start-column="8" selection-end-line="144" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="29" column="22" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ExecuteplanMapper.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="25" column="2" lean-forward="false" selection-start-line="25" selection-start-column="2" selection-end-line="29" selection-end-column="11" />
+        <state relative-caret-position="136">
+          <caret line="22" column="39" lean-forward="false" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="39" />
           <folding>
-            <marker date="1618298445000" expanded="true" signature="1260:1314" ph="SELECT a.* F... executeplan" />
-            <marker date="1618298445000" expanded="true" signature="1387:1436" ph="SELECT a.id,... executeplan" />
-            <marker date="1618298445000" expanded="true" signature="1515:1589" ph="SELECT a.id,... executeplan" />
-            <marker date="1618298445000" expanded="true" signature="1672:1710" ph="SELECT count... executeplan" />
-            <marker date="1618298445000" expanded="true" signature="1816:2040" ph="update execu... " />
-            <marker date="1618298445000" expanded="true" signature="2097:2213" ph="update execu... " />
-            <marker date="1618298445000" expanded="true" signature="2292:2339" ph="SELECT a.exe... executeplan" />
+            <marker date="1616661243000" expanded="true" signature="2970:3170" ph="SELECT b.cas... apicases_report" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/DeployunitMapper.xml">
+    <entry file="file://$PROJECT_DIR$/admin/src/views/reportcenter/apireport/index.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="55" column="20" lean-forward="true" selection-start-line="55" selection-start-column="20" selection-end-line="55" selection-end-column="20" />
+        <state relative-caret-position="5970">
+          <caret line="415" column="31" lean-forward="false" selection-start-line="415" selection-start-column="19" selection-end-line="415" selection-end-column="31" />
           <folding>
-            <marker date="1618573457000" expanded="true" signature="1208:1314" ph="SELECT a.dep... deployunit" />
-            <marker date="1618573457000" expanded="true" signature="1770:1807" ph="SELECT count... deployunit" />
-            <marker date="1618573457000" expanded="true" signature="1893:1936" ph="SELECT deplo... deployunit" />
-            <marker date="1618573457000" expanded="true" signature="2032:2227" ph="update deplo... " />
-            <marker date="1618573457000" expanded="true" signature="2310:2363" ph="SELECT a.* F... deployunit" />
+            <element signature="e#7594#7695#0" expanded="false" />
+            <element signature="e#11270#11301#0" expanded="false" />
+            <element signature="e#11326#11570#0" expanded="false" />
+            <element signature="e#11579#11610#0" expanded="false" />
+            <element signature="e#11634#11833#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java">
+    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="43" column="35" lean-forward="false" selection-start-line="43" selection-start-column="15" selection-end-line="43" selection-end-column="35" />
+        <state relative-caret-position="192">
+          <caret line="174" column="25" lean-forward="false" selection-start-line="174" selection-start-column="25" selection-end-line="174" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/StaticsPlanandcasesMapper.java">
+    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="11" column="27" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state relative-caret-position="-273">
+          <caret line="406" column="30" lean-forward="false" selection-start-line="406" selection-start-column="30" selection-end-line="406" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/StaticsPlanandcasesMapper.xml">
+    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="27" column="2" lean-forward="false" selection-start-line="27" selection-start-column="2" selection-end-line="33" selection-end-column="11" />
-          <folding>
-            <marker date="1618483984000" expanded="true" signature="1256:1334" ph="SELECT * FRO... statics_planandcases" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/StaticsDeployunitandcasesMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state relative-caret-position="777">
+          <caret line="116" column="41" lean-forward="false" selection-start-line="116" selection-start-column="41" selection-end-line="116" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/StaticsDeployunitandcasesMapper.xml">
+    <entry file="file://$PROJECT_DIR$/admin/src/views/executecenter/executeplan/index.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="30" column="50" lean-forward="false" selection-start-line="30" selection-start-column="50" selection-end-line="30" selection-end-column="50" />
+        <state relative-caret-position="290">
+          <caret line="823" column="0" lean-forward="false" selection-start-line="823" selection-start-column="0" selection-end-line="823" selection-end-column="0" />
           <folding>
-            <marker date="1618573457000" expanded="true" signature="1287:1371" ph="SELECT * FRO... statics_deployunitandcases" />
+            <element signature="e#25115#26230#0" expanded="false" />
+            <element signature="e#26239#26279#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApicasesReportstatics.java">
+    <entry file="file://$PROJECT_DIR$/admin/src/views/executecenter/executeplanbatch/index.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        <state relative-caret-position="190">
+          <caret line="17" column="34" lean-forward="false" selection-start-line="17" selection-start-column="34" selection-end-line="17" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/dist/static/js/0.ef7723600964e6d8c056.js.map">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="0" column="2508373" lean-forward="false" selection-start-line="0" selection-start-column="2508373" selection-end-line="0" selection-end-column="2508373" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="sourcemapFileViewerProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/executecenter/executeplancase/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="113" column="40" lean-forward="false" selection-start-line="113" selection-start-column="40" selection-end-line="113" selection-end-column="40" />
           <folding>
-            <element signature="e#367#368#0" expanded="true" />
-            <element signature="e#402#403#0" expanded="true" />
-            <element signature="e#456#457#0" expanded="true" />
-            <element signature="e#504#505#0" expanded="true" />
+            <element signature="n#el-pagination#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-table#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-pagination#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#7982#8049#0" expanded="false" />
+            <element signature="e#11058#11228#0" expanded="false" />
+            <element signature="e#11281#11315#0" expanded="false" />
+            <element signature="e#11356#11458#0" expanded="false" />
+            <element signature="e#11953#11986#0" expanded="false" />
+            <element signature="e#13142#13196#0" expanded="false" />
+            <element signature="e#13226#13334#0" expanded="false" />
+            <element signature="e#13342#13393#0" expanded="false" />
+            <element signature="e#13513#13689#0" expanded="false" />
+            <element signature="e#19266#19352#0" expanded="false" />
+            <element signature="e#19466#20759#0" expanded="false" />
+            <element signature="e#20768#20800#0" expanded="false" />
+            <element signature="e#23281#23340#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/ApicasesReportstaticsService.java">
+    <entry file="file://$PROJECT_DIR$/admin/src/views/enviroment/testenviroment/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="123" column="23" lean-forward="true" selection-start-line="123" selection-start-column="23" selection-end-line="123" selection-end-column="23" />
+          <folding>
+            <element signature="n#el-form#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-table#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-pagination#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="e#5186#5293#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/settings.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/permission.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#29#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1257">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/static/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="16" column="20" lean-forward="false" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#21#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/dispatch/dispatch/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="30" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3030">
+          <caret line="105" column="22" lean-forward="false" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="22" />
+          <folding>
+            <element signature="n#el-form-item#0;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form-item#1;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form-item#2;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form-item#3;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form-item#4;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form-item#5;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-form-item#6;n#el-form#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-button#1;n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-button#2;n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#el-button#3;n#div#0;n#el-dialog#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/EnviromentMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/AccountRoleService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="9" column="17" lean-forward="false" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
@@ -2659,81 +2325,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportstaticsMapper.xml">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="28" column="48" lean-forward="false" selection-start-line="28" selection-start-column="14" selection-end-line="28" selection-end-column="48" />
-          <folding>
-            <marker date="1618573853000" expanded="true" signature="1338:1598" ph="SELECT testp... apicases_reportstatics" />
-            <marker date="1618573853000" expanded="true" signature="1520:1567" ph="SELECT * FRO... statics_planandcases" />
-            <marker date="1618573853000" expanded="true" signature="1520:1568" ph="SELECT * FRO... statics_planandcases" />
-            <marker date="1618573853000" expanded="true" signature="1520:1578" ph="SELECT * FRO... apicases_reportstatics" />
-            <marker date="1618573853000" expanded="true" signature="1693:1957" ph="SELECT deplo... apicases_reportstatics" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/mapper/ApicasesReportstaticsMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="11" column="66" lean-forward="false" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="66" />
+        <state relative-caret-position="60">
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/Scheduled/GeneralStaticsDatasScheduleTask.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesMapper.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="980">
-          <caret line="135" column="40" lean-forward="false" selection-start-line="135" selection-start-column="40" selection-end-line="135" selection-end-column="40" />
+        <state relative-caret-position="301">
+          <caret line="29" column="19" lean-forward="false" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <marker date="1621094144000" expanded="true" signature="2517:2628" ph="SELECT a.cas... apicases" />
+            <marker date="1621094144000" expanded="true" signature="2706:2965" ph="SELECT id,ap... apicases" />
+            <marker date="1621094144000" expanded="true" signature="3042:3103" ph="SELECT count... apicases" />
+            <marker date="1621094144000" expanded="true" signature="3198:3582" ph="update apica... " />
+            <marker date="1621094144000" expanded="true" signature="3669:3751" ph="SELECT deplo... apicases" />
+            <marker date="1621094144000" expanded="true" signature="3833:3896" ph="SELECT * FRO... apicases" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestAssert.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/AccountController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="54" column="19" lean-forward="false" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
+        <state relative-caret-position="-495">
+          <caret line="29" column="25" lean-forward="false" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java">
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="53" column="22" lean-forward="false" selection-start-line="53" selection-start-column="22" selection-end-line="53" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/router/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="140" column="0" lean-forward="false" selection-start-line="140" selection-start-column="0" selection-end-line="140" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-            <marker date="1618644359000" expanded="true" signature="1944:8581" ph="[...]" />
-            <marker date="1618644359000" expanded="true" signature="4853:5853" ph="{&quot;name&quot;: '报告中心'...}" />
-            <marker date="1618644359000" expanded="true" signature="4957:5849" ph="[...]" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="24" column="23" lean-forward="false" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+        <state relative-caret-position="2116">
+          <caret line="192" column="33" lean-forward="false" selection-start-line="192" selection-start-column="33" selection-end-line="192" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin/src/views/deployunit/api/index.vue">
+    <entry file="file://$PROJECT_DIR$/admin/src/views/reportcenter/apireportstatics/index.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="25" column="13" lean-forward="false" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        <state relative-caret-position="60">
+          <caret line="4" column="68" lean-forward="true" selection-start-line="4" selection-start-column="68" selection-end-line="4" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="87" column="0" lean-forward="false" selection-start-line="87" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -2798,6 +2440,7 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>

@@ -1,7 +1,10 @@
 package com.zoctan.api.entity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Deployunit {
     /**
@@ -30,6 +33,16 @@ public class Deployunit {
      * 描述
      */
     private String memo;
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
 
     /**
      * 创建时间

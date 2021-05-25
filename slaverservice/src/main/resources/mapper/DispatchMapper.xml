@@ -33,6 +33,11 @@
     select * from dispatch a where a.slaverid = #{slaverid} and status =#{status} and plantype=#{plantype} order by id ASC limit ${maxthread}
   </select>
 
+  <select id="getcasebyslaveridandrunmode" resultMap="BaseResultMap">
+    select * from dispatch a JOIN executeplan b on a.execplanid=b.id where a.slaverid = #{slaverid} and a.status =#{status} and a.plantype=#{plantype}
+     and b.runmode=#{runmode} order by a.id ASC limit ${maxthread}
+  </select>
+
   <select id="getdoingcasebyslaverid" resultMap="BaseResultMap">
     select * from dispatch a where a.slaverid = #{slaverid} and status =#{status} and plantype=#{plantype}
   </select>

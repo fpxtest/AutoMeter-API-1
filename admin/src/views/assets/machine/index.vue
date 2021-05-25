@@ -23,10 +23,10 @@
 
         <span v-if="hasPermission('machine:search')">
           <el-form-item>
-            <el-input maxlength="40" v-model="search.machinename" @keyup.enter.native="searchBy" placeholder="服务器名"></el-input>
+            <el-input clearable maxlength="40" v-model="search.machinename" @keyup.enter.native="searchBy" placeholder="服务器名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input maxlength="40" v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
+            <el-input clearable maxlength="40" v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -36,6 +36,7 @@
     </div>
     <el-table
       :data="machineList"
+      :key="itemKey"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -51,6 +52,7 @@
       <el-table-column label="ip" align="center" prop="ip" width="100"/>
       <el-table-column label="cpu" align="center" prop="cpu" width="60"/>
       <el-table-column label="disk" align="center" prop="disk" width="60"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="mem" align="center" prop="mem" width="60"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -83,8 +85,8 @@
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-size="listQuery.size"
+      :current-page="search.page"
+      :page-size="search.size"
       :total="total"
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
@@ -173,13 +175,13 @@
 </template>
 <script>
   import {
-    getmachineList as getmachineList,
     search,
     addmachine,
     updatemachine,
     removemachine
   } from '@/api/assets/machine'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
     filters: {
@@ -194,18 +196,12 @@
     },
     data() {
       return {
+        itemKey: null,
         tmpmachinename: null,
         tmpip: null,
         machineList: [], // 服务器列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
-        listQuery: {
-          page: 1, // 页码
-          size: 10, // 每页数量
-          listLoading: true,
-          machinename: null,
-          ip: null
-        },
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
@@ -220,15 +216,20 @@
           ip: '',
           cpu: '',
           disk: '',
-          mem: ''
+          mem: '',
+          creator: ''
         },
         search: {
-          page: null,
-          size: null,
+          page: 1,
+          size: 10,
           machinename: null,
           ip: null
         }
       }
+    },
+
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'avatar'])
     },
 
     created() {
@@ -243,7 +244,9 @@
        */
       getmachineList() {
         this.listLoading = true
-        getmachineList(this.listQuery).then(response => {
+        this.search.machinename = this.tmpmachinename
+        this.search.ip = this.tmpip
+        search(this.search).then(response => {
           this.machineList = response.data.list
           this.total = response.data.total
           this.listLoading = false
@@ -251,12 +254,12 @@
           this.$message.error('加载服务器列表失败')
         })
       },
+
       searchBy() {
-        this.btnLoading = true
+        this.search.page = 1
         this.listLoading = true
-        this.search.page = this.listQuery.page
-        this.search.size = this.listQuery.size
         search(this.search).then(response => {
+          this.itemKey = Math.random()
           this.machineList = response.data.list
           this.total = response.data.total
         }).catch(res => {
@@ -268,37 +271,22 @@
         this.btnLoading = false
       },
 
-      searchBypageing() {
-        this.btnLoading = true
-        this.listLoading = true
-        this.listQuery.machinename = this.tmpmachinename
-        this.listQuery.ip = this.tmpip
-        search(this.listQuery).then(response => {
-          this.machineList = response.data.list
-          this.total = response.data.total
-        }).catch(res => {
-          this.$message.error('搜索失败')
-        })
-        this.listLoading = false
-        this.btnLoading = false
-      },
-
       /**
        * 改变每页数量
        * @param size 页大小
        */
       handleSizeChange(size) {
-        this.listQuery.size = size
-        this.listQuery.page = 1
-        this.searchBypageing()
+        this.search.page = 1
+        this.search.size = size
+        this.getmachineList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
       handleCurrentChange(page) {
-        this.listQuery.page = page
-        this.searchBypageing()
+        this.search.page = page
+        this.getmachineList()
       },
       /**
        * 表格序号
@@ -308,7 +296,7 @@
        * @returns 表格序号
        */
       getIndex(index) {
-        return (this.listQuery.page - 1) * this.listQuery.size + index + 1
+        return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
        * 显示添加服务器对话框
@@ -323,6 +311,7 @@
         this.tmpmachine.cpu = ''
         this.tmpmachine.disk = ''
         this.tmpmachine.mem = ''
+        this.tmpmachine.creator = this.name
       },
       /**
        * 添加服务器
@@ -356,6 +345,7 @@
         this.tmpmachine.cpu = this.machineList[index].cpu
         this.tmpmachine.disk = this.machineList[index].disk
         this.tmpmachine.mem = this.machineList[index].mem
+        this.tmpmachine.creator = this.name
       },
       /**
        * 更新服务器

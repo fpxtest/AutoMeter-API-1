@@ -86,13 +86,14 @@ public class postcondition extends AbstractJavaSamplerClient {
         //更新调度表状态已完成
         try {
             core.updatedispatchcasestatus(testplanid,batchid,slaverid,caseid);
+            core.PlanBatchAllDipatchFinish(testplanid,batchname);
             getLogger().info(TestCore.logplannameandcasename + "更新调度表状态完成");
         }
         catch (Exception ex)
         {
             getLogger().info(TestCore.logplannameandcasename + "更新调度表状态异常："+ex.getMessage());
         }
-        //通知slaver性能测试解析报告，生成数据入库
+        //slaver性能测试解析报告，生成数据入库
         try {
             if(casetype.equals(new String("性能")))
             {

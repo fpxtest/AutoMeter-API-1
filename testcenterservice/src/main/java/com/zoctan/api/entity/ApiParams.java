@@ -53,6 +53,16 @@ public class ApiParams {
      */
     private String keyname;
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
     /**
      * 创建时间
      */
