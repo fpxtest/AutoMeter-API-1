@@ -65,10 +65,8 @@
         applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
     2.testcenterapp（后台）
      配置：
-        在目录admin/config/prod.env.js中修改配置BASE_API项，为调用testcenterservice的ip和端口，或者使用域名
-    3.api-jmeter-autotest (用例执行器)
-        配置src/resource/app.properties中配置mysql.host，username，password   
-    4.系统字典表配置
+        在目录admin/static/config.js中修改配置SERVER_URL，为调用testcenterservice的ip和端口，或者使用域名  
+    3.系统字典表配置
         如果需要部署多个slaver集群运行测试，则需要在字典表中配置调度服务的访问地址
         增加字典项：调度服务，字典编码：dispatchservice，字典项名：调度服务器地址,字典项值：替换成你的调度服务的访问地址
 
