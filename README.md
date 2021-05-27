@@ -65,7 +65,10 @@
     3.系统字典表配置
         如果需要部署多个slaver集群运行测试，则需要在字典表中配置调度服务的访问地址
         增加字典项：调度服务，字典编码：dispatchservice，字典项名：调度服务器地址,字典项值：替换成你的调度服务的访问地址
+    4.nginx配置
+        nginx.conf中的http.server.location.root配置/app/AutoMeter/dist/  dist为admin打包出来的静态文件目录
 
+        
 3.初始化数据库
 
     mysql下新建数据库testcenter运行testcenter.sql
