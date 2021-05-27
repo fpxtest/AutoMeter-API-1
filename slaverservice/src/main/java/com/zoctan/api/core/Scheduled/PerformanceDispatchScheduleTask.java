@@ -101,8 +101,8 @@ public class PerformanceDispatchScheduleTask {
             if (lock) {
                 PerformanceDispatchScheduleTask.log.info("============获得redis分布式锁成功=======================");
                 String ProjectPath = System.getProperty("user.dir");
-                String JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
-                String JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+                String JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
+                String JmxPath = ProjectPath + "/servicejmxcase";
                 String JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
                 PerformanceDispatchScheduleTask.log.info("性能任务-jmeter可执行路径  is:" + JmeterPath+" jmx文件路径  is:" + JmxPath +" 性能报告文件路径  is:" + JmeterPerformanceReportPath);
 

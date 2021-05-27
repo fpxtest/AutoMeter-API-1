@@ -43,7 +43,7 @@ spring:
       min-idle: 0
       testOnBorrow: false
   domain:
-    allowdomain: http://81.69.0.136,http://localhost:9999
+    allowdomain: http://192.168.130.87,http://localhost:9999
 
   profiles:
     # 激活的配置

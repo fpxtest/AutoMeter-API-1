@@ -39,7 +39,7 @@
   </update>
 
   <insert id="insertBatchDispatch"  parameterType="com.zoctan.api.entity.Dispatch">
-    insert into Dispatch (execplanid, execplanname,batchid,batchname,slaverid,slavername,testcaseid,testcasename,casejmxname,
+    insert into dispatch (execplanid, execplanname,batchid,batchname,slaverid,slavername,testcaseid,testcasename,casejmxname,
     deployunitname,expect,status,create_time,lastmodify_time,plantype,threadnum,loops)
     values
     <foreach collection="dispatchList" item="dispatch" index="index" separator=",">
