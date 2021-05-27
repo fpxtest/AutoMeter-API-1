@@ -63,6 +63,7 @@
     1.testcenterservice（测试中心服务），slaverservice（执行服务），dispatchservice（调度服务）三个服务配置相同
      配置：
         applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
+        applicaton.yml中spring.logging配置日志路径path
     2.testcenterapp（后台）
      配置：
         在目录admin/static/config.js中修改配置SERVER_URL，为调用testcenterservice的ip和端口，或者使用域名  
@@ -72,7 +73,7 @@
 
 3.初始化数据库
 
-    mysql下运行init.sql
+    mysql下新建数据库testcenter运行testcenter.sql
 
 4.启动顺序
 
@@ -92,7 +93,7 @@
        5.服务器部署发布单元，在环境管理-组件部署中新增在某个环境的服务器下部署某个发布单元
        6.定义api，在发布单元-API下新建属于发布单元的api
        7.定义api参数，在发布单元-API参数新增参数
-       8.设置运行用例的执行节点，在调度中心-执行节点中设置执行机的类型是功能还是性能（slaverservice启动后会自动注册上来）
+       8.设置运行用例的执行节点，在调度中心-执行节点中设置执行机的类型是功能还是性能,以及访问的端口（slaverservice启动后会自动注册上来）
        9.新建用例，在测试资产-用例库新增用例，定义用例是测试哪个api，期望值是什么，以及用例类型是功能还是性能，其中Jmeter-Class(后面描述）
        10.设置用例数据，在新建好的用例列表管理列中，点击参数值，设置用例的数据
        11.执行计划，在执行中心-执行计划中新建执行计划，定义计划类型是功能还是性能
