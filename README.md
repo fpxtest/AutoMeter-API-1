@@ -58,6 +58,7 @@
     1.testcenterservice（测试中心服务），slaverservice（执行服务），dispatchservice（调度服务）三个服务配置相同
      配置：
         applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
+        applicaton.yml中spring.domain.allowdomain 配置admin的访问地址，解决跨域
         applicaton.yml中spring.logging配置日志路径path
     2.testcenterapp（后台）
      配置：
