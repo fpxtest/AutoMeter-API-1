@@ -119,7 +119,7 @@ Release/Beta版本为编译好的包，可以根据以下来部署发布
        14.报告中心，报告中心选择功能或者性能的报告页面查看用例的执行结果明细和统计结果
        
        
-  ![image](https://github.com/AutoMeter/testplantform/blob/master/img/fanfan.jpg)
+  ![image](https://github.com/AutoMeter/testplantform/blob/master/img/fanfan.jpeg)
    
       
 ## License
