@@ -103,8 +103,8 @@ public class FunctionDispatchScheduleTask {
             if (lock) {
                 FunctionDispatchScheduleTask.log.info("功能任务-============获得redis分布式锁成功=======================");
                 String ProjectPath = System.getProperty("user.dir");
-                String JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
-                String JmxPath = ProjectPath + "/servicejmxcase";
+                String JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
+                String JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
                 FunctionDispatchScheduleTask.log.info("功能任务-jmeter可执行路径  is:" + JmeterPath + " jmx文件路径  is:" + JmxPath);
 
                 List<Dispatch> dispatchAllList = dispatchMapper.getcasebyslaverid(SlaverId, "待分配", SlaverType, new Long(100));
