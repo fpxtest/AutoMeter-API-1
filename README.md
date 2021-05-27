@@ -121,5 +121,5 @@ Release/Beta版本为编译好的包，可以根据以下来部署发布
 ## License
 MIT
 
-Copyright (c) 2017-present Season
+Copyright (c) 2020-present Season
     
