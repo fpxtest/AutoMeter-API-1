@@ -22,6 +22,7 @@
         <option value="$PROJECT_DIR$/tradeservice/pom.xml" />
         <option value="$PROJECT_DIR$/dispatchservice/pom.xml" />
         <option value="$PROJECT_DIR$/api-jmeter-autotest/pom.xml" />
+        <option value="$PROJECT_DIR$/conditionservice/pom.xml" />
       </list>
     </option>
   </component>

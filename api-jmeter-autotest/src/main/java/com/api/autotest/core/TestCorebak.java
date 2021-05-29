@@ -28,6 +28,7 @@ public class TestCorebak {
     public TestCorebak(JavaSamplerContext context, Logger log)
     {
         logger=log;
+        Httphelp.logger=log;
         String MysqlUrl=context.getParameter("mysqlurl");
         String MysqlUserName=context.getParameter("mysqlusername");
         String MysqlPass=context.getParameter("mysqlpassword");
@@ -265,9 +266,16 @@ public class TestCorebak {
         }
         // 设置参数
         HttpParamers paramers = new  HttpParamers();
+
         for (String key : paramsmap.keySet()) {
             paramers.addParam(key, paramsmap.get(key));
         }
+
+        // 如果参数为空，设置body
+        for (String key : bodymap.keySet()) {
+            paramers.addParam(key, bodymap.get(key));
+        }
+
         // url请求资源路径
         String path = getcaseValue("path", apilist);
         if (!path.startsWith("/")) {

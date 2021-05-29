@@ -78,6 +78,7 @@ public class PerformanceDispatchScheduleTask {
                     // slaver全部为空闲状态
                     if(RuningSlaverNums==0)
                     {
+                        // 增加代码先判断是否有前置条件，如果有请求条件服务，处理完成再发送到各个性能服务器并行执行
                         for (Slaver slaver: Slaverlist) {
                             Dispatch dispatch=GetCaseDispatch(CaseResultDispatchList,slaver.getId());
                             if(dispatch!=null)

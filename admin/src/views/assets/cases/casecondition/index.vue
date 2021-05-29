@@ -68,6 +68,8 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
+
+      <el-table-column label="计划名" align="center" prop="execplanname" width="80"/>
       <el-table-column label="用例名" align="center" prop="casename" width="80"/>
       <el-table-column label="前后置" align="center" prop="basetype" width="80"/>
       <el-table-column label="基础分类" align="center" prop="conditionbasetype" width="80"/>

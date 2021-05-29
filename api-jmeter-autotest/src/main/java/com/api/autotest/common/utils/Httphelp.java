@@ -16,6 +16,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.log.Logger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -23,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class Httphelp {
+    public static Logger logger=null;
+
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final String JSON_CONTENT_FORM = "application/json;charset=UTF-8";
     public static final String CONTENT_FORM = "application/x-www-form-urlencoded;charset=UTF-8";
@@ -68,13 +71,17 @@ public class Httphelp {
                 httpPost.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
                 paramers.setJsonParamer();
                 query = paramers.getJsonParamer();
+                logger.info("Post json datas is :  " + query);
+
             } else {
                 //表单数据
                 httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
                 query = paramers.getQueryString(DEFAULT_CHARSET);
+                logger.info("Post form datas is :  " + query);
             }
             if (query != null) {
                 HttpEntity reqEntity = new StringEntity(query);
+                logger.info("Post last datas is :  " + query);
                 httpPost.setEntity(reqEntity);
             }
             if(protocal.equals(new String("http")))
@@ -89,9 +96,8 @@ public class Httphelp {
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
-            System.out.println("Exception is :" + e.getMessage());
+            logger.info("Post Exception is :" + e.getMessage());
             responseData = e.getMessage();
-            //e.printStackTrace();
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -100,7 +106,7 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        System.out.println("responseData is :" + responseData);
+        logger.info("Post responseData is :" + responseData);
         return responseData;
     }
 
@@ -121,6 +127,7 @@ public class Httphelp {
         CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(url);
+            logger.info("Get datas is :  " + url);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
@@ -137,6 +144,7 @@ public class Httphelp {
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
             responseData = e.getMessage();
+            logger.info("Exception is :" + e.getMessage());
             throw new Exception("请求url:"+url+"发生异常，原因："+responseData);
         } finally {
             if (httpResponse != null) {
@@ -146,6 +154,7 @@ public class Httphelp {
                 httpClient.close();
             }
         }
+        logger.info("Get responseData is :" + responseData);
         return responseData;
     }
 
@@ -166,7 +175,6 @@ public class Httphelp {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
-
             String query = null;
             url = buildGetUrl(url, query);
             HttpPut httpGet = new HttpPut(url);
@@ -177,12 +185,13 @@ public class Httphelp {
                 //json数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
                 query = params.getJsonParamer();
+                logger.info("Put json datas is :  " + query);
             } else {
                 //表单数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
                 query = params.getQueryString(DEFAULT_CHARSET);
+                logger.info("Put json datas is :  " + query);
             }
-
             if(protocal.equals(new String("http")))
             {
                 httpClient = HttpClients.createDefault();
@@ -195,6 +204,7 @@ public class Httphelp {
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
+            logger.info("Put Exception is :" + e.getMessage());
             responseData = e.getMessage();
         } finally {
             if (httpResponse != null) {
@@ -203,8 +213,8 @@ public class Httphelp {
             if (httpClient != null) {
                 httpClient.close();
             }
-            ;
         }
+        logger.info("Put responseData is :" + responseData);
         return responseData;
     }
 
@@ -235,10 +245,12 @@ public class Httphelp {
                 //json数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
                 query = params.getJsonParamer();
+                logger.info("Delete json datas is :  " + query);
             } else {
                 //表单数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
                 query = params.getQueryString(DEFAULT_CHARSET);
+                logger.info("Delete json datas is :  " + query);
             }
 
             if(protocal.equals(new String("http")))
@@ -253,6 +265,7 @@ public class Httphelp {
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
+            logger.info(" Delete Exception is :" + e.getMessage());
             responseData = e.getMessage();
         } finally {
             if (httpResponse != null) {
@@ -261,8 +274,8 @@ public class Httphelp {
             if (httpClient != null) {
                 httpClient.close();
             }
-            ;
         }
+        logger.info("Delete responseData is :" + responseData);
         return responseData;
     }
 
@@ -274,6 +287,7 @@ public class Httphelp {
                 for (Map.Entry<String, String> entry : entries) {
                     String name = entry.getKey();
                     String value = entry.getValue();
+                    logger.info("header name is :  " + name+" value is :  "+value);
                     httpRequestBase.setHeader(name, value);
                 }
             }
@@ -297,6 +311,7 @@ public class Httphelp {
         }
         newUrl.append(query);
         hasPrepend = false;
+        logger.info("buildGetUrl url is :  " + newUrl.toString());
         return newUrl.toString();
     }
 
