@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.SlaverMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Slaver">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="slavername" jdbcType="VARCHAR" property="slavername" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="stype" jdbcType="VARCHAR" property="stype" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findslaverWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM slaver a
+    <where>
+      <if test="slavername != null and slavername != ''">a.slavername like CONCAT('%',#{slavername},'%')</if>
+      <if test="ip != null  and ip != ''">and a.ip like CONCAT('%',#{ip},'%')</if>
+    </where>
+  </select>
+
+  <select id="findslaverbyip" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where ip=#{ip}
+  </select>
+
+  <select id="findslaverbytype" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where stype=#{stype}
+  </select>
+
+  <insert id="addslaver">
+    INSERT INTO slaver (slavername, ip,port,status,stype,memo,create_time,lastmodify_time)
+    VALUES (#{slavername},#{ip},#{port},#{status},#{stype},#{memo},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+  </insert>
+
+  <update id="updateSlaver" parameterType="com.zoctan.api.entity.Slaver">
+    update slaver set slavername = #{slavername}, ip = #{ip}, port= #{port},stype= #{stype},
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+
+</mapper>

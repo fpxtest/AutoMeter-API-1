@@ -5,23 +5,208 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/common/utils/Httphelp.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/common/utils/Httphelp.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestCorebak.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestCorebak.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/HttpApiFunction.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/HttpApiFunction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README/database.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README/permission.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README/role.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README/role_permission.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README/user.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README/user_role.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/api.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/conditionservice.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/dispatchservice.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/pom.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/resetDB.sh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/slaverservice.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/Application.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/aspect/ControllerLogAspect.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/ApiController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/ApicasesPerformancestatisticsController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/DeployunitController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/DictionaryController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/EnviromentController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/EnvmachineController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/MachineController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/PerformancereportsourceController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/TestController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/Scheduled/ConditionScheduleTask.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/cache/CacheExpire.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/cache/MyRedisCacheManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/config/JasyptConfig.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/config/RedisTemplaterConfig.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/config/RedisUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/config/Swagger2Config.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/config/ValidatorConfig.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/config/WebMvcConfig.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/constant/ProjectConstant.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/exception/ExceptionResolver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/exception/ResourcesNotFoundException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/exception/ServiceException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/jasypt/MyEncryptablePropertyDetector.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/mapper/MyMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/response/Result.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/response/ResultCode.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/response/ResultGenerator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/rsa/RsaConfigurationProperties.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/rsa/RsaUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/service/AbstractService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/service/HttpHeader.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/service/HttpParamers.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/service/Httphelp.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/core/service/Service.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/AccountDto.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/AccountWithRole.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/AccountWithRolePermission.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/Generalperformreport.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/RoleWithPermission.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/RoleWithResource.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/TestplanCase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/dto/Testplanandbatch.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Account.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/AccountRole.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Api.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Apicases.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/ApicasesPerformancestatistics.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/ApicasesReport.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Deployunit.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Dictionary.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Dispatch.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Enviroment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Envmachine.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Executeplan.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/ExecuteplanTestcase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Executeplanbatch.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Handle.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Machine.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Performancereportsource.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Permission.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Resource.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Role.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/RolePermission.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Slaver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/Test.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/filter/RequestWrapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/AccountRoleMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ApiMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ApicasesMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ApicasesPerformancestatisticsMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ApicasesReportMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/DeployunitMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/DictionaryMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/EnviromentMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/EnvmachineMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ExecuteplanMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ExecuteplanTestcaseMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/ExecuteplanbatchMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/MachineMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/PerformancereportsourceMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/PermissionMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/RoleMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/RolePermissionMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/TestMapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/TestPlanCaseService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/AccountRoleService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/ApiService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/ApicasesPerformancestatisticsService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/ApicasesReportService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/ApicasesService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/DeployunitService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/DictionaryService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/DispatchService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/EnviromentService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/EnvmachineService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/ExecuteplanService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/MachineService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/PerformancereportsourceService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/PermissionService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/RolePermissionService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/RoleService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/TestService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/AccountRoleServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/ApiServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/ApicasesPerformancestatisticsServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/ApicasesReportServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/ApicasesServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/DeployunitServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/DictionaryServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/DispatchServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/EnviromentServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/EnvmachineServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/MachineServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/PerformancereportsourceServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/PermissionServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/RolePermissionServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/RoleServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/TestServiceImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/util/AesUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/util/AssertUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/util/ContextUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/util/IpUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/util/JsonUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/util/UrlUtils.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/META-INF/spring-devtools.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/application-back.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/application-dev.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/application-prod.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/application-test.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/application.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/banner.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/AccountMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/AccountRoleMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ApiMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ApicasesMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ApicasesPerformancestatisticsMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ApicasesReportMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/DeployunitMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/DictionaryMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/DispatchMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/EnviromentMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/EnvmachineMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ExecuteplanMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ExecuteplanTestcaseMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/ExecuteplanbatchMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/MachineMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/PerformancereportsourceMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/PermissionMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/RoleMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/RolePermissionMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/SlaverMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/TestMapper.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/java/CodeGenerator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/java/JasyptStringEncryptor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/java/PasswordEncryptor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/java/RsaEncryptor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/java/com/tsbtv/report/BaseControllerTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/java/com/tsbtv/report/testfun.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/generator/template/controller-restful.ftl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/generator/template/controller.ftl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/generator/template/service-impl.ftl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/generator/template/service.ftl" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/account.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/account_role.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/api.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/deployunit.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/dictionary.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/enviroment.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/envmachine.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/machine.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/permission.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/role.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/role_permission.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/conditionservice/src/test/resources/sql/dev/test.sql" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/middlevariable.sql" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestplanCaseService.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestplanCaseServiceImpl.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/assets/cases/casecondition/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/assets/cases/casecondition/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Httphelp.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Httphelp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" />
     </list>
     <ignored path="$PROJECT_DIR$/admin/node_modules/" />
     <ignored path="$PROJECT_DIR$/testcenterservice/target/" />
@@ -54,106 +239,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="precondition.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/precondition.java">
+      <file leaf-file-name="RoleServiceImpl.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/RoleServiceImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="31" column="27" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestCorebak.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="386" column="35" lean-forward="false" selection-start-line="386" selection-start-column="35" selection-end-line="386" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dispatch.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/dispatch.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="24" lean-forward="false" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="middlevariable.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/middlevariable.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="36" column="20" lean-forward="false" selection-start-line="36" selection-start-column="20" selection-end-line="36" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PerformanceDispatchScheduleTask.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="37" column="44" lean-forward="false" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conditionservice/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="30" lean-forward="false" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="application.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conditionservice/src/main/resources/application.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FunctionDispatchScheduleTask.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="69" column="74" lean-forward="false" selection-start-line="69" selection-start-column="74" selection-end-line="69" selection-end-column="74" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RequestObject.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/dto/RequestObject.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="182" column="18" lean-forward="false" selection-start-line="182" selection-start-column="18" selection-end-line="182" selection-end-column="18" />
-              <folding>
-                <element signature="e#3524#3525#0" expanded="true" />
-                <element signature="e#3553#3554#0" expanded="true" />
-                <element signature="e#3601#3602#0" expanded="true" />
-                <element signature="e#3637#3638#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/src/views/assets/cases/casecondition/index.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="71" column="32" lean-forward="false" selection-start-line="71" selection-start-column="32" selection-end-line="71" selection-end-column="32" />
+            <state relative-caret-position="150">
+              <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -260,8 +350,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentAssembleController.java" />
-        <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/MacdepunitController.java" />
         <option value="$PROJECT_DIR$/admin/src/views/enviroment/enviromentassemble/index.vue" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/EnviromentAssembleMapper.xml" />
         <option value="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApiController.java" />
@@ -311,6 +399,8 @@
         <option value="$PROJECT_DIR$/conditionservice/pom.xml" />
         <option value="$PROJECT_DIR$/conditionservice/src/main/resources/application.yml" />
         <option value="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" />
+        <option value="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" />
+        <option value="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" />
       </list>
     </option>
   </component>
@@ -520,6 +610,44 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="testplantform" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="testplantform" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="slaverservice" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1624,7 +1752,7 @@
       <workItem from="1616744413598" duration="163580000" />
       <workItem from="1618279085070" duration="130211000" />
       <workItem from="1619160983762" duration="7595000" />
-      <workItem from="1619422840400" duration="167463000" />
+      <workItem from="1619422840400" duration="169269000" />
     </task>
     <servers />
   </component>
@@ -1661,7 +1789,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1577075000" />
+    <option name="totallyTimeSpent" value="1578881000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1679,7 +1807,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2716593" sideWeight="0.50646204" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19386107" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19386107" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1870,22 +1998,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ApicasesReportController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="90" column="54" lean-forward="false" selection-start-line="90" selection-start-column="54" selection-end-line="90" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/test/java/PasswordEncryptor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="18" column="7" lean-forward="false" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/config/RedisConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -1983,22 +2095,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="524">
           <caret line="93" column="55" lean-forward="false" selection-start-line="93" selection-start-column="55" selection-end-line="93" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="13" column="9" lean-forward="false" selection-start-line="13" selection-start-column="9" selection-end-line="13" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="41" column="83" lean-forward="false" selection-start-line="41" selection-start-column="71" selection-end-line="41" selection-end-column="83" />
           <folding />
         </state>
       </provider>
@@ -2225,10 +2321,10 @@
         <state relative-caret-position="233">
           <caret line="182" column="18" lean-forward="false" selection-start-line="182" selection-start-column="18" selection-end-line="182" selection-end-column="18" />
           <folding>
-            <element signature="e#3524#3525#0" expanded="true" />
-            <element signature="e#3553#3554#0" expanded="true" />
-            <element signature="e#3601#3602#0" expanded="true" />
-            <element signature="e#3637#3638#0" expanded="true" />
+            <element signature="e#3524#3525#0" expanded="false" />
+            <element signature="e#3553#3554#0" expanded="false" />
+            <element signature="e#3601#3602#0" expanded="false" />
+            <element signature="e#3637#3638#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2289,6 +2385,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="69" column="74" lean-forward="false" selection-start-line="69" selection-start-column="74" selection-end-line="69" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/RoleService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="13" column="17" lean-forward="false" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -2297,10 +2409,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java">
+    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="69" column="74" lean-forward="false" selection-start-line="69" selection-start-column="74" selection-end-line="69" selection-end-column="74" />
+        <state relative-caret-position="255">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/RoleServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding />
         </state>
       </provider>

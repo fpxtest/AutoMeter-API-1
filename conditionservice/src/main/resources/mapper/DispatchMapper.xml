@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.DispatchMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Dispatch">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="execplanid" jdbcType="BIGINT" property="execplanid" />
+    <result column="execplanname" jdbcType="VARCHAR" property="execplanname" />
+    <result column="batchid" jdbcType="BIGINT" property="batchid" />
+    <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="slaverid" jdbcType="BIGINT" property="slaverid" />
+    <result column="slavername" jdbcType="VARCHAR" property="slavername" />
+    <result column="testcaseid" jdbcType="BIGINT" property="testcaseid" />
+    <result column="testcasename" jdbcType="VARCHAR" property="testcasename" />
+    <result column="casejmxname" jdbcType="VARCHAR" property="casejmxname" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="expect" jdbcType="VARCHAR" property="expect" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="loops" jdbcType="BIGINT" property="loops" />
+    <result column="threadnum" jdbcType="BIGINT" property="threadnum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="plantype" jdbcType="VARCHAR" property="plantype" />
+  </resultMap>
+
+  <select id="findbusythreadnums" resultType="java.lang.Integer">
+    select COUNT(*) from dispatch a where a.status = #{status} and a.slaverid = #{slaverid}
+  </select>
+
+  <select id="getcasebyslaverid" resultMap="BaseResultMap">
+    select * from dispatch a where a.slaverid = #{slaverid} and status =#{status} and plantype=#{plantype} order by id ASC limit ${maxthread}
+  </select>
+
+  <update id="updatedispatchstatus">
+    update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
+    and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
+  </update>
+
+  <insert id="insertBatchDispatch"  parameterType="com.zoctan.api.entity.Dispatch">
+    insert into dispatch (execplanid, execplanname,batchid,batchname,slaverid,slavername,testcaseid,testcasename,casejmxname,
+    deployunitname,expect,status,create_time,lastmodify_time,plantype,threadnum,loops)
+    values
+    <foreach collection="dispatchList" item="dispatch" index="index" separator=",">
+      (#{dispatch.execplanid}, #{dispatch.execplanname}, #{dispatch.batchid},#{dispatch.batchname},#{dispatch.slaverid},
+      #{dispatch.slavername},#{dispatch.testcaseid},#{dispatch.testcasename},#{dispatch.casejmxname},#{dispatch.deployunitname},#{dispatch.expect},
+      #{dispatch.status},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'),#{dispatch.plantype},#{dispatch.threadnum},#{dispatch.loops})
+    </foreach>
+  </insert>
+
+  <select id="getcasebyrunmode" resultMap="BaseResultMap">
+    select * from dispatch a JOIN executeplan b on a.execplanid=b.id where a.status =#{status} and b.usetype=#{usetype}
+    and b.runmode=#{runmode} order by a.id ASC
+  </select>
+
+
+  <select id="findbusyslavernums" resultType="java.lang.Integer">
+    select COUNT(*) from dispatch a where a.status = #{status} and a.slaverid IN
+  <foreach collection="slaverlist" item="slaver" index="index" open="(" close=")" separator=",">
+    #{slaver.slaverid}
+  </foreach>
+  </select>
+</mapper>

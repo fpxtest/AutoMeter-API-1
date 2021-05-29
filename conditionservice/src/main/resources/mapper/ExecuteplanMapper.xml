@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ExecuteplanMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Executeplan">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findexplanWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplan a
+    <where>
+      <if test="executeplanname != null and executeplanname != ''">a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>
+    </where>
+  </select>
+
+  <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
+    update executeplan set executeplanname = #{executeplanname}, usetype=#{usetype}, memo = #{memo},ip =#{ip}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+
+  <update id="updatetestplanstatus">
+    update  executeplan set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where id = #{id}
+  </update>
+
+  <select id="findexplanWithid" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplan a
+    where a.id=#{id}
+  </select>
+</mapper>

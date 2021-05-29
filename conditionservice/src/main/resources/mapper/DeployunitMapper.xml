@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.DeployunitMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Deployunit">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="protocal" jdbcType="VARCHAR" property="protocal" />
+    <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findDeployNameValueWithCode" resultMap="BaseResultMap">
+    SELECT a.deployunitname,a.protocal,a.port
+    FROM deployunit a where a.deployunitname = #{deployunitname}
+  </select>
+</mapper>
