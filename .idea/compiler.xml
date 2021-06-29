@@ -2,17 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="api" />
-        <module name="api-jmeter-autotest" />
-        <module name="conditionservice" />
-        <module name="dispatchservice" />
+        <module name="slaverservice (1)" />
         <module name="security" />
         <module name="slaverservice" />
-        <module name="slaverservice (1)" />
+        <module name="api" />
+        <module name="api-jmeter-autotest" />
+        <module name="dispatchservice" />
+        <module name="conditionservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -25,5 +26,13 @@
       <module name="slaverservice (1)" target="1.8" />
       <module name="tradeservice" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api" options="-parameters" />
+      <module name="conditionservice" options="-parameters" />
+      <module name="dispatchservice" options="-parameters" />
+      <module name="slaverservice" options="-parameters" />
+    </option>
   </component>
 </project>
