@@ -4,40 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_base_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_core_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_boot_autoconfigure_2_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_spring_boot_starter_2_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__tk_mybatis_mapper_weekend_1_1_3.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/api-jmeter-autotest-1.0.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/common/utils/Httphelp.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/common/utils/Httphelp.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestCorebak.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/core/TestCorebak.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/HttpApiFunction.class" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/classes/com/api/autotest/test/httpapitestcase/HttpApiFunction.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/router/index.js" afterPath="$PROJECT_DIR$/admin/src/router/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" afterPath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Httphelp.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/common/utils/Httphelp.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/api-jmeter-autotest/target/maven-archiver/pom.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/DispatchMapper.xml" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/DispatchMapper.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/SlaverMapper.xml" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/SlaverMapper.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/servicejmxcase/HTTPFunction.jmx" afterPath="$PROJECT_DIR$/slaverservice/servicejmxcase/HTTPFunction.jmx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/slaverservice/src/main/resources/mapper/SlaverMapper.xml" afterPath="$PROJECT_DIR$/slaverservice/src/main/resources/mapper/SlaverMapper.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/application.yml" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/application.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" afterPath="$PROJECT_DIR$/testcenterservice/src/test/java/CodeGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/enviroment_assemble.sql" afterPath="$PROJECT_DIR$/testcenterservice/src/test/resources/sql/dev/enviroment_assemble.sql" />
-    </list>
+    <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/admin/node_modules/" />
     <ignored path="$PROJECT_DIR$/testcenterservice/target/" />
     <ignored path="$PROJECT_DIR$/dispatchservice/target/" />
@@ -69,16 +36,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="LineChart.vue" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/admin/src/views/dashboard/admin/components/LineChart.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="BarChart.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin/src/views/dashboard/admin/components/BarChart.vue">
           <provider selected="true" editor-type-id="text-editor">
@@ -121,11 +78,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EnviromentController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="EnviromentController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/EnviromentController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="219">
               <caret line="87" column="9" lean-forward="false" selection-start-line="87" selection-start-column="9" selection-end-line="87" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="467" column="0" lean-forward="false" selection-start-line="467" selection-start-column="0" selection-end-line="468" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -889,6 +856,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="build" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="testplantform" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="testplantform" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value=".idea" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1851,7 +1832,7 @@
       <workItem from="1618279085070" duration="130211000" />
       <workItem from="1619160983762" duration="7595000" />
       <workItem from="1619422840400" duration="223716000" />
-      <workItem from="1624615063262" duration="97000" />
+      <workItem from="1624615063262" duration="215000" />
     </task>
     <servers />
   </component>
@@ -1888,7 +1869,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1633425000" />
+    <option name="totallyTimeSpent" value="1633543000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2097,7 +2078,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/ConditionController.java" />
     <entry file="file://$PROJECT_DIR$/testcenterservice.log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="163">
@@ -2458,6 +2438,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="32" lean-forward="false" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="467" column="0" lean-forward="false" selection-start-line="467" selection-start-column="0" selection-end-line="468" selection-end-column="0" />
           <folding />
         </state>
       </provider>
