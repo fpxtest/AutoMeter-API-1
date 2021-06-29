@@ -488,6 +488,14 @@ public class TestCorebak {
     }
 
 
+    // 更新Slaver状态
+    public void UpdateSlaverStatus(String Slaverid,String status) {
+        String UpdateSql="update  slaver set status='"+status+"' where id="+Slaverid ;
+        logger.info(logplannameandcasename+"更新Slaver状态结果完成  sql is...........: " + UpdateSql);
+        logger.info(logplannameandcasename+"更新Slaver状态结果完成 result sql is...........: " + MysqlConnectionUtils.update(UpdateSql));
+    }
+
+
 
     //处理前置条件
     public void fixprecondition(String planid,String testcaseid) throws Exception {

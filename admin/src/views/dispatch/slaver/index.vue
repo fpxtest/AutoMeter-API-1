@@ -42,6 +42,7 @@
       <el-table-column label="执行机名" align="center" prop="slavername" width="120"/>
       <el-table-column label="ip" align="center" prop="ip" width="100"/>
       <el-table-column label="端口" align="center" prop="port" width="60"/>
+      <el-table-column label="状态" align="center" prop="status" width="60"/>
       <el-table-column label="类型" align="center" prop="stype" width="80"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">

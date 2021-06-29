@@ -38,8 +38,8 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
     }
 
     @Override
-    public void ExecuteHttpPlanFunctionCase(String JmeterPath, String JmxPath, String DispatchIds, String MysqlUrl, String MysqlUserName, String MysqlPassword) {
-        String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HTTPFunction.jmx -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds;
+    public void ExecuteHttpPlanFunctionCase(Long Slaverid, String JmeterPath, String JmxPath, String DispatchIds, String MysqlUrl, String MysqlUserName, String MysqlPassword) {
+        String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HTTPFunction.jmx -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds+" -JSlaverid="+Slaverid;
         TestPlanCaseServiceImpl.log.info("功能JmeterCmd  is :" + JmeterCmd);
         ExecShell(JmeterCmd);
         TestPlanCaseServiceImpl.log.info("功能JmeterCmd finish。。。。。。。。。。。。。。。。。。。。。。。。。。。。。 :");

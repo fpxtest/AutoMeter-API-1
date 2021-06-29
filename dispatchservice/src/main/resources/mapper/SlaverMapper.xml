@@ -37,6 +37,12 @@
     where stype=#{stype}
   </select>
 
+  <select id="findslaverbytypeandstatus" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where stype=#{stype} and status =#{status}
+  </select>
+
   <insert id="addslaver">
     INSERT INTO slaver (slavername, ip,port,status,stype,memo,create_time,lastmodify_time)
     VALUES (#{slavername},#{ip},#{port},#{status},#{stype},#{memo},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))

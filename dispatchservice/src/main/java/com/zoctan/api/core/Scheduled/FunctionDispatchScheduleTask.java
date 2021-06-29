@@ -60,100 +60,100 @@ public class FunctionDispatchScheduleTask {
             address = InetAddress.getLocalHost();
             ip = address.getHostAddress();
             // 全局性能任务的redis的key相同，保证全局性能任务同一时刻只有一个线程进入工作
-            String redisKey = "FunctionDispatchScheduleTask-RedisLock";
+            String redisKey = "Dispatchservice-FunctionDispatchScheduleTask-RedisLock";
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
             // redis_default_expire_time 不能设置为永久，避免死锁
             boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
             if (lock) {
-                List<Slaver> Slaverlist = slaverMapper.findslaverbytype("功能");
-                List<Dispatch> DispatchAllList = dispatchMapper.getcasebyrunmode( "待分配","性能","多机并行");
-                if(DispatchAllList.size()>0)
-                {
-                    //按照planid分组取第一组,再按照CaseID分组取第一组，每组请求slaver前，先查询，每组中的slaver是否空闲状态，如果空闲则发送slaver性能任务
-                    List<Dispatch> PlanIDResultDispatchList=GetGroupList(DispatchAllList,"PlanID");
-                    List<Dispatch> CaseResultDispatchList=GetGroupList(PlanIDResultDispatchList,"CaseID");
-                    int RuningSlaverNums= dispatchMapper.findbusyslavernums(Slaverlist,"已分配");
-                    // slaver全部为空闲状态
-                    if(RuningSlaverNums==0)
-                    {
-                        for (Slaver slaver: Slaverlist) {
-                            Dispatch dispatch=GetCaseDispatch(CaseResultDispatchList,slaver.getId());
-                            if(dispatch!=null)
-                            {
-                                String params = JSON.toJSONString(dispatch);
-                                HttpHeader header = new HttpHeader();
-                                String ServerUrl="http://"+slaver.getIp()+":"+slaver.getPort()+"/execperformancetest";
-                                String respon= Httphelp.doPost(ServerUrl, params, header, 10, 10);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        FunctionDispatchScheduleTask.log.info("性能任务--有"+RuningSlaverNums+"台性能机器正在运行中，无法并行执行性能测试");
-                        return ;
+                List<Dispatch> DispatchAllList = dispatchMapper.getcasebyrunmode("待分配", "功能", "多机执行");
+                FunctionDispatchScheduleTask.log.info("功能调度任务-============获取待分配的调度数量："+DispatchAllList.size());
+                if (DispatchAllList.size() > 0) {
+                    //按照planid分组取第一组
+                    List<Dispatch> PlanIDResultDispatchList = GetGroupList(DispatchAllList, "PlanID");
+                    FunctionDispatchScheduleTask.log.info("功能调度任务-============第一组planid的调度用例数："+PlanIDResultDispatchList.size());
+
+                    HashMap<Long, List<Dispatch>> PlanDipatchList = GetSlverDispatchList(PlanIDResultDispatchList);
+
+                    List<Slaver> Slaverlist = slaverMapper.findslaverbytypeandstatus("功能","空闲");
+                    FunctionDispatchScheduleTask.log.info("功能调度任务-============获取空闲slaver数量："+Slaverlist.size());
+
+                    //新增条件服务器调用
+
+                    for (Slaver slaver : Slaverlist) {
+                        List<Dispatch> SlaverDispathcList= PlanDipatchList.get(slaver.getId());
+                        String params = JSON.toJSONString(SlaverDispathcList);
+                        FunctionDispatchScheduleTask.log.info("功能调度任务-============执行机id："+slaver.getId()+"  执行机名："+slaver.getSlavername()+" 执行的dispatch："+params);
+                        HttpHeader header = new HttpHeader();
+                        String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execfunctiontest";
+                        String respon = Httphelp.doPost(ServerUrl, params, header, 10, 10);
+                        FunctionDispatchScheduleTask.log.info("功能调度任务-============请求slaver响应结果："+respon);
                     }
                 }
                 //TODO 执行任务结束后需要释放锁
                 //释放锁
                 redisUtils.deletekey(redisKey);
-                FunctionDispatchScheduleTask.log.info("性能任务-============释放分布式锁成功=======================");
+                FunctionDispatchScheduleTask.log.info("功能调度任务-============释放分布式锁成功=======================");
             } else {
-                FunctionDispatchScheduleTask.log.info("性能任务-============获得分布式锁失败=======================");
+                FunctionDispatchScheduleTask.log.info("功能调度任务-============获得分布式锁失败=======================");
                 ip = (String) redisUtils.getkey(redisKey);
-                FunctionDispatchScheduleTask.log.info("性能任务-============{}机器上占用分布式锁，正在执行中=======================" + ip);
+                FunctionDispatchScheduleTask.log.info("功能调度任务-============{}机器上占用分布式锁，正在执行中=======================" + ip);
                 return;
             }
         } catch (Exception ex) {
-            FunctionDispatchScheduleTask.log.info("性能任务-调度定时器异常: " + ex.getMessage());
+            FunctionDispatchScheduleTask.log.info("功能调度任务-调度定时器异常: " + ex.getMessage());
         }
     }
 
-
-    private List<Dispatch> GetGroupList(List<Dispatch> dispatchList,String ID)
-    {
-        Long ObjectID=new Long(0);
-        HashMap<Long,List<Dispatch>> ResultGroup=new HashMap<>();
-        for (Dispatch dispatch : dispatchList )
-        {
-            if(!ResultGroup.containsKey(dispatch.getExecplanid()))
-            {
-                List<Dispatch> tmp=new ArrayList<>();
+    private HashMap<Long, List<Dispatch>> GetSlverDispatchList(List<Dispatch> PlanDispatchList) {
+        HashMap<Long, List<Dispatch>> result = new HashMap<>();
+        for (Dispatch dispatch : PlanDispatchList) {
+            if (!result.containsKey(dispatch.getSlaverid())) {
+                List<Dispatch> tmp = new ArrayList<>();
                 tmp.add(dispatch);
-                if(ID.equals(new String("PlanID")))
-                {
-                    ObjectID=dispatch.getExecplanid();
-                }
-                if(ID.equals(new String("CaseID")))
-                {
-                    ObjectID=dispatch.getTestcaseid();
-                }
-                ResultGroup.put(dispatch.getExecplanid(),tmp);
+                result.put(dispatch.getSlaverid(), tmp);
+            } else {
+                result.get(dispatch.getSlaverid()).add(dispatch);
             }
-            else
-            {
+        }
+        return result;
+    }
+
+
+    private List<Dispatch> GetGroupList(List<Dispatch> dispatchList, String ID) {
+        Long ObjectID = new Long(0);
+        HashMap<Long, List<Dispatch>> ResultGroup = new HashMap<>();
+        for (Dispatch dispatch : dispatchList) {
+            if (!ResultGroup.containsKey(dispatch.getExecplanid())) {
+                List<Dispatch> tmp = new ArrayList<>();
+                tmp.add(dispatch);
+                if (ID.equals(new String("PlanID"))) {
+                    ObjectID = dispatch.getExecplanid();
+                }
+                if (ID.equals(new String("CaseID"))) {
+                    ObjectID = dispatch.getTestcaseid();
+                }
+                ResultGroup.put(dispatch.getExecplanid(), tmp);
+            } else {
                 ResultGroup.get(ObjectID).add(dispatch);
             }
         }
-        List<Dispatch> ResultDispatchList=new ArrayList<>();
-        for(Long Planid : ResultGroup.keySet())
-        {
+        List<Dispatch> ResultDispatchList = new ArrayList<>();
+        for (Long Planid : ResultGroup.keySet()) {
             ResultDispatchList = ResultGroup.get(Planid);
             break;
         }
         return ResultDispatchList;
     }
 
-    private Dispatch GetCaseDispatch(List<Dispatch> dispatchList,Long SlaverID)
-    {
-        for (Dispatch dis: dispatchList) {
-            if(SlaverID.equals(dis.getSlaverid()))
-            {
+    private Dispatch GetCaseDispatch(List<Dispatch> dispatchList, Long SlaverID) {
+        for (Dispatch dis : dispatchList) {
+            if (SlaverID.equals(dis.getSlaverid())) {
                 return dis;
             }
         }
-        return  null;
+        return null;
     }
 
 }

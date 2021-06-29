@@ -5,7 +5,9 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.*;
+import com.zoctan.api.service.ApicasesReportService;
 import com.zoctan.api.service.DeployunitService;
+import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.TestPlanCaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -45,6 +48,8 @@ public class TestPlanCaseController {
     private ExecuteplanMapper executeplanMapper;
     @Autowired
     private SlaverMapper slaverMapper;
+    @Autowired(required = false)
+    private DictionaryMapper dictionaryMapper;
     @Autowired
     private DispatchMapper dispatchMapper;
     @Autowired(required = false)
@@ -53,6 +58,10 @@ public class TestPlanCaseController {
     private ApicasesMapper apicasesMapper;
     @Autowired(required = false)
     private TestPlanCaseService tpcservice;
+    @Autowired(required = false)
+    private ApicasesReportService apicasereportservice;
+    @Autowired(required = false)
+    private ExecuteplanService epservice;
     @Autowired(required = false)
     private ApicasesReportPerformanceMapper apicasesReportPerformanceMapper;
 
@@ -195,6 +204,68 @@ public class TestPlanCaseController {
 
     }
 
+
+    @PostMapping("/execfunctiontest")
+    public Result execfunctiontest(@RequestBody List<Dispatch> dispatchList) throws Exception {
+        String ip = null;
+        InetAddress address = null;
+        address = InetAddress.getLocalHost();
+        ip = address.getHostAddress();
+        List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
+        if (slaverlist.size() == 0) {
+            TestPlanCaseController.log.error("功能任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
+            return ResultGenerator.genFailedResult("execfunctiontest 未找到ip为：" + ip + "的slaver");
+        }
+        Long SlaverId = slaverlist.get(0).getId();
+        try {
+            slaverMapper.updateSlaverStaus(SlaverId, "运行中");
+            String ProjectPath = System.getProperty("user.dir");
+            String JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
+            String JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+            TestPlanCaseController.log.info("功能任务-获取待执行的功能用例数：。。。。。。。。。。。。。。。。。。。。。。。。" + dispatchList.size());
+            int FunctionJmeter = GetJmeterProcess("FunctionJmeterProcess", "功能");
+
+            HashMap<String, List<Dispatch>> ProtocolDispatchRun = GetProtocolDispatch(dispatchList);
+            for (String Protocol : ProtocolDispatchRun.keySet()) {
+                int ProtocolJmeterNum = 0;
+                if (FunctionJmeter == 1) {
+                    ProtocolJmeterNum = 1;
+                } else {
+                    ProtocolJmeterNum = FunctionJmeter / ProtocolDispatchRun.size();
+                }
+                TestPlanCaseController.log.info("功能任务-ProtocolJmeterNum：。。。。。。。。" + ProtocolJmeterNum);
+                List<List<Dispatch>> last = FunctionDispatch(ProtocolJmeterNum, ProtocolDispatchRun.get(Protocol));
+                if (Protocol.equals(new String("http"))) {
+                    for (List<Dispatch> JmeterList : last) {
+                        String DispatchIDs = "";
+                        for (Dispatch dis : JmeterList) {
+                            DispatchIDs = dis.getId() + "," + DispatchIDs;
+                            dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
+                            TestPlanCaseController.log.info("功能任务-更新调度状态为已分配：。。。。。。。。" + dis.getId());
+                        }
+                        if (!DispatchIDs.isEmpty()) {
+                            DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
+                            TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
+                            tpcservice.ExecuteHttpPlanFunctionCase(SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password);
+                        }
+                    }
+                }
+                if (Protocol.equals(new String("rpc"))) {
+                    String JmeterClassName = "";
+                    String DeployUnitNameForJmeter = "";
+                }
+            }
+        } catch (Exception ex) {
+            slaverMapper.updateSlaverStaus(SlaverId, "空闲");
+            TestPlanCaseController.log.error("功能任务-execfunctiontest 异常:=======================" + ex.getMessage());
+            return ResultGenerator.genFailedResult(ex.getMessage());
+        }
+        return ResultGenerator.genOkResult();
+    }
+
+
+
+
     public void JmeterClassNotExist(Dispatch dis, String jmeterclassname, String casename) {
         // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态
         ApicasesReport ar = new ApicasesReport();
@@ -251,4 +322,139 @@ public class TestPlanCaseController {
         return flag;
     }
 
+
+    public void FunJmeterClassNotExist(Dispatch dis, String jmeterclassname, String casename) {
+        // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态
+        ApicasesReport ar = new ApicasesReport();
+        ar.setTestplanid(dis.getExecplanid());
+        ar.setCaseid(dis.getTestcaseid());
+        ar.setCasename(dis.getTestcasename());
+        ar.setErrorinfo("功能任务-执行用例：" + casename + " |未找到用例对应的jmeter-class类：" + jmeterclassname + " 请检查是否已经开发提交");
+        ar.setBatchname(dis.getBatchname());
+        ar.setExpect(dis.getExpect());
+        ar.setStatus("失败");
+        ar.setRuntime(new Long(0));
+        Long planid = dis.getExecplanid();
+
+        apicasereportservice.addcasereport(ar);
+        epservice.updatetestplanstatus(planid, "fail");
+        TestPlanCaseController.log.info("功能任务-未找到用例对应的jmeter-class类......." + jmeterclassname);
+    }
+
+    //功能用例平均分配
+    public List<List<Dispatch>> FunctionDispatch(int Jmeternums, List<Dispatch> dispatchList) {
+        if (dispatchList.size() < Jmeternums) {
+            Jmeternums = dispatchList.size();
+        }
+        List<List<Dispatch>> LastDispatchList = new ArrayList<List<Dispatch>>();
+        List<Dispatch> splitdispatchList;
+        int sizemode = (dispatchList.size()) / Jmeternums;
+        int sizeleft = (dispatchList.size()) % Jmeternums;
+        int j = 0;
+        int x = 0;
+        for (int i = 0; i < Jmeternums; i++) {
+            splitdispatchList = new ArrayList<Dispatch>();
+            for (j = x; j < (sizemode + x); j++) {
+                Dispatch dis = dispatchList.get(j);
+                splitdispatchList.add(dis);
+            }
+            x = j;
+            LastDispatchList.add(splitdispatchList);
+        }
+        if (sizeleft != 0) {
+            for (int y = 1; y < sizeleft + 1; y++) {
+                Dispatch dis = dispatchList.get(dispatchList.size() - y);
+                LastDispatchList.get(LastDispatchList.size() - 1).add(dis);
+            }
+        }
+        return LastDispatchList;
+    }
+
+
+    public int GetJmeterProcess(String DictionaryCode, String DicType) {
+        List<Dictionary> slavermaxfunthreaddic = dictionaryMapper.findDicNameValueWithCode(DictionaryCode);
+
+        int JmeterProcess = 1;
+        //字典表未配置，默认取一条
+        if (slavermaxfunthreaddic.size() == 0) {
+            TestPlanCaseController.log.info("功能任务-字典表未配置" + DicType + "slaver并发执行jmerter进程个数，默认为1");
+        } else {
+            String slavermaxthread = slavermaxfunthreaddic.get(0).getDicitmevalue();
+            try {
+                JmeterProcess = Integer.valueOf(slavermaxthread);
+            } catch (Exception ex) {
+                TestPlanCaseController.log.error("功能任务-字典表未正确配置" + DicType + "slaver并发执行jmerter进程个数，默认为1");
+            }
+            TestPlanCaseController.log.info("功能任务-获取字典表slaver并发执行jmerter进程个数：。。。。。。。。" + slavermaxthread);
+        }
+        return JmeterProcess;
+    }
+
+    public HashMap<String, List<Dispatch>> GetProtocolDispatch(List<Dispatch> dispatchList) {
+        List<Dispatch> dispatchResultList = new ArrayList<>();
+        HashMap<Long, List<Dispatch>> GroupDispatch = new HashMap<Long, List<Dispatch>>();
+
+        //获取计划id分组中的第一组列表
+        for (Dispatch dispatch : dispatchList) {
+            Long planid = dispatch.getExecplanid();
+            if (!GroupDispatch.containsKey(planid)) {
+                List<Dispatch> dispatchListtmp = new ArrayList<>();
+                dispatchListtmp.add(dispatch);
+                GroupDispatch.put(planid, dispatchListtmp);
+            } else {
+                GroupDispatch.get(planid).add(dispatch);
+            }
+        }
+        for (Long planid : GroupDispatch.keySet()) {
+            dispatchResultList = GroupDispatch.get(planid);
+            break;
+        }
+
+        //获取发布单元分组列表
+        HashMap<String, List<Dispatch>> DeployUnitGroupDispatch = new HashMap<String, List<Dispatch>>();
+        for (Dispatch dispatch : dispatchResultList) {
+            String DeployUnit = dispatch.getDeployunitname();
+            if (!DeployUnitGroupDispatch.containsKey(DeployUnit)) {
+                List<Dispatch> dispatchListtmp = new ArrayList<>();
+                dispatchListtmp.add(dispatch);
+                DeployUnitGroupDispatch.put(DeployUnit, dispatchListtmp);
+            } else {
+                DeployUnitGroupDispatch.get(DeployUnit).add(dispatch);
+            }
+        }
+
+        //合并协议列表
+        HashMap<String, List<Dispatch>> ProtocolGroupDispatch = new HashMap<String, List<Dispatch>>();
+
+        for (String DeployUnit : DeployUnitGroupDispatch.keySet()) {
+            Deployunit deployunit = deployunitService.findDeployNameValueWithCode(DeployUnit);
+            String Protocal = deployunit.getProtocal();
+            if (Protocal.equals(new String("http")) || Protocal.equals(new String("https"))) {
+                ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "http");
+            }
+            if (Protocal.equals(new String("rpc"))) {
+                ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "rpc");
+            }
+        }
+        return ProtocolGroupDispatch;
+    }
+
+    public HashMap<String, List<Dispatch>> MergeCaseList(HashMap<String, List<Dispatch>> ProtocolGroupDispatch, HashMap<String, List<Dispatch>> DeployUnitGroupDispatch, String DeployUnit, String Protocol) {
+        HashMap<String, List<Dispatch>> ProtocolGroupResultDispatch = ProtocolGroupDispatch;
+        if (!ProtocolGroupResultDispatch.containsKey(Protocol)) {
+            List<Dispatch> dispatchListtmp = new ArrayList<>();
+            for (Dispatch dis : DeployUnitGroupDispatch.get(DeployUnit)) {
+                dispatchListtmp.add(dis);
+            }
+            ProtocolGroupResultDispatch.put(Protocol, dispatchListtmp);
+        } else {
+            for (Dispatch dis : DeployUnitGroupDispatch.get(DeployUnit)) {
+                ProtocolGroupResultDispatch.get(Protocol).add(dis);
+            }
+        }
+        return ProtocolGroupResultDispatch;
+    }
+
+
 }
+

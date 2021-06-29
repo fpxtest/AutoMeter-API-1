@@ -51,7 +51,7 @@
 
   <select id="getcasebyrunmode" resultMap="BaseResultMap">
     select * from dispatch a JOIN executeplan b on a.execplanid=b.id where a.status =#{status} and b.usetype=#{usetype}
-    and b.runmode=#{runmode} order by a.id ASC
+    and b.runmode=#{runmode} order by a.id ASC limit 100
   </select>
 
 

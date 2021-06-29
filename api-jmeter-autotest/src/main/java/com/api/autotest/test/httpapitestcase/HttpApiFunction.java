@@ -24,6 +24,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         Arguments params = new Arguments();
         //定义一个参数，显示到Jmeter的参数列表中，第一个参数为参数默认的显示名称，第二个参数为默认值
         params.addArgument("DispatchIds", "11");
+        params.addArgument("SlaverId", "11");
         params.addArgument("mysqlurl", "/opt/");
         params.addArgument("mysqlusername", "/opt/");
         params.addArgument("mysqlpassword", "/opt/");
@@ -32,6 +33,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
 
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
+        String SlaverId=ctx.getParameter("SlaverId");
+        getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
         SampleResult results = new SampleResult();
         //Jmeter java实例开始执行
         results.sampleStart();
@@ -100,7 +103,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     }
                 }
                 //收集本次运行的功能用例统计结果
-                CollectionReportStatics(Core,apicasesReportstatics,BatchName, BatchDeployTotalCaseNums,BatchDeployTotalPassNums,BatchDeployTotalFailNUms,AllCostTime);
+                getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
+                CollectionReportStatics(Core,apicasesReportstatics,BatchName, BatchDeployTotalCaseNums,BatchDeployTotalPassNums,BatchDeployTotalFailNUms,AllCostTime,SlaverId);
                 //
             }
         }
@@ -177,7 +181,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //功能用例统计收集信息
-    private void CollectionReportStatics(TestCorebak core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums,int TotalPassNums,int TotalFailNUms,long AllCostTime) {
+    private void CollectionReportStatics(TestCorebak core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums,int TotalPassNums,int TotalFailNUms,long AllCostTime,String SlaverId) {
         apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));
         apicasesReportstatics.setTotalpasscases(String.valueOf(TotalPassNums));
@@ -186,6 +190,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         core.SaveReportStatics(apicasesReportstatics);
         //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
         core.PlanBatchAllDipatchFinish(apicasesReportstatics);
+        getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
+        core.UpdateSlaverStatus(SlaverId,"空闲");
         getLogger().info("功能用例统计收集信息 完成。。。。。。。。。。。。。。。。");
     }
 
@@ -227,7 +233,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "3");
+        params.addArgument("DispatchIds", "17");
+        params.addArgument("SlaverId", "9");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "root");
         params.addArgument("mysqlpassword", "root");

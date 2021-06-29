@@ -85,7 +85,7 @@ public class PerformanceDispatchScheduleTask {
                             {
                                 String params = JSON.toJSONString(dispatch);
                                 HttpHeader header = new HttpHeader();
-                                String ServerUrl="http://"+slaver.getIp()+":"+slaver.getPort()+"/execperformancetest";
+                                String ServerUrl="http://"+slaver.getIp()+":"+slaver.getPort()+"/exectestplancase/execperformancetest";
                                 String respon= Httphelp.doPost(ServerUrl, params, header, 10, 10);
                             }
                         }

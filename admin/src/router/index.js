@@ -74,8 +74,20 @@ export const asyncRouterMap = [
     children: [
       { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
       //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }},
-      { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { title: '前后置条件', permission: ['apicases_condition:list'] }}
+      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }}
+      // { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { title: '前后置条件', permission: ['apicases_condition:list'] }}
+    ]
+  },
+
+  {
+    path: '/condition',
+    component: Layout,
+    name: '条件管理',
+    icon: 'asset',
+    children: [
+      { path: 'condition/list', name: '条件管理', component: _import('condition/condition/index'), meta: { title: '条件管理', permission: ['condition:list'] }},
+      { path: 'apicondition/list', name: '接口条件', component: _import('condition/apicondition/index'), meta: { title: '接口条件', permission: ['apicondition:list'] }},
+      { path: 'dbcondition/list', name: 'DB条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB条件', permission: ['dbcondition:list'] }}
     ]
   },
 

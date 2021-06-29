@@ -24,7 +24,8 @@ DROP TABLE IF EXISTS `enviroment_assemble`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `enviroment_assemble`
 (
-    `id`  bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '环境Id',
+    `id`  bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '环境组件Id',
+    `enviromentid`  bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '环境Id',
     `assemblename`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '环境组件名',
     `assembletype`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'mysql，oracle，redis',
     `connectstr`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '连接字',

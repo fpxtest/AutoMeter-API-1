@@ -10,6 +10,7 @@ package com.api.autotest.common.utils;
 */
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -61,8 +62,12 @@ public class Httphelp {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(connectTimeout).build();
             String query = null;
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
                 setHeader(httpPost, header);
             }
@@ -92,6 +97,7 @@ public class Httphelp {
             {
                 httpClient = new SSLClient();
             }
+
             httpResponse = httpClient.execute(httpPost);
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
@@ -126,7 +132,11 @@ public class Httphelp {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(connectTimeout).build();
             HttpGet httpGet = new HttpGet(url);
+            httpGet.setConfig(requestConfig);
             logger.info("Get datas is :  " + url);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
@@ -175,9 +185,13 @@ public class Httphelp {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(connectTimeout).build();
             String query = null;
             url = buildGetUrl(url, query);
             HttpPut httpGet = new HttpPut(url);
+            httpGet.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
@@ -234,10 +248,13 @@ public class Httphelp {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
-
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(connectTimeout).build();
             String query = null;
             url = buildGetUrl(url, query);
             HttpDelete httpGet = new HttpDelete(url);
+            httpGet.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.RuntimeparamsrecordMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Runtimeparamsrecord">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="caseid" jdbcType="BIGINT" property="caseid" />
+    <result column="testplanid" jdbcType="BIGINT" property="testplanid" />
+    <result column="bantchid" jdbcType="BIGINT" property="bantchid" />
+    <result column="apicases_runtimeparamsid" jdbcType="BIGINT" property="apicasesRuntimeparamsid" />
+    <result column="paramsvalue" jdbcType="VARCHAR" property="paramsvalue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+</mapper>

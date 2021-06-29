@@ -25,5 +25,7 @@ public interface SlaverMapper extends MyMapper<Slaver> {
      */
     void updateSlaver(Slaver params);
 
+    void updateSlaverStaus(@Param("id") final Long id,@Param("status") final String status);
+
     void addslaver(Slaver params);
 }

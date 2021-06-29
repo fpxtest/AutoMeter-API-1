@@ -20,6 +20,9 @@ public interface SlaverMapper extends MyMapper<Slaver> {
 
     List<Slaver> findslaverbytype(@Param("stype") final String stype);
 
+    List<Slaver> findslaverbytypeandstatus(@Param("stype") final String stype,@Param("status") final String status);
+
+
     /**
      * 更新字典内容
      *
