@@ -740,12 +740,6 @@ CREATE TABLE `slaver` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='服务器表';
 
--- ----------------------------
---  Records of `slaver`
--- ----------------------------
-BEGIN;
-INSERT INTO `slaver` VALUES ('8', '功能测试机器1', '127.0.0.1', '8081', '', '功能', 'slaver', '2021-05-26 23:05:35', '2021-05-26 23:05:54');
-COMMIT;
 
 -- ----------------------------
 --  Table structure for `statics_deployunitandcases`
