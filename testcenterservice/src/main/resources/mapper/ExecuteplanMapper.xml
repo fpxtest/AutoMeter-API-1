@@ -36,11 +36,11 @@
   </select>
 
   <select id="getallexplan" resultMap="BaseResultMap">
-    SELECT a.id, a.executeplanname FROM executeplan a
+    SELECT a.* FROM executeplan a
   </select>
 
   <select id="getallexplanbytype" resultMap="BaseResultMap">
-    SELECT a.id, a.executeplanname FROM executeplan a where usetype=#{usetype}
+    SELECT a.* FROM executeplan a where usetype=#{usetype}
   </select>
 
   <select id="getexecuteplannum" resultType="java.lang.Integer">

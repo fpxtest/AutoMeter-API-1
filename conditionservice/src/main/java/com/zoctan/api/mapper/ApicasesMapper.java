@@ -30,6 +30,6 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
      * @param caseid 参数
      * @return jmx名
      */
-    Apicases getjmetername(@Param("id")long caseid);
+    Apicases GetCaseByCaseID(@Param("id")long caseid);
 
 }

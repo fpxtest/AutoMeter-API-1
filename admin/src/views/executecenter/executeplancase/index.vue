@@ -397,10 +397,13 @@
       testplanselectChanged(e) {
         this.tmpexecuteplanid = null
         this.tmpcasecasetype = null
+        console.log(this.execplanList)
         for (let i = 0; i < this.execplanList.length; i++) {
           if (this.execplanList[i].executeplanname === e) {
             this.tmpexecuteplanid = this.execplanList[i].id
             this.tmpcasecasetype = this.execplanList[i].usetype
+            console.log('1111111111111111111111')
+            console.log(this.tmpcasecasetype)
           }
         }
       },
@@ -537,6 +540,7 @@
         this.searchcase.deployunitid = this.tmpdeployunitid
         this.searchcase.apiid = this.tmpapiid
         this.searchcase.casetype = this.tmpcasecasetype
+        console.log(this.searchcase)
         this.caselistLoading = true
         this.$refs.searchcase.validate(valid => {
           if (valid) {
@@ -635,6 +639,7 @@
             this.$message.error('装载失败')
           })
           this.casedialogFormVisible = false
+          this.getexecuteplancaseList()
         }
       },
 
@@ -681,6 +686,7 @@
       showTestCaseDialog() {
         this.casedialogFormVisible = true
         this.dialogStatus = 'add'
+        this.searchcase.executeplanname = null
         this.searchcase.deployunitname = null
         this.searchcase.apiname = null
         this.testcaselastList = []

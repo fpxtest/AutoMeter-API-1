@@ -35,7 +35,6 @@ public class EnviromentController {
             enviromentService.save(enviroment);
             return ResultGenerator.genOkResult();
         }
-
     }
 
     @DeleteMapping("/{id}")

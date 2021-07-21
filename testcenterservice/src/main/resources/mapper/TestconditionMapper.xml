@@ -22,11 +22,12 @@
     FROM testcondition a
     <where>
       <if test="objecttype != null and objecttype != ''">a.objecttype like CONCAT('%',#{objecttype},'%')</if>
+      <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
     </where>
   </select>
 
   <select id="getallTestcondition" resultMap="BaseResultMap">
-    SELECT a.conditionname FROM testcondition a
+    SELECT * FROM testcondition a
   </select>
 
   <update id="updateTestcondition" parameterType="com.zoctan.api.entity.Testcondition">

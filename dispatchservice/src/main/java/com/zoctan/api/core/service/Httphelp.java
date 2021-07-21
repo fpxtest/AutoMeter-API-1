@@ -10,6 +10,7 @@ package com.zoctan.api.core.service;
 */
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -29,12 +30,12 @@ public class Httphelp {
     public static final String JSON_CONTENT_FORM = "application/json;charset=UTF-8";
     public static final String CONTENT_FORM = "application/x-www-form-urlencoded;charset=UTF-8";
 
-    public static String doService(String url,String method, String paramers, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static String doService(String url,String method, String paramers, HttpHeader header, int connectTimeout) throws Exception {
         switch (method) {
             case "get":
                 //return doGet(url, paramers, header, connectTimeout, readTimeout);
             case "post":
-                return doPost(url, paramers, header, connectTimeout, readTimeout);
+                return doPost(url, paramers, header, connectTimeout);
         }
         return null;
     }
@@ -46,17 +47,20 @@ public class Httphelp {
      * @param paramers
      * @param header
      * @param connectTimeout
-     * @param readTimeout
      * @return
      * @throws IOException
      */
-    public static String doPost(String url, String paramers, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static String doPost(String url, String paramers, HttpHeader header, int connectTimeout) throws Exception {
         String responseData = "";
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(connectTimeout).build();
             String query = null;
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setConfig(requestConfig);
             if(header.getParams().size()>0)
             {
                 setHeader(httpPost, header);

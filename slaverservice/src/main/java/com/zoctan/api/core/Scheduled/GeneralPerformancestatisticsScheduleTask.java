@@ -18,14 +18,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * Created by fanseasn on 2020/11/21.
@@ -52,6 +51,8 @@ public class GeneralPerformancestatisticsScheduleTask {
     private ExecuteplanService epservice;
     @Autowired(required = false)
     private PerformancereportsourceMapper performancereportsourceMapper;
+    private String redisKey = "";
+    private String ip = "";
 
 
     //3.添加定时任务
@@ -59,12 +60,10 @@ public class GeneralPerformancestatisticsScheduleTask {
     //或直接指定时间间隔，例如：5秒
     //@Scheduled(fixedRate=5000)
     private void configureTasks() {
-        String ip = null;
-        InetAddress address = null;
         try {
-            address = InetAddress.getLocalHost();
-            ip = address.getHostAddress();
-            String redisKey = "Performancestatistics"+ UUID.randomUUID().toString()+ip+"GeneralPerformancestatistics";
+//            address = InetAddress.getLocalHost();
+//            ip = address.getHostAddress();
+            //String redisKey = "Performancestatistics"+ UUID.randomUUID().toString()+ip+"GeneralPerformancestatistics";
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
@@ -231,4 +230,18 @@ public class GeneralPerformancestatisticsScheduleTask {
 
 
     }
+
+    @PostConstruct
+    public void Init() {
+        InetAddress address = null;
+        try {
+            address = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-UnknownHostException is:" + e.getMessage());
+        }
+        ip = address.getHostAddress();
+        redisKey = "Performancestatistics"+ip+"GeneralPerformancestatistics"+ new Date();
+        GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-redisKey is:" + redisKey);
+    }
+
 }

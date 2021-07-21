@@ -28,7 +28,7 @@
     </where>
   </select>
 
-  <select id="getjmetername" resultMap="BaseResultMap">
+  <select id="GetCaseByCaseID" resultMap="BaseResultMap">
     SELECT a.*
     FROM apicases a
     where a.id= #{id}

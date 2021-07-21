@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.Apicases;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -26,5 +27,7 @@ public interface ApicasesService extends Service<Apicases> {
      * @return 发布单元列表
      */
     void updateApicase(Apicases params);
+
+    Apicases GetCaseByCaseID(@Param("id")long caseid);
 
 }

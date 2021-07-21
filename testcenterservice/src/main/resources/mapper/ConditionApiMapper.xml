@@ -7,6 +7,10 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="conditionid" jdbcType="BIGINT" property="conditionid" />
+    <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
     <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
     <result column="caseid" jdbcType="BIGINT" property="caseid" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
@@ -16,16 +20,16 @@
   </resultMap>
 
   <select id="findtestconditionapiWithName" resultMap="BaseResultMap">
-    SELECT d.conditionname ,b.deployunitname, c.casename,a.*
-    FROM condition_api a inner join deployunit b on a.deployunitid=b.id inner join apicases c on a.caseid=c.id
-    inner join testcondition d on a.conditionid=d.id
+    SELECT *
+    FROM condition_api
     <where>
-      <if test="conditionid != null and conditionid != ''">a.conditionid like CONCAT('%',#{conditionid},'%')</if>
+      <if test="conditionname != null and conditionname != ''">conditionname like CONCAT('%',#{conditionname},'%')</if>
     </where>
   </select>
 
-  <update id="updateTestcondition" parameterType="com.zoctan.api.entity.Testcondition">
+  <update id="updateTestconditionapi" parameterType="com.zoctan.api.entity.Testcondition">
     update condition_api set conditionid = #{conditionid}, deployunitid = #{deployunitid},caseid=#{caseid},
+    conditionname = #{conditionname},deployunitname = #{deployunitname},apiname = #{apiname},casename = #{casename},
     memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>

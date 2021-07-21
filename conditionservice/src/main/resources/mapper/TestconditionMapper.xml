@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.TestconditionMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Testcondition">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
+    <result column="objectid" jdbcType="BIGINT" property="objectid" />
+    <result column="objectname" jdbcType="VARCHAR" property="objectname" />
+    <result column="objecttype" jdbcType="VARCHAR" property="objecttype" />
+    <result column="conditiontype" jdbcType="VARCHAR" property="conditiontype" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findtestconditionWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM testcondition a
+    <where>
+      <if test="objecttype != null and objecttype != ''">a.objecttype like CONCAT('%',#{objecttype},'%')</if>
+      <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
+    </where>
+  </select>
+
+  <select id="getallTestcondition" resultMap="BaseResultMap">
+    SELECT * FROM testcondition a
+  </select>
+
+  <select id="GetConditionByPlanIDAndConditionType" resultMap="BaseResultMap">
+    SELECT * FROM testcondition where objectid = #{objectid} and conditiontype=#{conditiontype}
+  </select>
+
+  <update id="updateTestcondition" parameterType="com.zoctan.api.entity.Testcondition">
+    update testcondition set objectid = #{objectid},conditionname = #{conditionname}, objectname = #{objectname},objecttype=#{objecttype},conditiontype=#{conditiontype},
+    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+</mapper>

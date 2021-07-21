@@ -14,6 +14,16 @@ public class Apicases {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getApiid() {
+        return apiid;
+    }
+
+    public void setApiid(Long apiid) {
+        this.apiid = apiid;
+    }
+
+    private Long apiid;
+
     public Long getThreadnum() {
         return threadnum;
     }

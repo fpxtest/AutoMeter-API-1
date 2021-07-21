@@ -33,4 +33,9 @@ private ApicasesMapper apicasesMapper;
         apicasesMapper.updateApicase(params);
 
     }
+
+    @Override
+    public Apicases GetCaseByCaseID(long caseid) {
+        return apicasesMapper.GetCaseByCaseID(caseid);
+    }
 }

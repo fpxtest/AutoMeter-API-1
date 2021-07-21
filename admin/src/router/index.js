@@ -74,8 +74,8 @@ export const asyncRouterMap = [
     children: [
       { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
       //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }}
-      // { path: 'cases/casecondition/list', name: '前后置条件', component: _import('assets/cases/casecondition/index'), meta: { title: '前后置条件', permission: ['apicases_condition:list'] }}
+      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }},
+      { path: 'cases/apicasesvariables/list', name: '用例变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '用例变量', permission: ['ApicasesVariables:list'] }}
     ]
   },
 
@@ -88,6 +88,17 @@ export const asyncRouterMap = [
       { path: 'condition/list', name: '条件管理', component: _import('condition/condition/index'), meta: { title: '条件管理', permission: ['condition:list'] }},
       { path: 'apicondition/list', name: '接口条件', component: _import('condition/apicondition/index'), meta: { title: '接口条件', permission: ['apicondition:list'] }},
       { path: 'dbcondition/list', name: 'DB条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB条件', permission: ['dbcondition:list'] }}
+    ]
+  },
+
+  {
+    path: '/testvariables',
+    component: Layout,
+    name: '变量管理',
+    icon: 'asset',
+    children: [
+      { path: 'testvariables/list', name: '变量管理', component: _import('testvariables/testvariables/index'), meta: { title: '变量管理', permission: ['testvariables:list'] }},
+      { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
     ]
   },
 
@@ -146,6 +157,7 @@ export const asyncRouterMap = [
     name: '报告中心',
     icon: 'report',
     children: [
+      { path: 'testconditionreport/list', name: '条件执行报告', component: _import('reportcenter/testconditionreport/index'), meta: { title: '条件执行报告', permission: ['testconditionreport:list'] }},
       { path: 'apireport/list', name: '功能测试报告', component: _import('reportcenter/apireport/index'), meta: { title: '功能测试报告', permission: ['apireport:list'] }},
       { path: 'apireportstatics/list', name: '功能统计报告', component: _import('reportcenter/apireportstatics/index'), meta: { title: '功能统计报告', permission: ['apireportstatics:list'] }},
       //  { path: 'apireport/list', name: '功能报告分析', component: _import('reportcenter/apireport/index'), meta: { permission: ['apireport:list'] }},

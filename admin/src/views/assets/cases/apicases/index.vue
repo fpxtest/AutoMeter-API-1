@@ -240,16 +240,7 @@
 如果api返回是html，xml则使用xpath表示期望值，多个值用英文逗号隔开 例如：//div/h3//text():value"
           />
         </el-form-item>
-        <el-form-item label="中间变量" prop="middleparam" >
-          <el-input
-            type="textarea"
-            maxlength="400"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model.trim="tmpapicases.middleparam"
-            placeholder="接口运行后，在返回值中提取内容定义为变量，其他接口可以作为参数使用，例如：$token=data.plist[0].name"
-          />
-        </el-form-item>
+
         <el-form-item label="优先级" prop="level" >
           <el-input
             type="text"

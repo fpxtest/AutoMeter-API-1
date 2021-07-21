@@ -48,9 +48,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="测试环境" align="center" prop="enviromentname" width="120"/>
-      <el-table-column label="服务器" align="center" prop="machinename" width="120"/>
-      <el-table-column label="ip" align="center" prop="ip" width="120"/>
+      <el-table-column label="条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="发布单元名" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="api名" align="center" prop="apiname" width="120"/>
+      <el-table-column label="接口名" align="center" prop="casename" width="120"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -124,8 +125,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="用例" prop="casename" required >
-          <el-select v-model="tmpapicondition.casename" placeholder="用例" @change="testcaseselectChanged($event)">
+        <el-form-item label="接口" prop="casename" required >
+          <el-select v-model="tmpapicondition.casename" placeholder="接口" @change="testcaseselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testcase, index) in caseList" :key="index">
               <el-option :label="testcase.casename" :value="testcase.casename" required/>
@@ -163,6 +164,7 @@
   import { getalltestcondition } from '@/api/condition/condition'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
+  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
@@ -180,15 +182,20 @@
     data() {
       return {
         itemKey: null,
-        tmpenviromentname: '',
+        tmpconditionname: '',
         conditionList: [], // 条件列表
         apiconditionList: [], // 接口条件列表
+        apiList: [], // api列表
         caseList: [], // 用例列表
         deployunitList: [], // 发布单元列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
-        apiQuery: {
+        deployunitQuery: {
           deployunitname: '' // 获取字典表入参
+        },
+        apiquery: {
+          casedeployunitname: '',
+          caseapiname: ''
         },
         apicaseQuery: {
           apiname: '' // 获取字典表入参
@@ -196,8 +203,7 @@
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true,
-          enviromentname: ''
+          listLoading: true
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -213,6 +219,8 @@
           conditionname: '',
           deployunitid: '',
           deployunitname: '',
+          apiname: '',
+          apiid: '',
           caseid: '',
           casename: '',
           memo: '',
@@ -221,7 +229,7 @@
         search: {
           page: 1,
           size: 10,
-          enviromentname: null
+          conditionname: null
         }
       }
     },
@@ -260,8 +268,14 @@
        * api下拉选择事件获取发布单元id  e的值为options的选值
        */
       apiselectChanged(e) {
-        this.apicaseQuery.apiname = e
-        findcasesbyname(this.apicaseQuery).then(response => {
+        for (let i = 0; i < this.apiList.length; i++) {
+          if (this.apiList[i].apiname === e) {
+            this.tmpapicondition.apiid = this.apiList[i].id
+          }
+        }
+        this.apiquery.caseapiname = e
+        this.apiquery.casedeployunitname = this.deployunitQuery.deployunitname
+        findcasesbyname(this.apiquery).then(response => {
           this.caseList = response.data
         }).catch(res => {
           this.$message.error('加载apicase列表失败')
@@ -277,25 +291,13 @@
       },
 
       /**
-       * 条件下拉选择事件获取发布单元id  e的值为options的选值
+       * 条件下拉选择事件获取条件id  e的值为options的选值
        */
       ConditionselectChanged(e) {
         for (let i = 0; i < this.conditionList.length; i++) {
           if (this.conditionList[i].conditionname === e) {
             this.tmpapicondition.conditionid = this.conditionList[i].id
           }
-        }
-      },
-
-      /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
-       */
-      selectChangedEN(e) {
-        for (let i = 0; i < this.enviromentnameList.length; i++) {
-          if (this.enviromentnameList[i].enviromentname === e) {
-            this.tmpapicondition.envid = this.enviromentnameList[i].id
-          }
-          console.log(this.enviromentnameList[i].id)
         }
       },
 
@@ -312,11 +314,24 @@
       },
 
       /**
+       * 获取发布单元列表
+       */
+      getdepunitList() {
+        this.listLoading = true
+        getdepunitList(this.listQuery).then(response => {
+          this.deployunitList = response.data.list
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载发布单元列表失败')
+        })
+      },
+
+      /**
        * 获取服务器环境列表
        */
       getapiconditionList() {
         this.listLoading = true
-        this.search.enviromentname = this.tmpenviromentname
+        this.search.conditionname = this.tmpconditionname
         search(this.search).then(response => {
           this.apiconditionList = response.data.list
           this.total = response.data.total
@@ -327,7 +342,7 @@
       },
 
       /**
-       * 获取环境列表
+       * 获取条件列表
        */
       getalltestcondition() {
         this.listLoading = true
@@ -350,7 +365,7 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
-        this.tmpenviromentname = this.search.enviromentname
+        this.tmpconditionname = this.search.conditionname
         this.listLoading = false
         this.btnLoading = false
       },
@@ -390,10 +405,10 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
         this.tmpapicondition.id = ''
-        this.tmpapicondition.envid = ''
-        this.tmpapicondition.machineid = ''
-        this.tmpapicondition.machinename = ''
-        this.tmpapicondition.enviromentname = ''
+        this.tmpapicondition.conditionname = ''
+        this.tmpapicondition.deployunitname = ''
+        this.tmpapicondition.apiname = ''
+        this.tmpapicondition.casename = ''
         this.tmpapicondition.creator = this.name
       },
       /**

@@ -18,8 +18,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +50,9 @@ public class PerformanceDispatchScheduleTask {
     private DeployunitService deployunitService;
     @Autowired(required = false)
     private DispatchMapper dispatchMapper;
+    private String redisKey = "";
+
+
 
     //3.添加定时任务,处理并行多机并发性能测试任务
     @Scheduled(cron = "0/5 * * * * ?")
@@ -60,7 +65,7 @@ public class PerformanceDispatchScheduleTask {
             address = InetAddress.getLocalHost();
             ip = address.getHostAddress();
             // 全局性能任务的redis的key相同，保证全局性能任务同一时刻只有一个线程进入工作
-            String redisKey = "Performance-dispatch-RedisLock";
+            //String redisKey = "Performance-dispatch-RedisLock";
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
@@ -86,7 +91,7 @@ public class PerformanceDispatchScheduleTask {
                                 String params = JSON.toJSONString(dispatch);
                                 HttpHeader header = new HttpHeader();
                                 String ServerUrl="http://"+slaver.getIp()+":"+slaver.getPort()+"/exectestplancase/execperformancetest";
-                                String respon= Httphelp.doPost(ServerUrl, params, header, 10, 10);
+                                String respon= Httphelp.doPost(ServerUrl, params, header, 30000);
                             }
                         }
                     }
@@ -155,6 +160,12 @@ public class PerformanceDispatchScheduleTask {
             }
         }
         return  null;
+    }
+
+    @PostConstruct
+    public void Init() {
+        redisKey = "Performance-dispatch-RedisLock" + new Date();
+        PerformanceDispatchScheduleTask.log.info("性能调度任务-redisKey is:" + redisKey);
     }
 
 }

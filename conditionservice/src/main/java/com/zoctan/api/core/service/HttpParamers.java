@@ -5,7 +5,7 @@ package com.zoctan.api.core.service;
  */
 /*
  @author Season
- @DESCRIPTION 
+ @DESCRIPTION
  @create 2020/10/17
 */
 
@@ -23,33 +23,33 @@ import java.util.Set;
 
 
 public class HttpParamers {
-    public enum HttpMethod {
-        GET, POST;
-    }
+    //    public enum HttpMethod {
+//        GET, POST;
+//    }
     private Map<String, String> params = new HashMap<String, String>();
-    private HttpMethod httpMethod;
+    //private HttpMethod httpMethod;
     private String jsonParamer = "";
 
-    public HttpParamers(HttpMethod httpMethod) {
-        this.httpMethod = httpMethod;
-    }
+//    public HttpParamers(HttpMethod httpMethod) {
+//        this.httpMethod = httpMethod;
+//    }
 
-    public static HttpParamers httpPostParamers() {
-        return new HttpParamers(HttpMethod.POST);
-    }
-
-    public static HttpParamers httpGetParamers() {
-        return new HttpParamers(HttpMethod.GET);
-    }
+//    public  HttpParamers Paramers() {
+//        return new HttpParamers();
+//    }
+//
+//    public static HttpParamers httpGetParamers() {
+//        return new HttpParamers(HttpMethod.GET);
+//    }
 
     public HttpParamers addParam(String name, String value) {
         this.params.put(name, value);
         return this;
     }
 
-    public HttpMethod getHttpMethod() {
-        return this.httpMethod;
-    }
+//    public HttpMethod getHttpMethod() {
+//        return this.httpMethod;
+//    }
 
     public String getQueryString(String charset) throws IOException {
         if ((this.params == null) || (this.params.isEmpty())) {

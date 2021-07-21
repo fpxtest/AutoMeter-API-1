@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('condition:search')">
           <el-form-item>
-            <el-input clearable v-model="search.objectname" @keyup.enter.native="searchBy" placeholder="条件名"></el-input>
+            <el-input clearable v-model="search.conditionname" @keyup.enter.native="searchBy" placeholder="条件名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -46,7 +46,8 @@
 
       <el-table-column label="条件名" align="center" prop="conditionname" width="120"/>
       <el-table-column label="目标名" align="center" prop="objectname" width="120"/>
-      <el-table-column label="目标类型" align="center" prop="conditiontype" width="120"/>
+      <el-table-column label="目标类型" align="center" prop="objecttype" width="120"/>
+      <el-table-column label="条件类型" align="center" prop="conditiontype" width="120"/>
       <el-table-column label="备注" align="center" prop="memo" width="120"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -213,7 +214,7 @@
     data() {
       return {
         itemKey: null,
-        tmpenviromentname: '',
+        tmpconditionname: '',
         execplanList: [], // 计划列表
         conditionList: [], // 环境服务器列表
         apiList: [], // api列表
@@ -225,11 +226,17 @@
         executeplanVisible: false,
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
+        deployunitquery: {
+          deployunitname: ''
+        },
+        apiquery: {
+          casedeployunitname: '',
+          caseapiname: ''
+        },
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          listLoading: true,
-          enviromentname: ''
+          listLoading: true
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
@@ -247,12 +254,14 @@
           objectname: '',
           conditiontype: '',
           memo: '',
-          creator: ''
+          creator: '',
+          deployunitname: '',
+          apiname: ''
         },
         search: {
           page: 1,
           size: 10,
-          objectname: null
+          conditionname: null
         }
       }
     },
@@ -284,11 +293,14 @@
             this.$message.error('加载执行计划列表失败')
           })
         }
-        if (e === '用例') {
+        if (e === '测试用例') {
           this.executeplanVisible = false
           this.testcasevisible = true
           this.tmpcondition.objectid = ''
           this.tmpcondition.objectname = ''
+          this.tmpcondition.deployunitname = ''
+          this.tmpcondition.deployunitname = ''
+          this.tmpcondition.apiname = ''
         }
       },
 
@@ -296,7 +308,11 @@
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
        */
       selectChanged(e) {
-        getapiListbydeploy(this.caseQuery).then(response => {
+        this.tmpcondition.apiname = ''
+        this.deployunitquery.deployunitname = e
+        this.tmpcondition.apiname = ''
+        this.tmpcondition.objectname = ''
+        getapiListbydeploy(this.deployunitquery).then(response => {
           this.apiList = response.data
         }).catch(res => {
           this.$message.error('加载api列表失败')
@@ -307,7 +323,9 @@
        * API下拉选择事件获取用例  e的值为options的选值
        */
       apiselectChanged(e) {
-        findcasesbyname(this.apicaseQuery).then(response => {
+        this.apiquery.caseapiname = e
+        this.apiquery.casedeployunitname = this.deployunitquery.deployunitname
+        findcasesbyname(this.apiquery).then(response => {
           this.caseList = response.data
         }).catch(res => {
           this.$message.error('加载api用例列表失败')
@@ -338,30 +356,6 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
-       */
-      selectChangedEN(e) {
-        for (let i = 0; i < this.enviromentnameList.length; i++) {
-          if (this.enviromentnameList[i].enviromentname === e) {
-            this.tmpcondition.envid = this.enviromentnameList[i].id
-          }
-          console.log(this.enviromentnameList[i].id)
-        }
-      },
-
-      /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
-       */
-      selectChangedMN(e) {
-        for (let i = 0; i < this.machinenameList.length; i++) {
-          if (this.machinenameList[i].machinename === e) {
-            this.tmpcondition.machineid = this.machinenameList[i].id
-          }
-          console.log(this.machinenameList[i].id)
-        }
-      },
-
-      /**
        * 获取发布单元列表
        */
       getdepunitList() {
@@ -375,7 +369,7 @@
       },
 
       /**
-       * 获取服务器环境列表
+       * 获取条件列表
        */
       getconditionList() {
         this.listLoading = true
@@ -385,7 +379,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载条件服务器列表失败')
+          this.$message.error('加载条件列表失败')
         })
       },
 
@@ -399,7 +393,7 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
-        this.tmpenviromentname = this.search.enviromentname
+        this.tmpconditionname = this.search.conditionname
         this.listLoading = false
         this.btnLoading = false
       },
@@ -437,12 +431,14 @@
       showAddconditionDialog() {
         // 显示新增对话框
         this.dialogFormVisible = true
+        this.testcasevisible = false
         this.dialogStatus = 'add'
         this.tmpcondition.id = ''
         this.tmpcondition.conditionname = ''
         this.tmpcondition.objectid = ''
         this.tmpcondition.objectname = ''
         this.tmpcondition.objecttype = ''
+        this.tmpcondition.conditiontype = ''
         this.tmpcondition.memo = ''
         this.tmpcondition.creator = this.name
       },
@@ -458,6 +454,15 @@
               this.getconditionList()
               this.dialogFormVisible = false
               this.btnLoading = false
+              this.testcasevisible = false
+              this.tmpcondition.id = ''
+              this.tmpcondition.conditionname = ''
+              this.tmpcondition.objectid = ''
+              this.tmpcondition.objectname = ''
+              this.tmpcondition.objecttype = ''
+              this.tmpcondition.deployunitname = ''
+              this.tmpcondition.apiname = ''
+              this.tmpcondition.memo = ''
             }).catch(res => {
               this.$message.error('添加失败')
               this.btnLoading = false
@@ -474,6 +479,11 @@
         this.dialogStatus = 'update'
         if (this.conditionList[index].objecttype === '执行计划') {
           this.executeplanVisible = true
+          this.testcasevisible = false
+        }
+        if (this.conditionList[index].objecttype === '测试用例') {
+          this.testcasevisible = true
+          this.executeplanVisible = false
         }
         this.tmpcondition.id = this.conditionList[index].id
         this.tmpcondition.objectid = this.conditionList[index].objectid

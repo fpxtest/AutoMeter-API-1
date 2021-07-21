@@ -22,10 +22,9 @@ import static com.zoctan.api.core.constant.ProjectConstant.*;
 class CodeGenerator {
   // JDBC配置，请修改为你项目的实际配置
   private static final String JDBC_URL =
-      "jdbc:mysql://localhost:3306/admin_test"
-          + "?useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-  private static final String JDBC_USERNAME = "root";
-  private static final String JDBC_PASSWORD = "root";
+      "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+  private static final String JDBC_USERNAME = "test";
+  private static final String JDBC_PASSWORD = "test";
   private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
   // 项目在硬盘上的基础路径
   private static final String PROJECT_PATH = System.getProperty("user.dir");
@@ -60,7 +59,7 @@ class CodeGenerator {
 //    }
     System.out.print("start!!!");
 
-    CodeGenerator.genCode("testcondition");
+    CodeGenerator.genCode("testcondition_report");
     System.out.print("finish!!!");
 
     // genCodeByCustomModelName("输入表名","输入自定义Model名称");
