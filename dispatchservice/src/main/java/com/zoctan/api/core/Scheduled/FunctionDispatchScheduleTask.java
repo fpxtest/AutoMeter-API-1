@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.zoctan.api.core.config.RedisUtils;
 import com.zoctan.api.core.service.HttpHeader;
 import com.zoctan.api.core.service.Httphelp;
-import com.zoctan.api.entity.Dispatch;
-import com.zoctan.api.entity.Slaver;
+import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.DispatchMapper;
 import com.zoctan.api.mapper.SlaverMapper;
-import com.zoctan.api.service.DeployunitService;
-import com.zoctan.api.service.ExecuteplanService;
-import com.zoctan.api.service.TestPlanCaseService;
+import com.zoctan.api.mapper.TestconditionMapper;
+import com.zoctan.api.mapper.TestconditionReportMapper;
+import com.zoctan.api.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,20 +38,19 @@ import java.util.List;
 @EnableScheduling   // 2.开启定时任务
 @Component
 public class FunctionDispatchScheduleTask {
-    @Value("${spring.conditionserver.serverurl}")
-    private String conditionserver;
+
     @Autowired(required = false)
     private SlaverMapper slaverMapper;
     @Autowired(required = false)
     RedisUtils redisUtils;
     @Autowired(required = false)
-    private ExecuteplanService epservice;
-    @Autowired(required = false)
-    private TestPlanCaseService tpcservice;
-    @Autowired(required = false)
-    private DeployunitService deployunitService;
-    @Autowired(required = false)
     private DispatchMapper dispatchMapper;
+    @Autowired(required = false)
+    private TestconditionReportMapper testconditionReportMapper;
+    @Autowired(required = false)
+    private TestconditionService testconditionService;
+    @Autowired(required = false)
+    private ConditionApiService conditionApiService;
     private String redisKey = "";
 
 
@@ -66,42 +64,44 @@ public class FunctionDispatchScheduleTask {
         try {
             address = InetAddress.getLocalHost();
             ip = address.getHostAddress();
-            // 全局性能任务的redis的key相同，保证全局性能任务同一时刻只有一个线程进入工作
-            //String redisKey = "Dispatchservice-FunctionDispatchScheduleTask-RedisLock";
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
             // redis_default_expire_time 不能设置为永久，避免死锁
             boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
             if (lock) {
-                List<Dispatch> DispatchAllList = dispatchMapper.getcasebyrunmode("待分配", "功能", "多机执行");
-                FunctionDispatchScheduleTask.log.info("功能调度任务-============获取待分配的调度数量：" + DispatchAllList.size());
-                if (DispatchAllList.size() > 0) {
-                    //按照planid分组取第一组
-                    List<Dispatch> PlanIDResultDispatchList = GetGroupList(DispatchAllList, "PlanID");
-                    FunctionDispatchScheduleTask.log.info("功能调度任务-============第一组planid的调度用例数：" + PlanIDResultDispatchList.size());
-                    if (PlanIDResultDispatchList.size() > 0) {
-                        HashMap<Long, List<Dispatch>> PlanDipatchList = GetSlaverDispatchList(PlanIDResultDispatchList);
-                        List<Slaver> Slaverlist = slaverMapper.findslaverbytypeandstatus("功能", "空闲");
-                        FunctionDispatchScheduleTask.log.info("功能调度任务-============获取空闲slaver数量：" + Slaverlist.size());
-                        //有空闲的执行机再往下进行
-                        if(Slaverlist.size()>0)
-                        {
+                Dispatch dispatch = dispatchMapper.getrecentdispatchbyusetype("待分配", "功能");
+                if (dispatch != null) {
+                    Long PlanID = dispatch.getExecplanid();
+                    String BatchName = dispatch.getBatchname();
+                    //判断计划的前置条件是否已经完成
+                    boolean flag=IsConditionFinish(PlanID,BatchName);
+                    if(flag)
+                    {
+                        List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaverid("待分配", "功能", PlanID, BatchName);
+                        if (SlaverIDList.size() > 0) {
                             try {
-                                //在执行计划用例前增加条件服务器调用，处理计划前置条件，用例条件在slaverservice中具体执行前后处理
-                                Dispatch dispatch = PlanIDResultDispatchList.get(0);
-                                RequestConditionServiceByPlanId(dispatch);
-                                for (Slaver slaver : Slaverlist) {
-                                    List<Dispatch> SlaverDispathcList = PlanDipatchList.get(slaver.getId());
-                                    String params = JSON.toJSONString(SlaverDispathcList);
-                                    FunctionDispatchScheduleTask.log.info("功能调度任务-============执行机id：" + slaver.getId() + "  执行机名：" + slaver.getSlavername() + " 执行的dispatch：" + params);
-                                    HttpHeader header = new HttpHeader();
-                                    String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execfunctiontest";
-                                    String respon = Httphelp.doPost(ServerUrl, params, header, 30000);
-                                    FunctionDispatchScheduleTask.log.info("功能调度任务-============请求slaver响应结果：" + respon);
+                                for (Dispatch dispatch1 : SlaverIDList) {
+                                    Long Slaverid =dispatch1.getSlaverid();
+                                    FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
+                                    Slaver slaver = slaverMapper.findslaverbyid(Slaverid);
+                                    if (slaver != null) {
+                                        if (slaver.getStatus().equals("空闲")) {
+                                            List<Dispatch> SlaverDispathcList = dispatchMapper.getfunctiondispatchsbyslaverid(Slaverid, "待分配", "功能", PlanID, BatchName);
+                                            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器 slaverid:" + slaver + " 获取dispatch数-：" + SlaverDispathcList.size());
+                                            if (SlaverDispathcList.size() > 0) {
+                                                String params = JSON.toJSONString(SlaverDispathcList);
+                                                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============执行机id：" + slaver.getId() + "  执行机名：" + slaver.getSlavername() + " 执行的dispatch：" + params);
+                                                HttpHeader header = new HttpHeader();
+                                                String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execfunctiontest";
+                                                String respon = Httphelp.doPost(ServerUrl, params, header, 30000);
+                                                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============请求slaver响应结果：" + respon);
+                                            }
+                                        }
+                                    }
                                 }
                             } catch (Exception ex) {
-                                FunctionDispatchScheduleTask.log.info("功能调度任务请求条件服务失败：" + ex.getMessage());
+                                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器请求执行服务异常：" + ex.getMessage());
                             }
                         }
                     }
@@ -109,24 +109,57 @@ public class FunctionDispatchScheduleTask {
                 //TODO 执行任务结束后需要释放锁
                 //释放锁
                 redisUtils.deletekey(redisKey);
-                FunctionDispatchScheduleTask.log.info("功能调度任务-============释放分布式锁成功=======================");
+                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============释放分布式锁成功=======================");
 
             } else {
-                FunctionDispatchScheduleTask.log.info("功能调度任务-============获得分布式锁失败=======================");
+                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============获得分布式锁失败=======================");
                 ip = (String) redisUtils.getkey(redisKey);
-                FunctionDispatchScheduleTask.log.info("功能调度任务-============{}机器上占用分布式锁，正在执行中=======================" + ip);
+                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============{}机器上占用分布式锁，正在执行中=======================" + ip);
                 return;
             }
         } catch (Exception ex) {
-            FunctionDispatchScheduleTask.log.info("功能调度任务-调度定时器异常: " + ex.getMessage());
+            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-异常: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
-    private void RequestConditionServiceByPlanId(Dispatch dispatch) throws Exception {
-        String params = JSON.toJSONString(dispatch);
-        HttpHeader header = new HttpHeader();
-        String ServerUrl = conditionserver + "/testcondition/exec";
-        Httphelp.doPost(ServerUrl, params, header, 30000);
+
+    private boolean IsConditionFinish(Long PlanID,String BatchName)
+    {
+        boolean flag=true;
+        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
+        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-前置条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionList.size());
+        if(testconditionList.size()>0) {
+            long ConditionID= testconditionList.get(0).getId();
+            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-API条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ conditionApiList.size());
+            if(conditionApiList.size()>0)
+            {
+                List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
+                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionReportList.size());
+                //配置了API条件，但是还未执行
+                if(testconditionReportList.size()==0)
+                {
+                    flag=false;
+                }
+                else
+                {
+                    List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中");
+                    FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告状态为进行中..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionstatusReportList.size());
+                    //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
+                    if(testconditionstatusReportList.size()==0)
+                    {
+                        flag=true;
+                    }
+                }
+            }
+            //配置了条件，但是未配置API条件，认为是无API条件，可以执行用例
+            if(conditionApiList.size()==0)
+            {
+                flag=true;
+            }
+        }
+        return flag;
     }
 
     private HashMap<Long, List<Dispatch>> GetSlaverDispatchList(List<Dispatch> PlanDispatchList) {
@@ -156,6 +189,9 @@ public class FunctionDispatchScheduleTask {
                 if (ID.equals(new String("CaseID"))) {
                     ObjectID = dispatch.getTestcaseid();
                 }
+                if (ID.equals(new String("BatchID"))) {
+                    ObjectID = dispatch.getBatchid();
+                }
                 ResultGroup.put(dispatch.getExecplanid(), tmp);
             } else {
                 ResultGroup.get(ObjectID).add(dispatch);
@@ -181,6 +217,6 @@ public class FunctionDispatchScheduleTask {
     @PostConstruct
     public void Init() {
         redisKey = "Dispatchservice-FunctionDispatchScheduleTask-RedisLock" + new Date();
-        FunctionDispatchScheduleTask.log.info("功能调度任务-redisKey is:" + redisKey);
+        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-redisKey is:" + redisKey);
     }
 }

@@ -31,6 +31,12 @@
     where ip=#{ip}
   </select>
 
+  <select id="findslaverbyid" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where id=#{id}
+  </select>
+
   <select id="findslaverbytype" resultMap="BaseResultMap">
     SELECT *
     FROM slaver
@@ -41,6 +47,13 @@
     SELECT *
     FROM slaver
     where stype=#{stype} and status =#{status}
+  </select>
+
+  <select id="findbusyslavernums" resultType="java.lang.Integer">
+    select COUNT(*) from slaver a where a.status = #{status} and a.stype=#{stype} and a.slaverid IN
+    <foreach collection="slaverlist" item="slaver" index="index" open="(" close=")" separator=",">
+      #{slaver.slaverid}
+    </foreach>
   </select>
 
   <insert id="addslaver">

@@ -8,6 +8,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="caseid" jdbcType="BIGINT" property="caseid" />
     <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="variablesid" jdbcType="BIGINT" property="variablesid" />
     <result column="variablesname" jdbcType="VARCHAR" property="variablesname" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
@@ -17,17 +19,18 @@
   </resultMap>
 
   <select id="findApicasesVariablesWithName" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM apicases_variables a
+    SELECT a.*,b.deployunitname,b.apiname
+    FROM apicases_variables a,apicases b
     <where>
       <if test="casename != null and casename != ''">a.casename like CONCAT('%',#{casename},'%')</if>
       <if test="variablesname != null and variablesname != ''">a.variablesname like CONCAT('%',#{variablesname},'%')</if>
+      and a.caseid=b.id
     </where>
   </select>
 
   <update id="updateApicasesVariables" parameterType="com.zoctan.api.entity.ApicasesVariables">
     update apicases_variables set casename = #{casename},variablesname=#{variablesname},caseid=#{caseid},variablesid=#{variablesid},
-                             memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    deployunitname=#{deployunitname},apiname=#{apiname} , memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
 </mapper>

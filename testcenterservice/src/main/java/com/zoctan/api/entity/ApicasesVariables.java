@@ -22,6 +22,26 @@ public class ApicasesVariables {
      */
     private String casename;
 
+    public String getDeployunitname() {
+        return deployunitname;
+    }
+
+    public void setDeployunitname(String deployunitname) {
+        this.deployunitname = deployunitname;
+    }
+
+    public String getApiname() {
+        return apiname;
+    }
+
+    public void setApiname(String apiname) {
+        this.apiname = apiname;
+    }
+
+    private String deployunitname;
+    private String apiname;
+
+
     /**
      * 变量Id
      */

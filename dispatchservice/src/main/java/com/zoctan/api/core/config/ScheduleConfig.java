@@ -28,7 +28,7 @@ public class ScheduleConfig implements SchedulingConfigurer {
 
     @Bean
     public Executor taskExecutor() {
-        return Executors.newScheduledThreadPool(3); //指定线程池大小
+        return Executors.newScheduledThreadPool(5); //指定线程池大小
     }
 }
 

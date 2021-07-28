@@ -256,6 +256,8 @@
             this.tmpapicondition.deployunitid = this.deployunitList[i].id
           }
         }
+        this.tmpapicondition.apiname = ''
+        this.tmpapicondition.casename = ''
         this.deployunitQuery.deployunitname = e
         getapiListbydeploy(this.deployunitQuery).then(response => {
           this.apiList = response.data
@@ -273,6 +275,7 @@
             this.tmpapicondition.apiid = this.apiList[i].id
           }
         }
+        this.tmpapicondition.casename = ''
         this.apiquery.caseapiname = e
         this.apiquery.casedeployunitname = this.deployunitQuery.deployunitname
         findcasesbyname(this.apiquery).then(response => {
@@ -298,6 +301,9 @@
           if (this.conditionList[i].conditionname === e) {
             this.tmpapicondition.conditionid = this.conditionList[i].id
           }
+          this.tmpapicondition.deployunitname = ''
+          this.tmpapicondition.apiname = ''
+          this.tmpapicondition.casename = ''
         }
       },
 
@@ -438,10 +444,27 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         this.tmpapicondition.id = this.apiconditionList[index].id
-        this.tmpapicondition.envid = this.apiconditionList[index].envid
-        this.tmpapicondition.machineid = this.apiconditionList[index].machineid
-        this.tmpapicondition.machinename = this.apiconditionList[index].machinename
-        this.tmpapicondition.enviromentname = this.apiconditionList[index].enviromentname
+        this.tmpapicondition.conditionname = this.apiconditionList[index].conditionname
+        this.tmpapicondition.deployunitname = this.apiconditionList[index].deployunitname
+
+        this.deployunitQuery.deployunitname = this.tmpapicondition.deployunitname
+        getapiListbydeploy(this.deployunitQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
+
+        this.tmpapicondition.apiname = this.apiconditionList[index].apiname
+
+        this.apiquery.caseapiname = this.tmpapicondition.apiname
+        this.apiquery.casedeployunitname = this.tmpapicondition.deployunitname
+        findcasesbyname(this.apiquery).then(response => {
+          this.caseList = response.data
+        }).catch(res => {
+          this.$message.error('加载apicase列表失败')
+        })
+
+        this.tmpapicondition.casename = this.apiconditionList[index].casename
         this.tmpapicondition.creator = this.name
       },
       /**

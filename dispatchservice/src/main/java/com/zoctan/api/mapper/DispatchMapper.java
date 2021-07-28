@@ -15,9 +15,19 @@ public interface DispatchMapper extends MyMapper<Dispatch> {
 
     List<Dispatch> getcasebyslaverid(@Param("slaverid") Long slaverid, @Param("status") String status, @Param("plantype") String plantype, @Param("maxthread") Long maxthread);
 
-    List<Dispatch> getcasebyrunmode(@Param("status") String status, @Param("usetype") String usetype, @Param("runmode") String runmode);
+    List<Dispatch> getcasebyrunmode(@Param("status") String status, @Param("usetype") String usetype, @Param("runmode") String runmode, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
 
     void updatedispatchstatus(@Param("status") String status, @Param("slaverid") Long slaverid, @Param("execplanid") Long execplanid, @Param("batchid") Long batchid, @Param("testcaseid") Long testcaseid);
 
     Integer findbusyslavernums(@Param("slaverlist") final List<Slaver> slaverlist, @Param("status") String status);
+
+    Dispatch getrecentdispatch(@Param("status") String status);
+    Dispatch getrecentdispatchbyusetype(@Param("status") String status,@Param("plantype") String plantype);
+
+    List<Dispatch> getdistinctslaverid(@Param("status") String status,@Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
+    List<Dispatch> getdistinctslaveridandcaaseid(@Param("status") String status,@Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname, @Param("testcaseid") Long testcaseid);
+
+    List<Dispatch> getfunctiondispatchsbyslaverid(@Param("slaverid") Long slaverid, @Param("status") String status, @Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
+
+
 }

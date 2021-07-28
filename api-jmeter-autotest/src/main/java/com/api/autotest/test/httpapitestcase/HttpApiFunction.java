@@ -24,7 +24,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         Arguments params = new Arguments();
         //定义一个参数，显示到Jmeter的参数列表中，第一个参数为参数默认的显示名称，第二个参数为默认值
         params.addArgument("DispatchIds", "11");
-        params.addArgument("SlaverId", "11");
+        params.addArgument("SlaverId", "12");
         params.addArgument("mysqlurl", "/opt/");
         params.addArgument("mysqlusername", "/opt/");
         params.addArgument("mysqlpassword", "/opt/");
@@ -34,7 +34,11 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
         String SlaverId=ctx.getParameter("SlaverId");
+        String DispatchIds=ctx.getParameter("DispatchIds");
+        String mysqlurl=ctx.getParameter("mysqlurl");
         getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
+        getLogger().info("DispatchIds 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+DispatchIds);
+        getLogger().info("mysqlurl 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+mysqlurl);
         SampleResult results = new SampleResult();
         //Jmeter java实例开始执行
         results.sampleStart();

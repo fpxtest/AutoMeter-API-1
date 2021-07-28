@@ -75,50 +75,40 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
     public void executeplancase(List<Testplanandbatch> testplanlist) {
         for (Testplanandbatch plan : testplanlist) {
             Long execplanid = plan.getPlanid();
-            //String batchname=plan.getBatchname();
-            //Executeplanbatch epb=executeplanbatchMapper.getbatchidbyplanidandbatchname(execplanid,batchname);
-            // 检查plan当前的状态，如果状态为new，stop，finish继续执行
             Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
-            if (!ep.getStatus().equals(new String("running"))) {
-                HttpHeader header = new HttpHeader();
-                String DsipatchServerurl="";
-                String plantype=ep.getUsetype();
-                List<Slaver> slaverlist=slaverMapper.findslaverWithType(plantype);
-                if(slaverlist.size()==0)
+            HttpHeader header = new HttpHeader();
+            String DsipatchServerurl="";
+            String plantype=ep.getUsetype();
+            List<Slaver> slaverlist=slaverMapper.findslaverWithType(plantype);
+            if(slaverlist.size()==0)
+            {
+                ExecuteplanServiceImpl.log.info("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
+                throw new ServiceException("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
+            }
+            else
+            {
+                List<Dictionary> dic = dictionaryMapper.findDicNameValueWithCode("dispatchservice");
+                if(dic.size()==0) //表示没有调度服务，直接调用单机slaver
                 {
-                    System.out.println("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
-                    ExecuteplanServiceImpl.log.info("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
-                    throw new ServiceException("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
+                    ExecuteplanServiceImpl.log.info("字典表未配置dispatchservice，则为单slaver模式，根据计划类型获取slaver");
+                    DsipatchServerurl ="http://"+slaverlist.get(0).getIp()+":"+slaverlist.get(0).getPort()+"/exectestplancase/exec";
+                    ExecuteplanServiceImpl.log.info("单slaver模式 slaverserverurl地址："+DsipatchServerurl);
                 }
                 else
                 {
-                    List<Dictionary> dic = dictionaryMapper.findDicNameValueWithCode("dispatchservice");
-                    if(dic.size()==0) //表示没有调度服务，直接调用单机slaver
-                    {
-                        ExecuteplanServiceImpl.log.info("字典表未配置dispatchservice，则为单slaver模式，根据计划类型获取slaver");
-                        System.out.println("字典表未配置dispatchservice，则为单slaver模式，根据计划类型获取slaver");
-                        DsipatchServerurl ="http://"+slaverlist.get(0).getIp()+":"+slaverlist.get(0).getPort()+"/exectestplancase/exec";
-                        ExecuteplanServiceImpl.log.info("单slaver模式 slaverserverurl地址："+DsipatchServerurl);
-                        System.out.println("slaver server url is："+DsipatchServerurl);
-                    }
-                    else
-                    {
-                        System.out.println("字典表配置dispatchservice，通过dispatchservice调度执行");
-                        DsipatchServerurl ="http://"+ dic.get(0).getDicitmevalue()+"/exectestplancase/exec";
-                        ExecuteplanServiceImpl.log.info("字典表配置dispatchservice，调度服务地址slaverserverurl地址："+DsipatchServerurl);
-                    }
+                    DsipatchServerurl ="http://"+ dic.get(0).getDicitmevalue()+"/exectestplancase/exec";
+                    ExecuteplanServiceImpl.log.info("字典表配置dispatchservice，调度服务地址地址："+DsipatchServerurl);
                 }
-                String params = JSON.toJSONString(plan);
-                ExecuteplanServiceImpl.log.info("请求参数："+params);
-                System.out.println("request json is:" + params);
-                System.out.println("request url  is:" + DsipatchServerurl);
-                try {
-                    String respon= Httphelp.doPost(DsipatchServerurl, params, header, 10, 10);
-                    ExecuteplanServiceImpl.log.info("发送请求响应："+respon);
-                } catch (Exception e) {
-                    ExecuteplanServiceImpl.log.info("发送请求异常："+e.getMessage());
-                    throw new ServiceException(e.getMessage());
-                }
+            }
+            String params = JSON.toJSONString(plan);
+            ExecuteplanServiceImpl.log.info("请求参数："+params);
+            try {
+                ExecuteplanServiceImpl.log.info("开始请求。。。。。。。。。。。。。。。。。。。。。。。。");
+                String respon= Httphelp.doPost(DsipatchServerurl, params, header, 30000, 30000);
+                ExecuteplanServiceImpl.log.info("发送请求响应。。。。。。。。。。。。。。。。。。。。。。。。："+respon);
+            } catch (Exception e) {
+                ExecuteplanServiceImpl.log.info("发送请求异常："+e.getMessage());
+                throw new ServiceException(e.getMessage());
             }
         }
     }

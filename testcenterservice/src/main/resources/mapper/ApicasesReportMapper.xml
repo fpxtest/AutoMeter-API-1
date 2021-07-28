@@ -27,6 +27,7 @@
       <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
       <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
     </where>
+    order by b.create_time desc
   </select>
 
 

@@ -1,6 +1,7 @@
 package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
+import com.zoctan.api.entity.Dispatch;
 import com.zoctan.api.entity.Slaver;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,10 +19,13 @@ public interface SlaverMapper extends MyMapper<Slaver> {
 
     List<Slaver> findslaverbyip(@Param("ip") final String ip);
 
+    Slaver findslaverbyid(@Param("id") final Long id);
+
     List<Slaver> findslaverbytype(@Param("stype") final String stype);
 
     List<Slaver> findslaverbytypeandstatus(@Param("stype") final String stype,@Param("status") final String status);
 
+    Integer findbusyslavernums(@Param("slaverlist") final List<Dispatch> slaverlist, @Param("status") String status, @Param("stype") String stype);
 
     /**
      * 更新字典内容

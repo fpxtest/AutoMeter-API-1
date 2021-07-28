@@ -40,10 +40,8 @@ public class TestPlanCaseController {
 
 
     @PostMapping("/exec")
-    //    public Result exec(@RequestBody List<TestplanCase> plancaseList) {
     public Result exec(@RequestBody Testplanandbatch planbatch) throws Exception {
-        // 调用testcenter需要模拟下admin登录，调用Request URL: http://localhost:8080/account/token  {name: "admin", password: "admin123"}
-        // 在请求头里面加上Authorization = token
+        TestPlanCaseController.log.info("开始保存调度用例。。。。。。。。。。。。。。。。。。。。。。。。");
         Long execplanid = planbatch.getPlanid();
         String batchname = planbatch.getBatchname();
         Executeplanbatch epb = executeplanbatchMapper.getbatchidbyplanidandbatchname(execplanid, batchname);
@@ -51,7 +49,6 @@ public class TestPlanCaseController {
         {
             return ResultGenerator.genOkResult("无此计划id下" + execplanid+" 未找到执行批次名 "+batchname);
         }
-        // 检查plan当前的状态，如果状态为new，stop，finish继续执行
         Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
         if(ep==null)
         {
@@ -61,7 +58,7 @@ public class TestPlanCaseController {
         TestPlanCaseController.log.info("计划id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
 
         if (caselist.size() == 0) {
-            return ResultGenerator.genOkResult("计划id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
+            return ResultGenerator.genOkResult("此执行计划:" + ep.getExecuteplanname()+" 还没用例，请先装载用例");
         }
         //获取对应计划类型的所有slaver
         List<Slaver> slaverlist = slaverMapper.findslaverbytype(ep.getUsetype());
@@ -82,9 +79,9 @@ public class TestPlanCaseController {
         }
         for (List<Dispatch> li:dispatchList) {
             dispatchMapper.insertBatchDispatch(li);
-            TestPlanCaseController.log.info("保存调度用例条数：" + li.size());
+            TestPlanCaseController.log.info("保存成功调度用例条数：" + li.size());
         }
-        TestPlanCaseController.log.info("完成保存调度用例");
+        TestPlanCaseController.log.info("完成保存调度用例。。。。。。。。。。。。。。。。。。。。。。。。");
         return ResultGenerator.genOkResult();
     }
 

@@ -46,7 +46,7 @@
       <el-table-column label="变量名" align="center" prop="testvariablesname" width="100"/>
       <el-table-column label="变量描述" align="center" prop="variablesdes" width="100"/>
       <el-table-column label="变量类型" align="center" prop="testvariablestype" width="80"/>
-      <el-table-column label="变量表示" align="center" prop="variablesexpress" width="80"/>
+      <el-table-column label="变量值表示" align="center" prop="variablesexpress" width="100"/>
       <el-table-column label="备注" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -90,7 +90,7 @@
         class="small-space"
         label-position="left"
         label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        style="width: 500px; margin-left:50px;"
         :model="tmptestvariables"
         ref="tmptestvariables"
       >
@@ -117,19 +117,27 @@
 
         <el-form-item label="变量类型" prop="testvariablestype" required >
           <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型">
-            <el-option label="全局变量" value="全局变量"></el-option>
             <el-option label="用例变量" value="用例变量"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="变量表示" prop="variablesexpress" required>
+        <el-form-item label="变量值表示" prop="variablesexpress" required>
           <el-input
             type="textarea"
-            maxlength="20"
+            rows="5"
+            cols="10"
+            maxlength="400"
+            placeholder="例如 $.store.book[0].title"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmptestvariables.variablesexpress"
           />
+          <div class="right">
+            <el-tooltip placement="right-start">
+              <div slot="content">1.如果获取变量值的接口返回数据类型是Json则使用JsonPath表达式提取变量值，例如：$.store.book[0].title   在线解析网站：http://www.e123456.com/aaaphp/online/jsonpath/<br/>2.如果获取变量值接口返回是html，xml则使用XPath表达式提取变量值， 例如：//div/h3//text()   在线解析网站： http://www.ab173.com/other/xpath.php</div>
+              <el-button>变量值表示语法规则</el-button>
+            </el-tooltip>
+          </div>
         </el-form-item>
 
         <el-form-item label="备注" prop="memo">
@@ -184,15 +192,15 @@
       return {
         itemKey: null,
         tmptestvariablesname: '',
-        testvariablesList: [], // 环境列表
+        testvariablesList: [], // 变量列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改环境',
-          update: '修改环境',
-          add: '添加环境'
+          updateRole: '修改变量',
+          update: '修改变量',
+          add: '添加变量'
         },
         btnLoading: false, // 按钮等待动画
         tmptestvariables: {
@@ -224,7 +232,7 @@
       unix2CurrentTime,
 
       /**
-       * 获取环境列表
+       * 获取变量列表
        */
       gettestvariablesList() {
         this.listLoading = true
@@ -234,7 +242,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载环境列表失败')
+          this.$message.error('加载变量列表失败')
         })
       },
 

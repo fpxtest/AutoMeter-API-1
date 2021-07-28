@@ -153,7 +153,6 @@
         <el-form-item label="条件类型" prop="conditiontype" required >
           <el-select v-model="tmpcondition.conditiontype" placeholder="条件类型">
             <el-option label="前置条件" value="前置条件"/>
-            <el-option label="后置条件" value="后置条件"></el-option>
           </el-select>
         </el-form-item>
 

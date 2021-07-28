@@ -262,18 +262,24 @@ public class TestCorebak {
         // 设置header
         HttpHeader header = new HttpHeader();
         for (String key : headmap.keySet()) {
-            header.addParam(key, headmap.get(key));
+            String Value=headmap.get(key);
+            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+            Value=GetVariablesValues(PlanId,TestCaseId,BatchName,Value);
+            header.addParam(key, Value);
         }
         // 设置参数
         HttpParamers paramers = new  HttpParamers();
-
         for (String key : paramsmap.keySet()) {
-            paramers.addParam(key, paramsmap.get(key));
+            String Value=paramsmap.get(key);
+            Value=GetVariablesValues(PlanId,TestCaseId,BatchName,Value);
+            paramers.addParam(key, Value);
         }
 
         // 如果参数为空，设置body
         for (String key : bodymap.keySet()) {
-            paramers.addParam(key, bodymap.get(key));
+            String Value=bodymap.get(key);
+            Value=GetVariablesValues(PlanId,TestCaseId,BatchName,Value);
+            paramers.addParam(key, Value);
         }
 
         // url请求资源路径
@@ -335,6 +341,31 @@ public class TestCorebak {
         return ro;
     }
 
+    private String GetVariablesValues(String PlanId, String TestCaseId, String BatchName,String Variables)
+    {
+        String VariablesResult="";
+        if(Variables.startsWith("$"))
+        {
+            String VariablesName=Variables.substring(1);
+            try {
+                String sql = "select variablesvalue from testvariables_value where planid="+PlanId + " and batchname= '"+BatchName+"'"+" and variablesname='"+VariablesName+"'";
+                logger.info(logplannameandcasename+"查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
+                ArrayList<HashMap<String, String>> result= MysqlConnectionUtils.query(sql);
+                if(result.size()>0)
+                {
+                    VariablesResult= result.get(0).get("variablesvalue");
+                }
+            } catch (Exception e) {
+                logger.info(logplannameandcasename+"查询计划下的批次中条件接口获取的中间变量异常...........: " + e.getMessage());
+            }
+        }
+        else
+        {
+            VariablesResult=Variables;
+        }
+        return VariablesResult;
+    }
+
     // 发送http请求
     public String request(RequestObject requestObject) throws Exception {
         String result="";
@@ -344,7 +375,7 @@ public class TestCorebak {
                 {
                     logger.info(logplannameandcasename+"getrequest url is ....." +Httphelp.getrequesturl(requestObject.getResource(), requestObject.getApistyle(),requestObject.getParamers()));
                 }
-                result = Httphelp.doService(requestObject.getProtocal(),requestObject.getResource(), requestObject.getRequestmMthod(),requestObject.getApistyle(), requestObject.getParamers(),requestObject.getRequestcontenttype(), requestObject.getHeader(), 10, 10);
+                result = Httphelp.doService(requestObject.getProtocal(),requestObject.getResource(), requestObject.getRequestmMthod(),requestObject.getApistyle(), requestObject.getParamers(),requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
                 logger.info(logplannameandcasename+"request result is ....." + result);
         }
 

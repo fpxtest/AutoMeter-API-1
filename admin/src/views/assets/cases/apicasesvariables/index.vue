@@ -43,8 +43,8 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
+      <el-table-column label="用例名" align="center" prop="casename" width="180"/>
       <el-table-column label="用例变量名" align="center" prop="variablesname" width="100"/>
-      <el-table-column label="用例名" align="center" prop="casename" width="120"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -253,6 +253,9 @@
             this.tmpApicasesVariables.deployunitid = this.deployunitList[i].id
           }
         }
+        this.tmpApicasesVariables.apiname = ''
+        this.tmpApicasesVariables.casename = ''
+        this.tmpApicasesVariables.variablesname = ''
         this.deployunitQuery.deployunitname = e
         getapiListbydeploy(this.deployunitQuery).then(response => {
           this.apiList = response.data
@@ -270,6 +273,8 @@
             this.tmpApicasesVariables.apiid = this.apiList[i].id
           }
         }
+        this.tmpApicasesVariables.casename = ''
+        this.tmpApicasesVariables.variablesname = ''
         this.apiquery.caseapiname = e
         this.apiquery.casedeployunitname = this.tmpApicasesVariables.deployunitname
         findcasesbyname(this.apiquery).then(response => {
@@ -284,6 +289,7 @@
           if (this.caseList[i].casename === e) {
             this.tmpApicasesVariables.caseid = this.caseList[i].id
           }
+          this.tmpApicasesVariables.variablesname = ''
         }
       },
 
@@ -387,6 +393,8 @@
         this.dialogStatus = 'add'
         this.tmpApicasesVariables.id = ''
         this.tmpApicasesVariables.caseid = ''
+        this.tmpApicasesVariables.deployunitname = ''
+        this.tmpApicasesVariables.apiname = ''
         this.tmpApicasesVariables.casename = ''
         this.tmpApicasesVariables.variablesid = ''
         this.tmpApicasesVariables.variablesname = ''
@@ -420,6 +428,23 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         this.tmpApicasesVariables.id = this.ApicasesVariablesList[index].id
+        this.tmpApicasesVariables.caseid = this.ApicasesVariablesList[index].caseid
+        this.tmpApicasesVariables.variablesid = this.ApicasesVariablesList[index].variablesid
+        this.tmpApicasesVariables.deployunitname = this.ApicasesVariablesList[index].deployunitname
+        this.deployunitQuery.deployunitname = this.tmpApicasesVariables.deployunitname
+        getapiListbydeploy(this.deployunitQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
+        this.tmpApicasesVariables.apiname = this.ApicasesVariablesList[index].apiname
+        this.apiquery.caseapiname = this.tmpApicasesVariables.apiname
+        this.apiquery.casedeployunitname = this.tmpApicasesVariables.deployunitname
+        findcasesbyname(this.apiquery).then(response => {
+          this.caseList = response.data
+        }).catch(res => {
+          this.$message.error('加载apicase列表失败')
+        })
         this.tmpApicasesVariables.casename = this.ApicasesVariablesList[index].casename
         this.tmpApicasesVariables.variablesname = this.ApicasesVariablesList[index].variablesname
         this.tmpApicasesVariables.memo = this.ApicasesVariablesList[index].memo
@@ -460,22 +485,6 @@
         }).catch(() => {
           this.$message.info('已取消删除')
         })
-      },
-
-      /**
-       * 用例变量是否唯一
-       * @param 用例变量
-       */
-      isUniqueDetail(ApicasesVariables) {
-        for (let i = 0; i < this.ApicasesVariablesList.length; i++) {
-          if (this.ApicasesVariablesList[i].id !== ApicasesVariables.id) { // 排除自己
-            if (this.ApicasesVariablesList[i].ApicasesVariablesname === ApicasesVariables.ApicasesVariablesname) {
-              this.$message.error('用例变量名已存在')
-              return false
-            }
-          }
-        }
-        return true
       }
     }
   }

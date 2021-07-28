@@ -33,6 +33,12 @@
     select * from dispatch a where a.slaverid = #{slaverid} and status =#{status} and plantype=#{plantype} order by id ASC limit ${maxthread}
   </select>
 
+  <select id="getfunctiondispatchsbyslaverid" resultMap="BaseResultMap">
+    select * from dispatch  where slaverid = #{slaverid} and status =#{status} and plantype=#{plantype} and execplanid=#{execplanid} and batchname=#{batchname} order by id ASC limit 50
+  </select>
+
+
+
   <update id="updatedispatchstatus">
     update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
     and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
@@ -50,8 +56,25 @@
   </insert>
 
   <select id="getcasebyrunmode" resultMap="BaseResultMap">
-    select * from dispatch a JOIN executeplan b on a.execplanid=b.id where a.status =#{status} and b.usetype=#{usetype}
-    and b.runmode=#{runmode} order by a.id ASC limit 100
+    select * from dispatch a , executeplan b  where a.status =#{status} and b.usetype=#{usetype}
+    and b.runmode=#{runmode} and a.execplanid=#{execplanid} and a.batchname=#{batchname} order by a.id ASC limit 100
+  </select>
+
+  <select id="getrecentdispatch" resultMap="BaseResultMap">
+    select * from dispatch a where a.status =#{status} order by a.id ASC limit 1
+  </select>
+
+  <select id="getrecentdispatchbyusetype" resultMap="BaseResultMap">
+    select * from dispatch a where a.status =#{status} and a.plantype=#{plantype} order by a.id ASC limit 1
+  </select>
+
+  <select id="getdistinctslaverid" resultMap="BaseResultMap">
+    select DISTINCT(slaverid) from dispatch where status =#{status} and plantype=#{plantype} and execplanid=#{execplanid} and batchname=#{batchname}
+  </select>
+
+  <select id="getdistinctslaveridandcaaseid" resultMap="BaseResultMap">
+    select DISTINCT(slaverid) from dispatch where status =#{status} and plantype=#{plantype}
+    and execplanid=#{execplanid} and batchname=#{batchname} and testcaseid=#{testcaseid}
   </select>
 
 

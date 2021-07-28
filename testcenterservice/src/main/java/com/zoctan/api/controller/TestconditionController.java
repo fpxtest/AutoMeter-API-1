@@ -26,10 +26,12 @@ public class TestconditionController {
     @PostMapping
     public Result add(@RequestBody Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
-        con.createCriteria().andCondition("conditionname = '" + testcondition.getConditionname() + "'");
+        con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+                .andCondition("objectname = '" + testcondition.getObjectname() + "'")
+                .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
         if(testconditionService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该条件名已经存在");
+            return ResultGenerator.genFailedResult("该计划或者用例已经存在相同的条件");
         }
         else {
             testconditionService.save(testcondition);
@@ -68,16 +70,19 @@ public class TestconditionController {
      * 更新自己的资料
      */
     @PutMapping("/detail")
-    public Result updateDeploy(@RequestBody final Testcondition dic) {
+    public Result updateDeploy(@RequestBody final Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
-        con.createCriteria().andCondition("conditionname = '" + dic.getConditionname() + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+                .andCondition("objectname = '" + testcondition.getObjectname() + "'")
+                .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'")
+                .andCondition("id <> " + testcondition.getId());
         if(testconditionService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("已存在该条件名");
+            return ResultGenerator.genFailedResult("该计划或者用例已经存在相同的条件");
         }
         else {
 
-            this.testconditionService.updateTestcondition(dic);
+            this.testconditionService.updateTestcondition(testcondition);
             return ResultGenerator.genOkResult();
         }
     }

@@ -9,7 +9,10 @@ package com.zoctan.api.core.service;
  @create 2020/10/17
 */
 
+import com.zoctan.api.service.impl.ExecuteplanServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,6 +27,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public class Httphelp {
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final String JSON_CONTENT_FORM = "application/json;charset=UTF-8";
@@ -55,8 +59,12 @@ public class Httphelp {
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(connectTimeout).build();
             String query = null;
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setConfig(requestConfig);
             if(header.getParams().size()>0)
             {
                 setHeader(httpPost, header);
@@ -68,8 +76,10 @@ public class Httphelp {
                 HttpEntity reqEntity = new StringEntity(query,"utf-8");
                 httpPost.setEntity(reqEntity);
             }
-            httpClient = HttpClients.createDefault();
+            httpClient = HttpClients.custom().build();// .createDefault();
+            Httphelp.log.info("start......................................................");
             httpResponse = httpClient.execute(httpPost);
+            Httphelp.log.info("end......................................................");
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {

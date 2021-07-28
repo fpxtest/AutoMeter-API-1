@@ -12,6 +12,7 @@ import com.zoctan.api.service.TestPlanCaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -236,7 +237,8 @@ public class TestPlanCaseController {
                 TestPlanCaseController.log.info("功能任务-ProtocolJmeterNum：。。。。。。。。" + ProtocolJmeterNum);
                 List<List<Dispatch>> last = FunctionDispatch(ProtocolJmeterNum, ProtocolDispatchRun.get(Protocol));
                 if (Protocol.equals(new String("http"))) {
-                    for (List<Dispatch> JmeterList : last) {
+                    for (int i=0;i< last.size();i++) {
+                        List<Dispatch> JmeterList=last.get(i);
                         String DispatchIDs = "";
                         for (Dispatch dis : JmeterList) {
                             DispatchIDs = dis.getId() + "," + DispatchIDs;
@@ -246,9 +248,22 @@ public class TestPlanCaseController {
                         if (!DispatchIDs.isEmpty()) {
                             DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
                             TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
-                            tpcservice.ExecuteHttpPlanFunctionCase(SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password);
+                            tpcservice.ExecuteHttpPlanFunctionCase(SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password,i);
                         }
                     }
+//                        for (List<Dispatch> JmeterList : last) {
+//                        String DispatchIDs = "";
+//                        for (Dispatch dis : JmeterList) {
+//                            DispatchIDs = dis.getId() + "," + DispatchIDs;
+//                            dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
+//                            TestPlanCaseController.log.info("功能任务-更新调度状态为已分配：。。。。。。。。" + dis.getId());
+//                        }
+//                        if (!DispatchIDs.isEmpty()) {
+//                            DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
+//                            TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
+//                            tpcservice.ExecuteHttpPlanFunctionCase(SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password);
+//                        }
+//                    }
                 }
                 if (Protocol.equals(new String("rpc"))) {
                     String JmeterClassName = "";

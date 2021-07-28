@@ -15,6 +15,7 @@
     <result column="subconditiontype" jdbcType="VARCHAR" property="subconditiontype" />
     <result column="conditionresult" jdbcType="VARCHAR" property="conditionresult" />
     <result column="conditionstatus" jdbcType="VARCHAR" property="conditionstatus" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="runtime" jdbcType="BIGINT" property="runtime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />

@@ -236,10 +236,17 @@
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapicases.expect"
-            placeholder="如果api返回是json类型使用jsonpath表示期望值,多个值用英文逗号隔开，例如：$.store.book[0].title:value,$.store.people[0].name:value
-如果api返回是html，xml则使用xpath表示期望值，多个值用英文逗号隔开 例如：//div/h3//text():value"
+            placeholder="1.如果返回是Json类型使用JsonPath表示期望值,多个值用符号|隔开，例如：$.store.book[0].title:value|$.store.people[0].name:value
+2.如果返回是html，xml则使用XPath表示期望值，多个值用符号|隔开 例如：//div/h3//text():value|//div/h4//text():value"
           />
+          <div class="right">
+            <el-tooltip placement="right-start">
+              <div slot="content">1.如果用例返回数据类型是Json则使用JsonPath表示期望值, 如果多个值用符号|隔开，例如：$.store.book[0].title=test|$.store.people[0].name=hello   在线解析网站：http://www.e123456.com/aaaphp/online/jsonpath/<br/>2.如果用例返回是html，xml则使用XPath表示期望值，如果多个值用符号|隔开 例如：//div/h3//text()=hello|//div/h4//text()=123456   在线解析网站： http://www.ab173.com/other/xpath.php</div>
+              <el-button>期望值语法规则</el-button>
+            </el-tooltip>
+          </div>
         </el-form-item>
+
 
         <el-form-item label="优先级" prop="level" >
           <el-input

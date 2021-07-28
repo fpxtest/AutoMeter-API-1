@@ -3,6 +3,7 @@ package com.zoctan.api.service.impl;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.SlaverMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +20,9 @@ import java.net.UnknownHostException;
 */
 @Component
 public class InitSlaver {
+
+    @Value("${server.port}")
+    private String port;
 
     @Autowired
     private SlaverMapper slaverMapper;
@@ -37,15 +41,15 @@ public class InitSlaver {
         String ip=address.getHostAddress();
         Slaver sa=new Slaver();
         sa.setIp(ip);
-        sa.setSlavername("");
-        sa.setPort("");
-        sa.setStatus("");
+        sa.setSlavername("执行机"+ip);
+        sa.setPort(port);
+        sa.setStatus("空闲");
         sa.setStype("");
-        sa.setMemo("slaver");
+        sa.setMemo("执行机"+ip);
         if(slaverMapper.findslaverbyip(ip).size()==0)
         {
             slaverMapper.addslaver(sa);
-            System.out.println("启动注册slaver完成");
+            System.out.println("启动注册slaver完成.......................................................");
         }
         else
         {

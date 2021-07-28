@@ -14,6 +14,7 @@ import com.zoctan.api.mapper.DeployunitMapper;
 import com.zoctan.api.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -82,16 +83,31 @@ public class TestconditionController {
     }
 
     @PostMapping("/exec")
+    @Async
     public Result exec(@RequestBody Dispatch dispatch) throws Exception {
-        // 调用testcenter需要模拟下admin登录，调用Request URL: http://localhost:8080/account/token  {name: "admin", password: "admin123"}
-        // 在请求头里面加上Authorization = token
         Long Planid = dispatch.getExecplanid();
-        Testcondition testcondition=testconditionService.GetConditionByPlanIDAndConditionType(Planid,"前置条件");
-        if(testcondition!=null)
+        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(Planid,"前置条件");
+        if(testconditionList.size()>0)
         {
-            long ConditionID= testcondition.getId();
+            long ConditionID= testconditionList.get(0).getId();
             List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+            TestconditionController.log.info("条件报告API子条件数量-============："+conditionApiList.size());
             for (ConditionApi conditionApi : conditionApiList) {
+                TestconditionReport testconditionReport=new TestconditionReport();
+                testconditionReport.setTestplanid(dispatch.getExecplanid());
+                testconditionReport.setPlanname(dispatch.getExecplanname());
+                testconditionReport.setBatchname(dispatch.getBatchname());
+                testconditionReport.setConditionid(new Long(ConditionID));
+                testconditionReport.setConditiontype("前置条件");
+                testconditionReport.setConditionresult("");
+                testconditionReport.setConditionstatus("");
+                testconditionReport.setRuntime(new Long(0));
+                testconditionReport.setSubconditionid(conditionApi.getId());
+                testconditionReport.setSubconditiontype("接口");
+                testconditionReport.setStatus("进行中");
+                TestconditionController.log.info("条件报告保存子条件进行中状态-============："+testconditionReport.getPlanname()+"|"+ testconditionReport.getBatchname()+"|"+conditionApi.getCasename());
+                testconditionReportService.save(testconditionReport);
+
                 Long CaseID= conditionApi.getCaseid();
                 Apicases apicases= apicasesService.GetCaseByCaseID(CaseID);
                 Long ApiID= apicases.getApiid();
@@ -122,39 +138,25 @@ public class TestconditionController {
                     End = new Date().getTime();
                 }
                 CostTime=End-Start;
-                //保存条件结果表
-                TestconditionReport testconditionReport=new TestconditionReport();
-                testconditionReport.setTestplanid(dispatch.getExecplanid());
-                testconditionReport.setPlanname(dispatch.getExecplanname());
-                testconditionReport.setBatchname(dispatch.getBatchname());
-                testconditionReport.setConditionid(new Long(ConditionID));
-                testconditionReport.setConditiontype("前置条件");
+                //更新条件结果表
                 testconditionReport.setConditionresult(Respone);
                 testconditionReport.setConditionstatus(ConditionResultStatus);
                 testconditionReport.setRuntime(CostTime);
-                testconditionReport.setSubconditionid(conditionApi.getId());
-                testconditionReport.setSubconditiontype("接口");
+                testconditionReport.setStatus("已完成");
+                TestconditionController.log.info("条件报告更新子条件结果-============："+testconditionReport.getPlanname()+"|"+ testconditionReport.getBatchname()+"|"+conditionApi.getCasename());
+                testconditionReportService.update(testconditionReport);
 
-
-                Condition con=new Condition(TestconditionReport.class);
-                con.createCriteria().andCondition("testplanid = " + testconditionReport.getTestplanid() )
-                        .andCondition("conditionid = " + testconditionReport.getConditionid())
-                        .andCondition("subconditionid = " + testconditionReport.getSubconditionid())
-                        .andCondition("batchname = '" + testconditionReport.getBatchname() + "'");
-                //计划批次对应的条件，子条件如果不存在，则保存
-                if(testconditionReportService.ifexist(con)<=0)
+                //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+                ApicasesVariables apicasesVariables= apicasesVariablesService.getBy("caseid",apicases.getId());
+                if(apicasesVariables!=null)
                 {
-                    TestconditionController.log.info("条件报告保存子条件结果-============："+testconditionReport.getPlanname()+"|"+ testconditionReport.getBatchname()+"|"+conditionApi.getCasename());
-                    testconditionReportService.save(testconditionReport);
-
-                    //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
-                    ApicasesVariables apicasesVariables= apicasesVariablesService.getBy("caseid",apicases.getId());
+                    TestconditionController.log.info("条件报告子条件处理变量-============："+apicasesVariables.getVariablesname());
                     Testvariables testvariables=testvariablesService.getById(apicasesVariables.getId());
                     String VariablesPath=testvariables.getVariablesexpress();
-
+                    TestconditionController.log.info("条件报告子条件处理变量表达式-============："+VariablesPath+" 响应数据类型"+requestObject.getResponecontenttype());
                     ParseResponeHelp parseResponeHelp=new ParseResponeHelp();
                     String ParseValue= parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(),Respone,VariablesPath);
-
+                    TestconditionController.log.info("条件报告子条件处理变量取值-============："+ParseValue);
                     TestvariablesValue testvariablesValue=new TestvariablesValue();
                     testvariablesValue.setPlanid(Planid);
                     testvariablesValue.setPlanname(dispatch.getExecplanname());
@@ -169,7 +171,6 @@ public class TestconditionController {
                 }
             }
         }
-
         return ResultGenerator.genOkResult();
     }
 

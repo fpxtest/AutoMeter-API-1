@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.TestconditionReportMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.TestconditionReport">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="testplanid" jdbcType="BIGINT" property="testplanid" />
+    <result column="planname" jdbcType="VARCHAR" property="planname" />
+    <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="conditionid" jdbcType="BIGINT" property="conditionid" />
+    <result column="conditiontype" jdbcType="VARCHAR" property="conditiontype" />
+    <result column="subconditionid" jdbcType="BIGINT" property="subconditionid" />
+    <result column="subconditiontype" jdbcType="VARCHAR" property="subconditiontype" />
+    <result column="conditionresult" jdbcType="VARCHAR" property="conditionresult" />
+    <result column="conditionstatus" jdbcType="VARCHAR" property="conditionstatus" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="runtime" jdbcType="BIGINT" property="runtime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findTestconditionReportWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM testcondition_report a
+    <where>
+      <if test="planname != null and planname != ''">a.planname like CONCAT('%',#{planname},'%')</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+    </where>
+  </select>
+
+  <select id="getunfinishapiconditionnumswithstatus" resultMap="BaseResultMap">
+    SELECT * FROM testcondition_report where  testplanid=#{testplanid}
+    and batchname=#{batchname} and status=#{status}
+  </select>
+
+  <select id="getunfinishapiconditionnums" resultMap="BaseResultMap">
+    SELECT * FROM testcondition_report where  testplanid=#{testplanid}
+    and batchname=#{batchname}
+  </select>
+
+</mapper>
