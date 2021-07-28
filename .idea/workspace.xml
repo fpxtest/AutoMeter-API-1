@@ -5,55 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d22d01c0-a568-4755-9a02-2b0ea82ef4d4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_0_9_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_security_2_1_6_RELEASE.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_config_5_1_5_RELEASE.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/views/assets/cases/apicases/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/views/assets/cases/apicasesvariables/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/views/assets/cases/apicasesvariables/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/views/condition/apicondition/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/views/condition/apicondition/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/views/condition/condition/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/views/condition/condition/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/views/dispatch/slaver/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/views/testvariables/testvariables/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/views/testvariables/testvariables/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/core/TestCorebak.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/api-jmeter-autotest/src/main/java/com/api/autotest/test/httpapitestcase/HttpApiFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/TestconditionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/controller/TestconditionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/TestconditionReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/entity/TestconditionReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/TestconditionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/mapper/TestconditionMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/TestconditionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/TestconditionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/TestconditionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/java/com/zoctan/api/service/impl/TestconditionServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/TestconditionReportMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/conditionservice/src/main/resources/mapper/TestconditionReportMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/dispatchservice.iml" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/dispatchservice.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/FunctionDispatchScheduleTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/config/ScheduleConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/core/config/ScheduleConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/DispatchMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/SlaverMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/mapper/TestPlanCaseService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/DispatchMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/DispatchMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/SlaverMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dispatchservice/src/main/resources/mapper/SlaverMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/apache-jmeter-5.3/lib/ext/api-jmeter-autotest-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/apache-jmeter-5.3/lib/ext/api-jmeter-autotest-1.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/servicejmxcase/HTTPFunction.jmx" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/servicejmxcase/HTTPFunction.jmx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/controller/TestPlanCaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/core/Scheduled/PerformanceDispatchScheduleTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/TestPlanCaseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/InitSlaver.java" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/InitSlaver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/slaverservice/src/main/java/com/zoctan/api/service/impl/TestPlanCaseServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/TestconditionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/controller/TestconditionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/service/Httphelp.java" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/core/service/Httphelp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApicasesVariables.java" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/ApicasesVariables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/TestconditionReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/entity/TestconditionReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/java/com/zoctan/api/service/impl/ExecuteplanServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesReportMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesVariablesMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/ApicasesVariablesMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/TestconditionReportMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/testcenterservice/src/main/resources/mapper/TestconditionReportMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispatchservice/api.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispatchservice/resetDB.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dispatchservice/slaverservice.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcenterservice/api.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testcenterservice/testcenterservice.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1420,6 +1382,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="testcenterservice" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.zoctan.api.Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="conditionservice" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="conditionservice" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.zoctan.api.Application" />
@@ -1493,6 +1462,7 @@
       <item itemvalue="Spring Boot.dispatchservice" />
       <item itemvalue="Spring Boot.slaverservice" />
       <item itemvalue="Spring Boot.testcenterservice" />
+      <item itemvalue="Spring Boot.Application" />
     </list>
     <recent_temporary>
       <list>
@@ -1558,7 +1528,7 @@
       <workItem from="1625726484132" duration="446000" />
       <workItem from="1625727158375" duration="630000" />
       <workItem from="1625731127929" duration="66649000" />
-      <workItem from="1626594712030" duration="96480000" />
+      <workItem from="1626594712030" duration="97362000" />
     </task>
     <servers />
   </component>

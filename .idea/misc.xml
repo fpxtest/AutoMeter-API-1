@@ -15,7 +15,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/adminservice/pom.xml" />
-        <option value="$PROJECT_DIR$/testcenterservice/pom.xml" />
         <option value="$PROJECT_DIR$/slaverservice/pom.xml" />
         <option value="$PROJECT_DIR$/strategy/pom.xml" />
         <option value="$PROJECT_DIR$/ftSecurity/pom.xml" />
@@ -23,6 +22,7 @@
         <option value="$PROJECT_DIR$/dispatchservice/pom.xml" />
         <option value="$PROJECT_DIR$/api-jmeter-autotest/pom.xml" />
         <option value="$PROJECT_DIR$/conditionservice/pom.xml" />
+        <option value="$PROJECT_DIR$/testcenterservice/pom.xml" />
       </list>
     </option>
   </component>
@@ -106,5 +106,5 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_3" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>
