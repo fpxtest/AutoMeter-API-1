@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="dispatchservice:war">
-    <output-path>$PROJECT_DIR$/dispatchservice/target</output-path>
-    <root id="archive" name="dispatchservice.war">
-      <element id="artifact" artifact-name="dispatchservice:war exploded" />
-    </root>
-  </artifact>
-</component>
