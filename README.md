@@ -47,59 +47,14 @@
 
 ## 架构
 
-![image](https://github.com/AutoMeter/testplantform/blob/master/img/%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg)
+ [架构设计](https://www.toutiao.com/i6975322437458379271/)
 
-
-## 技术
-    1.springboot
-    2.vue
-    3.mysql
-    4.redis
-    5.Jmeter
-    
 
 ## 部署
-Release/Beta版本为编译好的包，可以根据以下来部署发布
+ [部署](https://www.toutiao.com/i7012047297831862816//)
 
-1.基础环境：
 
-    1.mysql   5.7   
-    2.redis   5.0.8
-    3.jdk     1.8
-    4.nodejs  8.12.0
-    5.npm     6.4.1
-    6.nginx   1.9.9
-    
-2.应用配置：
-
-    1.testcenterservice（测试中心服务），slaverservice（执行服务），dispatchservice（调度服务）三个服务配置相同
-     配置：
-        applicaton.yml中配置mysql连接字(spring-datasource:url,username,password),redis连接字(spring-redis:host,port)
-        applicaton.yml中spring.domain.allowdomain 配置admin的访问地址，解决跨域
-        applicaton.yml中spring.logging配置日志路径path
-    2.testcenterapp（后台）
-     配置：
-        在目录admin/static/config.js中修改配置SERVER_URL，为调用testcenterservice的ip和端口，或者使用域名  
-    3.系统字典表配置
-        如果需要部署多个slaver集群运行测试，则需要在字典表中配置调度服务的访问地址
-        增加字典项：调度服务，字典编码：dispatchservice，字典项名：调度服务器地址,字典项值：替换成你的调度服务的访问地址
-    4.nginx配置
-        nginx.conf中的http.server.location.root配置/app/AutoMeter/dist/  dist为admin打包出来的静态文件目录
-
-        
-3.初始化数据库
-
-    mysql下新建数据库testcenter运行testcenter.sql
-
-4.启动顺序
-
-    建议使用jenkins来编译，打包，发布以下应用服务
-    1.testcenterservice
-    2.slaverservice
-    3.dispatchservice(单个slaverservice可以不部署dispatchservice)
-    4.admin （建议nginx部署vue -npm build出来的静态文件目录dist）
-    
-## 部署完成后，如何开始第一个用例
+## 如何开始第一个用例
 
    一，系统配置：
    
