@@ -79,6 +79,10 @@ public class ApicasesReportController {
     @PostMapping("/getstaticsreport")
     public Result getstaticsreport(@RequestBody final Map<String, Object> param) {
         //ApicasesReportController.log.info(param);
+        if(param.get("batchname")==null||param.get("testplanname")==null)
+        {
+            return ResultGenerator.genOkResult("请选中测试计划和批次");
+        }
         CaseReportStatics caseReportStatics=new CaseReportStatics();
         Long casetotals = this.apicasesReportService.getApicasetotalsWithName(param);
         Map<String, Object> statusparams=param;

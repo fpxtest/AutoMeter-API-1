@@ -14,6 +14,31 @@ public class Apicases {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * API
+     */
+    private String apiname;
+
+    public Long getApiid() {
+        return apiid;
+    }
+
+    public void setApiid(Long apiid) {
+        this.apiid = apiid;
+    }
+
+    private Long apiid;
+
+    public Long getDeployunitid() {
+        return deployunitid;
+    }
+
+    public void setDeployunitid(Long deployunitid) {
+        this.deployunitid = deployunitid;
+    }
+
+    private Long deployunitid;
+
     public Long getThreadnum() {
         return threadnum;
     }
@@ -34,21 +59,15 @@ public class Apicases {
 
     private Long loops;
 
-
-    public String getCasetype() {
-        return casetype;
+    public String getMiddleparam() {
+        return middleparam;
     }
 
-    public void setCasetype(String casetype) {
-        this.casetype = casetype;
+    public void setMiddleparam(String middleparam) {
+        this.middleparam = middleparam;
     }
 
-    private String casetype;
-
-    /**
-     * API
-     */
-    private String apiname;
+    private String middleparam;
 
     /**
      * 发布单元
@@ -69,6 +88,17 @@ public class Apicases {
      * 用例内容，以英文逗号分开，提供jar获取自定义期望结果A：1的值，入参为冒号左边的内容
      */
     private String casecontent;
+
+
+    public String getCasetype() {
+        return casetype;
+    }
+
+    public void setCasetype(String casetype) {
+        this.casetype = casetype;
+    }
+
+    private String  casetype;
 
     /**
      * 期望值

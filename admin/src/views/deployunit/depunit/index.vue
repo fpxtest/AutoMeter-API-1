@@ -105,16 +105,14 @@
             v-model="tmpdepunit.deployunitname"
           />
         </el-form-item>
-        <el-form-item label="协议" prop="protocal">
-          <el-input
-            type="text"
-            maxlength="40"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model="tmpdepunit.protocal"
-          />
+        <el-form-item label="协议" prop="protocal" required>
+          <el-select v-model="tmpdepunit.protocal" placeholder="协议">
+            <el-option label="http" value="http"></el-option>
+            <el-option label="https" value="https"></el-option>
+            <el-option label="rpc" value="rpc"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="端口" prop="port">
+        <el-form-item label="端口" prop="port" required>
           <el-input
             type="text"
             maxlength="40"
@@ -173,6 +171,13 @@
       }
     },
     data() {
+      const validateDeployName = (rule, value, callback) => {
+        if (value.length < 3) {
+          callback(new Error('账户名长度必须 ≥ 3'))
+        } else {
+          callback()
+        }
+      }
       return {
         itemKey: null,
         tmpdeployunitname: null,
@@ -201,6 +206,9 @@
           size: 10,
           deployunitname: null,
           protocal: null
+        },
+        createRules: {
+          email: [{ required: true, trigger: 'blur', validator: validateDeployName }]
         }
       }
     },

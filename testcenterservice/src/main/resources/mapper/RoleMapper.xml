@@ -33,4 +33,8 @@
         WHERE id = #{id}
     </update>
 
+    <insert id="SaveRole">
+        insert into role(id,name) values(#{id},#{name})
+    </insert>
+
 </mapper>

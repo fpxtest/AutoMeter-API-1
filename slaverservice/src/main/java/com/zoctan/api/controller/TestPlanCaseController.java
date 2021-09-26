@@ -5,15 +5,16 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.*;
-import com.zoctan.api.service.ApicasesReportService;
-import com.zoctan.api.service.DeployunitService;
-import com.zoctan.api.service.ExecuteplanService;
+import com.zoctan.api.service.*;
 import com.zoctan.api.service.TestPlanCaseService;
+import com.zoctan.api.service.impl.TestPlanCaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
+import com.alibaba.fastjson.JSON;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +63,19 @@ public class TestPlanCaseController {
     @Autowired(required = false)
     private ApicasesReportService apicasereportservice;
     @Autowired(required = false)
+    private ApicasesService apicasesService;
+    @Autowired(required = false)
+    private ApiCasedataService apiCasedataService;
+    @Autowired(required = false)
+    private ApiParamsService apiParamsService;
+    @Autowired(required = false)
+    private ApiService apiService;
+    @Autowired(required = false)
     private ExecuteplanService epservice;
+    @Autowired(required = false)
+    private  MacdepunitService macdepunitService;
+    @Autowired(required = false)
+    private MachineService machineService;
     @Autowired(required = false)
     private ApicasesReportPerformanceMapper apicasesReportPerformanceMapper;
 
@@ -154,7 +167,7 @@ public class TestPlanCaseController {
         return flag;
     }
 
-    @GetMapping("/test")
+    @PostMapping("/test")
     public Result gettest(@RequestBody ExecuteplanTestcase plancase) {
         //tpcservice.executeplancase(plancase.getExecuteplanid(),plancase.getTestcaseid());
         return ResultGenerator.genOkResult();
@@ -163,10 +176,40 @@ public class TestPlanCaseController {
     @PostMapping("/execperformancetest")
     public Result execperformancetest(@RequestBody Dispatch dispatch) throws Exception {
 
+        String ip = null;
+        InetAddress address = null;
+        address = InetAddress.getLocalHost();
+        ip = address.getHostAddress();
+        List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
+        if (slaverlist.size() == 0) {
+            TestPlanCaseController.log.error("性能任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
+            return ResultGenerator.genFailedResult("execperformancetest 未找到ip为：" + ip + "的slaver");
+        }
+        Long SlaverId = slaverlist.get(0).getId();
+        slaverMapper.updateSlaverStaus(SlaverId, "运行中");
+
         String ProjectPath = System.getProperty("user.dir");
-        String JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
-        String JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
-        String JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
+        String JmeterPath ="";
+        String JmxPath="";
+        String JmeterPerformanceReportPath="";
+        if(ProjectPath.contains("slaverservice"))
+        {
+            JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
+            JmxPath = ProjectPath + "/servicejmxcase";
+            JmeterPerformanceReportPath = ProjectPath + "/performancereport";
+        }
+        else
+        {
+            JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
+            JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+            JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
+        }
+
+        File dir = new File(JmeterPerformanceReportPath);
+        if (!dir.exists()) {// 判断目录是否存在
+            dir.mkdir();
+            TestPlanCaseController.log.info("创建性能报告目录performancereport完成 :" + JmeterPerformanceReportPath);
+        }
         String JmxCaseName = dispatch.getCasejmxname();
         String DeployUnitName=dispatch.getDeployunitname();
         String CaseName = dispatch.getTestcasename();
@@ -192,17 +235,30 @@ public class TestPlanCaseController {
 
         if (!JmeterClassExist(ClassName, JmeterPath)) {
             JmeterClassNotExist(dispatch, ClassName, CaseName);
-            dispatchMapper.updatedispatchstatus("调度异常", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+            String memo=CaseName+"未开发对应的JmeterClass："+ClassName;
+            dispatchMapper.updatedispatchstatusandmemo("调度异常",memo, dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
         } else {
-            // 更新调度表对应用例状态为已分配
-            dispatchMapper.updatedispatchstatus("已分配", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
-            TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
-            // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
-            tpcservice.ExecuteHttpPerformancePlanCase(apicases.getCasetype(), dispatch.getSlaverid(), dispatch.getBatchid(), dispatch.getExecplanid(), dispatch.getTestcaseid(), apicases.getThreadnum(), apicases.getLoops(), DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, dispatch.getBatchname(), JmeterPerformanceReportPath, url, username, password);
-            TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。"+ dispatch.getId());
+            JmeterPerformanceObject jmeterPerformanceObject=null;
+            try {
+                 jmeterPerformanceObject= GetJmeterPerformance(dispatch);
+            }
+            catch (Exception ex)
+            {
+                dispatchMapper.updatedispatchstatusandmemo("调度异常",ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+                TestPlanCaseController.log.info("性能任务-调度异常。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。获取 JmeterPerformanceObject对象异常报错..。。。。。。。。。。。。。。。。。。。。。。。。。" + ex.getMessage());
+            }
+            if(jmeterPerformanceObject!=null)
+            {
+                // 更新调度表对应用例状态为已分配
+                dispatchMapper.updatedispatchstatus("已分配", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+                TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
+                // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
+                tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath,apicases.getThreadnum(), apicases.getLoops());
+                //tpcservice.ExecuteHttpPerformancePlanCase(apicases.getCasetype(), dispatch.getSlaverid(), dispatch.getBatchid(), dispatch.getExecplanid(), dispatch.getTestcaseid(), apicases.getThreadnum(), apicases.getLoops(), DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, dispatch.getBatchname(), JmeterPerformanceReportPath, url, username, password);
+                TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。"+ dispatch.getId());
+            }
         }
         return ResultGenerator.genOkResult();
-
     }
 
 
@@ -221,8 +277,18 @@ public class TestPlanCaseController {
         try {
             slaverMapper.updateSlaverStaus(SlaverId, "运行中");
             String ProjectPath = System.getProperty("user.dir");
-            String JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
-            String JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+            String JmeterPath ="";
+            String JmxPath="";
+            if(ProjectPath.contains("slaverservice"))
+            {
+                 JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
+                 JmxPath = ProjectPath + "/servicejmxcase";
+            }
+            else
+            {
+                 JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
+                 JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+            }
             TestPlanCaseController.log.info("功能任务-获取待执行的功能用例数：。。。。。。。。。。。。。。。。。。。。。。。。" + dispatchList.size());
             int FunctionJmeter = GetJmeterProcess("FunctionJmeterProcess", "功能");
 
@@ -248,7 +314,7 @@ public class TestPlanCaseController {
                         if (!DispatchIDs.isEmpty()) {
                             DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
                             TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
-                            tpcservice.ExecuteHttpPlanFunctionCase(SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password,i);
+                            tpcservice.ExecuteHttpPlanFunctionCase( SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password,i);
                         }
                     }
 //                        for (List<Dispatch> JmeterList : last) {
@@ -279,7 +345,124 @@ public class TestPlanCaseController {
     }
 
 
+    public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch)
+    {
+        JmeterPerformanceObject jmeterPerformanceObject=new JmeterPerformanceObject();
+        jmeterPerformanceObject.setTestplanid(dispatch.getExecplanid());
+        jmeterPerformanceObject.setCaseid(dispatch.getTestcaseid());
+        jmeterPerformanceObject.setSlaverid(dispatch.getSlaverid());
+        jmeterPerformanceObject.setBatchid(dispatch.getBatchid());
+        jmeterPerformanceObject.setCasename(dispatch.getTestcasename());
+        jmeterPerformanceObject.setBatchname(dispatch.getBatchname());
+        jmeterPerformanceObject.setExecuteplanname(dispatch.getExecplanname());
+        Apicases apicases=apicasesService.getBy("id",dispatch.getTestcaseid());
+        jmeterPerformanceObject.setExpect(apicases.getExpect());
+        jmeterPerformanceObject.setCasetype(apicases.getCasetype());
+        Api api=apiService.getBy("id",apicases.getApiid());
+        jmeterPerformanceObject.setApistyle(api.getApistyle());
+        jmeterPerformanceObject.setRequestmMthod(api.getVisittype());
 
+        jmeterPerformanceObject.setRequestcontenttype(api.getRequestcontenttype());
+        jmeterPerformanceObject.setResponecontenttype(api.getResponecontenttype());
+        Deployunit deployunit=deployunitService.getBy("id",api.getDeployunitid());
+        jmeterPerformanceObject.setProtocal(deployunit.getProtocal());
+
+        Executeplan executeplan=epservice.getBy("id",dispatch.getExecplanid());
+        Long EnvID= executeplan.getEnvid();
+        Macdepunit macdepunit= macdepunitService.getmacdepbyenvidanddepid(EnvID,deployunit.getId());
+        if(macdepunit!=null)
+        {
+            String testserver = "";
+            String resource = "";
+            if(macdepunit.getVisittype().equals(new String("ip")))
+            {
+                Long MachineID=macdepunit.getMachineid();
+                Machine machine= machineService.getBy("id",MachineID);
+                testserver = machine.getIp();
+                resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
+            }
+            else
+            {
+                testserver= macdepunit.getDomain();
+                resource = deployunit.getProtocal() + "://" + testserver  + api.getPath();
+            }
+            jmeterPerformanceObject.setResource(resource);
+        }
+        List<ApiCasedata> apiCasedataList=apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
+
+        HashMap<String,String> HeaderMap=new HashMap<>();
+        HashMap<String,String> ParamsMap=new HashMap<>();
+        HashMap<String,String> BodyMap=new HashMap<>();
+        for(ApiCasedata apiCasedata:apiCasedataList)
+        {
+            if(apiCasedata.getPropertytype().equals(new String("Params")))
+            {
+                ParamsMap.put(apiCasedata.getApiparam(),apiCasedata.getApiparamvalue());
+            }
+            if(apiCasedata.getPropertytype().equals(new String("Header")))
+            {
+                HeaderMap.put(apiCasedata.getApiparam(),apiCasedata.getApiparamvalue());
+            }
+            if(apiCasedata.getPropertytype().equals(new String("Body")))
+            {
+                BodyMap.put(apiCasedata.getApiparam(),apiCasedata.getApiparamvalue());
+            }
+        }
+        if(HeaderMap.size()>0)
+        {
+            jmeterPerformanceObject.setHeadjson( JSON.toJSONString(HeaderMap));
+        }
+        else
+        {
+            List<ApiParams> paramsList= apiParamsService.getApiParamsbypropertytype(api.getId(),"Header");
+            //API是否有参数，有参数无用例数据表示用例数据不完整
+            if(paramsList.size()>0)
+            {
+                jmeterPerformanceObject.setHeadjson("nocasedatas");
+            }
+            //API是否有参数，无参数无用例数据，表示无Header
+            else
+            {
+                jmeterPerformanceObject.setHeadjson("headjson");
+            }
+        }
+        if(ParamsMap.size()>0)
+        {
+            jmeterPerformanceObject.setParamsjson( JSON.toJSONString(ParamsMap));
+        }
+        else
+        {
+            List<ApiParams> paramsList= apiParamsService.getApiParamsbypropertytype(api.getId(),"Params");
+            if(paramsList.size()>0)
+            {
+                jmeterPerformanceObject.setParamsjson("nocasedatas");
+            }
+            else
+            {
+                jmeterPerformanceObject.setParamsjson("paramjson");
+            }
+        }
+        if(BodyMap.size()>0)
+        {
+            jmeterPerformanceObject.setBodyjson( JSON.toJSONString(BodyMap));
+        }
+        else
+        {
+            List<ApiParams> paramsList= apiParamsService.getApiParamsbypropertytype(api.getId(),"Body");
+            if(paramsList.size()>0)
+            {
+                jmeterPerformanceObject.setBodyjson("nocasedatas");
+            }
+            else
+            {
+                jmeterPerformanceObject.setBodyjson("bodyjson");
+            }
+        }
+        jmeterPerformanceObject.setMysqlurl(url);
+        jmeterPerformanceObject.setMysqlusername(username);
+        jmeterPerformanceObject.setMysqlpassword(password);
+        return jmeterPerformanceObject;
+    }
 
     public void JmeterClassNotExist(Dispatch dis, String jmeterclassname, String casename) {
         // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态

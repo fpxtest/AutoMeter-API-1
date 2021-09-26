@@ -84,4 +84,9 @@
     #{slaver.slaverid}
   </foreach>
   </select>
+
+  <update id="updatedispatchstatusandmemo">
+    update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
+    and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
+  </update>
 </mapper>

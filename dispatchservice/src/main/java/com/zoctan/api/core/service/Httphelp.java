@@ -77,10 +77,8 @@ public class Httphelp {
             HttpEntity resEntity = httpResponse.getEntity();
             responseData = EntityUtils.toString(resEntity);
         } catch (Exception e) {
-            System.out.println("post Exception is :"+e.getMessage());
             responseData=e.getMessage();
             throw new Exception(e.getMessage());
-            //e.printStackTrace();
         } finally {
             if(httpResponse!=null)
             {

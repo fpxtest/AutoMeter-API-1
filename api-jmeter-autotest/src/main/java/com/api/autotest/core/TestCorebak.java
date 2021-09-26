@@ -155,6 +155,10 @@ public class TestCorebak {
         newob.setCasetype(casetype);
 
         newob.setResponecontenttype(responecontenttype);
+        if(resource==null)
+        {
+            throw new Exception("执行计划对应的环境中未部署发布单元，请在测试环境中完成部署发布单元后再运行");
+        }
         newob.setResource(resource);
         newob.setRequestmMthod(RequestmMthod);
         newob.setRequestcontenttype(requestcontenttype);
@@ -163,8 +167,8 @@ public class TestCorebak {
 
         if(headjson.equals(new String("nocasedatas")))
         {
-            //表示api设置了header参数，但是用例未赋值
-            throw new Exception("用例的Header参数未设置数据，请设置完整再运行");
+            //表示api设置了header参数，但是用例无数据
+            throw new Exception("API的Header参数无测试用例数据，请完成数据后再运行");
         }
         else
         {
@@ -193,7 +197,7 @@ public class TestCorebak {
         }
         if(paramsjson.equals(new String("nocasedatas")))
         {
-            throw new Exception("用例的Params参数未设置数据，请设置完整再运行");
+            throw new Exception("API的Params参数无测试用例数据，请完成数据后再运行");
         }
         else
         {
@@ -218,6 +222,37 @@ public class TestCorebak {
                 catch (Exception ex)
                 {
                     throw  new Exception("Paras参数用例数据异常："+paramsjson);
+                }
+            }
+        }
+
+        if(bodyjson.equals(new String("nocasedatas")))
+        {
+            throw new Exception("API的Body无测试用例数据，请完成数据后再运行");
+        }
+        else
+        {
+            HttpParamers params=null;
+
+            if(paramsjson.equals(new String("bodyjson")))
+            {
+                params=new HttpParamers();
+                newob.setParamers(params);
+            }
+            else
+            {
+                try {
+                    Map paramsmaps = (Map) JSON.parse(paramsjson);
+                    params=new HttpParamers();
+                    for (Object map : paramsmaps.entrySet()){
+                        System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
+                        params.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+                    }
+                    newob.setParamers(params);
+                }
+                catch (Exception ex)
+                {
+                    throw  new Exception("Body参数用例数据异常："+paramsjson);
                 }
             }
         }
@@ -427,31 +462,46 @@ public class TestCorebak {
     }
 
     // 记录用例测试结果
-    public void savetestcaseresult(boolean status, long time, String respone, String assertvalue,String errorinfo,RequestObject ob) {
+    public void savetestcaseresult(boolean status, long time, String respone, String assertvalue,String errorinfo,RequestObject requestObject) {
         //GetDBConnection();
-        String resulttable="";
-        if(ob.getCasetype().equals(new String("功能")))
+        try
         {
-            resulttable="apicases_report";
+            String resulttable="";
+            String casetype=requestObject.getCasetype();// context.getParameter("casetype");
+            String testplanid =requestObject.getTestplanid();// context.getParameter("testplanid");
+            String caseid =requestObject.getCaseid();// context.getParameter("caseid");
+            String slaverid =requestObject.getSlaverid();// context.getParameter("slaverid");
+            //String batchid = context.getParameter("batchid");
+            String expect=requestObject.getExpect();// context.getParameter("expect");
+            String batchname =requestObject.getBatchname();// context.getParameter("batchname");
+
+            if(casetype.equals(new String("功能")))
+            {
+                resulttable="apicases_report";
+            }
+            if(casetype.equals(new String("性能")))
+            {
+                resulttable="apicases_report_performance";
+            }
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateNowStr = sdf.format(d);
+            String sql = "";
+            if (status) {
+                sql = "insert "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator)" +
+                        " values(" + caseid + "," + testplanid + ", '"+batchname+"', "+ slaverid  + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" +errorinfo+ "','"+ dateNowStr + "', '" + dateNowStr + "','admin')";
+            } else {
+                sql = "insert  "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator)" +
+                        " values(" + caseid + "," + testplanid + ", '"+batchname+"', "+ slaverid  + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" +errorinfo+ "','"+ dateNowStr + "','" + dateNowStr + "','admin')";
+            }
+            logger.info(logplannameandcasename+"测试结果 result sql is...........: " + sql);
+            System.out.println("case result sql is: " + sql);
+            logger.info(logplannameandcasename+"记录用例测试结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
         }
-        if(ob.getCasetype().equals(new String("性能")))
+        catch (Exception ex)
         {
-            resulttable="apicases_report_performance";
+            logger.info(logplannameandcasename+"记录用例测试结果异常...........: " + ex.getMessage());
         }
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateNowStr = sdf.format(d);
-        String sql = "";
-        if (status) {
-            sql = "insert "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator)" +
-                    " values(" + ob.getCaseid() + "," + ob.getTestplanid() + ", '"+ob.getBatchname()+"', "+ ob.getSlaverid()  + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + ob.getExpect() + "','" +errorinfo+ "','"+ dateNowStr + "', '" + dateNowStr + "','admin')";
-        } else {
-            sql = "insert  "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator)" +
-                    " values(" + ob.getCaseid() + "," + ob.getTestplanid() + ", '"+ob.getBatchname()+"', "+ ob.getSlaverid()  + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + ob.getExpect() + "','" +errorinfo+ "','"+ dateNowStr + "','" + dateNowStr + "','admin')";
-        }
-        logger.info(logplannameandcasename+"测试结果 result sql is...........: " + sql);
-        System.out.println("case result sql is: " + sql);
-        logger.info(logplannameandcasename+"记录用例测试结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
 
 
@@ -616,15 +666,22 @@ public class TestCorebak {
 
 
     // 更新用例调度结果
-    public void updatedispatchcasestatus(String testplanid,String batchid,String slaverid,String caseid) {
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateNowStr = sdf.format(d);
-        String sql = "";
-        sql = "update dispatch set status='已完成',lastmodify_time='"+dateNowStr+"' where slaverid="+slaverid+" and execplanid="+testplanid+" and batchid="+batchid+" and testcaseid="+caseid;
-        logger.info(logplannameandcasename+"更新调度用例状态 result sql is...........: " + sql);
-        System.out.println("case result sql is: " + sql);
-        logger.info(logplannameandcasename+"更新用例调度结果 is...........: " +MysqlConnectionUtils.update(sql));
+    public void updatedispatchcasestatus(String testplanid,String caseid,String slaverid,String batchid) {
+        try
+        {
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateNowStr = sdf.format(d);
+            String sql = "";
+            sql = "update dispatch set status='已完成',lastmodify_time='"+dateNowStr+"' where slaverid="+slaverid+" and execplanid="+testplanid+" and batchid="+batchid+" and testcaseid="+caseid;
+            logger.info(logplannameandcasename+"更新调度用例状态 result sql is...........: " + sql);
+            System.out.println("case result sql is: " + sql);
+            logger.info(logplannameandcasename+"更新用例调度结果 is...........: " +MysqlConnectionUtils.update(sql));
+        }
+        catch (Exception ex)
+        {
+            logger.info(logplannameandcasename+"更新用例调度结果异常...........: " +ex.getMessage());
+        }
     }
 
     //生产性能报告目录

@@ -23,6 +23,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="plantype" jdbcType="VARCHAR" property="plantype" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
   </resultMap>
 
   <select id="findbusythreadnums" resultType="java.lang.Integer">
@@ -44,6 +45,11 @@
 
   <update id="updatedispatchstatus">
     update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
+    and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
+  </update>
+
+  <update id="updatedispatchstatusandmemo">
+    update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
     and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
   </update>
 

@@ -2,6 +2,7 @@ package com.zoctan.api.service.impl;
 
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.SlaverMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.net.UnknownHostException;
  @create 2020/11/26
 */
 @Component
+@Slf4j
 public class InitSlaver {
 
     @Value("${server.port}")
@@ -30,12 +32,12 @@ public class InitSlaver {
     @PostConstruct
     public void Init()
     {
-        System.out.println("启动注册slaver");
+        InitSlaver.log.info("启动注册slaver");
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            System.out.println("启动注册slaver异常"+e.getMessage());
+            InitSlaver.log.info("启动注册slaver异常"+e.getMessage());
             e.printStackTrace();
         }
         String ip=address.getHostAddress();
@@ -49,11 +51,11 @@ public class InitSlaver {
         if(slaverMapper.findslaverbyip(ip).size()==0)
         {
             slaverMapper.addslaver(sa);
-            System.out.println("启动注册slaver完成.......................................................");
+            InitSlaver.log.info("启动注册slaver完成.......................................................");
         }
         else
         {
-            System.out.println("启动注册slaver已注册");
+            InitSlaver.log.info("slaver已注册.......................................................");
         }
     }
 }

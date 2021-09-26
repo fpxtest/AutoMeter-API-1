@@ -35,7 +35,7 @@ public class Httphelp {
         switch (method) {
             case "get":
                 String getrequesturl= getrequesturl(url, apistyle,paramers);
-                return doGet(protocal,getrequesturl, paramers, requestcontenttype, header, connectTimeout, readTimeout);
+                return doGet(protocal,getrequesturl,  header, connectTimeout, readTimeout);
             case "post":
                 return doPost(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
             case "put":
@@ -127,7 +127,7 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doGet(String protocal, String url, HttpParamers paramsob, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static String doGet(String protocal, String url,  HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;

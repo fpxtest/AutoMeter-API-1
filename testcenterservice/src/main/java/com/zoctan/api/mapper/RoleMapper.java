@@ -19,6 +19,8 @@ public interface RoleMapper extends MyMapper<Role> {
    */
   List<RoleWithResource> listRoles();
 
+  void SaveRole(@Param("id") Long id,@Param("name") String name);
+
   /**
    * 按角色Id更新修改时间
    *

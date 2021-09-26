@@ -42,6 +42,7 @@ public class RoleServiceImpl extends AbstractService<Role> implements RoleServic
   @Override
   public void save(final RoleWithPermission role) {
     this.roleMapper.insert(role);
+    //this.roleMapper.SaveRole(role.getId(),role.getName());
     this.rolePermissionMapper.saveRolePermission(role.getId(), role.getPermissionIdList());
   }
 

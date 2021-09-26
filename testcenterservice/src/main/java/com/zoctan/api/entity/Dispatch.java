@@ -100,6 +100,16 @@ public class Dispatch {
      */
     private String status;
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    private String memo;
+
     /**
      * 创建时间
      */

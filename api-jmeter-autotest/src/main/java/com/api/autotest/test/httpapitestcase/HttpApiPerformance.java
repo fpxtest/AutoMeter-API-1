@@ -14,19 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class HttpApiPerformance extends AbstractJavaSamplerClient {
-    //测试核心
-    //private TestCore core;
-    //API请求数据对象
-    //private RequestObject ob;
-    //运行用例错误信息
-    //private String errorInfo="";
-    //运行API用例返回值
-    //private String ActualResult="";
-    //用例运行开始时间
-    //private long start = 0;
-    //用例运行结束时间
-    //private long end = 0;
-
     // 初始化方法，实际运行时每个线程仅执行一次，在测试方法运行前执行，类似于LoadRunner中的init方法
     public void setupTest(JavaSamplerContext context) {
         super.setupTest(context);
@@ -58,7 +45,6 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         params.addArgument("mysqlurl", "/opt/");
         params.addArgument("mysqlusername", "/opt/");
         params.addArgument("mysqlpassword", "/opt/");
-
         return params;
     }
 
@@ -95,7 +81,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         } finally {
             // 保存用例运行结果，Jmeter的sample运行结果
             long End = new Date().getTime();
-            CaseFinish(Core,results, TestAssert, AssertInfo,End-Start,ErrorInfo,ActualResult,requestObject);
+            CaseFinish(Core,results, TestAssert, AssertInfo,End-Start,ErrorInfo,ActualResult,ctx,requestObject);
         }
         //Jmeter事务，表示这是事务的结束点
         results.sampleEnd();
@@ -104,9 +90,10 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
 
     //初始化用例的基础数据
     private RequestObject InitalTestData(TestCorebak core,JavaSamplerContext ctx) throws Exception {
-        getLogger().info("Hello World runTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
+        getLogger().info("Start InitTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
         //core = new TestCore(getLogger());
         RequestObject ob = core.InitHttpDatabyJmeter(ctx);
+        getLogger().info("Finish InitTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
         //用例开始运行时间
         //start = new Date().getTime();
         return ob;
@@ -133,10 +120,11 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
     }
 
     //用例运行结束收集信息
-    private void CaseFinish(TestCorebak core, SampleResult results, TestAssert testAssert, String assertInfo,long time,String ErrorInfo,String ActualResult,RequestObject ob) {
+    private void CaseFinish(TestCorebak core, SampleResult results, TestAssert testAssert, String assertInfo,long time,String ErrorInfo,String ActualResult,JavaSamplerContext ctx,RequestObject requestObject) {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
-        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,ob);
+        //性能并发高时考虑先把结果放到redis，再批量放到mysql
+        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject);
     }
 
     //获取用例期望值

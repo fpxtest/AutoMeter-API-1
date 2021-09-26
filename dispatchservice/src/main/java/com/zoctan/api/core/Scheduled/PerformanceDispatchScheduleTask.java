@@ -95,7 +95,7 @@ public class PerformanceDispatchScheduleTask {
                                             List<Dispatch> SlaverDispathcList = dispatchMapper.getfunctiondispatchsbyslaverid(Slaverid, "待分配", "性能", PlanID, BatchName);
                                             PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器 slaverid:" + slaver + " 获取dispatch数-：" + SlaverDispathcList.size());
                                             if (SlaverDispathcList.size() > 0) {
-                                                String params = JSON.toJSONString(SlaverDispathcList);
+                                                String params = JSON.toJSONString(SlaverDispathcList.get(0));
                                                 PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器-============执行机id：" + slaver.getId() + "  执行机名：" + slaver.getSlavername() + " 执行的dispatch：" + params);
                                                 HttpHeader header = new HttpHeader();
                                                 String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execperformancetest";
@@ -106,6 +106,7 @@ public class PerformanceDispatchScheduleTask {
                                     }
                                 }
                             } catch (Exception ex) {
+                                dispatchMapper.updatedispatchstatusandmemo("调度异常",ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                                 PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器请求执行服务异常：" + ex.getMessage());
                             }
                         }

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 
 /* layout */
 import Layout from '../views/layout/Layout'
+import nestedRouter from './modules/nested'
 
 const _import = require('./_import_' + process.env.NODE_ENV)
 
@@ -64,26 +65,57 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  // {
+  //   path: '/assets',
+  //   component: Layout,
+  //   name: '资产管理',
+  //   alwaysShow: true,
+  //   activeMenu: '/assets',
+  //   icon: 'asset',
+  //   children: [
+  //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
+  //     //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
+  //     { path: 'cases/apicases/list', name: '测试用例', component: _import('assets/cases/apicases/index'), meta: { title: '测试用例', permission: ['apicases:list'] }},
+  //     { path: 'cases/apicasesvariables/list', name: '用例变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '用例变量', permission: ['ApicasesVariables:list'] }}
+  //   ]
+  // },
+
   {
-    path: '/assets',
+    path: '/deployunit',
     component: Layout,
-    name: '资产管理',
+    name: '发布单元',
     alwaysShow: true,
-    activeMenu: '/assets',
-    icon: 'asset',
+    activeMenu: '/deployunit',
+    icon: 'deploy',
     children: [
-      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
-      //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-      { path: 'cases/apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }},
-      { path: 'cases/apicasesvariables/list', name: '用例变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '用例变量', permission: ['ApicasesVariables:list'] }}
+      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { title: '发布单元', permission: ['depunit:list'] }, icon: 'testmanager' },
+      { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { title: 'API管理', permission: ['api:list'] }},
+      { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
     ]
   },
+
+  {
+    path: '/enviroment',
+    component: Layout,
+    name: '环境管理',
+    icon: 'enviroment',
+    children: [
+      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
+      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
+      { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
+      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
+      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
+      }
+    ]
+  },
+
+  nestedRouter,
 
   {
     path: '/condition',
     component: Layout,
     name: '条件管理',
-    icon: 'asset',
+    icon: 'condition',
     children: [
       { path: 'condition/list', name: '条件管理', component: _import('condition/condition/index'), meta: { title: '条件管理', permission: ['condition:list'] }},
       { path: 'apicondition/list', name: '接口条件', component: _import('condition/apicondition/index'), meta: { title: '接口条件', permission: ['apicondition:list'] }},
@@ -95,36 +127,10 @@ export const asyncRouterMap = [
     path: '/testvariables',
     component: Layout,
     name: '变量管理',
-    icon: 'asset',
+    icon: 'paras',
     children: [
       { path: 'testvariables/list', name: '变量管理', component: _import('testvariables/testvariables/index'), meta: { title: '变量管理', permission: ['testvariables:list'] }},
       { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
-    ]
-  },
-
-  {
-    path: '/enviroment',
-    component: Layout,
-    name: '环境管理',
-    icon: 'enviroment',
-    children: [
-      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
-      { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
-      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
-      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
-      }
-    ]
-  },
-
-  {
-    path: '/deployunit',
-    component: Layout,
-    name: '发布单元',
-    icon: 'deploy',
-    children: [
-      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { title: '发布单元', permission: ['depunit:list'] }},
-      { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { title: 'API管理', permission: ['api:list'] }},
-      { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
     ]
   },
 

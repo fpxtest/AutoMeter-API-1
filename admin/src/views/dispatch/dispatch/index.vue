@@ -54,6 +54,7 @@
       <el-table-column label="执行批次" align="center" prop="batchname" width="150"/>
       <el-table-column label="执行用例" align="center" prop="testcasename" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="60"/>
+      <el-table-column label="备注" align="center" prop="memo" width="150"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

@@ -67,27 +67,27 @@ public class postcondition extends AbstractJavaSamplerClient {
         String testclass = ctx.getParameter("testclass");
         String start = ctx.getParameter("start");
 
-
-
         getLogger().info( "postcondition teardownTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
         //后置条件
-        try {
-            core.fixpostcondition(testplanid,caseid);
-            status="成功";
-        } catch (Exception e) {
-            status="失败";
-            errorinfo ="后置条件处理异常："+ e.getMessage().replace("'","");
-            getLogger().info(TestCore.logplannameandcasename + "后置条件处理发生异常:"+e.getMessage());
-        }
-        finally {
-            String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"后置",casetype);
-            getLogger().info(TestCore.logplannameandcasename + "处理后置条件完成");
-        }
+//        try {
+//            core.fixpostcondition(testplanid,caseid);
+//            status="成功";
+//        } catch (Exception e) {
+//            status="失败";
+//            errorinfo ="后置条件处理异常："+ e.getMessage().replace("'","");
+//            getLogger().info(TestCore.logplannameandcasename + "后置条件处理发生异常:"+e.getMessage());
+//        }
+//        finally {
+//            String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"后置",casetype);
+//            getLogger().info(TestCore.logplannameandcasename + "处理后置条件完成");
+//        }
         //更新调度表状态已完成
         try {
-            core.updatedispatchcasestatus(testplanid,batchid,slaverid,caseid);
+            core.updatedispatchcasestatus(testplanid,caseid,slaverid,batchid);
             core.PlanBatchAllDipatchFinish(testplanid,batchname);
             getLogger().info(TestCore.logplannameandcasename + "更新调度表状态完成");
+            getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+slaverid);
+            core.UpdateSlaverStatus(slaverid,"空闲");
         }
         catch (Exception ex)
         {

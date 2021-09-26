@@ -34,12 +34,6 @@
         </template>
       </el-table-column>
       <el-table-column label="角色名" align="center" prop="name" />
-      <el-table-column label="创建时间" align="center" prop="createTime">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
-      </el-table-column>
-      <el-table-column label="修改时间" align="center" prop="updateTime">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.updateTime) }}</template>
-      </el-table-column>
       <el-table-column
         label="管理"
         align="center"

@@ -41,4 +41,10 @@
     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
     where id = #{id};
   </update>
+
+  <update id="updateSlaverStatus" >
+    update slaver set status = #{status}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+
 </mapper>

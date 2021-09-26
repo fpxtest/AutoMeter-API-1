@@ -8,16 +8,19 @@ import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Dictionary;
 import com.zoctan.api.entity.Executeplan;
+import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.*;
 import com.zoctan.api.service.ExecuteplanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,15 +32,17 @@ import java.util.Map;
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
 public class ExecuteplanServiceImpl extends AbstractService<Executeplan> implements ExecuteplanService {
+    @Value("${spring.dispatchserver.serverurl}")
+    private String dispatchserver;
     @Resource
     private ExecuteplanMapper executeplanMapper;
-    @Autowired
-    private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
-    @Autowired
-    private ExecuteplanbatchMapper executeplanbatchMapper;
-    @Autowired
-    private DictionaryMapper dictionaryMapper;
-    @Autowired
+//    @Autowired
+//    private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
+//    @Autowired
+//    private ExecuteplanbatchMapper executeplanbatchMapper;
+//    @Autowired
+//    private DictionaryMapper dictionaryMapper;
+    @Resource
     private SlaverMapper slaverMapper;
 
 
@@ -77,28 +82,14 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
             Long execplanid = plan.getPlanid();
             Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
             HttpHeader header = new HttpHeader();
-            String DsipatchServerurl="";
+            String DsipatchServerurl=dispatchserver+"/exectestplancase/exec";
             String plantype=ep.getUsetype();
             List<Slaver> slaverlist=slaverMapper.findslaverWithType(plantype);
+            slaverlist=GetAliveSlaver(slaverlist);
             if(slaverlist.size()==0)
             {
-                ExecuteplanServiceImpl.log.info("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
-                throw new ServiceException("未找到类型为："+plantype+"的执行机，请先完成部署slaver");
-            }
-            else
-            {
-                List<Dictionary> dic = dictionaryMapper.findDicNameValueWithCode("dispatchservice");
-                if(dic.size()==0) //表示没有调度服务，直接调用单机slaver
-                {
-                    ExecuteplanServiceImpl.log.info("字典表未配置dispatchservice，则为单slaver模式，根据计划类型获取slaver");
-                    DsipatchServerurl ="http://"+slaverlist.get(0).getIp()+":"+slaverlist.get(0).getPort()+"/exectestplancase/exec";
-                    ExecuteplanServiceImpl.log.info("单slaver模式 slaverserverurl地址："+DsipatchServerurl);
-                }
-                else
-                {
-                    DsipatchServerurl ="http://"+ dic.get(0).getDicitmevalue()+"/exectestplancase/exec";
-                    ExecuteplanServiceImpl.log.info("字典表配置dispatchservice，调度服务地址地址："+DsipatchServerurl);
-                }
+                ExecuteplanServiceImpl.log.info("未找到可用的："+plantype+"的测试执行机，请先完成部署测试执行机");
+                throw new ServiceException("未找到可用的："+plantype+"的测试执行机，请先完成部署测试执行机");
             }
             String params = JSON.toJSONString(plan);
             ExecuteplanServiceImpl.log.info("请求参数："+params);
@@ -111,6 +102,32 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
                 throw new ServiceException(e.getMessage());
             }
         }
+    }
+
+    public List<Slaver> GetAliveSlaver(List<Slaver> SlaverList)
+    {
+        List<Slaver> AliveList=new ArrayList<>();
+        for (Slaver slaver:SlaverList) {
+            String IP=slaver.getIp();
+            String Port=slaver.getPort();
+            String ServerUrl = "http://" + IP + ":" + Port + "/exectestplancase/test";
+            ExecuteplanTestcase plancase=new ExecuteplanTestcase();
+            String params = JSON.toJSONString(plancase);
+            HttpHeader header = new HttpHeader();
+            String respon="";
+            try {
+                respon = Httphelp.doPost(ServerUrl, params, header, 5000,5000);
+            } catch (Exception e) {
+                ExecuteplanServiceImpl.log.info("检测："+ServerUrl+"请求响应结果。。。。。。。。。。。。。。。。。。。。。。。。："+e.getMessage());
+                slaverMapper.updateSlaverStatus(slaver.getId(),"已下线");
+                respon=e.getMessage();
+            }
+            if(respon.contains("200"))
+            {
+                AliveList.add(slaver);
+            }
+        }
+        return AliveList;
     }
 
     @Override

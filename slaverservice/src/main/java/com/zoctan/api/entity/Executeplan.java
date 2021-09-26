@@ -19,6 +19,17 @@ public class Executeplan {
      */
     private String executeplanname;
 
+    public String getBusinesstype() {
+        return businesstype;
+    }
+
+    public void setBusinesstype(String businesstype) {
+        this.businesstype = businesstype;
+    }
+
+    private String businesstype;
+
+
     /**
      * 状态，new，waiting，running，pause，finish
      */
@@ -42,6 +53,26 @@ public class Executeplan {
      */
     private String memo;
 
+    public String getEnviromentname() {
+        return enviromentname;
+    }
+
+    public void setEnviromentname(String enviromentname) {
+        this.enviromentname = enviromentname;
+    }
+
+    private String enviromentname;
+
+
+    public Long getEnvid() {
+        return envid;
+    }
+
+    public void setEnvid(Long envid) {
+        this.envid = envid;
+    }
+
+    private Long envid;
 
     public String getCreator() {
         return creator;
@@ -62,6 +93,7 @@ public class Executeplan {
     }
 
     private String runmode;
+
 
     /**
      * 创建时间

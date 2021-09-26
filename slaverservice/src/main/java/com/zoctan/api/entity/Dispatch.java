@@ -96,6 +96,17 @@ public class Dispatch {
      */
     private String slavername;
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    private String memo;
+
+
     /**
      * 用例Id
      */

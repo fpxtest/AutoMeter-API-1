@@ -1,7 +1,11 @@
 package com.zoctan.api.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.zoctan.api.core.Scheduled.FunctionDispatchScheduleTask;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.core.service.HttpHeader;
+import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.*;
@@ -62,8 +66,9 @@ public class TestPlanCaseController {
         }
         //获取对应计划类型的所有slaver
         List<Slaver> slaverlist = slaverMapper.findslaverbytype(ep.getUsetype());
+        //考虑增加检测slaver是否正常，在salver的control做个检测的请求返回
+        slaverlist=GetAliveSlaver(slaverlist);
         List<List<Dispatch>> dispatchList=new ArrayList<>();
-
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.info("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
             return ResultGenerator.genOkResult("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
@@ -211,6 +216,29 @@ public class TestPlanCaseController {
     }
 
 
+    public List<Slaver> GetAliveSlaver(List<Slaver> SlaverList)
+    {
+        List<Slaver> AliveList=new ArrayList<>();
+        for (Slaver slaver:SlaverList) {
+            String IP=slaver.getIp();
+            String Port=slaver.getPort();
+            String ServerUrl = "http://" + IP + ":" + Port + "/exectestplancase/test";
+            ExecuteplanTestcase plancase=new ExecuteplanTestcase();
+            String params = JSON.toJSONString(plancase);
+            HttpHeader header = new HttpHeader();
+            String respon="";
+            try {
+                 respon = Httphelp.doPost(ServerUrl, params, header, 5000);
+            } catch (Exception e) {
+                respon=e.getMessage();
+            }
+            if(respon.contains("200"))
+            {
+                AliveList.add(slaver);
+            }
+        }
+        return AliveList;
+    }
 
     public boolean jmeterclassexistornot(String jarpath, String jmeterclassname) {
         boolean flag = false;

@@ -5,7 +5,7 @@ spring:
     restart:
       # 修改代码后自动重启
       enabled: true
-    # 数据源（应该全部加密）
+    # 条件服务地址
   conditionserver:
     serverurl: http://127.0.0.1:8083
   datasource:

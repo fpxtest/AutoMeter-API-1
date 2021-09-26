@@ -101,6 +101,7 @@ public class FunctionDispatchScheduleTask {
                                     }
                                 }
                             } catch (Exception ex) {
+                                dispatchMapper.updatedispatchstatusandmemo("调度异常",ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                                 FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器请求执行服务异常：" + ex.getMessage());
                             }
                         }

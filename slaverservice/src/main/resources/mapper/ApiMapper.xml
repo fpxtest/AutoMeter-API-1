@@ -7,12 +7,15 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="visittype" jdbcType="VARCHAR" property="visittype" />
+    <result column="apistyle" jdbcType="VARCHAR" property="apistyle" />
     <result column="path" jdbcType="VARCHAR" property="path" />
-    <result column="headersname" jdbcType="VARCHAR" property="headersname" />
-    <result column="paramsname" jdbcType="VARCHAR" property="paramsname" />
-    <result column="body" jdbcType="BIT" property="body" />
+    <result column="requestcontenttype" jdbcType="VARCHAR" property="requestcontenttype" />
+    <result column="responecontenttype" jdbcType="VARCHAR" property="responecontenttype" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>

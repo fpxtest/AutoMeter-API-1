@@ -103,7 +103,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         {
                             BatchDeployTotalFailNUms=BatchDeployTotalFailNUms+1;
                         }
-                        CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult,requestObject);
+                        CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult,ctx,requestObject);
                     }
                 }
                 //收集本次运行的功能用例统计结果
@@ -112,9 +112,6 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                 //
             }
         }
-
-
-
         //Jmeter事务，表示这是事务的结束点
         results.sampleEnd();
         return results;
@@ -174,14 +171,14 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //用例运行结束保存记录，并且更新dispatch状态为完成
-    private void CaseFinish(TestCorebak core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult,RequestObject ob) {
+    private void CaseFinish(TestCorebak core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult,JavaSamplerContext ctx,RequestObject requestObject) {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
         ActualResult = ActualResult.replace("'", "");
         assertInfo = assertInfo.replace("'", "");
         ErrorInfo = ErrorInfo.replace("'", "");
-        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,ob);
-        core.updatedispatchcasestatus(ob.getTestplanid(),ob.getBatchid(),ob.getSlaverid(),ob.getCaseid());
+        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject);
+        core.updatedispatchcasestatus(requestObject.getTestplanid(),requestObject.getCaseid(),requestObject.getSlaverid(),requestObject.getBatchid());
     }
 
     //功能用例统计收集信息

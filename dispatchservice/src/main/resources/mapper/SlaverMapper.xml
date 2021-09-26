@@ -50,7 +50,7 @@
   </select>
 
   <select id="findbusyslavernums" resultType="java.lang.Integer">
-    select COUNT(*) from slaver a where a.status = #{status} and a.stype=#{stype} and a.slaverid IN
+    select COUNT(*) from slaver a where a.status = #{status} and a.stype=#{stype} and a.id IN
     <foreach collection="slaverlist" item="slaver" index="index" open="(" close=")" separator=",">
       #{slaver.slaverid}
     </foreach>
