@@ -208,9 +208,9 @@
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改测试环境',
-          update: '修改测试环境',
-          add: '添加测试环境'
+          updateRole: '修改接口条件',
+          update: '修改接口条件',
+          add: '添加接口条件'
         },
         btnLoading: false, // 按钮等待动画
         tmpapicondition: {
@@ -404,7 +404,7 @@
         return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
-       * 显示添加测试环境对话框
+       * 显示添加接口条件对话框
        */
       showAddapiconditionDialog() {
         // 显示新增对话框
@@ -418,7 +418,7 @@
         this.tmpapicondition.creator = this.name
       },
       /**
-       * 添加测试环境
+       * 添加接口条件
        */
       addapicondition() {
         this.$refs.tmpapicondition.validate(valid => {
@@ -437,8 +437,8 @@
         })
       },
       /**
-       * 显示修改测试环境对话框
-       * @param index 测试环境下标
+       * 显示修改接口条件对话框
+       * @param index 接口条件下标
        */
       showUpdateapiconditionDialog(index) {
         this.dialogFormVisible = true
@@ -468,7 +468,7 @@
         this.tmpapicondition.creator = this.name
       },
       /**
-       * 更新测试环境
+       * 更新接口条件
        */
       updateapicondition() {
         this.$refs.tmpapicondition.validate(valid => {
@@ -485,11 +485,11 @@
       },
 
       /**
-       * 删除测试环境
-       * @param index 测试环境下标
+       * 删除接口条件
+       * @param index 接口条件下标
        */
       removeapicondition(index) {
-        this.$confirm('删除该测试环境？', '警告', {
+        this.$confirm('删除该接口条件？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
@@ -505,15 +505,15 @@
       },
 
       /**
-       * 测试环境是否唯一
-       * @param 测试环境
+       * 接口条件是否唯一
+       * @param 接口条件
        */
       isUniqueDetail(apicondition) {
         for (let i = 0; i < this.apiconditionList.length; i++) {
           if (this.apiconditionList[i].id !== apicondition.id) { // 排除自己
             if (this.apiconditionList[i].enviromentname === apicondition.enviromentname) {
               if (this.apiconditionList[i].machinename === apicondition.machinename) {
-                this.$message.error('测试环境名已存在')
+                this.$message.error('接口条件名已存在')
                 return false
               }
             }

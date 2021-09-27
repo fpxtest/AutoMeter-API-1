@@ -185,7 +185,7 @@
       return {
         itemKey: null,
         tmpvariablesname: '',
-        ApicasesVariablesList: [], // 环境列表
+        ApicasesVariablesList: [], // 用例变量列表
         variablesList: [], // 变量列表
         apiList: [], // api列表
         caseList: [], // 用例列表
@@ -195,9 +195,9 @@
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改环境',
-          update: '修改环境',
-          add: '添加环境'
+          updateRole: '修改用例变量',
+          update: '修改用例变量',
+          add: '添加用例变量'
         },
         deployunitQuery: {
           deployunitname: '' // 获取字典表入参
@@ -328,7 +328,7 @@
       },
 
       /**
-       * 获取环境列表
+       * 获取用例变量列表
        */
       getApicasesVariablesList() {
         this.listLoading = true
@@ -338,7 +338,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载环境列表失败')
+          this.$message.error('加载用例变量列表失败')
         })
       },
 
