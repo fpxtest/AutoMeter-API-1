@@ -14,13 +14,13 @@ import redis.clients.jedis.JedisPoolConfig;
 @Slf4j
 public class RedisTemplaterConfig {
 
-	@Value("${spring.redis.pool.max-active}")
+	@Value("${spring.redis.jedis.pool.max-active}")
     Integer maxActive;
-    @Value("${spring.redis.pool.max-idle}")
+    @Value("${spring.redis.jedis.pool.max-idle}")
     Integer maxIdle;
-    @Value("${spring.redis.pool.max-wait}")
+    @Value("${spring.redis.jedis.pool.max-wait}")
     Integer maxWait;
-    @Value("${spring.redis.pool.min-idle}")
+    @Value("${spring.redis.jedis.pool.min-idle}")
     Integer minIdle;
     @Value("${spring.redis.host}")
     String hostname;
