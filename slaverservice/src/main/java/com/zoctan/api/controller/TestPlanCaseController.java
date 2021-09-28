@@ -275,7 +275,6 @@ public class TestPlanCaseController {
         }
         Long SlaverId = slaverlist.get(0).getId();
         try {
-            slaverMapper.updateSlaverStaus(SlaverId, "运行中");
             String ProjectPath = System.getProperty("user.dir");
             String JmeterPath ="";
             String JmxPath="";
@@ -308,28 +307,25 @@ public class TestPlanCaseController {
                         String DispatchIDs = "";
                         for (Dispatch dis : JmeterList) {
                             DispatchIDs = dis.getId() + "," + DispatchIDs;
-                            dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
-                            TestPlanCaseController.log.info("功能任务-更新调度状态为已分配：。。。。。。。。" + dis.getId());
                         }
                         if (!DispatchIDs.isEmpty()) {
                             DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
                             TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
-                            tpcservice.ExecuteHttpPlanFunctionCase( SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password,i);
+                            try
+                            {
+                                tpcservice.ExecuteHttpPlanFunctionCase( SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password,i);
+                                for (Dispatch dis : JmeterList) {
+                                    dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
+                                    TestPlanCaseController.log.info("功能任务-更新调度状态为已分配：。。。。。。。。" + dis.getId());
+                                }
+                                slaverMapper.updateSlaverStaus(SlaverId, "运行中");
+                            }
+                            catch (Exception ex)
+                            {
+                                TestPlanCaseController.log.info("调用JmeterCMD异常：。。。。。。。。" + ex.getMessage());
+                            }
                         }
                     }
-//                        for (List<Dispatch> JmeterList : last) {
-//                        String DispatchIDs = "";
-//                        for (Dispatch dis : JmeterList) {
-//                            DispatchIDs = dis.getId() + "," + DispatchIDs;
-//                            dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
-//                            TestPlanCaseController.log.info("功能任务-更新调度状态为已分配：。。。。。。。。" + dis.getId());
-//                        }
-//                        if (!DispatchIDs.isEmpty()) {
-//                            DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
-//                            TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
-//                            tpcservice.ExecuteHttpPlanFunctionCase(SlaverId,JmeterPath, JmxPath, DispatchIDs, url, username, password);
-//                        }
-//                    }
                 }
                 if (Protocol.equals(new String("rpc"))) {
                     String JmeterClassName = "";

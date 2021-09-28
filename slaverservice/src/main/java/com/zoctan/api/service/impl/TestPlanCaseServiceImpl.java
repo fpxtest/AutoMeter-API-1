@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Zoctan
@@ -25,7 +26,7 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
 
 
     @Override
-    public void ExecuteHttpPerformancePlanCase(JmeterPerformanceObject jmeterPerformanceObject, String DeployName, String JmeterPath, String JmxPath, String JmxCaseName, String JmeterPerformanceReportPath, Long Thread, Long Loop) {
+    public void ExecuteHttpPerformancePlanCase(JmeterPerformanceObject jmeterPerformanceObject, String DeployName, String JmeterPath, String JmxPath, String JmxCaseName, String JmeterPerformanceReportPath, Long Thread, Long Loop) throws IOException {
         long SlaverId=jmeterPerformanceObject.getSlaverid();
         long PlanId=jmeterPerformanceObject.getTestplanid();
         long CaseId=jmeterPerformanceObject.getCaseid();
@@ -83,20 +84,21 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
 //    }
 
     @Override
-    public void ExecuteHttpPlanFunctionCase(Long Slaverid, String JmeterPath, String JmxPath, String DispatchIds, String MysqlUrl, String MysqlUserName, String MysqlPassword,int JmeterLogFileNum) {
+    public void ExecuteHttpPlanFunctionCase(Long Slaverid, String JmeterPath, String JmxPath, String DispatchIds, String MysqlUrl, String MysqlUserName, String MysqlPassword,int JmeterLogFileNum) throws IOException {
         String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HTTPFunction.jmx -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds+" -JSlaverid="+Slaverid+ " -j jmeter-ft"+JmeterLogFileNum+".log ";
         TestPlanCaseServiceImpl.log.info("功能JmeterCmd  is :" + JmeterCmd);
         ExecShell(JmeterCmd);
         TestPlanCaseServiceImpl.log.info("功能JmeterCmd finish。。。。。。。。。。。。。。。。。。。。。。。。。。。。。 :");
     }
 
-    public void ExecShell(String ShellCmd) {
-        try {
-            Process pro = Runtime.getRuntime().exec(ShellCmd);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            TestPlanCaseServiceImpl.log.info("调用Jmeter命令异常: " + e.getMessage()+" ShellCmd is:"+ShellCmd);
-        }
+    public void ExecShell(String ShellCmd) throws IOException {
+        Process pro = Runtime.getRuntime().exec(ShellCmd);
+//        try {
+//            Process pro = Runtime.getRuntime().exec(ShellCmd);
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            TestPlanCaseServiceImpl.log.info("调用Jmeter命令异常: " + e.getMessage()+" ShellCmd is:"+ShellCmd);
+//        }
     }
 }
 
