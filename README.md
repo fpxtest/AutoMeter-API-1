@@ -1,6 +1,6 @@
 # AutoMeter
 
-1.AutoMeter是一款针对分布式服务，微服务API做功能和性能一体的自动化测试平台。针对接口支持分布式功能和性能测试，极大的提高了技术人员的接口测试需求
+1.AutoMeter是一款针对分布式服务，微服务API做功能和性能一体的自动化测试平台。针对接口支持分布式功能和性能测试，极大的提高了技术人员的接口测试的效率
 
 ![image](https://github.com/AutoMeter/testplantform/blob/master/img/dashboard.jpg)
 
