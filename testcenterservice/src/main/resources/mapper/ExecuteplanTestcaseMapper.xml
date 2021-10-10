@@ -26,6 +26,7 @@
       <if test="executeplanid != null and executeplanid != ''">and a.executeplanid = #{executeplanid}</if>
       <if test="apiid != null and apiid != ''">and a.apiid = #{apiid}</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="findcasebydeployandapi" resultMap="BaseResultMap">
@@ -56,7 +57,7 @@
     INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time,creator)
     VALUES
     <foreach collection="casedataList" item="item" index="index" separator=",">
-    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), #{item.creator})
+    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), #{item.creator})
     </foreach>
   </insert>
 

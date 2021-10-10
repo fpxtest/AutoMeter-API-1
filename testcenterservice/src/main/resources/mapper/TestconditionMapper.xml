@@ -24,6 +24,7 @@
       <if test="objecttype != null and objecttype != ''">a.objecttype like CONCAT('%',#{objecttype},'%')</if>
       <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="getallTestcondition" resultMap="BaseResultMap">
@@ -32,7 +33,7 @@
 
   <update id="updateTestcondition" parameterType="com.zoctan.api.entity.Testcondition">
     update testcondition set objectid = #{objectid},conditionname = #{conditionname}, objectname = #{objectname},objecttype=#{objecttype},conditiontype=#{conditiontype},
-    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

@@ -24,6 +24,7 @@
       <if test="machinename != null and machinename != ''">a.machinename like CONCAT('%',#{machinename},'%')</if>
       <if test="ip != null  and ip != ''">and a.ip like CONCAT('%',#{ip},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="findmachinebymachinename" resultMap="BaseResultMap">
@@ -42,4 +43,10 @@
     FROM machine a
     where a.ip =#{ip}
   </select>
+
+  <update id="updateMachine" parameterType="com.zoctan.api.entity.Machine">
+    update machine set machinename = #{machinename},ip=#{ip},cpu=#{cpu},disk=#{disk},
+    mem = #{mem},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
 </mapper>

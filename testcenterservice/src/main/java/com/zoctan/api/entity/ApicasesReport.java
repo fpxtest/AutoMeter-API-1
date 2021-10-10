@@ -43,6 +43,28 @@ public class ApicasesReport extends Apicases {
      */
     private String respone;
 
+
+    public String getRequestheader() {
+        return requestheader;
+    }
+
+    public void setRequestheader(String requestheader) {
+        this.requestheader = requestheader;
+    }
+
+    public String getRequestdatas() {
+        return requestdatas;
+    }
+
+    public void setRequestdatas(String requestdatas) {
+        this.requestdatas = requestdatas;
+    }
+
+    private String requestheader;
+
+    private String requestdatas;
+
+
     /**
      * 断言详细经过
      */

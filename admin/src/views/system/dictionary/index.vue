@@ -155,7 +155,7 @@
   </div>
 </template>
 <script>
-  import { getDicList as getDictionaryList, search, addDic, updateDic, removeDic } from '@/api/system/dictionary'
+  import { search, addDic, updateDic, removeDic } from '@/api/system/dictionary'
   import { unix2CurrentTime } from '@/utils'
 
   export default {
@@ -219,7 +219,8 @@
        */
       getDictionaryList() {
         this.listLoading = true
-        getDictionaryList(this.listQuery).then(response => {
+        this.search.dicitemname = this.tmpdicitemname
+        search(this.search).then(response => {
           this.dictionaryList = response.data.list
           this.total = response.data.total
           this.listLoading = false

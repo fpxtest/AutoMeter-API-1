@@ -44,6 +44,7 @@ public class InitSlaver {
         Slaver sa=new Slaver();
         sa.setIp(ip);
         sa.setSlavername("执行机"+ip);
+        sa.setStype("功能");
         sa.setPort(port);
         sa.setStatus("空闲");
         sa.setStype("");

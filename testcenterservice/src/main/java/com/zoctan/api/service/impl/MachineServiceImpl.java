@@ -43,6 +43,11 @@ private MachineMapper machineMapper;
     }
 
     @Override
+    public void updateMachine(Machine params) {
+        machineMapper.updateMachine(params);
+    }
+
+    @Override
     public Integer getmachinenum() {
         return machineMapper.getmachinenum();
     }

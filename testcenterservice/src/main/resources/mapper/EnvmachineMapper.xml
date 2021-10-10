@@ -22,6 +22,7 @@
       <if test="enviromentname != null and enviromentname != ''">and c.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
       <if test="machinename != null  and machinename != ''">and c.machinename like CONCAT('%',#{machinename},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="findexist" resultMap="BaseResultMap">
@@ -42,7 +43,7 @@
   <update id="updateEnvAndMac" parameterType="com.zoctan.api.entity.Envmachine">
     update envmachine set envid = #{envid}, machineid = #{machineid},machinename= #{machinename},
     enviromentname= #{enviromentname},creator = #{creator},
-    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

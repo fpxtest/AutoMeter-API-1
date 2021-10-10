@@ -32,11 +32,12 @@
       <if test="dicname != null and dicname != ''">a.dicname like CONCAT('%',#{dicname},'%')</if>
       <if test="dicitemname != null  and dicitemname != ''">and a.dicitemname  like CONCAT('%',#{dicitemname},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <update id="updateDic" parameterType="com.zoctan.api.entity.Dictionary">
     update dictionary set dicname = #{dicname}, diccode = #{diccode}, dicitemname = #{dicitemname},
-     dicitmevalue = #{dicitmevalue}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+     dicitmevalue = #{dicitmevalue}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 

@@ -124,7 +124,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
         //性能并发高时考虑先把结果放到redis，再批量放到mysql
-        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject);
+        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject,ctx);
     }
 
     //获取用例期望值

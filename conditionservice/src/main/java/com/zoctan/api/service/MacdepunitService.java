@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.Macdepunit;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface MacdepunitService extends Service<Macdepunit> {
     int ifexist(Condition condition);
 
     Integer findmachinenumbyenvidanddeployid(long envid,long depunitid);
+
+    Macdepunit getmacdepbyenvidanddepid(@Param("envid")long envid, @Param("depunitid")long depunitid);
 }

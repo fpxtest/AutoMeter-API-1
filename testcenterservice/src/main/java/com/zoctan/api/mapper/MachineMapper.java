@@ -12,5 +12,5 @@ public interface MachineMapper extends MyMapper<Machine> {
     Machine findmachinebyip(@Param("ip")String ip);
     List<Machine> findMachineWithName(final Map<String, Object> params);
     Integer getmachinenum();
-
+    void updateMachine(Machine params);
 }

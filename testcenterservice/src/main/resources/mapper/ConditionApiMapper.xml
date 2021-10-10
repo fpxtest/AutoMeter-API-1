@@ -25,12 +25,13 @@
     <where>
       <if test="conditionname != null and conditionname != ''">conditionname like CONCAT('%',#{conditionname},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <update id="updateTestconditionapi" parameterType="com.zoctan.api.entity.Testcondition">
     update condition_api set conditionid = #{conditionid}, deployunitid = #{deployunitid},caseid=#{caseid},
     conditionname = #{conditionname},deployunitname = #{deployunitname},apiname = #{apiname},casename = #{casename},
-    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

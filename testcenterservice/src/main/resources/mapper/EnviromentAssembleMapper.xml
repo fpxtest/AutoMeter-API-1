@@ -22,13 +22,14 @@
       <if test="assembletype != null and assembletype != ''">a.assembletype =#{assembletype}</if>
       <if test="assemblename != null and assemblename != ''">and a.assemblename like CONCAT('%',#{assemblename},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
 
 
   <update id="updateenviromentassemble" parameterType="com.zoctan.api.entity.EnviromentAssemble">
     update enviroment_assemble set assembletype = #{assembletype}, assemblename = #{assemblename},memo = #{memo},
-    connectstr = #{connectstr},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    connectstr = #{connectstr},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

@@ -19,19 +19,22 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="requestheader" jdbcType="VARCHAR" property="requestheader" />
+    <result column="requestdatas" jdbcType="VARCHAR" property="requestdatas" />
   </resultMap>
 
   <select id="findApicasereportWithName" resultMap="BaseResultMap">
-    SELECT b.casename,b.apiname,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time
+    SELECT b.casename,b.apiname,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time,a.requestheader,a.requestdatas
     FROM apicases_report_performance a inner join apicases b on a.caseid=b.id
     <where>
       <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
       <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
     </where>
+    order by a.lastmodify_time  DESC
   </select>
 
   <select id="listallresult" resultMap="BaseResultMap">
-    SELECT b.casename,b.apiname,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time
-    FROM apicases_report_performance a inner join apicases b on a.caseid=b.id
+    SELECT b.casename,b.apiname,a.requestheader,a.requestdatas,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time
+    FROM apicases_report_performance a inner join apicases b on a.caseid=b.id  order by a.lastmodify_time  DESC
   </select>
 </mapper>

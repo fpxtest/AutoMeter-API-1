@@ -182,7 +182,7 @@
         itemKey: null,
         tmpdeployunitname: null,
         tmpprotocal: null,
-        depunitList: [], // 字典列表
+        depunitList: [], // 发布单元列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         dialogStatus: 'add',
@@ -225,7 +225,7 @@
       unix2CurrentTime,
 
       /**
-       * 获取字典列表
+       * 获取发布单元列表
        */
       getdepunitList() {
         this.search.deployunitname = this.tmpdeployunitname
@@ -236,7 +236,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载字典列表失败')
+          this.$message.error('加载发布单元列表失败')
         })
       },
 
@@ -297,7 +297,7 @@
         this.tmpdepunit.creator = this.name
       },
       /**
-       * 添加字典
+       * 添加发布单元
        */
       adddepunit() {
         this.$refs.tmpdepunit.validate(valid => {
@@ -348,7 +348,7 @@
       },
 
       /**
-       * 删除字典
+       * 删除发布单元
        * @param index 发布单元下标
        */
       removedepunit(index) {

@@ -32,6 +32,7 @@
       <if test="deployunitname != null and deployunitname != ''">a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
       <if test="protocal != null  and protocal != ''">and a.protocal like CONCAT('%',#{protocal},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="getdeploynum" resultType="java.lang.Integer">
@@ -46,7 +47,7 @@
 
   <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">
     update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},
-    memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 

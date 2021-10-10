@@ -24,6 +24,7 @@
       <if test="apiname != null and apiname != ''">a.apiname = #{apiname}</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname = #{deployunitname}</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="getApiParamsbyname" resultMap="BaseResultMap">
@@ -34,7 +35,7 @@
   <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">
     update api_params set apiname = #{apiname},deployunitid =#{deployunitid}, deployunitname = #{deployunitname}, propertytype = #{propertytype},
     keyname = #{keyname},creator = #{creator},
-    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

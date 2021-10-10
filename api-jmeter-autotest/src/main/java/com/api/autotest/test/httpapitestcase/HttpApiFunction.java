@@ -177,7 +177,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         ActualResult = ActualResult.replace("'", "");
         assertInfo = assertInfo.replace("'", "");
         ErrorInfo = ErrorInfo.replace("'", "");
-        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject);
+        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject,ctx);
         core.updatedispatchcasestatus(requestObject.getTestplanid(),requestObject.getCaseid(),requestObject.getSlaverid(),requestObject.getBatchid());
     }
 

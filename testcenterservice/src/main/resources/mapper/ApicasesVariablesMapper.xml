@@ -26,11 +26,12 @@
       <if test="variablesname != null and variablesname != ''">a.variablesname like CONCAT('%',#{variablesname},'%')</if>
       and a.caseid=b.id
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <update id="updateApicasesVariables" parameterType="com.zoctan.api.entity.ApicasesVariables">
     update apicases_variables set casename = #{casename},variablesname=#{variablesname},caseid=#{caseid},variablesid=#{variablesid},
-    deployunitname=#{deployunitname},apiname=#{apiname} , memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    deployunitname=#{deployunitname},apiname=#{apiname} , memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

@@ -53,7 +53,7 @@ public class MachineController {
         }
         else
         {
-            machineService.update(machine);
+            machineService.updateMachine(machine);
             return ResultGenerator.genOkResult();
         }
     }

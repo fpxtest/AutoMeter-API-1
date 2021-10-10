@@ -42,5 +42,6 @@
       <if test="batchname != null and batchname != ''">a.batchname = #{batchname} </if>
       <if test="executeplanname != null and executeplanname != ''">and a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 </mapper>

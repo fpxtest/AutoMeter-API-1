@@ -69,6 +69,28 @@
       </template>
       </el-table-column>
 
+      <el-table-column label="请求头" align="center" prop="requestheader" width="100">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.requestheader }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">...</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="请求数据" align="center" prop="requestdatas" width="100">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.requestdatas }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">...</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+
       <el-table-column label="响应" align="center" prop="respone" width="100">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
@@ -252,6 +274,8 @@
           deployunitid: '',
           deployunitname: '',
           batchname: '',
+          requestheader: '',
+          requestdatas: '',
           apiperformancereportname: '',
           visittype: '',
           path: '',

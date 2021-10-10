@@ -184,8 +184,9 @@ public class TestCorebak {
                     Map headermaps = (Map) JSON.parse(headjson);
                     header=new HttpHeader();
                     for (Object map : headermaps.entrySet()){
-                        System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
-                        header.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+                        String Value=((Map.Entry)map).getValue().toString();
+                        Value=GetVariablesValues(testplanid,caseid,batchname,Value);
+                        header.addParam(((Map.Entry)map).getKey().toString(),Value);
                     }
                     newob.setHeader(header);
                 }
@@ -214,8 +215,9 @@ public class TestCorebak {
                     Map paramsmaps = (Map) JSON.parse(paramsjson);
                     params=new HttpParamers();
                     for (Object map : paramsmaps.entrySet()){
-                        System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
-                        params.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+                        String Value=((Map.Entry)map).getValue().toString();
+                        Value=GetVariablesValues(testplanid,caseid,batchname,Value);
+                        params.addParam(((Map.Entry)map).getKey().toString(),Value);
                     }
                     newob.setParamers(params);
                 }
@@ -234,7 +236,7 @@ public class TestCorebak {
         {
             HttpParamers params=null;
 
-            if(paramsjson.equals(new String("bodyjson")))
+            if(bodyjson.equals(new String("bodyjson")))
             {
                 params=new HttpParamers();
                 newob.setParamers(params);
@@ -245,14 +247,15 @@ public class TestCorebak {
                     Map paramsmaps = (Map) JSON.parse(paramsjson);
                     params=new HttpParamers();
                     for (Object map : paramsmaps.entrySet()){
-                        System.out.println(((Map.Entry)map).getKey()+"     " + ((Map.Entry)map).getValue());
-                        params.addParam(((Map.Entry)map).getKey().toString(),((Map.Entry)map).getValue().toString());
+                        String Value=((Map.Entry)map).getValue().toString();
+                        Value=GetVariablesValues(testplanid,caseid,batchname,Value);
+                        params.addParam(((Map.Entry)map).getKey().toString(),Value);
                     }
                     newob.setParamers(params);
                 }
                 catch (Exception ex)
                 {
-                    throw  new Exception("Body参数用例数据异常："+paramsjson);
+                    throw  new Exception("Body参数用例数据异常："+bodyjson);
                 }
             }
         }
@@ -462,18 +465,45 @@ public class TestCorebak {
     }
 
     // 记录用例测试结果
-    public void savetestcaseresult(boolean status, long time, String respone, String assertvalue,String errorinfo,RequestObject requestObject) {
+    public void savetestcaseresult(boolean status, long time, String respone, String assertvalue,String errorinfo,RequestObject requestObject,JavaSamplerContext context) {
         //GetDBConnection();
         try
         {
             String resulttable="";
-            String casetype=requestObject.getCasetype();// context.getParameter("casetype");
-            String testplanid =requestObject.getTestplanid();// context.getParameter("testplanid");
-            String caseid =requestObject.getCaseid();// context.getParameter("caseid");
-            String slaverid =requestObject.getSlaverid();// context.getParameter("slaverid");
-            //String batchid = context.getParameter("batchid");
-            String expect=requestObject.getExpect();// context.getParameter("expect");
-            String batchname =requestObject.getBatchname();// context.getParameter("batchname");
+            String casetype="";
+            String testplanid ="";
+            String caseid ="";
+            String slaverid ="";
+            String expect="";
+            String batchname ="";
+            String header="";
+            String params="";
+            if(requestObject==null)
+            {
+                 casetype= context.getParameter("casetype");
+                 testplanid = context.getParameter("testplanid");
+                 caseid = context.getParameter("caseid");
+                 slaverid = context.getParameter("slaverid");
+                 expect= context.getParameter("expect");
+                 batchname = context.getParameter("batchname");
+            }
+            else
+            {
+                 casetype=requestObject.getCasetype();// context.getParameter("casetype");
+                 testplanid =requestObject.getTestplanid();// context.getParameter("testplanid");
+                 caseid =requestObject.getCaseid();// context.getParameter("caseid");
+                 slaverid =requestObject.getSlaverid();// context.getParameter("slaverid");
+                 expect=requestObject.getExpect();// context.getParameter("expect");
+                 batchname =requestObject.getBatchname();// context.getParameter("batchname");
+                Map<String,String> headermap= requestObject.getHeader().getParams();
+                for (String key:headermap.keySet()) {
+                    header=header+key+" ："+ headermap.get(key);
+                }
+                Map<String,String> paramsmap=requestObject.getParamers().getParams();
+                for (String key:paramsmap.keySet()) {
+                    params=params+key+" ："+ paramsmap.get(key);
+                }
+            }
 
             if(casetype.equals(new String("功能")))
             {
@@ -488,11 +518,11 @@ public class TestCorebak {
             String dateNowStr = sdf.format(d);
             String sql = "";
             if (status) {
-                sql = "insert "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator)" +
-                        " values(" + caseid + "," + testplanid + ", '"+batchname+"', "+ slaverid  + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" +errorinfo+ "','"+ dateNowStr + "', '" + dateNowStr + "','admin')";
+                sql = "insert "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas)" +
+                        " values(" + caseid + "," + testplanid + ", '"+batchname+"', "+ slaverid  + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" +errorinfo+ "','"+ dateNowStr + "', '" + dateNowStr + "','admin', '"+header+"', '" + params   +"')";
             } else {
-                sql = "insert  "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator)" +
-                        " values(" + caseid + "," + testplanid + ", '"+batchname+"', "+ slaverid  + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" +errorinfo+ "','"+ dateNowStr + "','" + dateNowStr + "','admin')";
+                sql = "insert  "+ resulttable+" (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas)" +
+                        " values(" + caseid + "," + testplanid + ", '"+batchname+"', "+ slaverid  + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" +errorinfo+ "','"+ dateNowStr + "','" + dateNowStr + "','admin', '"+header+"', '" + params   +"')";
             }
             logger.info(logplannameandcasename+"测试结果 result sql is...........: " + sql);
             System.out.println("case result sql is: " + sql);

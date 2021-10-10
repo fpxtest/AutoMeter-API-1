@@ -68,6 +68,9 @@ public class TestconditionController {
     @Resource
     private TestconditionReportService testconditionReportService;
 
+    @Resource
+    private ExecuteplanService executeplanService;
+
     @PostMapping
     public Result add(@RequestBody Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
@@ -86,6 +89,7 @@ public class TestconditionController {
     @Async
     public Result exec(@RequestBody Dispatch dispatch) throws Exception {
         Long Planid = dispatch.getExecplanid();
+        Executeplan executeplan=executeplanService.getBy("id",Planid);
         List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(Planid,"前置条件");
         if(testconditionList.size()>0)
         {
@@ -115,7 +119,8 @@ public class TestconditionController {
                 Long Deployunitid= api.getDeployunitid();
                 Deployunit deployunit=deployunitService.getBy("id",Deployunitid);
                 List<ApiCasedata> apiCasedataList= apiCasedataService.GetCaseDatasByCaseID(CaseID);
-                Macdepunit macdepunit= macdepunitService.getBy("depunitid",deployunit.getId());
+                //区分环境类型
+                Macdepunit macdepunit= macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(),deployunit.getId());
                 Machine machine= machineService.getBy("id",macdepunit.getMachineid());
                 TestCaseHelp testCaseHelp=new TestCaseHelp();
                 long Start = 0;
@@ -151,7 +156,7 @@ public class TestconditionController {
                 if(apicasesVariables!=null)
                 {
                     TestconditionController.log.info("条件报告子条件处理变量-============："+apicasesVariables.getVariablesname());
-                    Testvariables testvariables=testvariablesService.getById(apicasesVariables.getId());
+                    Testvariables testvariables=testvariablesService.getById(apicasesVariables.getVariablesid());
                     String VariablesPath=testvariables.getVariablesexpress();
                     TestconditionController.log.info("条件报告子条件处理变量表达式-============："+VariablesPath+" 响应数据类型"+requestObject.getResponecontenttype());
                     ParseResponeHelp parseResponeHelp=new ParseResponeHelp();

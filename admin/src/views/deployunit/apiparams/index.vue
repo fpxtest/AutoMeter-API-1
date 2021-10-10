@@ -144,7 +144,7 @@
         <el-form-item label="参数(英文逗号隔开)" prop="keyname">
           <el-input
             type="textarea"
-            maxlength="50"
+            maxlength="1000"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapiparams.keyname"

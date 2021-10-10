@@ -186,7 +186,6 @@ public class TestPlanCaseController {
             return ResultGenerator.genFailedResult("execperformancetest 未找到ip为：" + ip + "的slaver");
         }
         Long SlaverId = slaverlist.get(0).getId();
-        slaverMapper.updateSlaverStaus(SlaverId, "运行中");
 
         String ProjectPath = System.getProperty("user.dir");
         String JmeterPath ="";
@@ -254,6 +253,7 @@ public class TestPlanCaseController {
                 TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
                 // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
                 tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath,apicases.getThreadnum(), apicases.getLoops());
+                slaverMapper.updateSlaverStaus(SlaverId, "运行中");
                 //tpcservice.ExecuteHttpPerformancePlanCase(apicases.getCasetype(), dispatch.getSlaverid(), dispatch.getBatchid(), dispatch.getExecplanid(), dispatch.getTestcaseid(), apicases.getThreadnum(), apicases.getLoops(), DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, dispatch.getBatchname(), JmeterPerformanceReportPath, url, username, password);
                 TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。"+ dispatch.getId());
             }

@@ -65,6 +65,9 @@
       <el-table-column label="tps" align="center" prop="tps" width="80"/>
       <el-table-column label="receivekbsec" align="center" prop="receivekbsec" width="80"/>
       <el-table-column label="sendkbsec" align="center" prop="sendkbsec" width="80"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
+        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
+      </el-table-column>
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"

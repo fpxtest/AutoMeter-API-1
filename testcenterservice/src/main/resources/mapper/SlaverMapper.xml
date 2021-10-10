@@ -23,6 +23,7 @@
       <if test="slavername != null and slavername != ''">a.slavername like CONCAT('%',#{slavername},'%')</if>
       <if test="ip != null  and ip != ''">and a.ip like CONCAT('%',#{ip},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="findslaverWithType" resultMap="BaseResultMap">
@@ -38,12 +39,12 @@
 
   <update id="updateSlaver" parameterType="com.zoctan.api.entity.Slaver">
     update slaver set slavername = #{slavername}, ip = #{ip}, port= #{port},stype= #{stype},
-    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 
   <update id="updateSlaverStatus" >
-    update slaver set status = #{status}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    update slaver set status = #{status}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 

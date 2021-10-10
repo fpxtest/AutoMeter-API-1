@@ -30,6 +30,7 @@
     <where>
       <if test="enviromentname != null and enviromentname != ''">a.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
     </where>
+    order by lastmodify_time  DESC
   </select>
 
   <select id="getenviromentnum" resultType="java.lang.Integer">
@@ -39,7 +40,7 @@
 
   <update id="updateEnviroment" parameterType="com.zoctan.api.entity.Enviroment">
     update enviroment set enviromentname = #{enviromentname},envtype=#{envtype},
-    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>
