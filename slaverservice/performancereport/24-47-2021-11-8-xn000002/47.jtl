@@ -1,0 +1,6 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1636371108514,17,getstart,200,OK,InitialThread 1-1,text,true,,0,0,1,2,null,0,0,0
+1636371108514,350,HttpApiPerformance,,,performance 2-1,,true,,0,0,1,1,null,0,0,0
+1636371108864,25,HttpApiPerformance,,,performance 2-1,,true,,0,0,1,1,null,0,0,0
+1636371109015,18,HttpApiPerformance,,,performance 2-2,,true,,0,0,1,1,null,0,0,0
+1636371109034,12,HttpApiPerformance,,,performance 2-2,,true,,0,0,1,1,null,0,0,0
