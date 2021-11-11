@@ -3,6 +3,8 @@ package com.api.autotest.dto;
 import com.api.autotest.common.utils.HttpHeader;
 import com.api.autotest.common.utils.HttpParamers;
 
+import java.util.List;
+
 /**
  * Created by fanseasn on 2020/11/30.
  */
@@ -13,6 +15,16 @@ import com.api.autotest.common.utils.HttpParamers;
 */
 public class RequestObject {
 
+
+    public List<ApicasesAssert> getApicasesAssertList() {
+        return apicasesAssertList;
+    }
+
+    public void setApicasesAssertList(List<ApicasesAssert> apicasesAssertList) {
+        this.apicasesAssertList = apicasesAssertList;
+    }
+
+    private List<ApicasesAssert> apicasesAssertList;
 
     public String getTestplanid() {
         return testplanid;
@@ -155,6 +167,17 @@ public class RequestObject {
     }
 
     private HttpParamers paramers;
+
+    public String getPostData() {
+        return PostData;
+    }
+
+    public void setPostData(String postData) {
+        PostData = postData;
+    }
+
+    private String PostData;
+
 
 
     public String getRequestcontenttype() {

@@ -1,5 +1,7 @@
 package com.zoctan.api.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.zoctan.api.core.service.AbstractService;
 import com.zoctan.api.entity.ApiParams;
 import com.zoctan.api.mapper.ApiParamsMapper;
@@ -11,6 +13,8 @@ import tk.mybatis.mapper.entity.Condition;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import com.alibaba.fastjson.JSON;
+
 
 /**
 * @author Zoctan
@@ -38,7 +42,54 @@ private ApiParamsMapper apiParamsMapper;
     }
 
     @Override
+    public void SaveApiParams(ApiParams params) {
+        String JsonKey=params.getKeyname();
+        if(JSON.isValidObject(JsonKey))
+        {
+            String  Result= GetJsonValue(JsonKey,"","");
+            Result=Result.substring(0,Result.length()-1);
+            System.out.println("Result......................is..Result:"+Result);
+            params.setKeyname(Result);
+        }
+        apiParamsMapper.SaveApiParams(params);
+    }
+
+    @Override
     public void updateApiParams(ApiParams params) {
+        String JsonKey=params.getKeyname();
+        if(JSON.isValidObject(JsonKey))
+        {
+            String  Result= GetJsonValue(JsonKey,"","");
+            Result=Result.substring(0,Result.length()-1);
+            System.out.println("Result......................is..Result:"+Result);
+            params.setKeyname(Result);
+        }
         apiParamsMapper.updateApiParams(params);
+    }
+
+    private String GetJsonValue(String JsonValue,String Key,String Parent)
+    {
+        JSONObject jsonObject= JSON.parseObject(JsonValue);
+        for (Map.Entry entry : jsonObject.entrySet()) {
+            String Value=entry.getValue().toString();
+            if(JSON.isValidObject(Value))
+            {
+                String ChildKey="";
+                if(!Parent.isEmpty())
+                {
+                    ChildKey=Parent+entry.getKey().toString()+".";
+                }
+                else
+                {
+                    ChildKey=entry.getKey().toString()+".";
+                }
+                Key=Key+GetJsonValue(Value,"",ChildKey);
+            }
+            else
+            {
+                Key=Key+Parent+entry.getKey().toString()+",";
+            }
+        }
+        return Key;
     }
 }

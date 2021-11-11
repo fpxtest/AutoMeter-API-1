@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column label="批次" align="center" prop="batchname" width="80"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
-      <el-table-column label="期望值" align="center" prop="expect" width="100">
+      <el-table-column label="断言" align="center" prop="expect" width="100">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.expect }}</p>

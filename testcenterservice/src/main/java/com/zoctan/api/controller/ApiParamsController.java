@@ -35,7 +35,7 @@ public class ApiParamsController {
         }
         else
         {
-            apiParamsService.save(apiParams);
+            apiParamsService.SaveApiParams(apiParams);
             return ResultGenerator.genOkResult();
         }
     }

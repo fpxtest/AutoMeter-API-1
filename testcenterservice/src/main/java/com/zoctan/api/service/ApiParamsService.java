@@ -36,5 +36,7 @@ public interface ApiParamsService extends Service<ApiParams> {
 
     int ifexist(Condition condition);
 
+    void SaveApiParams(ApiParams apiParams);
+
 
 }

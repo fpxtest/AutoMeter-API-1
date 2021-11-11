@@ -40,7 +40,7 @@
 
 
   <update id="updatedispatchstatus">
-    update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
+    update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where slaverid = #{slaverid}
     and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
   </update>
 
@@ -51,7 +51,7 @@
     <foreach collection="dispatchList" item="dispatch" index="index" separator=",">
       (#{dispatch.execplanid}, #{dispatch.execplanname}, #{dispatch.batchid},#{dispatch.batchname},#{dispatch.slaverid},
       #{dispatch.slavername},#{dispatch.testcaseid},#{dispatch.testcasename},#{dispatch.casejmxname},#{dispatch.deployunitname},#{dispatch.expect},
-      #{dispatch.status},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'),#{dispatch.plantype},#{dispatch.threadnum},#{dispatch.loops})
+      #{dispatch.status},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),#{dispatch.plantype},#{dispatch.threadnum},#{dispatch.loops})
     </foreach>
   </insert>
 
@@ -86,7 +86,7 @@
   </select>
 
   <update id="updatedispatchstatusandmemo">
-    update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where slaverid = #{slaverid}
+    update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where slaverid = #{slaverid}
     and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
   </update>
 </mapper>

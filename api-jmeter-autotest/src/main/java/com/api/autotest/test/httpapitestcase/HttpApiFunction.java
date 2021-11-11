@@ -2,7 +2,7 @@ package com.api.autotest.test.httpapitestcase;
 
 import com.api.autotest.core.TestAssert;
 import com.api.autotest.core.TestCore;
-import com.api.autotest.core.TestCorebak;
+import com.api.autotest.dto.ApicasesAssert;
 import com.api.autotest.dto.ApicasesReportstatics;
 import com.api.autotest.dto.RequestObject;
 import com.jayway.jsonpath.JsonPath;
@@ -11,6 +11,7 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
+import java.io.IOException;
 import java.util.*;
 
 public class HttpApiFunction extends AbstractJavaSamplerClient {
@@ -43,7 +44,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         //Jmeter java实例开始执行
         results.sampleStart();
         //用例运行开始时间
-        TestCorebak Core = new TestCorebak(ctx, getLogger());
+        TestCore Core = new TestCore(ctx, getLogger());
         Map<String,List<RequestObject>> BatchRequestObjectMap = new HashMap<>();
         // 初始化用例数据
         BatchRequestObjectMap = InitalTestData(Core, ctx);
@@ -78,15 +79,16 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     String AssertInfo = "";
                     String ErrorInfo = "";
                     String ActualResult = "";
-                    TestAssert TestAssert = new TestAssert();
+                    TestAssert TestAssert = new TestAssert(getLogger());
                     try {
                         ActualResult = SendCaseRequest(requestObject, Core);
                         String ResponeContentType = requestObject.getResponecontenttype();
                         if (ResponeContentType.equals(new String("json"))) {
-                            AssertInfo = ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
+                            AssertInfo = TestAssert.ParseJsonResult(ActualResult,requestObject);//ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
                         }
                         if (ResponeContentType.equals(new String("xml"))) {
                             //处理xml
+                            AssertInfo = TestAssert.ParseXmlResult(ActualResult,requestObject);//ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
                         }
                     } catch (Exception ex) {
                         ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
@@ -118,13 +120,12 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //初始化用例的基础数据
-    private Map<String,List<RequestObject>> InitalTestData(TestCorebak core, JavaSamplerContext ctx)  {
+    private Map<String,List<RequestObject>> InitalTestData(TestCore core, JavaSamplerContext ctx) {
         getLogger().info("根据调度ids获取请求数据列表 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
         List<RequestObject> objectList = core.GetDispatchOBList(ctx);
         Map<String,List<RequestObject>> BatchObject=GetGroupMap(objectList,"BatchName");
         return BatchObject;
     }
-
 
     private Map<String,List<RequestObject>> GetGroupMap(List<RequestObject> objectList,String ObjectName)
     {
@@ -154,7 +155,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private String SendCaseRequest(RequestObject ob, TestCorebak core) throws Exception {
+    private String SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
         String Result = core.request(ob);
         getLogger().info(TestCore.logplannameandcasename + "请求结果 is:" + Result);
         return Result;
@@ -171,7 +172,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //用例运行结束保存记录，并且更新dispatch状态为完成
-    private void CaseFinish(TestCorebak core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult,JavaSamplerContext ctx,RequestObject requestObject) {
+    private void CaseFinish(TestCore core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult, JavaSamplerContext ctx, RequestObject requestObject) {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
         ActualResult = ActualResult.replace("'", "");
@@ -182,7 +183,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //功能用例统计收集信息
-    private void CollectionReportStatics(TestCorebak core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums,int TotalPassNums,int TotalFailNUms,long AllCostTime,String SlaverId) {
+    private void CollectionReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId) {
         apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));
         apicasesReportstatics.setTotalpasscases(String.valueOf(TotalPassNums));
@@ -197,32 +198,52 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //获取用例期望值
-    private String getCaseExpectValue(TestCorebak core, String expectKey,HashMap<String,String> ExpectMap) throws Exception {
-        String expectValue = core.GetExpectValue(expectKey,ExpectMap);
-        getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
-        return expectValue;
-    }
+//    private String getCaseExpectValue(TestCore core, String expectKey, HashMap<String,String> ExpectMap) throws Exception {
+//        String expectValue = core.GetExpectValue(expectKey,ExpectMap);
+//        getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
+//        return expectValue;
+//    }
 
     //通过jsonpath获取实际值和期望值比较，返回断言信息
-    private String ParseJsonResult(TestCorebak core, String ActualJson, TestAssert Ass,RequestObject ob) throws Exception {
+    private String ParseJsonResult(TestCore core, String ActualJson, TestAssert Ass, RequestObject ob) throws Exception {
         String AssertInfo = "";
-        HashMap<String,String> ExpectMap=core.GetExpectMap(ob.getExpect());
-        for (String JPath: ExpectMap.keySet()) {
-            //获取期望值的status结果
-            String ExpectValue = getCaseExpectValue(core,JPath,ExpectMap);
-            //获取实际值使用jsonpath解析
-            String ActualResult="";
-            try {
-                 ActualResult=JsonPath.read(ActualJson,JPath).toString();
-            }
-            catch (Exception ex)
+        List<ApicasesAssert> apicasesAssertList = ob.getApicasesAssertList();
+        for (ApicasesAssert apicasesAssert : apicasesAssertList) {
+            if(apicasesAssert.getAsserttype().equals(new String("Json")))
             {
-                ActualResult=ex.getMessage();
-            }
+                //获取期望值的status结果
+                String ExpectValue = apicasesAssert.getAssertvalues();
+                //获取实际值使用jsonpath解析
+                String ActualResult="";
+                try {
+                    ActualResult=JsonPath.read(ActualJson,apicasesAssert.getExpression()).toString();
+                }
+                catch (Exception ex)
+                {
+                    ActualResult=ex.getMessage();
+                }
 
-            getLogger().info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
-            AssertInfo = Ass.AssertEqual(ExpectValue, ActualResult);
+                getLogger().info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+                AssertInfo = Ass.AssertEqual(ExpectValue, ActualResult);
+            }
         }
+//        HashMap<String,String> ExpectMap=core.GetExpectMap(ob.getExpect());
+//        for (String JPath: ExpectMap.keySet()) {
+//            //获取期望值的status结果
+//            String ExpectValue = getCaseExpectValue(core,JPath,ExpectMap);
+//            //获取实际值使用jsonpath解析
+//            String ActualResult="";
+//            try {
+//                 ActualResult=JsonPath.read(ActualJson,JPath).toString();
+//            }
+//            catch (Exception ex)
+//            {
+//                ActualResult=ex.getMessage();
+//            }
+//
+//            getLogger().info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+//            AssertInfo = Ass.AssertEqual(ExpectValue, ActualResult);
+//        }
         return AssertInfo;
     }
 
@@ -234,11 +255,11 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "17");
-        params.addArgument("SlaverId", "9");
+        params.addArgument("DispatchIds", "36");
+        params.addArgument("SlaverId", "15");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
-        params.addArgument("mysqlusername", "root");
-        params.addArgument("mysqlpassword", "root");
+        params.addArgument("mysqlusername", "test");
+        params.addArgument("mysqlpassword", "test");
 
         JavaSamplerContext ctx = new JavaSamplerContext(params);
         HttpApiFunction test = new HttpApiFunction();

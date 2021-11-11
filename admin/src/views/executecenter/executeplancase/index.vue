@@ -159,11 +159,9 @@
         <el-table-column type="selection" prop="status" width="50"/>
         <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
         <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
-        <el-table-column label="用例名" align="center" prop="casename" width="120"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
-        <el-table-column label="API" align="center" prop="apiname" width="120"/>
-        <el-table-column label="期望值" align="center" prop="expect" width="120"/>
-        </el-table-column>
+        <el-table-column label="用例名" align="center" prop="casename" width="180"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="180"/>
+        <el-table-column label="API" align="center" prop="apiname" width="220"/>
       </el-table>
       <el-pagination
         @size-change="casehandleSizeChange"

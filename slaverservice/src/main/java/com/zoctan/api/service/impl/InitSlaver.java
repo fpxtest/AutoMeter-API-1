@@ -47,7 +47,6 @@ public class InitSlaver {
         sa.setStype("功能");
         sa.setPort(port);
         sa.setStatus("空闲");
-        sa.setStype("");
         sa.setMemo("执行机"+ip);
         if(slaverMapper.findslaverbyip(ip).size()==0)
         {

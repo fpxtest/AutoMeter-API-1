@@ -69,10 +69,10 @@
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
-      <el-table-column label="参数名" align="center" prop="keyname" width="100">
+      <el-table-column label="参数名" align="center" prop="keynamebak" width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>{{ scope.row.keyname }}</p>
+            <p>{{ scope.row.keynamebak }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">...</el-tag>
             </div>
@@ -128,20 +128,20 @@
         <el-form-item label="api" prop="apiname" required >
           <el-select v-model="tmpapiparams.apiname" placeholder="api" @change="apinameselectChanged($event)">
             <el-option label="请选择" value />
-            <div v-for="(api, index) in apiList" :key="index">
+            <div v-for="(api, index) in paramsapiList" :key="index">
               <el-option :label="api.apiname" :value="api.apiname"/>
             </div>
           </el-select>
         </el-form-item>
         <el-form-item label="参数类型" prop="propertytype" required>
-          <el-select v-model="tmpapiparams.propertytype" placeholder="参数类型">
+          <el-select v-model="tmpapiparams.propertytype" placeholder="参数类型" @change="paratypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(para, index) in paramlist" :key="index">
               <el-option :label="para.value" :value="para.value"/>
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item label="参数(英文逗号隔开)" prop="keyname">
+        <el-form-item :label="paralabel" prop="keyname">
           <el-input
             type="textarea"
             maxlength="1000"
@@ -195,12 +195,15 @@
     },
     data() {
       return {
+        paralabel: '参数(英文逗号隔开)',
         itemKey: null,
         tmpapiname: null,
         tmpdeployunitname: null,
         apiparamsList: [], // apiparams列表
         apiList: [], // api列表
+        paramsapiList: [], // paramsapi列表
         deployunitList: [], // 发布单元列表
+        paramlist: [],
         listLoading: false, // 数据加载等待动画
         apiQuery: {
           deployunitname: ''
@@ -222,6 +225,7 @@
           deployunitname: '',
           propertytype: '',
           keyname: '',
+          keynamebak: '',
           creator: ''
         },
         search: {
@@ -229,17 +233,7 @@
           size: 10,
           apiname: null,
           deployunitname: null
-        },
-        paramlist: [{
-          value: 'Header'
-        },
-        {
-          value: 'Params'
-        },
-        {
-          value: 'Body'
         }
-        ]
       }
     },
 
@@ -298,6 +292,14 @@
         })
       },
 
+      paratypeselectChanged(e) {
+        if (e === 'Body') {
+          this.paralabel = '参数(Json，Xml)'
+        } else {
+          this.paralabel = '参数(英文逗号隔开)'
+        }
+      },
+
       /**
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
        */
@@ -307,13 +309,13 @@
             this.tmpapiparams.deployunitid = this.deployunitList[i].id
           }
         }
-        this.apiList = null
+        this.paramsapiList = null
         this.tmpapiparams.apiname = ''
         this.tmpapiparams.propertytype = ''
         this.tmpapiparams.keyname = ''
         this.apiQuery.deployunitname = e
         getapiListbydeploy(this.apiQuery).then(response => {
-          this.apiList = response.data
+          this.paramsapiList = response.data
           this.total = response.data.total
         }).catch(res => {
           this.$message.error('加载api列表失败')
@@ -326,9 +328,28 @@
       apinameselectChanged(e) {
         this.tmpapiparams.propertytype = ''
         this.tmpapiparams.keyname = ''
-        for (let i = 0; i < this.apiList.length; i++) {
-          if (this.apiList[i].apiname === e) {
-            this.tmpapiparams.apiid = this.apiList[i].id
+        for (let i = 0; i < this.paramsapiList.length; i++) {
+          if (this.paramsapiList[i].apiname === e) {
+            this.paramlist = []
+            this.tmpapiparams.apiid = this.paramsapiList[i].id
+            console.log('=====================================')
+            console.log(this.paramsapiList[i].visittype)
+            if (this.paramsapiList[i].visittype === 'get') {
+              var getheaddata = { value: 'Header' }
+              var getparamsdata = { value: 'Params' }
+              this.paramlist.push(getheaddata)
+              this.paramlist.push(getparamsdata)
+              console.log(this.paramlist)
+            } else {
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+              var headdata = { value: 'Header' }
+              var paramsdata = { value: 'Params' }
+              var postdata = { value: 'Body' }
+              this.paramlist.push(headdata)
+              this.paramlist.push(paramsdata)
+              this.paramlist.push(postdata)
+              console.log(this.paramlist)
+            }
           }
         }
       },
@@ -381,6 +402,7 @@
        */
       showAddapiparamsDialog() {
         // 显示新增对话框
+        this.paralabel = '参数'
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
         this.tmpapiparams.id = ''
@@ -399,6 +421,7 @@
           if (valid) {
             this.btnLoading = true
             this.tmpapiparams.keyname = this.tmpapiparams.keyname.trim()
+            this.tmpapiparams.keynamebak = this.tmpapiparams.keyname
             addapiparams(this.tmpapiparams).then(() => {
               this.$message.success('添加成功')
               this.getapiparamsList()
@@ -421,7 +444,8 @@
         this.tmpapiparams.id = this.apiparamsList[index].id
         this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
         this.tmpapiparams.apiname = this.apiparamsList[index].apiname
-        this.tmpapiparams.keyname = this.apiparamsList[index].keyname
+        this.tmpapiparams.keyname = this.apiparamsList[index].keynamebak
+        this.tmpapiparams.keynamebak = this.apiparamsList[index].keynamebak
         this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
         this.tmpapiparams.propertytype = this.apiparamsList[index].propertytype
         this.tmpapiparams.creator = this.name

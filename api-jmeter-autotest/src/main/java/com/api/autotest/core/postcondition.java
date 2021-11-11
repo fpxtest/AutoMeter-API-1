@@ -54,7 +54,7 @@ public class postcondition extends AbstractJavaSamplerClient {
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
         super.teardownTest(ctx);
-        TestCorebak core = new TestCorebak(ctx,getLogger());
+        TestCore core = new TestCore(ctx,getLogger());
         String errorinfo = "";
         String status="";
         String caseid = ctx.getParameter("caseid");

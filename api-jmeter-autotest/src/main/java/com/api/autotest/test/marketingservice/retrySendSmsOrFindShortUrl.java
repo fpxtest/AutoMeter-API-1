@@ -64,7 +64,7 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
         //用例多次断言信息汇总
         String assertInfo = "";
         //断言对象
-        TestAssert testAssert = new TestAssert();
+        TestAssert testAssert = new TestAssert(getLogger());
         try {
             // 初始化用例数据
             initalTestData(ctx);
@@ -138,14 +138,14 @@ public class retrySendSmsOrFindShortUrl extends AbstractJavaSamplerClient {
     private void caseFinish(SampleResult results, TestAssert testAssert, String assertInfo) {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
-        core.savetestcaseresult(testAssert.isCaseresult(), end - start, actualResult, assertInfo, errorInfo);
+        //core.savetestcaseresult(testAssert.isCaseresult(), end - start, actualResult, assertInfo, errorInfo);
     }
 
     //获取用例期望值
     private String getCaseExpectValue(String expectKey) throws Exception {
-        String expectValue = core.getExpectValue(expectKey);
-        getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
-        return expectValue;
+        //String expectValue = core.getExpectValue(expectKey);
+        //getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
+        return "";
     }
 
     //结束方法，实际运行时每个线程仅执行一次

@@ -29,15 +29,16 @@ public class Httphelp {
 
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final String JSON_CONTENT_FORM = "application/json;charset=UTF-8";
+    public static final String XML_CONTENT_FORM = "application/xml;charset=UTF-8";
     public static final String CONTENT_FORM = "application/x-www-form-urlencoded;charset=UTF-8";
 
-    public static String doService(String protocal,String url, String method,String apistyle, HttpParamers paramers, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static String doService(String protocal,String url, String method,String apistyle, HttpParamers paramers,String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         switch (method) {
             case "get":
-                String getrequesturl= getrequesturl(url, apistyle,paramers);
-                return doGet(protocal,getrequesturl,  header, connectTimeout, readTimeout);
+                String getrequesturl= getrequesturl(url, apistyle, paramers);
+                return doGet(protocal, getrequesturl,  header, connectTimeout, readTimeout);
             case "post":
-                return doPost(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
+                return doPost(protocal,url, postdata, requestcontenttype, header, connectTimeout, readTimeout);
             case "put":
                 return doPut(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
             case "delete":
@@ -50,14 +51,15 @@ public class Httphelp {
      * post方法
      *
      * @param url
-     * @param paramers
+     * @postdata postdata
      * @param header
      * @param connectTimeout
      * @param readTimeout
      * @return
      * @throws IOException
      */
-    public static String doPost(String protocal,String url, HttpParamers paramers, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    //HttpParamers paramers
+    public static String doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
         String responseData = "";
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
@@ -65,7 +67,7 @@ public class Httphelp {
             RequestConfig requestConfig = RequestConfig.custom()
                     .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
                     .setSocketTimeout(connectTimeout).build();
-            String query = null;
+            String query = postdata;
             HttpPost httpPost = new HttpPost(url);
             httpPost.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
@@ -74,18 +76,23 @@ public class Httphelp {
             if (requestcontenttype.equals(new String("json"))) {
                 //json数据
                 httpPost.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
-                paramers.setJsonParamer();
-                query = paramers.getJsonParamer();
-                logger.info("Post json datas is :  " + query);
-
-            } else {
-                //表单数据
-                httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
-                query = paramers.getQueryString(DEFAULT_CHARSET);
-                logger.info("Post form datas is :  " + query);
+//                paramers.setJsonParamer();
+//                query = paramers.getJsonParamer();
+//                logger.info("Post json datas is :  " + query);
             }
+            if (requestcontenttype.equals(new String("xml"))) {
+                //xml数据
+                httpPost.setHeader(HTTP.CONTENT_TYPE, XML_CONTENT_FORM);
+                logger.info("Post xml datas is :  " + query);
+            }
+//            else {
+//                //表单数据
+//                httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
+//                query = paramers.getQueryString(DEFAULT_CHARSET);
+//                logger.info("Post form datas is :  " + query);
+//            }
             if (query != null) {
-                HttpEntity reqEntity = new StringEntity(query);
+                HttpEntity reqEntity = new StringEntity(query,"utf-8");
                 logger.info("Post last datas is :  " + query);
                 httpPost.setEntity(reqEntity);
             }

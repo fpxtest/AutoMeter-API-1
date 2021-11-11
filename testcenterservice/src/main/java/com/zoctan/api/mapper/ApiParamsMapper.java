@@ -36,4 +36,7 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
 
     int ifexist(Condition condition);
 
+    void SaveApiParams(ApiParams apiParams);
+
+
 }

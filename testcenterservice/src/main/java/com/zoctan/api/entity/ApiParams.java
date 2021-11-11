@@ -53,6 +53,18 @@ public class ApiParams {
      */
     private String keyname;
 
+    public String getKeynamebak() {
+        return keynamebak;
+    }
+
+    public void setKeynamebak(String keynamebak) {
+        this.keynamebak = keynamebak;
+    }
+
+    private String keynamebak;
+
+
+
     public String getCreator() {
         return creator;
     }

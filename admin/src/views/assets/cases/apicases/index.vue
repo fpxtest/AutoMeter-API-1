@@ -81,29 +81,29 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="用例名" align="center" prop="casename" width="80"/>
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="80"/>
-      <el-table-column label="API" align="center" prop="apiname" width="80"/>
-      <el-table-column label="Jmeter-Class" align="center" prop="casejmxname" width="100"/>
+      <el-table-column label="用例名" align="center" prop="casename" width="120"/>
+      <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="API" align="center" prop="apiname" width="120"/>
+<!--      <el-table-column label="Jmeter-Class" align="center" prop="casejmxname" width="100"/>-->
       <el-table-column label="类型" align="center" prop="casetype" width="50"/>
       <el-table-column label="线程" align="center" prop="threadnum" width="50"/>
       <el-table-column label="循环" align="center" prop="loops" width="50"/>
       <el-table-column label="用例描述" align="center" prop="casecontent" width="120"/>
-      <el-table-column label="期望值" align="center" prop="expect" width="60">
-        <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.expect }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">...</el-tag>
-          </div>
-        </el-popover>
-      </template>
-      </el-table-column>
+<!--      <el-table-column label="期望值" align="center" prop="expect" width="60">-->
+<!--        <template slot-scope="scope">-->
+<!--        <el-popover trigger="hover" placement="top">-->
+<!--          <p>{{ scope.row.expect }}</p>-->
+<!--          <div slot="reference" class="name-wrapper">-->
+<!--            <el-tag size="medium">...</el-tag>-->
+<!--          </div>-->
+<!--        </el-popover>-->
+<!--      </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="100">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="100">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -129,7 +129,14 @@
             size="mini"
             v-if="hasPermission('apicases:params') && scope.row.id !== id"
             @click.native.prevent="showUpdateapicasesparamsDialog(scope.$index)"
-          >参数值
+          >用例值
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('apicases:params') && scope.row.id !== id"
+            @click.native.prevent="showAssertDialog(scope.$index)"
+          >断言
           </el-button>
         </template>
       </el-table-column>
@@ -149,11 +156,10 @@
         class="small-space"
         label-position="left"
         label-width="80px"
-        style="width: 500px; margin-left:50px;"
+        style="width: 350px; margin-left:50px;"
         :model="tmpapicases"
         ref="tmpapicases"
       >
-
         <el-form-item label="发布单元" prop="deployunitname" required >
           <el-select v-model="tmpapicases.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
@@ -227,27 +233,6 @@
             v-model="tmpapicases.casecontent"
           />
         </el-form-item>
-        <el-form-item label="期望值" prop="expect" required>
-          <el-input
-            type="textarea"
-            rows="5"
-            cols="10"
-            maxlength="400"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model.trim="tmpapicases.expect"
-            placeholder="1.如果返回是Json类型使用JsonPath表示期望值,多个值用符号|隔开，例如：$.store.book[0].title:value|$.store.people[0].name:value
-2.如果返回是html，xml则使用XPath表示期望值，多个值用符号|隔开 例如：//div/h3//text():value|//div/h4//text():value"
-          />
-          <div class="right">
-            <el-tooltip placement="right-start">
-              <div slot="content">1.如果用例返回数据类型是Json则使用JsonPath表示期望值, 如果多个值用符号|隔开，例如：$.store.book[0].title=test|$.store.people[0].name=hello   在线解析网站：http://www.e123456.com/aaaphp/online/jsonpath/<br/>2.如果用例返回是html，xml则使用XPath表示期望值，如果多个值用符号|隔开 例如：//div/h3//text()=hello|//div/h4//text()=123456   在线解析网站： http://www.ab173.com/other/xpath.php</div>
-              <el-button>期望值语法规则</el-button>
-            </el-tooltip>
-          </div>
-        </el-form-item>
-
-
         <el-form-item label="优先级" prop="level" >
           <el-input
             type="text"
@@ -319,7 +304,6 @@
           v-for="(param, index) in tmpcaseparamslist"
           :label="param"
           :key="index"
-          required
         >
           <el-input
             type="text"
@@ -385,6 +369,179 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="loadassert" :visible.sync="AssertdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchassert" ref="searchcase" >
+
+          <el-form-item>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click.native.prevent="showAddassertDialog"
+          >添加断言
+          </el-button>
+          </el-form-item>
+
+          <el-form-item label="断言类型:"  prop="asserttype" required>
+            <el-select v-model="searchassert.asserttype" placeholder="断言类型" >
+              <el-option label="Respone断言" value="Respone"></el-option>
+              <el-option label="Json断言" value="Json"></el-option>
+              <el-option label="Xml断言" value="Xml"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="searchassertBy" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+
+        </el-form>
+      </div>
+      <el-table
+        ref="assertTable"
+        :data="assertList"
+        :key="itemassertKey"
+        @row-click="asserthandleClickTableRow"
+        @selection-change="asserthandleSelectionChange"
+        v-loading.body="assertlistLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="assertgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="断言类型"  align="center" prop="asserttype" width="80"/>
+        <el-table-column label="断言子类型"  align="center" prop="assertsubtype" width="90"/>
+        <el-table-column label="表达式"  align="center" prop="expression" width="100"/>
+        <el-table-column label="条件" align="center" prop="assertcondition" width="60"/>
+        <el-table-column label="断言值"  align="center" prop="assertvalues" width="80"/>
+        <el-table-column label="断言值类型"  align="center" prop="assertvaluetype" width="100"/>
+        <el-table-column label="管理" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              size="mini"
+              @click.native.prevent="showUpdateapicasesassertDialog(scope.$index)"
+            >修改
+            </el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              @click.native.prevent="removeapicasesassert(scope.$index)"
+            >删除
+            </el-button>
+
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <el-pagination
+        @size-change="asserthandleSizeChange"
+        @current-change="asserthandleCurrentChange"
+        :current-page="searchassert.page"
+        :page-size="searchassert.size"
+        :total="asserttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+    </el-dialog>
+    <el-dialog :title="AsserttextMap[AssertdialogStatus]" :visible.sync="AssertAUdialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 350px; margin-left:50px;"
+        :model="tmpassert"
+        ref="tmpassert"
+      >
+
+      <el-form-item label="断言类型" prop="asserttype" required >
+        <el-select v-model="tmpassert.asserttype" placeholder="断言类型" @change="asserttypeselectChanged($event)">
+          <el-option label="Respone断言" value="Respone"></el-option>
+          <el-option label="Json断言" value="Json"></el-option>
+          <el-option label="Xml断言" value="Xml"></el-option>
+        </el-select>
+      </el-form-item>
+
+        <div v-if="AssertSubVisible">
+        <el-form-item label="断言子类型" prop="assertsubtype" required >
+          <el-select v-model="tmpassert.assertsubtype" placeholder="断言子类型">
+            <el-option label="Code" value="Code"></el-option>
+            <el-option label="文本" value="文本"></el-option>
+          </el-select>
+        </el-form-item>
+        </div>
+
+        <div v-if="ExpressionVisible">
+        <el-form-item label="表达式" prop="expression" required>
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpassert.expression"
+          />
+          <div class="right">
+            <el-tooltip placement="right-start">
+              <div slot="content">1.如果断言类型是Json则使用JsonPath表示, 例如：$.store.book[0].title  在线解析网站：http://www.e123456.com/aaaphp/online/jsonpath/<br/>2.如果断言类型为XML，则使用XPath表示， 例如：//div/h3//text()=hello|//div/h4//text()   在线解析网站： http://www.ab173.com/other/xpath.php</div>
+              <el-button>表达式语法规则</el-button>
+            </el-tooltip>
+          </div>
+        </el-form-item>
+        </div>
+
+        <el-form-item label="条件" prop="assertcondition" required >
+          <el-select v-model="tmpassert.assertcondition" placeholder="条件" @change="assertnameselectChanged($event)">
+            <el-option label="等于" value="="></el-option>
+            <el-option label="大于" value=">"></el-option>
+            <el-option label="小于" value="<"></el-option>
+            <el-option label="包含" value="Contain"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="断言值" prop="assertvalues" required>
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpassert.assertvalues"
+          />
+        </el-form-item>
+        <el-form-item label="断言值类型" prop="assertvaluetype" required >
+          <el-select v-model="tmpassert.assertvaluetype" placeholder="断言值类型">
+            <el-option label="int" value="int"></el-option>
+            <el-option label="Long" value="Long"></el-option>
+            <el-option label="Float" value="Float"></el-option>
+            <el-option label="Double" value="Double"></el-option>
+            <el-option label="Decimal" value="Decimal"></el-option>
+            <el-option label="字符串" value="String"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="AssertAUdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          v-if="AssertdialogStatus === 'add'"
+          @click.native.prevent="addassert"
+        >保存
+        </el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          v-if="AssertdialogStatus === 'update'"
+          @click.native.prevent="updateassert"
+        >更新
+        </el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -397,11 +554,13 @@
     copycases,
     getcasebydeployunitid
   } from '@/api/assets/apicases'
+
   import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype } from '@/api/assets/apicasesdata'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getcaseparatype as getcaseparatype } from '@/api/deployunit/apiparams'
   import { getdepunitLists as getdepunitLists, findDeployNameValueWithCode as findDeployNameValueWithCode } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
+  import { addapicasesassert, getassertbycaseid as getassertbycaseid, searchassert as searchassert, removeapicasesassert, updateapicasesassert } from '@/api/assets/apicasesassert'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -418,6 +577,8 @@
     data() {
       return {
         itemKey: null,
+        assertitemKey: null,
+        tmpasserttype: null,
         tmpprotocal: null,
         tmpdeployunitname: null,
         tmpapiname: null,
@@ -431,11 +592,17 @@
         caseparamsbytypelist: [], // 根据类型获取用例参数名列表
         tmpcaseparamslist: [], // 获取用例参数临时列表，getcaseparamsbytype（）调用
         sourcetestcaseList: [],
+        assertList: [],
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
         JmeterClassVisible: false, // JmeterClassVisible显示
+        ExpressionVisible: false, // 断言表达式显示
+        AssertSubVisible: false, // 断言子条件显示
+        AssertdialogFormVisible: false,
+        AssertAUdialogFormVisible: false,
         caseindex: '',
         total: 0, // 数据总数
+        asserttotal: 0, // 数据总数
         apiSearchQuery: {
           deployunitname: '', // 发布单元名
           apiname: '' // api名
@@ -444,8 +611,11 @@
           deployunitname: '' // 获取字典表入参
         },
         dialogStatus: 'add',
+        AssertdialogStatus: 'add',
         paramtitle: '用例参数值',
+        AssertTitle: '新增修改断言',
         CopyApiCase: '复制用例',
+        loadassert: '断言',
         dialogFormVisible: false,
         CopydialogFormVisible: false,
         paramdialogFormVisible: false,
@@ -453,6 +623,11 @@
           updateRole: '修改API用例',
           update: '修改API用例',
           add: '添加API用例'
+        },
+        AsserttextMap: {
+          updateRole: '修改用例断言',
+          update: '修改用例断言',
+          add: '添加用例断言'
         },
         diclevelQuery: {
           page: 1, // 页码
@@ -493,6 +668,17 @@
           sourcecasename: '',
           newcasename: ''
         },
+        tmpassert: {
+          id: '',
+          caseid: '',
+          asserttype: '',
+          assertsubtype: '',
+          expression: '',
+          assertcondition: '',
+          assertvalues: '',
+          assertvaluetype: '',
+          creator: ''
+        },
         casevalue: {
           caseid: '',
           propertytype: ''
@@ -503,6 +689,12 @@
           deployunitname: null,
           apiname: null,
           casetype: null
+        },
+        searchassert: {
+          page: 1,
+          size: 10,
+          asserttype: null,
+          caseid: null
         }
       }
     },
@@ -553,6 +745,19 @@
         this.getcaseparamsbytype(e)
       },
 
+      asserttypeselectChanged(e) {
+        if (e === 'Respone') {
+          this.ExpressionVisible = false
+          this.AssertSubVisible = true
+        } else {
+          this.AssertSubVisible = false
+          this.ExpressionVisible = true
+        }
+        this.tmpassert.assertsubtype = ''
+        this.tmpassert.assertcondition = ''
+        this.tmpassert.expression = ''
+        this.tmpassert.assertvalues = ''
+      },
       /**
        * 参数类型下拉框的值为e,来获取参数值
        */
@@ -574,11 +779,21 @@
                 this.paravaluemap.set(response.data.list[j].apiparam, response.data.list[j].apiparamvalue)
               }
               for (let k = 0; k < this.tmpcaseparamslist.length; k++) {
-                for (var [key, value] of this.paravaluemap) {
-                  if (key === this.tmpcaseparamslist[k]) {
-                    this.paraList.push(value)
-                  }
+                console.log(this.tmpcaseparamslist[k])
+                if (this.paravaluemap.has(this.tmpcaseparamslist[k])) {
+                  console.log(this.paravaluemap.get(this.tmpcaseparamslist[k]))
+                  this.paraList.push(this.paravaluemap.get(this.tmpcaseparamslist[k]))
+                } else {
+                  this.paraList.push('')
                 }
+                console.log(this.paraList)
+                // for (var [key, value] of this.paravaluemap) {
+                //   if (key === this.tmpcaseparamslist[k]) {
+                //     this.paraList.push(value)
+                //     console.log('paraList is......................................')
+                //     console.log(this.paraList)
+                //   }
+                // }
               }
               if (this.paraList === null) {
                 this.paraList = new Array(this.tmpcaseparamslist.length)
@@ -603,6 +818,15 @@
           this.listLoading = false
         }).catch(res => {
           this.$message.error('加载用例列表失败')
+        })
+      },
+
+      getassertbycaseid() {
+        getassertbycaseid(this.searchassert).then(response => {
+          this.assertList = response.data.list
+          this.asserttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('加载用例断言列表失败')
         })
       },
 
@@ -745,6 +969,46 @@
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
       },
+
+      searchassertBy() {
+        this.searchassert.page = 1
+        this.searchassert.caseid = this.tmpassert.caseid
+        searchassert(this.searchassert).then(response => {
+          this.assertitemKey = Math.random()
+          this.assertList = response.data.list
+          this.asserttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+        this.tmpasserttype = this.searchassert.asserttype
+      },
+      /**
+       * 改变每页数量
+       * @param size 页大小
+       */
+      asserthandleSizeChange(size) {
+        this.searchassert.page = 1
+        this.searchassert.size = size
+        this.getassertbycaseid(this.tmpassert)
+      },
+      /**
+       * 改变页码
+       * @param page 页号
+       */
+      asserthandleCurrentChange(page) {
+        this.searchassert.page = page
+        this.getassertbycaseid(this.tmpassert)
+      },
+      /**
+       * 表格序号
+       * 可参考自定义表格序号
+       * http://element-cn.eleme.io/#/zh-CN/component/table#zi-ding-yi-suo-yin
+       * @param index 数据下标
+       * @returns 表格序号
+       */
+      assertgetIndex(index) {
+        return (this.searchassert.page - 1) * this.searchassert.size + index + 1
+      },
       /**
        * 显示添加用例对话框
        */
@@ -766,6 +1030,24 @@
         this.tmpapicases.creator = this.name
         console.log(this.name)
       },
+
+      /**
+       * 显示增加断言对话框
+       */
+      showAddassertDialog() {
+        // 显示新增对话框
+        this.AssertdialogStatus = 'add'
+        this.AssertAUdialogFormVisible = true
+        this.tmpassert.id = ''
+        this.tmpassert.assertcondition = ''
+        this.tmpassert.assertsubtype = ''
+        this.tmpassert.asserttype = ''
+        this.tmpassert.assertvalues = ''
+        this.tmpassert.expression = ''
+        this.tmpassert.assertvaluetype = ''
+        this.tmpassert.creator = this.name
+      },
+
       /**
        * 显示Copy用例对话框
        */
@@ -818,6 +1100,24 @@
             }).catch(res => {
               this.$message.error('添加失败')
               this.btnLoading = false
+            })
+          }
+        })
+      },
+
+      /**
+       * 添加断言
+       */
+      addassert() {
+        this.$refs.tmpassert.validate(valid => {
+          if (valid) {
+            addapicasesassert(this.tmpassert).then(() => {
+              this.$message.success('添加断言成功')
+              this.searchassert.caseid = this.tmpassert.caseid
+              this.getassertbycaseid(this.searchassert)
+              this.AssertAUdialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('添加断言失败')
             })
           }
         })
@@ -912,6 +1212,42 @@
       },
 
       /**
+       * 显示修改用例断言对话框
+       * @param index 用例下标
+       */
+      showUpdateapicasesassertDialog(index) {
+        this.AssertdialogStatus = 'update'
+        this.AssertAUdialogFormVisible = true
+        this.tmpassert.id = this.assertList[index].id
+        this.tmpassert.asserttype = this.assertList[index].asserttype
+        this.tmpassert.assertsubtype = this.assertList[index].assertsubtype
+        this.tmpassert.expression = this.assertList[index].expression
+        this.tmpassert.assertcondition = this.assertList[index].assertcondition
+        this.tmpassert.assertvalues = this.assertList[index].assertvalues
+        this.tmpassert.assertvaluetype = this.assertList[index].assertvaluetype
+        this.tmpassert.creator = this.name
+        if (this.tmpassert.asserttype === 'Respone') {
+          this.ExpressionVisible = false
+          this.AssertSubVisible = true
+        } else {
+          this.AssertSubVisible = false
+          this.ExpressionVisible = true
+        }
+      },
+
+      /**
+       * 显示断言对话框
+       */
+      showAssertDialog(index) {
+        this.tmpapicases.id = this.apicasesList[index].id
+        this.tmpassert.caseid = this.tmpapicases.id
+        this.searchassert.caseid = this.tmpassert.caseid
+        this.getassertbycaseid(this.searchassert)
+        this.AssertdialogFormVisible = true
+        this.searchassert.asserttype = ''
+      },
+
+      /**
        * 显示前置条件对话框
        */
       showpreconditionDialog() {
@@ -945,6 +1281,23 @@
       },
 
       /**
+       * 更新用例断言
+       */
+      updateassert() {
+        this.$refs.tmpassert.validate(valid => {
+          if (valid) {
+            updateapicasesassert(this.tmpassert).then(() => {
+              this.$message.success('更新成功')
+              this.getassertbycaseid()
+              this.AssertAUdialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+            })
+          }
+        })
+      },
+
+      /**
        * 删除用例
        * @param index 用例下标
        */
@@ -958,6 +1311,26 @@
           removeapicases(id).then(() => {
             this.$message.success('删除成功')
             this.getapicasesList()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+
+      /**
+       * 删除用例断言
+       * @param index 用例下标
+       */
+      removeapicasesassert(index) {
+        this.$confirm('删除该用例断言？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.assertList[index].id
+          removeapicasesassert(id).then(() => {
+            this.$message.success('删除成功')
+            this.getassertbycaseid()
           })
         }).catch(() => {
           this.$message.info('已取消删除')
