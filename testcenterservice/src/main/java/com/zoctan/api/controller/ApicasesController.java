@@ -7,7 +7,9 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.entity.ApiCasedata;
 import com.zoctan.api.entity.Apicases;
+import com.zoctan.api.entity.ApicasesAssert;
 import com.zoctan.api.service.ApiCasedataService;
+import com.zoctan.api.service.ApicasesAssertService;
 import com.zoctan.api.service.ApicasesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,9 @@ public class ApicasesController {
     private ApicasesService apicasesService;
     @Autowired
     private ApiCasedataService apiCasedataService;
+    @Autowired
+    private ApicasesAssertService apicasesAssertService;
+
 
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
@@ -72,18 +77,29 @@ public class ApicasesController {
             List<ApiCasedata> SourceApicasedataList= apiCasedataService.listByCondition(apcasedatacon);
             if(SourceApicasedataList.size()>0)
             {
+                //复制用例
                 Sourcecase.setDeployunitid(Long.parseLong(sourcedeployunitid));
                 Sourcecase.setDeployunitname(sourcedeployunitname);
                 Sourcecase.setCasename(newcasename);
                 Sourcecase.setId(null);
                 apicasesService.save(Sourcecase);
                 Long NewCaseId= Sourcecase.getId();
-
+                //复制用例数据
                 for (ApiCasedata apiCasedata:SourceApicasedataList)
                 {
                     apiCasedata.setCaseid(NewCaseId);
                     apiCasedata.setId(null);
                     apiCasedataService.save(apiCasedata);
+                }
+                //复制断言
+                Condition AssertDataCondition=new Condition(ApicasesAssert.class);
+                AssertDataCondition.createCriteria().andCondition("caseid = " + Long.parseLong(sourcecaseid));
+                List<ApicasesAssert> SourceAssertdataList= apicasesAssertService.listByCondition(AssertDataCondition);
+                for(ApicasesAssert apicasesAssert :SourceAssertdataList)
+                {
+                    apicasesAssert.setCaseid(NewCaseId);
+                    apicasesAssert.setId(null);
+                    apicasesAssertService.save(apicasesAssert);
                 }
                 return ResultGenerator.genOkResult();
             }
