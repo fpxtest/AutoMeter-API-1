@@ -48,13 +48,18 @@
             </el-select>
           </el-form-item>
 
-           <el-form-item >
+          <el-form-item >
           <el-select v-model="search.casetype" placeholder="用例类型">
             <el-option label="请选择" value />
             <el-option label="功能" value="功能"></el-option>
             <el-option label="性能" value="性能"></el-option>
           </el-select>
-        </el-form-item>
+         </el-form-item>
+
+          <el-form-item>
+            <el-input clearable v-model="search.casename" @keyup.enter.native="searchBy" placeholder="用例" style="width:150px">
+            </el-input>
+          </el-form-item>
 
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -583,6 +588,7 @@
         tmpdeployunitname: null,
         tmpapiname: null,
         tmpcasetype: null,
+        tmpcasename: null,
         paraList: [], // paraList参数值列表
         paravaluemap: [], // 参数值map
         multipleSelection: [], // 用例表格被选中的内容
@@ -688,7 +694,8 @@
           size: 10,
           deployunitname: null,
           apiname: null,
-          casetype: null
+          casetype: null,
+          casename: null
         },
         searchassert: {
           page: 1,
@@ -811,7 +818,8 @@
         this.listLoading = true
         this.search.deployunitname = this.tmpdeployunitname
         this.search.apiname = this.tmpapiname
-        this.search.tmpcasetype = this.tmpcasetype
+        this.search.casetype = this.tmpcasetype
+        this.search.casename = this.tmpcasename
         search(this.search).then(response => {
           this.apicasesList = response.data.list
           this.total = response.data.total
@@ -939,7 +947,8 @@
         })
         this.tmpdeployunitname = this.search.deployunitname
         this.tmpapiname = this.search.apiname
-        this.tmpcasetype = this.search.tmpcasetype
+        this.tmpcasetype = this.search.casetype
+        this.tmpcasename = this.search.casename
       },
 
       /**

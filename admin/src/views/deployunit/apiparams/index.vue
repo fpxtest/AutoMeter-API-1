@@ -141,7 +141,7 @@
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item :label="paralabel" prop="keyname">
+        <el-form-item :label="paralabel" prop="keyname" required>
           <el-input
             type="textarea"
             maxlength="1000"

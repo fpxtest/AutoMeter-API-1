@@ -32,6 +32,7 @@
       <if test="apiname != null and apiname != ''">a.apiname = #{apiname}</if>
       <if test="casetype != null and casetype != ''">and a.casetype = #{casetype}</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname = #{deployunitname}</if>
+      <if test="casename != null and casename != ''">and a.casename like CONCAT('%',#{casename},'%')</if>
     </where>
     order by lastmodify_time  DESC
   </select>
