@@ -5,10 +5,7 @@ import com.zoctan.api.core.config.RedisUtils;
 import com.zoctan.api.core.service.HttpHeader;
 import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.entity.*;
-import com.zoctan.api.mapper.DispatchMapper;
-import com.zoctan.api.mapper.SlaverMapper;
-import com.zoctan.api.mapper.TestconditionMapper;
-import com.zoctan.api.mapper.TestconditionReportMapper;
+import com.zoctan.api.mapper.*;
 import com.zoctan.api.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
@@ -38,6 +36,8 @@ import java.util.List;
 @EnableScheduling   // 2.开启定时任务
 @Component
 public class FunctionDispatchScheduleTask {
+    @Value("${spring.conditionserver.serverurl}")
+    private String conditionserver;
 
     @Autowired(required = false)
     private SlaverMapper slaverMapper;
@@ -46,11 +46,17 @@ public class FunctionDispatchScheduleTask {
     @Autowired(required = false)
     private DispatchMapper dispatchMapper;
     @Autowired(required = false)
+    private ExecuteplanbatchMapper executeplanbatchMapper;
+    @Autowired(required = false)
     private TestconditionReportMapper testconditionReportMapper;
     @Autowired(required = false)
     private TestconditionService testconditionService;
     @Autowired(required = false)
     private ConditionApiService conditionApiService;
+    @Autowired(required = false)
+    private ConditionScriptService conditionScriptService;
+    @Autowired(required = false)
+    private TestconditionReportService testconditionReportService;
     private String redisKey = "";
 
 
@@ -65,17 +71,14 @@ public class FunctionDispatchScheduleTask {
             address = InetAddress.getLocalHost();
             ip = address.getHostAddress();
             long redis_default_expire_time = 2000;
-            //默认上锁时间为五小时
-            //此key存放的值为任务执行的ip，
-            // redis_default_expire_time 不能设置为永久，避免死锁
             boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
             if (lock) {
                 Dispatch dispatch = dispatchMapper.getrecentdispatchbyusetype("待分配", "功能");
                 if (dispatch != null) {
                     Long PlanID = dispatch.getExecplanid();
                     String BatchName = dispatch.getBatchname();
-                    //判断计划的前置条件是否已经完成
-                    boolean flag=IsConditionFinish(PlanID,BatchName);
+                    //判断计划的所有前置条件是否已经完成，并且全部成功，否则更新Dispatch状态为前置条件失败
+                    boolean flag=ConditionRequest(PlanID,BatchName,dispatch);   //IsConditionFinish(PlanID,BatchName);
                     if(flag)
                     {
                         List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaverid("待分配", "功能", PlanID, BatchName);
@@ -85,6 +88,7 @@ public class FunctionDispatchScheduleTask {
                                     Long Slaverid =dispatch1.getSlaverid();
                                     FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
                                     Slaver slaver = slaverMapper.findslaverbyid(Slaverid);
+                                    FunctionDispatchScheduleTask.log.info("调度服务【功能】执行机 SlaverIP:" + slaver.getIp() + " 状态：" + slaver.getStatus());
                                     if (slaver != null) {
                                         if (slaver.getStatus().equals("空闲")) {
                                             List<Dispatch> SlaverDispathcList = dispatchMapper.getfunctiondispatchsbyslaverid(Slaverid, "待分配", "功能", PlanID, BatchName);
@@ -125,42 +129,285 @@ public class FunctionDispatchScheduleTask {
     }
 
 
-    private boolean IsConditionFinish(Long PlanID,String BatchName)
-    {
+    private boolean ConditionRequest(Long PlanID,String BatchName,Dispatch dispatch) throws Exception {
         boolean flag=true;
         List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
-        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-前置条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionList.size());
-        if(testconditionList.size()>0) {
-            long ConditionID= testconditionList.get(0).getId();
+        if(testconditionList.size()>0)
+        {
+            Long ConditionID= testconditionList.get(0).getId();
             List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
-            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-API条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ conditionApiList.size());
-            if(conditionApiList.size()>0)
+            int ApiConditionNums=conditionApiList.size();
+            int DBConditionNUms=0;//待实现数据库条件
+            List<ConditionScript> conditionScriptList= conditionScriptService.getconditionscriptbyid(ConditionID);
+            int ScriptConditionNUms=conditionScriptList.size();
+            int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
+            //表示有子条件需要处理
+            if(SubConditionNums>0)
             {
+                //获取此计划批次条件报告的结果
                 List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
-                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionReportList.size());
-                //配置了API条件，但是还未执行
+                //还未产生报告，需要请求条件服务
                 if(testconditionReportList.size()==0)
                 {
+                    //todo发请求条件服务,异步请求
+                    RequestConditionServiceByPlanId(dispatch);
                     flag=false;
                 }
-                else
+                else //已经产生条件报告，需要查看报告结果是成功还是失败
                 {
-                    List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中");
-                    FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告状态为进行中..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionstatusReportList.size());
-                    //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
-                    if(testconditionstatusReportList.size()==0)
+                    for(TestconditionReport testconditionReport :testconditionReportList)
                     {
+                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
+                        {
+                            //有子条件已经执行失败，则此计划批次不再执行，更新当前计划批次的所有调度状态为条件失败，更新计划批次状态为条件失败
+                            //todo
+                            dispatchMapper.updatedispatchstatusbyplanandbatch("条件失败",PlanID,BatchName);
+                            FunctionDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的所有调度状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
+                            executeplanbatchMapper.updatestatusbyplanandbatch("条件失败",PlanID,BatchName);
+                            FunctionDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
+                            flag=false;
+                            break;
+                        }
+                    }
+                    List<TestconditionReport> successtestconditionReportList= testconditionReportMapper.getsubconditionnumswithstatus(PlanID,BatchName,"已完成","成功");
+                    if(successtestconditionReportList.size()==SubConditionNums)
+                    {
+                        //条件报告中已完成，成功的条数等于子条件总条数表示子条件都已成功完成，可以开始执行用例
+                        FunctionDispatchScheduleTask.log.info("调度服务【功能】条件报告已完成成功的数量: " + successtestconditionReportList.size()+ "  子条件总条数："+SubConditionNums);
                         flag=true;
                     }
                 }
             }
-            //配置了条件，但是未配置API条件，认为是无API条件，可以执行用例
-            if(conditionApiList.size()==0)
-            {
-                flag=true;
-            }
         }
         return flag;
+    }
+
+
+//    private boolean IsConditionFinish(Long PlanID,String BatchName)
+//    {
+//        boolean flag=true;
+//        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
+//        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-前置条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionList.size());
+//        if(testconditionList.size()>0) {
+//            long ConditionID= testconditionList.get(0).getId();
+//            boolean Apiflag=APIConditionIsReady(ConditionID,PlanID,BatchName);
+//            boolean DBflag=DBConditionIsReady(ConditionID,PlanID,BatchName);
+//            boolean Sflag=ScriptConditionIsReady(ConditionID,PlanID,BatchName);
+//            if(Apiflag&DBflag&Sflag)
+//            {
+//                flag=true;
+//            }
+//            else
+//            {
+//                flag=false;
+//            }
+////            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+////            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-API条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ conditionApiList.size());
+////            if(conditionApiList.size()>0)
+////            {
+////                List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
+////                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionReportList.size());
+////                //配置了API条件，但是还未执行
+////                if(testconditionReportList.size()==0)
+////                {
+////                    flag=false;
+////                }
+////                else
+////                {
+////                    List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中");
+////                    FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告状态为进行中..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionstatusReportList.size());
+////                    //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
+////                    if(testconditionstatusReportList.size()==0)
+////                    {
+////                        //增加条件结果状态全部为成功为true，否则为false
+////                        flag=true;
+////                    }
+////                    else
+////                    {
+////                        flag=false;
+////                    }
+////                }
+////            }
+////            //配置了条件，但是未配置API条件，认为是无API条件，可以执行用例
+////            if(conditionApiList.size()==0)
+////            {
+////                flag=true;
+////            }
+//        }
+//        return flag;
+//    }
+
+//    private boolean APIConditionIsReady(long ConditionID,Long PlanID,String BatchName)
+//    {
+//        boolean flag =true;
+//        List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+//        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-API条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ conditionApiList.size());
+//        if(conditionApiList.size()>0)
+//        {
+//            List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName,"接口");
+//            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionReportList.size());
+//            //配置了API条件，但是还未执行
+//            if(testconditionReportList.size()==0)
+//            {
+//                flag=false;
+//            }
+//            else
+//            {
+//                List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中","接口");
+//                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告接口状态为进行中..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionstatusReportList.size());
+//                //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
+//                if(testconditionstatusReportList.size()==0)
+//                {
+//                    flag=true;
+//                    //增加条件结果状态全部为成功为true，否则为false
+//                    for(TestconditionReport testconditionReport :testconditionstatusReportList)
+//                    {
+//                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
+//                        {
+//                            flag=false;
+//                            break;
+//                        }
+//                    }
+//                }
+//                else
+//                {
+//                    flag=false;
+//                }
+//            }
+//        }
+//        return flag;
+//    }
+//
+//    private boolean DBConditionIsReady(long ConditionID,Long PlanID,String BatchName)
+//    {
+//        boolean flag =true;
+//        List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+//        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-API条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ conditionApiList.size());
+//        if(conditionApiList.size()>0)
+//        {
+//            List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName,"数据库");
+//            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionReportList.size());
+//            //配置了API条件，但是还未执行
+//            if(testconditionReportList.size()==0)
+//            {
+//                flag=false;
+//            }
+//            else
+//            {
+//                List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中","数据库");
+//                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告数据库状态为进行中..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionstatusReportList.size());
+//                //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
+//                if(testconditionstatusReportList.size()==0)
+//                {
+//                    flag=true;
+//                    //增加条件结果状态全部为成功为true，否则为false
+//                    for(TestconditionReport testconditionReport :testconditionstatusReportList)
+//                    {
+//                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
+//                        {
+//                            flag=false;
+//                            break;
+//                        }
+//                    }
+//                }
+//                else
+//                {
+//                    flag=false;
+//                }
+//            }
+//        }
+//        return flag;
+//    }
+//
+//    private boolean ScriptConditionIsReady(long ConditionID,Long PlanID,String BatchName)
+//    {
+//        boolean flag =true;
+//        List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+//        FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-API条件..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ conditionApiList.size());
+//        if(conditionApiList.size()>0)
+//        {
+//            List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName,"脚本");
+//            FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionReportList.size());
+//            //配置了API条件，但是还未执行
+//            if(testconditionReportList.size()==0)
+//            {
+//                flag=false;
+//            }
+//            else
+//            {
+//                List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中","脚本");
+//                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-条件报告脚本状态为进行中..................PlanID:" + PlanID + " BatchName:" + BatchName +" 数量："+ testconditionstatusReportList.size());
+//                //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
+//                if(testconditionstatusReportList.size()==0)
+//                {
+//                    //增加条件结果状态全部为成功为true，否则为false
+//                    flag=true;
+//                    //增加条件结果状态全部为成功为true，否则为false
+//                    for(TestconditionReport testconditionReport :testconditionstatusReportList)
+//                    {
+//                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
+//                        {
+//                            flag=false;
+//                            break;
+//                        }
+//                    }
+//                }
+//                else
+//                {
+//                    flag=false;
+//                }
+//            }
+//        }
+//        return flag;
+//    }
+
+
+
+    private void PlanCondition(Dispatch dispatch,Long PlanID,String BatchName) throws Exception {
+        //判断此计划是否有条件需要处理
+        Condition testcondition = new Condition(Testcondition.class);
+        testcondition.createCriteria().andCondition("objectid = " + PlanID).andCondition("objecttype = '执行计划'");
+        if (testconditionService.ifexist(testcondition) > 0) {
+            FunctionDispatchScheduleTask.log.info("调度有计划条件需要处理................................");
+            //判断planid,batchid在conditionreport表中无记录，才执行，避免多次重复调用
+            Condition reportcon = new Condition(TestconditionReport.class);
+            reportcon.createCriteria().andCondition("testplanid = " + PlanID).andCondition("batchname = '" + BatchName + "'");
+            if (testconditionReportService.ifexist(reportcon) == 0) {
+                FunctionDispatchScheduleTask.log.info("条件报告表中无此计划和批次对应的条件结果................................" + dispatch.getExecplanname() + "|" + BatchName);
+                //在执行计划用例前增加条件服务器调用，处理计划前置条件
+                //RequestConditionServiceByPlanId(dispatch,"execplancondition");
+            }
+        }
+    }
+
+    private void CaseCondition(Dispatch dispatch,Long CaseID,String BatchName) throws Exception {
+        //判断此用例是否有条件需要处理
+        Condition testconditioncase = new Condition(Testcondition.class);
+        testconditioncase.createCriteria().andCondition("objectid = " + CaseID).andCondition("objecttype = '测试用例'");
+        if (testconditionService.ifexist(testconditioncase) > 0) {
+            FunctionDispatchScheduleTask.log.info("调度有用例条件需要处理................................");
+            Condition reportcon = new Condition(TestconditionReport.class);
+            reportcon.createCriteria().andCondition("testplanid = " + CaseID).andCondition("batchname = '" + BatchName + "'");
+            if (testconditionReportService.ifexist(reportcon) == 0) {
+                FunctionDispatchScheduleTask.log.info("条件报告表中无此用例和批次对应的条件结果................................" + dispatch.getExecplanname() + "|" + BatchName);
+                //在执行计划用例前增加条件服务器调用，处理计划前置条件
+                //RequestConditionServiceByPlanId(dispatch,"execcasecondition");
+            }
+        }
+    }
+
+    private void RequestConditionServiceByPlanId(Dispatch dispatch) throws Exception {
+        String params = JSON.toJSONString(dispatch);
+        HttpHeader header = new HttpHeader();
+        String ServerUrl = conditionserver + "/testcondition/execplancondition";
+        FunctionDispatchScheduleTask.log.info("调度处理条件任务请求conditionserver。。。。。。。: " + ServerUrl);
+        try {
+            FunctionDispatchScheduleTask.log.info("调度处理条件任务请求数据。。。。。。。: " + params);
+            String respone = Httphelp.doPost(ServerUrl, params, header, 30000);
+            FunctionDispatchScheduleTask.log.info("调度处理条件任务请求条件服务响应: " + respone);
+        } catch (Exception ex) {
+            FunctionDispatchScheduleTask.log.info("-------------调度处理条件任务请求异常: " + ex.getMessage());
+        }
     }
 
     private HashMap<Long, List<Dispatch>> GetSlaverDispatchList(List<Dispatch> PlanDispatchList) {

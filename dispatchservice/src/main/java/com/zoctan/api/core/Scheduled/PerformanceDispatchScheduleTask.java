@@ -6,6 +6,7 @@ import com.zoctan.api.core.service.HttpHeader;
 import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.DispatchMapper;
+import com.zoctan.api.mapper.ExecuteplanbatchMapper;
 import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.mapper.TestconditionReportMapper;
 import com.zoctan.api.service.*;
@@ -46,11 +47,15 @@ public class PerformanceDispatchScheduleTask {
     @Autowired(required = false)
     private DispatchMapper dispatchMapper;
     @Autowired(required = false)
+    private ExecuteplanbatchMapper executeplanbatchMapper;
+    @Autowired(required = false)
     private TestconditionReportMapper testconditionReportMapper;
     @Autowired(required = false)
     private TestconditionService testconditionService;
     @Autowired(required = false)
     private ConditionApiService conditionApiService;
+    @Autowired(required = false)
+    private ConditionScriptService conditionScriptService;
     private String redisKey = "";
 
 
@@ -77,8 +82,8 @@ public class PerformanceDispatchScheduleTask {
                     Long PlanID = dispatch.getExecplanid();
                     String BatchName = dispatch.getBatchname();
                     Long caseid=dispatch.getTestcaseid();
-                    //判断计划的前置条件是否已经完成
-                    boolean flag = IsConditionFinish(PlanID, BatchName);
+                    //判断计划的所有前置条件是否已经完成，并且全部成功，否则更新Dispatch状态为前置条件失败
+                    boolean flag=ConditionRequest(PlanID,BatchName,dispatch);   //IsConditionFinish(PlanID,BatchName);
                     if(flag)
                     {
                         List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaveridandcaaseid("待分配", "性能", PlanID, BatchName,caseid);
@@ -165,6 +170,59 @@ public class PerformanceDispatchScheduleTask {
     }
 
 
+    private boolean ConditionRequest(Long PlanID,String BatchName,Dispatch dispatch) throws Exception {
+        boolean flag=true;
+        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
+        if(testconditionList.size()>0)
+        {
+            Long ConditionID= testconditionList.get(0).getId();
+            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+            int ApiConditionNums=conditionApiList.size();
+            int DBConditionNUms=0;//待实现数据库条件
+            List<ConditionScript> conditionScriptList= conditionScriptService.getconditionscriptbyid(ConditionID);
+            int ScriptConditionNUms=conditionScriptList.size();
+            int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
+            //表示有子条件需要处理
+            if(SubConditionNums>0)
+            {
+                //获取此计划批次条件报告的结果
+                List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
+                //还未产生报告，需要请求条件服务
+                if(testconditionReportList.size()==0)
+                {
+                    //todo发请求条件服务,异步请求
+                    RequestConditionServiceByPlanId(dispatch);
+                    flag=false;
+                }
+                else //已经产生条件报告，需要查看报告结果是成功还是失败
+                {
+                    for(TestconditionReport testconditionReport :testconditionReportList)
+                    {
+                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
+                        {
+                            //有子条件已经执行失败，则此计划批次不再执行，更新当前计划批次的所有调度状态为条件失败，更新计划批次状态为条件失败
+                            //todo
+                            dispatchMapper.updatedispatchstatusbyplanandbatch("条件失败",PlanID,BatchName);
+                            PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的所有调度状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
+                            executeplanbatchMapper.updatestatusbyplanandbatch("条件失败",PlanID,BatchName);
+                            PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
+                            flag=false;
+                            break;
+                        }
+                    }
+                    List<TestconditionReport> successtestconditionReportList= testconditionReportMapper.getsubconditionnumswithstatus(PlanID,BatchName,"已完成","成功");
+                    if(successtestconditionReportList.size()==SubConditionNums)
+                    {
+                        //条件报告中已完成，成功的条数等于子条件总条数表示子条件都已成功完成，可以开始执行用例
+                        PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件报告已完成成功的数量: " + successtestconditionReportList.size()+ "  子条件总条数："+SubConditionNums);
+                        flag=true;
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+
     private boolean IsConditionFinish(Long PlanID,String BatchName)
     {
         boolean flag=true;
@@ -185,7 +243,7 @@ public class PerformanceDispatchScheduleTask {
                 }
                 else
                 {
-                    List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中");
+                    List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中","");
                     PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器条件报告进行中数量..................PlanID:" + PlanID + " BatchName:" + BatchName + testconditionstatusReportList.size());
                     //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
                     if(testconditionstatusReportList.size()==0)

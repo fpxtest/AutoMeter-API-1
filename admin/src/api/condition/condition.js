@@ -37,6 +37,14 @@ export function getalltestcondition() {
   })
 }
 
+export function getalltestconditionbytype(params) {
+  return request({
+    url: '/testcondition/getalltestconditionbytype',
+    method: 'get',
+    params
+  })
+}
+
 export function addcondition(conditionForm) {
   return request({
     url: '/testcondition',

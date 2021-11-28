@@ -19,6 +19,5 @@ public interface ConditionApiService extends Service<ConditionApi> {
 
     int ifexist(Condition condition);
 
-    List<ConditionApi> getallTestconditionapi();
 
 }

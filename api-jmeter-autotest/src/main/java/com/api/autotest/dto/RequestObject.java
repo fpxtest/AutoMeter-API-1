@@ -99,6 +99,17 @@ public class RequestObject {
     private String slaverid = "";
     private String batchname = "";
 
+    public String getCasename() {
+        return casename;
+    }
+
+    public void setCasename(String casename) {
+        this.casename = casename;
+    }
+
+    private String casename = "";
+
+
     public String getTestplanname() {
         return testplanname;
     }

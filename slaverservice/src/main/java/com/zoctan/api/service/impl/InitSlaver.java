@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * Created by fanseasn on 2020/11/26.
@@ -55,6 +56,16 @@ public class InitSlaver {
         }
         else
         {
+            List<Slaver> slaverList= slaverMapper.findslaverbyip(ip);
+            if(slaverList.size()>0)
+            {
+                Slaver slaver=slaverMapper.findslaverbyip(ip).get(0);
+                if(slaver.getStatus().equals(new String("已下线")))
+                {
+                    slaver.setStatus("空闲");
+                    slaverMapper.updateSlaver(slaver);
+                }
+            }
             InitSlaver.log.info("slaver已注册.......................................................");
         }
     }

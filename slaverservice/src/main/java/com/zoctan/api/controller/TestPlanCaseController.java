@@ -245,6 +245,7 @@ public class TestPlanCaseController {
                     dispatchMapper.updatedispatchstatus("已分配", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
                     // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
+                    //增加条件处理，调用条件服务
                     tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath, apicases.getThreadnum(), apicases.getLoops());
                     slaverMapper.updateSlaverStaus(SlaverId, "运行中");
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
@@ -305,6 +306,7 @@ public class TestPlanCaseController {
                             DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
                             TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
                             try {
+                                //增加条件处理，调用条件服务
                                 tpcservice.ExecuteHttpPlanFunctionCase(SlaverId, JmeterPath, JmxPath, DispatchIDs, url, username, password, i);
                                 for (Dispatch dis : JmeterList) {
                                     dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());

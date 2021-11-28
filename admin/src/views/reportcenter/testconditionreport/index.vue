@@ -14,7 +14,10 @@
 
         <span v-if="hasPermission('testconditionreport:search')">
           <el-form-item>
-            <el-input clearable maxlength="40" v-model="search.testconditionreportname" @keyup.enter.native="searchBy" placeholder="变量名"></el-input>
+            <el-input clearable maxlength="40" v-model="search.planname" @keyup.enter.native="searchBy" placeholder="计划/用例"></el-input>
+          </el-form-item>
+           <el-form-item>
+            <el-input clearable maxlength="40" v-model="search.batchname" @keyup.enter.native="searchBy" placeholder="批次"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -36,10 +39,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="计划名" align="center" prop="planname" width="150"/>
+      <el-table-column label="计划/用例名" align="center" prop="planname" width="150"/>
       <el-table-column label="批次名" align="center" prop="batchname" width="150"/>
+      <el-table-column label="条件类型" align="center" prop="conditiontype" width="120"/>
       <el-table-column label="条件名" align="center" prop="conditionname" width="120"/>
-      <el-table-column label="子条件名" align="center" prop="subconditionname" width="150"/>
       <el-table-column label="子条件类型" align="center" prop="subconditiontype" width="100"/>
       <el-table-column label="条件结果" align="center" prop="conditionresult" width="100">
       <template slot-scope="scope">
@@ -60,10 +63,6 @@
       <el-table-column label="消耗时长" align="center" prop="runtime" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
-      </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
-        </template>
       </el-table-column>
 
     </el-table>
@@ -97,7 +96,8 @@
     data() {
       return {
         itemKey: null,
-        tmptestconditionreportname: '',
+        tmpplanname: '',
+        tmpbatchname: '',
         testconditionreportList: [], // 条件结果
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
@@ -114,6 +114,7 @@
           planname: '',
           batchname: '',
           conditionname: '',
+          conditiontype: '',
           subconditiontype: '',
           subconditionname: '',
           conditionresult: '',
@@ -123,7 +124,8 @@
         search: {
           page: 1,
           size: 10,
-          testconditionreportname: null
+          planname: null,
+          batchname: null
         }
       }
     },
@@ -144,7 +146,8 @@
        */
       gettestconditionreportList() {
         this.listLoading = true
-        this.search.testconditionreportname = this.tmptestconditionreportname
+        this.search.planname = this.tmpplanname
+        this.search.batchname = this.tmpbatchname
         search(this.search).then(response => {
           this.testconditionreportList = response.data.list
           this.total = response.data.total
@@ -164,7 +167,8 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
-        this.tmptestconditionreportname = this.search.testconditionreportname
+        this.tmpplanname = this.search.planname
+        this.tmpbatchname = this.search.batchname
         this.listLoading = false
         this.btnLoading = false
       },

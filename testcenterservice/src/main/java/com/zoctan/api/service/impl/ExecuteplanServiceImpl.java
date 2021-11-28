@@ -13,6 +13,7 @@ import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.*;
 import com.zoctan.api.service.ExecuteplanService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,18 +31,12 @@ import java.util.Map;
  */
 @Service
 @Slf4j
-@Transactional(rollbackFor = Exception.class)
+@Transactional  //(rollbackFor = Exception.class)
 public class ExecuteplanServiceImpl extends AbstractService<Executeplan> implements ExecuteplanService {
     @Value("${spring.dispatchserver.serverurl}")
     private String dispatchserver;
     @Resource
     private ExecuteplanMapper executeplanMapper;
-//    @Autowired
-//    private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
-//    @Autowired
-//    private ExecuteplanbatchMapper executeplanbatchMapper;
-//    @Autowired
-//    private DictionaryMapper dictionaryMapper;
     @Resource
     private SlaverMapper slaverMapper;
 
@@ -77,33 +72,38 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
     }
 
     @Override
+    @Transactional(noRollbackFor =Exception.class )
     public void executeplancase(List<Testplanandbatch> testplanlist) {
         for (Testplanandbatch plan : testplanlist) {
             Long execplanid = plan.getPlanid();
             Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
             HttpHeader header = new HttpHeader();
-            String DsipatchServerurl=dispatchserver+"/exectestplancase/exec";
+            String DispatchServerurl=dispatchserver+"/exectestplancase/exec";
             String plantype=ep.getUsetype();
             List<Slaver> slaverlist=slaverMapper.findslaverWithType(plantype);
             slaverlist=GetAliveSlaver(slaverlist);
             if(slaverlist.size()==0)
             {
-                ExecuteplanServiceImpl.log.info("未找到可用的："+plantype+"的测试执行机，请先完成部署测试执行机");
-                throw new ServiceException("未找到可用的："+plantype+"的测试执行机，请先完成部署测试执行机");
+                ExecuteplanServiceImpl.log.info("未找到可用的："+plantype+"的测试执行机，或者执行机已下线，请检查部署");
+                throw new ServiceException("未找到可用的："+plantype+"的测试执行机，或者执行机已下线，请检查部署");
             }
-            String params = JSON.toJSONString(plan);
-            ExecuteplanServiceImpl.log.info("请求参数："+params);
-            try {
-                ExecuteplanServiceImpl.log.info("开始请求。。。。。。。。。。。。。。。。。。。。。。。。");
-                String respon= Httphelp.doPost(DsipatchServerurl, params, header, 30000, 30000);
-                ExecuteplanServiceImpl.log.info("发送请求响应。。。。。。。。。。。。。。。。。。。。。。。。："+respon);
-            } catch (Exception e) {
-                ExecuteplanServiceImpl.log.info("发送请求异常："+e.getMessage());
-                throw new ServiceException(e.getMessage());
+            else
+            {
+                String params = JSON.toJSONString(plan);
+                ExecuteplanServiceImpl.log.info("计划请求调度参数："+params);
+                try {
+                    ExecuteplanServiceImpl.log.info("计划开始请求调度。。。。。。。。。。。。。。。。。。。。。。。。");
+                    String respon= Httphelp.doPost(DispatchServerurl, params, header, 30000, 30000);
+                    ExecuteplanServiceImpl.log.info("计划发送调度请求响应。。。。。。。。。。。。。。。。。。。。。。。。："+respon);
+                } catch (Exception e) {
+                    ExecuteplanServiceImpl.log.info("计划发送调度请求异常："+e.getMessage());
+                    throw new ServiceException(e.getMessage());
+                }
             }
         }
     }
 
+    @Transactional(noRollbackFor =Exception.class )
     public List<Slaver> GetAliveSlaver(List<Slaver> SlaverList)
     {
         List<Slaver> AliveList=new ArrayList<>();

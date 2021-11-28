@@ -33,13 +33,10 @@ private ConditionApiMapper conditionApiMapper;
         conditionApiMapper.updateTestconditionapi(params);
     }
 
+
     @Override
     public int ifexist(Condition con) {
         return countByCondition(con);
     }
 
-    @Override
-    public List<ConditionApi> getallTestconditionapi() {
-        return conditionApiMapper.getallTestconditionapi();
-    }
 }

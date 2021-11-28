@@ -41,4 +41,9 @@ private TestconditionMapper testconditionMapper;
     public List<Testcondition> getallTestcondition() {
         return testconditionMapper.getallTestcondition();
     }
+
+    @Override
+    public List<Testcondition> getallTestconditionByType(String Type) {
+        return testconditionMapper.getallTestconditionByType(Type);
+    }
 }

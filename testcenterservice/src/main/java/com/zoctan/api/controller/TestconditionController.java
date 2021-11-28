@@ -94,6 +94,12 @@ public class TestconditionController {
         return ResultGenerator.genOkResult(list);
     }
 
+    @GetMapping("/getalltestconditionbytype")
+    public Result getallconditionbytype(@RequestParam String objecttype) {
+        List<Testcondition> list = testconditionService.getallTestconditionByType(objecttype);
+        return ResultGenerator.genOkResult(list);
+    }
+
     /**
      * 输入框查询
      */

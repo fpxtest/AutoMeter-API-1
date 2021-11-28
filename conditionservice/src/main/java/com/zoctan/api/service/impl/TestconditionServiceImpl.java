@@ -47,8 +47,8 @@ private TestconditionMapper testconditionMapper;
     }
 
     @Override
-    public List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid,String conditiontype) {
-        return testconditionMapper.GetConditionByPlanIDAndConditionType(objectid,conditiontype);
+    public List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid,String conditiontype,String objecttype) {
+        return testconditionMapper.GetConditionByPlanIDAndConditionType(objectid,conditiontype,objecttype);
     }
 
 }

@@ -23,12 +23,10 @@
   </resultMap>
 
   <select id="findTestconditionReportWithName" resultMap="BaseResultMap">
-    SELECT a.*,b.conditionname,ca.casename as subconditionname
-    FROM testcondition_report a, testcondition b,condition_api ca WHERE a.conditionid=b.id and ca.conditionid=b.id
-    <where>
-      <if test="planname != null and planname != ''">a.planname like CONCAT('%',#{planname},'%')</if>
-      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
-    </where>
+    SELECT a.*,b.conditionname
+    FROM testcondition_report a, testcondition b
+    where a.planname like CONCAT('%',#{planname},'%') and a.batchname like CONCAT('%',#{batchname})
+    and  a.conditionid=b.id
     order by a.lastmodify_time  DESC
   </select>
 

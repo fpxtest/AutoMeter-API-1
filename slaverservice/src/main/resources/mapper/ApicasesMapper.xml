@@ -42,7 +42,7 @@
 
   <update id="updateApicase" parameterType="com.zoctan.api.entity.Apicases">
     update apicases set casename = #{casename},casejmxname = #{casejmxname}, apiname = #{apiname}, deployunitname = #{deployunitname}, casecontent = #{casecontent},expect = #{expect},
-    memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

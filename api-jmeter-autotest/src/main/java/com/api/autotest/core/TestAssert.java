@@ -37,11 +37,12 @@ public class TestAssert {
             //获取期望值
             String ExpectValue = apicasesAssert.getAssertvalues();
             if (apicasesAssert.getAsserttype().equals(new String("Json"))) {
-                try {
-                    ActualResult = JsonPath.read(ActualJson, apicasesAssert.getExpression()).toString();
-                } catch (Exception ex) {
-                    ActualResult = ex.getMessage();
-                }
+                ActualResult=ParseJson(apicasesAssert.getExpression(),ActualJson);
+//                try {
+//                    ActualResult = JsonPath.read(ActualJson, apicasesAssert.getExpression()).toString();
+//                } catch (Exception ex) {
+//                    ActualResult = ex.getMessage();
+//                }
                 logger.info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
                 AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
             }
@@ -60,6 +61,20 @@ public class TestAssert {
         }
         logger.info(TestCore.logplannameandcasename + "AssertInfo is:" + AssertInfo );
         return AssertInfo;
+    }
+
+
+    public String ParseJson(String JSPath,String JsonRespone)
+    {
+        String Result="";
+        try {
+            Result= JsonPath.read(JsonRespone,JSPath).toString();
+        }
+        catch (Exception ex)
+        {
+            Result=ex.getMessage();
+        }
+        return Result;
     }
 
     public String ParseXmlResult(String ActualXml, RequestObject ob) {

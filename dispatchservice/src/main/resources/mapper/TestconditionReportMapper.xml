@@ -33,12 +33,24 @@
 
   <select id="getunfinishapiconditionnumswithstatus" resultMap="BaseResultMap">
     SELECT * FROM testcondition_report where  testplanid=#{testplanid}
-    and batchname=#{batchname} and status=#{status}
+    and batchname=#{batchname} and status=#{status} and subconditiontype=#{subconditiontype}
+  </select>
+
+  <select id="getunfinishapiconditionnumsbytype" resultMap="BaseResultMap">
+    SELECT * FROM testcondition_report where  testplanid=#{testplanid}
+    and batchname=#{batchname}  and subconditiontype=#{subconditiontype}
   </select>
 
   <select id="getunfinishapiconditionnums" resultMap="BaseResultMap">
     SELECT * FROM testcondition_report where  testplanid=#{testplanid}
-    and batchname=#{batchname}
+     and batchname=#{batchname}
   </select>
+
+  <select id="getsubconditionnumswithstatus" resultMap="BaseResultMap">
+    SELECT * FROM testcondition_report where  testplanid=#{testplanid}
+    and batchname=#{batchname} and conditionstatus=#{conditionstatus} and status =#{status}
+  </select>
+
+
 
 </mapper>

@@ -7,7 +7,10 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -24,4 +27,9 @@
     FROM executeplanbatch a
     where a.executeplanid=#{executeplanid} and batchname =#{batchname}
   </select>
+
+  <update id="updatestatusbyplanandbatch">
+    update  executeplanbatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where
+      executeplanid = #{executeplanid}  and batchname = #{batchname}
+  </update>
 </mapper>

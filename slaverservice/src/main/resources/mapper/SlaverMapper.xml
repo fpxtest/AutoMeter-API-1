@@ -33,17 +33,17 @@
 
   <insert id="addslaver">
     INSERT INTO slaver (slavername, ip,port,status,stype,memo,create_time,lastmodify_time)
-    VALUES (#{slavername},#{ip},#{port},#{status},#{stype},#{memo},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+    VALUES (#{slavername},#{ip},#{port},#{status},#{stype},#{memo},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'))
   </insert>
 
   <update id="updateSlaver" parameterType="com.zoctan.api.entity.Slaver">
-    update slaver set slavername = #{slavername}, ip = #{ip}, port= #{port},stype= #{stype},
-    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    update slaver set slavername = #{slavername}, ip = #{ip}, port= #{port},stype= #{stype},status=#{status},
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 
   <update id="updateSlaverStaus" parameterType="com.zoctan.api.entity.Slaver">
-    update slaver set status = #{status},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    update slaver set status = #{status},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 

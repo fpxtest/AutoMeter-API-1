@@ -89,4 +89,9 @@
     update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where slaverid = #{slaverid}
     and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
   </update>
+
+  <update id="updatedispatchstatusbyplanandbatch">
+    update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where
+    execplanid = #{execplanid}  and batchname = #{batchname}
+  </update>
 </mapper>

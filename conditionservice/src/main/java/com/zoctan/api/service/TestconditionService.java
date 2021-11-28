@@ -20,6 +20,6 @@ public interface TestconditionService extends Service<Testcondition> {
 
     List<Testcondition> getallTestcondition();
 
-    List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid,String conditiontype);
+    List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid,String conditiontype,String objecttype);
 
 }

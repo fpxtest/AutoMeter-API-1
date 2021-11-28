@@ -872,8 +872,6 @@
        */
       showplanbatchDialog() {
         // 显示新增对话框
-        console.log('11111111111')
-        console.log(this.multipleSelection.length)
         for (let i = 0; i < this.multipleSelection.length; i++) {
           if (this.multipleSelection[i].status === 'running') {
             this.multipleSelection.splice(i)

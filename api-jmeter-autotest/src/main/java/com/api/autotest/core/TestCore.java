@@ -2,13 +2,8 @@ package com.api.autotest.core;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.api.autotest.common.utils.HttpHeader;
-import com.api.autotest.common.utils.HttpParamers;
-import com.api.autotest.common.utils.Httphelp;
-import com.api.autotest.common.utils.MysqlConnectionUtils;
-import com.api.autotest.dto.ApicasesAssert;
-import com.api.autotest.dto.ApicasesReportstatics;
-import com.api.autotest.dto.RequestObject;
+import com.api.autotest.common.utils.*;
+import com.api.autotest.dto.*;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -155,6 +150,7 @@ public class TestCore {
 
         //GetExpectMap(expect);
         newob.setCaseid(caseid);
+        newob.setCasename(casename);
         newob.setTestplanid(testplanid);
         newob.setSlaverid(slaverid);
         newob.setBatchname(batchname);
@@ -322,6 +318,7 @@ public class TestCore {
         logger.info(logplannameandcasename + "resource is :  " + resource + "   protocal  is:   " + protocal + "  expect is :      " + expect + "  visittype is: " + method + "   path is: " + path + " casetype is: " + casetype);
 
         ro.setCaseid(TestCaseId);
+        ro.setCasename(TestCaseName);
         ro.setDeployunitid(deployunitid);
         ro.setTestplanid(PlanId);
         ro.setSlaverid(SlaverId);
@@ -400,8 +397,12 @@ public class TestCore {
         HashMap<String, String> headmap = fixhttprequestdatas("Header", casedatalist);
         for (String key : headmap.keySet()) {
             String Value = headmap.get(key);
-            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-            Value = GetVariablesValues(PlanId, TestCaseId, BatchName, Value);
+            if (Value.startsWith("$")) {
+                String VariablesName = Value.substring(1);
+                String Caseid= GetCaseIdByVariablesName(VariablesName);
+                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
+            }
             header.addParam(key, Value);
         }
         return header;
@@ -412,7 +413,12 @@ public class TestCore {
         HashMap<String, String> paramsmap = fixhttprequestdatas("Params", casedatalist);
         for (String key : paramsmap.keySet()) {
             String Value = paramsmap.get(key);
-            Value = GetVariablesValues(PlanId, TestCaseId, BatchName, Value);
+            if (Value.startsWith("$")) {
+                String VariablesName = Value.substring(1);
+                String Caseid= GetCaseIdByVariablesName(VariablesName);
+                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
+            }
             paramers.addParam(key, Value);
         }
         return paramers;
@@ -469,12 +475,30 @@ public class TestCore {
         return Result;
     }
 
-    private String GetVariablesValues(String PlanId, String TestCaseId, String BatchName, String Variables) {
+    //根据变量名获取caseid
+    private String GetCaseIdByVariablesName(String VariablesName)
+    {
+        String CaseID="";
+        try {
+            String sql = "select caseid from apicases_variables where  variablesname='" + VariablesName + "'";
+            logger.info(logplannameandcasename + "根据变量名获取caseid result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
+            if (result.size() > 0) {
+                CaseID = result.get(0).get("caseid");
+            }
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "根据变量名获取caseid异常...........: " + e.getMessage());
+        }
+        return CaseID;
+    }
+
+    //获取变量值
+    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String Variables) {
         String VariablesResult = "";
         if (Variables.startsWith("$")) {
             String VariablesName = Variables.substring(1);
             try {
-                String sql = "select variablesvalue from testvariables_value where planid=" + PlanId + " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
+                String sql = "select variablesvalue from testvariables_value where planid=" + PlanID +" and caseid="+TestCaseId+ " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
                 logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
                 ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
                 if (result.size() > 0) {
@@ -488,6 +512,189 @@ public class TestCore {
         }
         return VariablesResult;
     }
+
+    //处理条件入口
+    public void FixCondition(RequestObject requestObject) {
+        Long ObjectID =Long.parseLong( requestObject.getCaseid());
+        ArrayList<HashMap<String, String>> testconditionList = GetConditionByPlanIDAndConditionType(ObjectID, "前置条件", "测试用例");
+        if (testconditionList.size() > 0) {
+            long ConditionID =Long.parseLong(testconditionList.get(0).get("id"));
+            //处理接口条件
+            logger.info("开始处理用例前置条件-API子条件-============：");
+            APICondition(ConditionID,requestObject);
+            logger.info("完成处理用例前置条件-API子条件-============：");
+            //处理数据库条件
+            //DBCondition();
+            //处理脚本条件
+            logger.info("开始处理用例前置条件-脚本子条件-============：");
+            ScriptCondition(ConditionID,requestObject);
+            logger.info("完成处理用例前置条件-脚本子条件-============：");
+        }
+    }
+
+    //处理接口条件
+    public void APICondition(long ConditionID, RequestObject requestObject) {
+        ArrayList<HashMap<String, String>> conditionApiList = GetApiConditionByConditionID(ConditionID);
+        Long PlanID=Long.parseLong(requestObject.getTestplanid());
+        Long CaseID=Long.parseLong(requestObject.getCaseid());
+        logger.info("条件报告API子条件数量-============：" + conditionApiList.size());
+        for (HashMap<String, String> conditionApi : conditionApiList) {
+            long Start = 0;
+            long End = 0;
+            long CostTime = 0;
+            String Respone = "";
+            String ConditionResultStatus = "成功";
+            try {
+                Start = new Date().getTime();
+                Respone = request(requestObject);
+            } catch (Exception ex) {
+                ConditionResultStatus = "失败";
+                Respone = ex.getMessage();
+            } finally {
+                End = new Date().getTime();
+            }
+            CostTime = End - Start;
+
+            TestconditionReport testconditionReport = new TestconditionReport();
+            testconditionReport.setTestplanid(PlanID);
+            testconditionReport.setPlanname(requestObject.getTestplanname());
+            testconditionReport.setBatchname(requestObject.getBatchname());
+            testconditionReport.setConditionid(new Long(ConditionID));
+            testconditionReport.setConditiontype("前置条件");
+            testconditionReport.setConditionresult(Respone);
+            testconditionReport.setConditionstatus(ConditionResultStatus);
+            testconditionReport.setRuntime(CostTime);
+            testconditionReport.setSubconditionid(Long.parseLong(conditionApi.get("id")));
+            testconditionReport.setSubconditiontype("接口");
+            testconditionReport.setStatus("已完成");
+            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
+            SubConditionReportSave(testconditionReport);
+            //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+            ArrayList<HashMap<String, String>> apicasesVariablesList  = GetApiCaseVaribales(CaseID);
+            if (apicasesVariablesList.size()>0) {
+                logger.info("条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
+                String Variablesid=apicasesVariablesList.get(0).get("id");
+                ArrayList<HashMap<String, String>> VariablesList  = GetVaribales(Variablesid);
+                if(VariablesList.size()>0)
+                {
+                    String VariablesPath = VariablesList.get(0).get("variablesexpress");
+                    logger.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
+                    TestAssert testAssert=new TestAssert(logger);
+                    String ParseValue = testAssert.ParseJson(VariablesPath, Respone);
+                    logger.info("条件报告子条件处理变量取值-============：" + ParseValue);
+                    TestvariablesValue testvariablesValue = new TestvariablesValue();
+                    testvariablesValue.setPlanid(PlanID);
+                    testvariablesValue.setPlanname(requestObject.getTestplanname());
+                    testvariablesValue.setBatchname(requestObject.getBatchname());
+                    testvariablesValue.setCaseid(CaseID);
+                    testvariablesValue.setCasename(requestObject.getCasename());
+                    testvariablesValue.setVariablesid(Long.parseLong(VariablesList.get(0).get("id")));
+                    testvariablesValue.setVariablesname(VariablesList.get(0).get("testvariablesname"));
+                    testvariablesValue.setVariablesvalue(ParseValue);
+                    testvariablesValue.setMemo("test");
+                    testVariablesValueSave(testvariablesValue);
+                }
+            }
+        }
+    }
+
+    //处理脚本条件
+    public void ScriptCondition(Long ConditionID,RequestObject requestObject) {
+        Long PlanID=Long.parseLong(requestObject.getTestplanid());
+        Long CaseID=Long.parseLong(requestObject.getCaseid());
+        ArrayList<HashMap<String, String>> conditionScriptList = GetScriptConditionByConditionID(ConditionID);
+        for (HashMap<String, String> conditionScript : conditionScriptList) {
+            long Start = 0;
+            long End = 0;
+            long CostTime = 0;
+            String Respone = "执行脚本成功";
+            String ConditionResultStatus = "成功";
+            try {
+                Start = new Date().getTime();
+                DnamicCompilerHelp dnamicCompilerHelp = new DnamicCompilerHelp();
+                //数据库中获取脚本
+                String JavaSource=conditionScript.get("script");
+                logger.info("条件报告脚本子条件:-============：" + JavaSource);
+                String Source = dnamicCompilerHelp.GetCompeleteClass(JavaSource, CaseID);
+                dnamicCompilerHelp.CallDynamicScript(Source);
+            } catch (Exception ex) {
+                ConditionResultStatus = "失败";
+                Respone =  ex.getMessage();
+            } finally {
+                End = new Date().getTime();
+            }
+            CostTime = End - Start;
+            //更新条件结果表
+            TestconditionReport testconditionReport = new TestconditionReport();
+            testconditionReport.setTestplanid(PlanID);
+            testconditionReport.setPlanname(requestObject.getCasename());
+            testconditionReport.setBatchname(requestObject.getBatchname());
+            testconditionReport.setConditionid(new Long(ConditionID));
+            testconditionReport.setConditiontype("前置条件");
+            testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
+            testconditionReport.setSubconditiontype("脚本");
+            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+
+            testconditionReport.setConditionresult(Respone);
+            testconditionReport.setConditionstatus(ConditionResultStatus);
+            testconditionReport.setRuntime(CostTime);
+            testconditionReport.setStatus("已完成");
+            SubConditionReportSave(testconditionReport);
+
+            logger.info("条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+        }
+
+
+
+    }
+
+    //条件逻辑是否完成
+//    public boolean ConditionRequest(String CaseID,String BatchName)
+//    {
+//        boolean flag=true;
+//        ArrayList<HashMap<String, String>> result =GetConditionByPlanIDAndConditionType(CaseID,"前置条件");
+//        if(result.size()>0)
+//        {
+//            Long ConditionID= Long.parseLong(result.get(0).get("id"));
+//            ArrayList<HashMap<String, String>>  conditionApiList=GetCaseListByConditionID(ConditionID);
+//            int ApiConditionNums=conditionApiList.size();
+//            int DBConditionNUms=0;
+//            int ScriptConditionNUms=0;
+//            int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
+//            //表示有子条件需要处理
+//            if(SubConditionNums>0)
+//            {
+//                //获取条件报告此计划批次的结果
+//                ArrayList<HashMap<String, String>>  testconditionReportList= getunfinishapiconditionnums(CaseID,BatchName);
+//                //还未产生报告，需要请求条件服务
+//                if(testconditionReportList.size()==0)
+//                {
+//                    //todo发请求条件服务,异步请求
+//                    flag=false;
+//                }
+//                else //已经产生条件报告，需要查看报告结果是成功还是失败
+//                {
+//                    for(HashMap<String, String> hs :testconditionReportList)
+//                    {
+//                        if(hs.get("conditionstatus").equals(new String("失败")))
+//                        {
+//                            //有子条件已经执行失败，需要更新当前计划批次的所有调度状态为条件失败，更新计划批次状态为条件失败
+//                            //todo
+//                            flag=false;
+//                            break;
+//                        }
+//                    }
+//                    ArrayList<HashMap<String, String>>  successtestconditionReportList= getsubconditionnumswithstatus(CaseID,BatchName,"已完成","成功");
+//                    if(successtestconditionReportList.size()==SubConditionNums)
+//                    {
+//                        //条件报告中已完成，成功的条数等于子条件总条数表示子条件都已成功完成，可以开始执行用例
+//                        flag=true;
+//                    }
+//                }
+//            }
+//        }
+//        return flag;
+//    }
 
     // 发送http请求
     public String request(RequestObject requestObject) throws Exception {
@@ -533,6 +740,99 @@ public class TestCore {
     public String getcaseValue(String key, ArrayList<HashMap<String, String>> list) {
         HashMap<String, String> hs = list.get(0);
         return hs.get(key).trim();
+    }
+
+
+    //获取条件
+    private  ArrayList<HashMap<String, String>>  GetConditionByPlanIDAndConditionType(Long Caseid,String ConditionType,String ObjectType)
+    {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select * from testcondition where objectid=" + Caseid+" and conditiontype='"+ ConditionType+"' and objecttype='"+ObjectType+"'";
+            logger.info(logplannameandcasename + "获取条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //获取接口条件
+    private  ArrayList<HashMap<String, String>>  GetApiConditionByConditionID(Long ConditionID)
+    {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select * from condition_api where conditionid=" + ConditionID ;
+            logger.info(logplannameandcasename + "获取接口条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取接口条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //获取脚本条件
+    private  ArrayList<HashMap<String, String>>  GetScriptConditionByConditionID(Long ConditionID)
+    {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select * from condition_script where conditionid=" + ConditionID ;
+            logger.info(logplannameandcasename + "获取脚本条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取脚本条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //保存条件结果
+    public void  SubConditionReportSave(TestconditionReport testconditionReport)
+    {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateNowStr = sdf.format(d);
+        String sql = "insert testcondition_report (conditionid,conditiontype,subconditionid,conditionresult,conditionstatus,runtime,create_time,lastmodify_time,creator,batchname,planname,testplanid,subconditiontype,status)" +
+                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'"+", '"+testconditionReport.getBatchname()+"',  '"+testconditionReport.getPlanname()+"',"+testconditionReport.getTestplanid()+", '"+testconditionReport.getSubconditiontype()+"', '"+testconditionReport.getStatus()+"')";
+        logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + sql);
+        logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+    }
+
+    //保存变量结果
+    public void  testVariablesValueSave(TestvariablesValue testvariablesValue)
+    {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateNowStr = sdf.format(d);
+        String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,creator,batchname)" +
+                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname() + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename() + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname() + "', '" + testvariablesValue.getMemo() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')"+", '"+testvariablesValue.getBatchname()+"'";
+        logger.info(logplannameandcasename + "保存变量结果 result sql is...........: " + sql);
+        logger.info(logplannameandcasename + "保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+    }
+
+    //查询用例变量
+    public ArrayList<HashMap<String, String>>  GetApiCaseVaribales(Long CaseID) {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select *  from apicases_variables where caseid=" + CaseID ;
+            logger.info(logplannameandcasename + "查询用例变量 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "查询用例变量异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //查询变量
+    public ArrayList<HashMap<String, String>>  GetVaribales(String VaribaleID) {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select *  from testvariables where id=" + VaribaleID ;
+            logger.info(logplannameandcasename + "查询变量 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "查询变量异常...........: " + e.getMessage());
+        }
+        return result;
     }
 
     // 获取用例Header，params，Body，Dubbo数据

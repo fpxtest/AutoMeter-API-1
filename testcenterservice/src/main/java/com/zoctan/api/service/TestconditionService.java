@@ -19,6 +19,9 @@ public interface TestconditionService extends Service<Testcondition> {
     int ifexist(Condition condition);
 
     List<Testcondition> getallTestcondition();
+    List<Testcondition> getallTestconditionByType(String objecttype);
+
+
 
 
 }

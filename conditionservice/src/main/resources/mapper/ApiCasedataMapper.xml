@@ -31,10 +31,19 @@
     FROM api_casedata a where a.caseid = #{caseid}
   </select>
 
+  <select id="GetCaseDatasByCaseIDAndApiparamAndType" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api_casedata a where a.caseid = #{caseid} and a.apiparam = #{apiparam} and a.propertytype =#{propertytype}
+  </select>
+
   <select id="getparamvaluebycaseidandtype" resultMap="BaseResultMap">
     SELECT a.apiparam,a.apiparamvalue
     FROM api_casedata a where a.caseid = #{caseid} and a.propertytype=#{propertytype}
   </select>
+
+  <update id="UpdateByCaseIDAndApiparam" parameterType="com.zoctan.api.entity.ApiCasedata">
+    update api_casedata a set a.apiparamvalue = #{apiparamvalue} where a.caseid = #{caseid} and a.apiparam = #{apiparam} and a.propertytype =#{propertytype}
+  </update>
 
   <insert id="deleteparamvaluebycaseidandtype">
     DELETE from api_casedata where caseid = #{caseid} and propertytype=#{propertytype}

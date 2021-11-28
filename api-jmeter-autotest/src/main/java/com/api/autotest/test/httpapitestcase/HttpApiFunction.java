@@ -81,6 +81,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     String ActualResult = "";
                     TestAssert TestAssert = new TestAssert(getLogger());
                     try {
+                        //增加条件处理逻辑
+                        Core.FixCondition(requestObject);
                         ActualResult = SendCaseRequest(requestObject, Core);
                         String ResponeContentType = requestObject.getResponecontenttype();
                         if (ResponeContentType.equals(new String("json"))) {
@@ -255,8 +257,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "36");
-        params.addArgument("SlaverId", "15");
+        params.addArgument("DispatchIds", "65");
+        params.addArgument("SlaverId", "17");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
         params.addArgument("mysqlpassword", "test");

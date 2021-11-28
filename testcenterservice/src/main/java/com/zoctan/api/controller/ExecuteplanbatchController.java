@@ -1,14 +1,22 @@
 package com.zoctan.api.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.core.service.HttpHeader;
+import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Executeplan;
+import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.entity.Executeplanbatch;
+import com.zoctan.api.entity.Slaver;
+import com.zoctan.api.mapper.ExecuteplanMapper;
+import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanbatchService;
+import com.zoctan.api.service.impl.ExecuteplanServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
@@ -29,6 +37,10 @@ public class ExecuteplanbatchController {
     private ExecuteplanbatchService executeplanbatchService;
     @Autowired
     private ExecuteplanService executeplanService;
+    @Resource
+    private SlaverMapper slaverMapper;
+    @Resource
+    private ExecuteplanMapper executeplanMapper;
 
     @PostMapping
     public Result add(@RequestBody Executeplanbatch executeplanbatch) {
@@ -40,11 +52,43 @@ public class ExecuteplanbatchController {
             return ResultGenerator.genFailedResult("该执行计划下已经存在此批次");
         }
         else {
-            executeplanbatch.setStatus("待执行");
-            executeplanbatch.setSource("平台");
-            executeplanbatchService.save(executeplanbatch);
+            Long execplanid = executeplanbatch.getExecuteplanid();
+            Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
+            String plantype=ep.getUsetype();
+            List<Slaver> slaverlist=slaverMapper.findslaverWithType(plantype);
+            slaverlist=GetAliveSlaver(slaverlist);
+            if(slaverlist.size()>0)
+            {
+                executeplanbatch.setStatus("待执行");
+                executeplanbatch.setSource("平台");
+                executeplanbatchService.save(executeplanbatch);
+            }
             return ResultGenerator.genOkResult();
         }
+    }
+
+    public List<Slaver> GetAliveSlaver(List<Slaver> SlaverList)
+    {
+        List<Slaver> AliveList=new ArrayList<>();
+        for (Slaver slaver:SlaverList) {
+            String IP=slaver.getIp();
+            String Port=slaver.getPort();
+            String ServerUrl = "http://" + IP + ":" + Port + "/exectestplancase/test";
+            ExecuteplanTestcase plancase=new ExecuteplanTestcase();
+            String params = JSON.toJSONString(plancase);
+            HttpHeader header = new HttpHeader();
+            String respon="";
+            try {
+                respon = Httphelp.doPost(ServerUrl, params, header, 5000,5000);
+            } catch (Exception e) {
+                respon=e.getMessage();
+            }
+            if(respon.contains("200"))
+            {
+                AliveList.add(slaver);
+            }
+        }
+        return AliveList;
     }
 
     //对外接口，CI或者其他触发计划用例执行

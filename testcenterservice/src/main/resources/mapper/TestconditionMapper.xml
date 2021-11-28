@@ -31,6 +31,10 @@
     SELECT * FROM testcondition a
   </select>
 
+  <select id="getallTestconditionByType" resultMap="BaseResultMap">
+    SELECT * FROM testcondition a where a.objecttype=#{objecttype}
+  </select>
+
   <update id="updateTestcondition" parameterType="com.zoctan.api.entity.Testcondition">
     update testcondition set objectid = #{objectid},conditionname = #{conditionname}, objectname = #{objectname},objecttype=#{objecttype},conditiontype=#{conditiontype},
     memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')

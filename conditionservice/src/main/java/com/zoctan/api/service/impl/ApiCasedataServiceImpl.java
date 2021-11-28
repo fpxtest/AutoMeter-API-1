@@ -24,4 +24,14 @@ public class ApiCasedataServiceImpl extends AbstractService<ApiCasedata> impleme
     public List<ApiCasedata> GetCaseDatasByCaseID(Long caseid) {
         return apiCasedataMapper.GetCaseDatasByCaseID(caseid);
     }
+
+    @Override
+    public ApiCasedata GetCaseDatasByCaseIDAndApiparamAndType(Long caseid, String apiparam,String property) {
+        return apiCasedataMapper.GetCaseDatasByCaseIDAndApiparamAndType(caseid,apiparam,property);
+    }
+
+    @Override
+    public void UpdateByCaseIDAndApiparam(Long caseid, String apiparam, String propertytype,String Value) {
+        apiCasedataMapper.UpdateByCaseIDAndApiparam(caseid,apiparam,propertytype,Value);
+    }
 }

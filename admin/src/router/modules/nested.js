@@ -2,7 +2,7 @@
 
 import Layout from '../../views/layout/Layout'
 
-const nestedRouter = {
+const nestedRouterTestManager = {
   path: '/assets',
   component: Layout,
   name: '测试管理',
@@ -28,7 +28,6 @@ const nestedRouter = {
       path: '/cases',
       component: () => import('../../views/assets/cases/apicasesvariables/index'), // Parent router-view
       name: '用例变量',
-      meta: { title: 'xxxxxx 1' },
       children: [
         {
           path: 'apicasesvariables/list',
@@ -40,5 +39,4 @@ const nestedRouter = {
     }
   ]
 }
-
-export default nestedRouter
+export default nestedRouterTestManager

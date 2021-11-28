@@ -4,7 +4,8 @@ import Router from 'vue-router'
 
 /* layout */
 import Layout from '../views/layout/Layout'
-import nestedRouter from './modules/nested'
+import nestedRouterTestManager from './modules/nested'
+// import nestedRouterSubCondition from './modules/subconditionnested'
 
 const _import = require('./_import_' + process.env.NODE_ENV)
 
@@ -109,7 +110,8 @@ export const asyncRouterMap = [
     ]
   },
 
-  nestedRouter,
+  nestedRouterTestManager,
+  // nestedRouterSubCondition,
 
   {
     path: '/condition',
@@ -119,7 +121,9 @@ export const asyncRouterMap = [
     children: [
       { path: 'condition/list', name: '条件管理', component: _import('condition/condition/index'), meta: { title: '条件管理', permission: ['condition:list'] }},
       { path: 'apicondition/list', name: '接口条件', component: _import('condition/apicondition/index'), meta: { title: '接口条件', permission: ['apicondition:list'] }},
-      { path: 'dbcondition/list', name: 'DB条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB条件', permission: ['dbcondition:list'] }}
+      // { path: 'dbcondition/list', name: 'DB条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB条件', permission: ['dbcondition:list'] }},
+      { path: 'scriptcondition/list', name: '脚本条件', component: _import('condition/scriptcondition/index'), meta: { title: '脚本条件', permission: ['scriptcondition:list'] }}
+
     ]
   },
 
