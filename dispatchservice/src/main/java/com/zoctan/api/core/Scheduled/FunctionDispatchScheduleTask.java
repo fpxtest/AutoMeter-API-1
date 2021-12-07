@@ -54,6 +54,8 @@ public class FunctionDispatchScheduleTask {
     @Autowired(required = false)
     private ConditionApiService conditionApiService;
     @Autowired(required = false)
+    private ConditionDbService conditionDbService;
+    @Autowired(required = false)
     private ConditionScriptService conditionScriptService;
     @Autowired(required = false)
     private TestconditionReportService testconditionReportService;
@@ -137,7 +139,8 @@ public class FunctionDispatchScheduleTask {
             Long ConditionID= testconditionList.get(0).getId();
             List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
             int ApiConditionNums=conditionApiList.size();
-            int DBConditionNUms=0;//待实现数据库条件
+            List<ConditionDb> conditionDbList=conditionDbService.GetCaseListByConditionID(ConditionID);
+            int DBConditionNUms=conditionDbList.size();//待实现数据库条件
             List<ConditionScript> conditionScriptList= conditionScriptService.getconditionscriptbyid(ConditionID);
             int ScriptConditionNUms=conditionScriptList.size();
             int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;

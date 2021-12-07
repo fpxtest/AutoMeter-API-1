@@ -155,6 +155,19 @@
               </div>
             </el-select>
           </el-form-item>
+
+          <el-form-item label="访问方式" prop="visittype" required >
+            <el-select v-model="tmpmacdepunit.visittype" placeholder="访问方式" @change="selectChangedVisittype($event)">
+              <el-option label="ip" value="ip"></el-option>
+              <el-option label="域名" value="域名"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <div v-if="domianVisible">
+            <el-form-item label="访问域名" prop="domain" required>
+              <el-input v-model="tmpmacdepunit.domain"  placeholder="访问域名" required></el-input>
+            </el-form-item>
+          </div>
         </div>
 
       </el-form>
@@ -527,7 +540,7 @@
               this.tmpmacdepunit.domain = ''
             }
             if (this.tmpmacdepunit.assembletype === '组件') {
-              this.tmpmacdepunit.visittype = ''
+              // this.tmpmacdepunit.visittype = ''
               this.tmpmacdepunit.depunitid = ''
               this.tmpmacdepunit.domain = ''
             }

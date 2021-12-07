@@ -89,7 +89,7 @@ public class TestconditionController {
 
 
     @GetMapping("/getalltestcondition")
-    public Result getallexplan() {
+    public Result getalltestcondition() {
         List<Testcondition> list = testconditionService.getallTestcondition();
         return ResultGenerator.genOkResult(list);
     }

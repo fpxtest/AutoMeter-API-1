@@ -31,4 +31,11 @@ public interface MacdepunitService extends Service<Macdepunit> {
     int ifexist(Condition condition);
 
     Integer findmachinenumbyenvidanddeployid(long envid,long depunitid);
+
+    Macdepunit getmacdepbyenvidanddepid(long envid,long depunitid);
+
+    List<Macdepunit> getenvassemblelistbyenvidandtype(long envid,String  assembletype);
+
+
+
 }

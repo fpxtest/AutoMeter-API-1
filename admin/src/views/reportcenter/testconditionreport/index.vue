@@ -40,9 +40,9 @@
         </template>
       </el-table-column>
       <el-table-column label="计划/用例名" align="center" prop="planname" width="150"/>
-      <el-table-column label="批次名" align="center" prop="batchname" width="150"/>
-      <el-table-column label="条件类型" align="center" prop="conditiontype" width="120"/>
-      <el-table-column label="条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="批次名" align="center" prop="batchname" width="120"/>
+      <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="子条件名" align="center" prop="subconditionname" width="180"/>
       <el-table-column label="子条件类型" align="center" prop="subconditiontype" width="100"/>
       <el-table-column label="条件结果" align="center" prop="conditionresult" width="100">
       <template slot-scope="scope">
@@ -60,7 +60,7 @@
         <span v-else style="color: #37B328">{{ scope.row.conditionstatus }}</span>
       </template>
       </el-table-column>
-      <el-table-column label="消耗时长" align="center" prop="runtime" width="100"/>
+      <el-table-column label="消耗时长(ms)" align="center" prop="runtime" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

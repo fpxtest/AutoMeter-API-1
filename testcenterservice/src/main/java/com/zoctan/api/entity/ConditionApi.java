@@ -70,6 +70,17 @@ public class ConditionApi {
     }
 
     private String conditionname;
+
+    public String getSubconditionname() {
+        return subconditionname;
+    }
+
+    public void setSubconditionname(String subconditionname) {
+        this.subconditionname = subconditionname;
+    }
+
+    private String subconditionname;
+
     private String deployunitname;
     private String apiname;
     private String casename;

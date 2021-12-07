@@ -7,6 +7,7 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="conditionid" jdbcType="BIGINT" property="conditionid" />
+    <result column="subconditionname" jdbcType="VARCHAR" property="subconditionname" />
     <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
@@ -30,7 +31,7 @@
 
   <update id="updateTestconditionapi" parameterType="com.zoctan.api.entity.Testcondition">
     update condition_api set conditionid = #{conditionid}, deployunitid = #{deployunitid},caseid=#{caseid},
-    conditionname = #{conditionname},deployunitname = #{deployunitname},apiname = #{apiname},casename = #{casename},
+    conditionname = #{conditionname},subconditionname=#{subconditionname}, deployunitname = #{deployunitname},apiname = #{apiname},casename = #{casename},
     memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>

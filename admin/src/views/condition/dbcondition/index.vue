@@ -21,7 +21,10 @@
 
         <span v-if="hasPermission('dbcondition:search')">
           <el-form-item>
-            <el-input clearable v-model="search.dbtype" @keyup.enter.native="searchBy" placeholder="DB类型"></el-input>
+            <el-input clearable v-model="search.conditionname" @keyup.enter.native="searchBy" placeholder="父条件名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input clearable v-model="search.subconditionname" @keyup.enter.native="searchBy" placeholder="子条件名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -43,14 +46,26 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
+      <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="数据库条件名" align="center" prop="subconditionname" width="120"/>
+      <el-table-column label="环境" align="center" prop="enviromentname" width="120"/>
+      <el-table-column label="组件名" align="center" prop="assemblename" width="120"/>
       <el-table-column label="数据库类型" align="center" prop="dbtype" width="120"/>
-      <el-table-column label="数据库内容" align="center" prop="dbcontent" width="120"/>
-      <el-table-column label="连接字" align="center" prop="connectstr" width="120"/>
+      <el-table-column label="数据库内容" align="center" prop="dbcontent" width="120">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.dbcontent }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">...</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -87,13 +102,32 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 600px; margin-left:30px;"
         :model="tmpdbcondition"
         ref="tmpdbcondition"
       >
-        <el-form-item label="测试环境" prop="enviromentname" required >
-          <el-select v-model="tmpdbcondition.enviromentname"  placeholder="测试环境名" @change="selectChangedEN($event)">
+        <el-form-item label="数据库条件名：" prop="subconditionname" required>
+          <el-input
+            type="text"
+            maxlength="20"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpdbcondition.subconditionname"
+          />
+        </el-form-item>
+
+        <el-form-item label="父条件：" prop="conditionname" required >
+          <el-select v-model="tmpdbcondition.conditionname"  placeholder="父条件名" @change="ConditionselectChangedPC($event)" >
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(condition, index) in conditionList" :key="index">
+              <el-option :label="condition.conditionname" :value="condition.conditionname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="环境：" prop="enviromentname" required >
+          <el-select v-model="tmpdbcondition.enviromentname"  placeholder="环境" @change="selectChangedEN($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(envname, index) in enviromentnameList" :key="index">
               <el-option :label="envname.enviromentname" :value="envname.enviromentname" required/>
@@ -101,13 +135,32 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="服务器" prop="machinename" required >
-          <el-select v-model="tmpdbcondition.machinename" placeholder="服务器" @change="selectChangedMN($event)">
+        <el-form-item label="组件：" prop="assemblename" required >
+          <el-select v-model="tmpdbcondition.assemblename" placeholder="组件" @change="ConditionselectChangedAS($event)">
             <el-option label="请选择" value="''" style="display: none" />
-            <div v-for="(macname, index) in machinenameList" :key="index">
-              <el-option :label="`${macname.machinename} ：${macname.ip}`" :value="macname.machinename" required/>
+            <div v-for="(macname, index) in enviroment_assembleList" :key="index">
+              <el-option :label="macname.assemblename" :value="macname.assemblename" required/>
             </div>
           </el-select>
+        </el-form-item>
+
+        <el-form-item label="操作类型：" prop="dbtype" required >
+          <el-select v-model="tmpdbcondition.dbtype" placeholder="操作类型" @change="selectChangedDBType($event)">
+            <el-option label="新增" value="Insert"  />
+            <el-option label="删除" value="Delete"  />
+            <el-option label="修改" value="Update"  />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Sql语句：" prop="dbcontent" required>
+          <el-input
+            type="textarea"
+            rows="10" cols="50"
+            maxlength="2000"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpdbcondition.dbcontent"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,6 +187,9 @@
   </div>
 </template>
 <script>
+  import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
+  import { getconditionallList as getconditionallList } from '@/api/condition/condition'
+  import { getassembleallnameList as getassembleallnameList } from '@/api/enviroment/enviromentassemble'
   import { search, adddbcondition, updatedbcondition, removedbcondition } from '@/api/condition/dbcondition'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
@@ -152,8 +208,12 @@
     data() {
       return {
         itemKey: null,
-        tmpenviromentname: '',
+        tmpconditionname: '',
+        tmpsubconditionname: '',
         dbconditionList: [], // 环境服务器列表
+        conditionList: [], // 条件服务器列表
+        enviroment_assembleList: [], // 环境组件列表
+        enviromentnameList: [], // 环境列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
@@ -165,15 +225,20 @@
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改测试环境',
-          update: '修改测试环境',
-          add: '添加测试环境'
+          updateRole: '修改数据库条件',
+          update: '修改数据库条件',
+          add: '添加数据库条件'
         },
         btnLoading: false, // 按钮等待动画
         tmpdbcondition: {
           id: '',
           conditionid: '',
+          conditionname: '',
+          assembleid: '',
+          assemblename: '',
+          subconditionname: '',
           enviromentid: '',
+          enviromentname: '',
           dbtype: '',
           dbcontent: '',
           connectstr: '',
@@ -183,7 +248,8 @@
         search: {
           page: 1,
           size: 10,
-          dbtype: null
+          conditionname: null,
+          subconditionname: null
         }
       }
     },
@@ -193,6 +259,8 @@
     },
 
     created() {
+      this.getconditionallList()
+      this.getassembleallnameList()
       this.getdbconditionList()
       this.getenviromentallList()
       this.getmachineLists()
@@ -202,17 +270,73 @@
       unix2CurrentTime,
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 获取环境列表
+       */
+      getenviromentallList() {
+        this.listLoading = true
+        getenviromentallList().then(response => {
+          this.enviromentnameList = response.data
+          this.total = response.data.total
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载数据库条件列表失败')
+        })
+      },
+
+      /**
+       * 获取父条件列表
+       */
+      getconditionallList() {
+        getconditionallList().then(response => {
+          this.conditionList = response.data
+        }).catch(res => {
+          this.$message.error('获取父条件列表失败')
+        })
+      },
+
+      /**
+       * 获取组件列表
+       */
+      getassembleallnameList() {
+        getassembleallnameList().then(response => {
+          this.enviroment_assembleList = response.data
+        }).catch(res => {
+          this.$message.error('获取组件列表失败')
+        })
+      },
+      /**
+       * 环境下拉选择事件获取环境id  e的值为options的选值
        */
       selectChangedEN(e) {
         for (let i = 0; i < this.enviromentnameList.length; i++) {
           if (this.enviromentnameList[i].enviromentname === e) {
-            this.tmpdbcondition.envid = this.enviromentnameList[i].id
+            this.tmpdbcondition.enviromentid = this.enviromentnameList[i].id
           }
           console.log(this.enviromentnameList[i].id)
         }
       },
 
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      ConditionselectChangedPC(e) {
+        for (let i = 0; i < this.conditionList.length; i++) {
+          if (this.conditionList[i].conditionname === e) {
+            this.tmpdbcondition.conditionid = this.conditionList[i].id
+          }
+        }
+      },
+
+      /**
+       * 组件下拉选择事件获取组件id  e的值为options的选值
+       */
+      ConditionselectChangedAS(e) {
+        for (let i = 0; i < this.enviroment_assembleList.length; i++) {
+          if (this.enviroment_assembleList[i].assemblename === e) {
+            this.tmpdbcondition.assembleid = this.enviroment_assembleList[i].id
+          }
+        }
+      },
       /**
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
        */
@@ -230,13 +354,14 @@
        */
       getdbconditionList() {
         this.listLoading = true
-        this.search.enviromentname = this.tmpenviromentname
+        this.search.conditionname = this.tmpconditionname
+        this.search.subconditionname = this.tmpsubconditionname
         search(this.search).then(response => {
           this.dbconditionList = response.data.list
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载测试环境服务器列表失败')
+          this.$message.error('加载数据库条件服务器列表失败')
         })
       },
 
@@ -250,7 +375,8 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
-        this.tmpenviromentname = this.search.enviromentname
+        this.tmpconditionname = this.search.conditionname
+        this.tmpsubconditionname = this.search.subconditionname
         this.listLoading = false
         this.btnLoading = false
       },
@@ -283,21 +409,25 @@
         return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
-       * 显示添加测试环境对话框
+       * 显示添加数据库条件对话框
        */
       showAdddbconditionDialog() {
         // 显示新增对话框
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
         this.tmpdbcondition.id = ''
-        this.tmpdbcondition.envid = ''
-        this.tmpdbcondition.machineid = ''
-        this.tmpdbcondition.machinename = ''
+        this.tmpdbcondition.conditionname = ''
+        this.tmpdbcondition.enviromentid = ''
         this.tmpdbcondition.enviromentname = ''
+        this.tmpdbcondition.assembleid = ''
+        this.tmpdbcondition.assemblename = ''
+        this.tmpdbcondition.subconditionname = ''
+        this.tmpdbcondition.dbtype = ''
+        this.tmpdbcondition.dbcontent = ''
         this.tmpdbcondition.creator = this.name
       },
       /**
-       * 添加测试环境
+       * 添加数据库条件
        */
       adddbcondition() {
         this.$refs.tmpdbcondition.validate(valid => {
@@ -316,21 +446,26 @@
         })
       },
       /**
-       * 显示修改测试环境对话框
-       * @param index 测试环境下标
+       * 显示修改数据库条件对话框
+       * @param index 数据库条件下标
        */
       showUpdatedbconditionDialog(index) {
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         this.tmpdbcondition.id = this.dbconditionList[index].id
-        this.tmpdbcondition.envid = this.dbconditionList[index].envid
-        this.tmpdbcondition.machineid = this.dbconditionList[index].machineid
-        this.tmpdbcondition.machinename = this.dbconditionList[index].machinename
+        this.tmpdbcondition.conditionid = this.dbconditionList[index].conditionid
+        this.tmpdbcondition.assembleid = this.dbconditionList[index].assembleid
+        this.tmpdbcondition.enviromentid = this.dbconditionList[index].enviromentid
         this.tmpdbcondition.enviromentname = this.dbconditionList[index].enviromentname
+        this.tmpdbcondition.assemblename = this.dbconditionList[index].assemblename
+        this.tmpdbcondition.conditionname = this.dbconditionList[index].conditionname
+        this.tmpdbcondition.subconditionname = this.dbconditionList[index].subconditionname
+        this.tmpdbcondition.dbtype = this.dbconditionList[index].dbtype
+        this.tmpdbcondition.dbcontent = this.dbconditionList[index].dbcontent
         this.tmpdbcondition.creator = this.name
       },
       /**
-       * 更新测试环境
+       * 更新数据库条件
        */
       updatedbcondition() {
         this.$refs.tmpdbcondition.validate(valid => {
@@ -347,11 +482,11 @@
       },
 
       /**
-       * 删除测试环境
-       * @param index 测试环境下标
+       * 删除数据库条件
+       * @param index 数据库条件下标
        */
       removedbcondition(index) {
-        this.$confirm('删除该测试环境？', '警告', {
+        this.$confirm('删除该数据库条件？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
@@ -367,15 +502,15 @@
       },
 
       /**
-       * 测试环境是否唯一
-       * @param 测试环境
+       * 数据库条件是否唯一
+       * @param 数据库条件
        */
       isUniqueDetail(dbcondition) {
         for (let i = 0; i < this.dbconditionList.length; i++) {
           if (this.dbconditionList[i].id !== dbcondition.id) { // 排除自己
             if (this.dbconditionList[i].enviromentname === dbcondition.enviromentname) {
               if (this.dbconditionList[i].machinename === dbcondition.machinename) {
-                this.$message.error('测试环境名已存在')
+                this.$message.error('数据库条件名已存在')
                 return false
               }
             }

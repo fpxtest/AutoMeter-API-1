@@ -21,6 +21,8 @@ public interface ApiCasedataService extends Service<ApiCasedata> {
 
     List<ApiCasedata> getparamvaluebycaseidandtype(final Map<String, Object> params);
 
+    List<ApiCasedata> getparamvaluebycaseidandtype(Long caseid,String PrppertyType);
+
     void deletcasedatabyid(Long caseid);
 
 }

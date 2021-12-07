@@ -24,6 +24,11 @@
             v-if="hasPermission('api:add')"
             @click.native.prevent="showCopyapiDialog"
           >复制api</el-button>
+
+<!--          <el-upload ref="upload" action="" :http-request="uploadSectionFile">-->
+<!--            <el-button size="small" type="primary" @click="uploadSectionFile">点击上传</el-button>-->
+<!--          </el-upload>-->
+<!--          <el-progress v-show="showProgress" :text-inside="true" :stroke-width="18" :percentage="uploadPercent"></el-progress>-->
         </el-form-item>
 
         <span v-if="hasPermission('api:search')">
@@ -283,6 +288,7 @@
     },
     data() {
       return {
+        fileurl: window.g.SERVER_URL + '/',
         itemKey: null,
         tmpapiname: '',
         tmpdeployunitname: '',
@@ -372,6 +378,28 @@
 
     methods: {
       unix2CurrentTime,
+      // uploadSectionFile(param) {
+      //   console.log('上传开始。。。。。。。。。。。。。。。。。。。。。。')
+      //   console.log(this.fileurl)
+      //   const form = new FormData()
+      //   var that = this
+      //   form.append('file', param.file)
+      //   form.append('dir', 'temp1')
+      //   that.$axios.post(this.fileurl, form, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     },
+      //     onUploadProgress: progressEvent => {
+      //       that.uploadPercent = (progressEvent.loaded / progressEvent.total * 100) | 0
+      //     }
+      //   }).then((res) => {
+      //     console.log('上传结束')
+      //     console.log(res)
+      //   }).catch((err) => {
+      //     console.log('上传错误')
+      //     console.log(err)
+      //   })
+      // },
 
       /**
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值

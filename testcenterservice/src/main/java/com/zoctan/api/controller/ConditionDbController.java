@@ -4,9 +4,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.ConditionApi;
 import com.zoctan.api.entity.ConditionDb;
 import com.zoctan.api.service.ConditionDbService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,7 +26,17 @@ public class ConditionDbController {
 
     @PostMapping
     public Result add(@RequestBody ConditionDb conditionDb) {
-        conditionDbService.save(conditionDb);
+
+        Condition con=new Condition(ConditionDb.class);
+        con.createCriteria().andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionDb.getSubconditionname()+ "'");
+        if(conditionDbService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("已经存在该子条件名");
+        }
+        else {
+            conditionDbService.save(conditionDb);
+        }
         return ResultGenerator.genOkResult();
     }
 
@@ -53,6 +65,25 @@ public class ConditionDbController {
         List<ConditionDb> list = conditionDbService.listAll();
         PageInfo<ConditionDb> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 更新自己的资料
+     */
+    @PutMapping("/detail")
+    public Result updateDeploy(@RequestBody final ConditionDb conditionDb) {
+        Condition con=new Condition(ConditionApi.class);
+        con.createCriteria().andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionDb.getSubconditionname()+ "'")
+                .andCondition("id <> " + conditionDb.getId());
+        if(conditionDbService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("已经存在该子条件名");
+        }
+        else {
+            this.conditionDbService.updateTestconditiondb(conditionDb);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**

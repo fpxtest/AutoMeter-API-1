@@ -1,11 +1,13 @@
 package com.zoctan.api.service.impl;
 
+import com.zoctan.api.entity.ConditionApi;
 import com.zoctan.api.mapper.ConditionDbMapper;
 import com.zoctan.api.entity.ConditionDb;
 import com.zoctan.api.service.ConditionDbService;
 import com.zoctan.api.core.service.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,5 +26,15 @@ private ConditionDbMapper conditionDbMapper;
     @Override
     public List<ConditionDb> finddbconditionWithName(Map<String, Object> params) {
         return conditionDbMapper.finddbconditionWithName(params);
+    }
+
+    @Override
+    public void updateTestconditiondb(ConditionDb params) {
+        conditionDbMapper.updateTestconditiondb(params);
+    }
+
+    @Override
+    public int ifexist(Condition condition) {
+        return countByCondition(condition);
     }
 }

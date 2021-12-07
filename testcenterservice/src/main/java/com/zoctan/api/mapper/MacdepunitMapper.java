@@ -28,4 +28,9 @@ public interface MacdepunitMapper extends MyMapper<Macdepunit> {
     int ifexist(Condition condition);
 
     Integer findmachinenumbyenvidanddeployid(@Param("envid") long envid, @Param("depunitid")long depunitid);
+    Macdepunit getmacdepbyenvidanddepid(long envid,long depunitid);
+
+    List<Macdepunit> getenvassemblelistbyenvidandtype(@Param("envid")long envid, @Param("assembletype") String  assembletype);
+
+
 }

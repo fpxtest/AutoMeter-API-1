@@ -143,6 +143,13 @@
             @click.native.prevent="showAssertDialog(scope.$index)"
           >断言
           </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('apicases:params') && scope.row.id !== id"
+            @click.native.prevent="showTestDialog(scope.$index)"
+          >测试
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -464,7 +471,6 @@
         :model="tmpassert"
         ref="tmpassert"
       >
-
       <el-form-item label="断言类型" prop="asserttype" required >
         <el-select v-model="tmpassert.asserttype" placeholder="断言类型" @change="asserttypeselectChanged($event)">
           <el-option label="Respone断言" value="Respone"></el-option>
@@ -548,10 +554,51 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="运行测试" :visible.sync="TestdialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="100px"
+        style="width: 600px; margin-left:50px;"
+      >
+        <div class="filter-container">
+          <el-form :inline="true"
+                   :model="tmptest"
+                   ref="tmptest">
+            <el-form-item label="环境" prop="enviromentname"  required>
+              <el-select v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
+                <el-option label="请选择"  />
+                <div v-for="(enviroment, index) in enviromentnameList" :key="index">
+                  <el-option :label="enviroment.enviromentname" :value="enviroment.enviromentname" required />
+                </div>
+              </el-select>
+              <el-button
+                type="success"
+                :loading="btnLoading"
+                @click.native.prevent="runtest"
+              >测试
+              </el-button>
+            </el-form-item>
+
+            <el-form-item label="响应结果：" prop="respone"  >
+              <el-input
+                type="textarea"
+                rows="20" cols="90"
+                maxlength="4000"
+                v-model="tmptest.respone"
+              />
+            </el-form-item>
+          </el-form>
+        </div>
+
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 <script>
   import {
+    runtest,
     search,
     addapicases,
     updateapicases,
@@ -560,6 +607,7 @@
     getcasebydeployunitid
   } from '@/api/assets/apicases'
 
+  import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
   import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype } from '@/api/assets/apicasesdata'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getcaseparatype as getcaseparatype } from '@/api/deployunit/apiparams'
@@ -593,6 +641,7 @@
         paravaluemap: [], // 参数值map
         multipleSelection: [], // 用例表格被选中的内容
         apiList: [], // api列表
+        enviromentnameList: [], // 环境列表
         deployunitList: [], // 发布单元列表
         caseparamtypelist: [], // 用例参数类型列表
         caseparamsbytypelist: [], // 根据类型获取用例参数名列表
@@ -606,6 +655,7 @@
         AssertSubVisible: false, // 断言子条件显示
         AssertdialogFormVisible: false,
         AssertAUdialogFormVisible: false,
+        TestdialogFormVisible: false,
         caseindex: '',
         total: 0, // 数据总数
         asserttotal: 0, // 数据总数
@@ -685,6 +735,15 @@
           assertvaluetype: '',
           creator: ''
         },
+        tmptest: {
+          enviromentname: '',
+          respone: ''
+        },
+        tmptestdata: {
+          caseid: '',
+          enviromentid: ''
+        },
+
         casevalue: {
           caseid: '',
           propertytype: ''
@@ -707,6 +766,7 @@
     },
 
     created() {
+      this.getenviromentallList()
       this.getapicasesList()
       this.getdepunitLists()
       this.getcaseconditionList()
@@ -750,6 +810,15 @@
        */
       selectparamsChanged(e) {
         this.getcaseparamsbytype(e)
+      },
+
+      EnviromentselectChanged(e) {
+        this.tmptest.respone = ''
+        for (let i = 0; i < this.enviromentnameList.length; i++) {
+          if (this.enviromentnameList[i].enviromentname === e) {
+            this.tmptestdata.enviromentid = this.enviromentnameList[i].id
+          }
+        }
       },
 
       asserttypeselectChanged(e) {
@@ -810,6 +879,16 @@
             })
           }
         }
+      },
+      /**
+       * 获取环境列表
+       */
+      getenviromentallList() {
+        getenviromentallList().then(response => {
+          this.enviromentnameList = response.data
+        }).catch(res => {
+          this.$message.error('加载环境列表失败')
+        })
       },
       /**
        * 获取用例列表
@@ -1133,6 +1212,20 @@
       },
 
       /**
+       * 运行测试
+       */
+      runtest() {
+        this.$refs.tmptest.validate(valid => {
+          if (valid) {
+            runtest(this.tmptestdata).then(response => {
+              this.tmptest.respone = response.data
+            }).catch(res => {
+              this.$message.error('运行测试失败')
+            })
+          }
+        })
+      },
+      /**
        * 添加用例数据
        */
       addapicasesdata() {
@@ -1254,6 +1347,15 @@
         this.getassertbycaseid(this.searchassert)
         this.AssertdialogFormVisible = true
         this.searchassert.asserttype = ''
+      },
+
+      /**
+       * 显示断言对话框
+       */
+      showTestDialog(index) {
+        this.tmptestdata.caseid = this.apicasesList[index].id
+        this.tmptest.respone = ''
+        this.TestdialogFormVisible = true
       },
 
       /**

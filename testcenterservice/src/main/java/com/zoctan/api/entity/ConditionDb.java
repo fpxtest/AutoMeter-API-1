@@ -17,6 +17,54 @@ public class ConditionDb {
      */
     private Long conditionid;
 
+    public String getSubconditionname() {
+        return subconditionname;
+    }
+
+    public void setSubconditionname(String subconditionname) {
+        this.subconditionname = subconditionname;
+    }
+
+    private String subconditionname;
+
+
+    public String getConditionname() {
+        return conditionname;
+    }
+
+    public void setConditionname(String conditionname) {
+        this.conditionname = conditionname;
+    }
+
+    public Long getAssembleid() {
+        return assembleid;
+    }
+
+    public void setAssembleid(Long assembleid) {
+        this.assembleid = assembleid;
+    }
+
+    public String getAssemblename() {
+        return assemblename;
+    }
+
+    public void setAssemblename(String assemblename) {
+        this.assemblename = assemblename;
+    }
+
+    public String getEnviromentname() {
+        return enviromentname;
+    }
+
+    public void setEnviromentname(String enviromentname) {
+        this.enviromentname = enviromentname;
+    }
+
+    private String conditionname;
+    private Long assembleid;
+    private String assemblename;
+    private String enviromentname;
+
     /**
      * 环境id
      */
@@ -30,12 +78,12 @@ public class ConditionDb {
     /**
      * db执行内容
      */
-    private Long dbcontent;
+    private String dbcontent;
 
     /**
      * db连接字
      */
-    private Long connectstr;
+    private String connectstr;
 
     /**
      * 备注
@@ -136,7 +184,7 @@ public class ConditionDb {
      *
      * @return dbcontent - db执行内容
      */
-    public Long getDbcontent() {
+    public String getDbcontent() {
         return dbcontent;
     }
 
@@ -145,7 +193,7 @@ public class ConditionDb {
      *
      * @param dbcontent db执行内容
      */
-    public void setDbcontent(Long dbcontent) {
+    public void setDbcontent(String dbcontent) {
         this.dbcontent = dbcontent;
     }
 
@@ -154,7 +202,7 @@ public class ConditionDb {
      *
      * @return connectstr - db连接字
      */
-    public Long getConnectstr() {
+    public String getConnectstr() {
         return connectstr;
     }
 
@@ -163,7 +211,7 @@ public class ConditionDb {
      *
      * @param connectstr db连接字
      */
-    public void setConnectstr(Long connectstr) {
+    public void setConnectstr(String connectstr) {
         this.connectstr = connectstr;
     }
 

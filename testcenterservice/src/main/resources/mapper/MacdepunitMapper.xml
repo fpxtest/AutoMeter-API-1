@@ -42,4 +42,12 @@
     lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
+
+  <select id="getmacdepbyenvidanddepid" resultMap="BaseResultMap">
+    select * from macdepunit a where a.envid = #{envid} and depunitid =#{depunitid}
+  </select>
+
+  <select id="getenvassemblelistbyenvidandtype" resultMap="BaseResultMap">
+    select a.* as assemblename from macdepunit a  where a.envid =#{envid} and assembletype=#{assembletype}
+  </select>
 </mapper>

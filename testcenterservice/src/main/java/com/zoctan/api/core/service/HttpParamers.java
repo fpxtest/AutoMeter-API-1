@@ -12,6 +12,7 @@ package com.zoctan.api.core.service;
 import com.alibaba.fastjson.JSON;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class HttpParamers {
     public HttpParamers(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
+
 
     public static HttpParamers httpPostParamers() {
         return new HttpParamers(HttpMethod.POST);

@@ -31,6 +31,14 @@ export function search(apicasesForm) {
   })
 }
 
+export function runtest(apicasesForm) {
+  return request({
+    url: '/apicases/runtest',
+    method: 'post',
+    data: apicasesForm
+  })
+}
+
 export function getcasebydeployunitid(apicasesForm) {
   return request({
     url: '/apicases/getcasebydeployunitid',

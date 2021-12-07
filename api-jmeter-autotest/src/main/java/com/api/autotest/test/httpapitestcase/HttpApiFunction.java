@@ -159,7 +159,6 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     //用例发送请求
     private String SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
         String Result = core.request(ob);
-        getLogger().info(TestCore.logplannameandcasename + "请求结果 is:" + Result);
         return Result;
     }
 
@@ -257,8 +256,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "65");
-        params.addArgument("SlaverId", "17");
+        params.addArgument("DispatchIds", "89");
+        params.addArgument("SlaverId", "16");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
         params.addArgument("mysqlpassword", "test");

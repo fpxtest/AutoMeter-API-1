@@ -104,7 +104,7 @@
 
         <el-form-item label="api" prop="apiname" required >
           <el-select v-model="tmpApicasesVariables.apiname" placeholder="api" @change="apiselectChanged($event)">
-            <el-option label="请选择" value />
+            <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(api, index) in apiList" :key="index">
               <el-option :label="api.apiname" :value="api.apiname"/>
             </div>
@@ -120,7 +120,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="变量名" prop="variablesname" required >
+        <el-form-item label="绑定变量" prop="variablesname" required >
           <el-select v-model="tmpApicasesVariables.variablesname" placeholder="变量名" @change="variablesselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(variables, index) in variablesList" :key="index">

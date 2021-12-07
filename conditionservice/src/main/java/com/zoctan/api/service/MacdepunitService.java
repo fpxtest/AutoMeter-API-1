@@ -34,4 +34,7 @@ public interface MacdepunitService extends Service<Macdepunit> {
     Integer findmachinenumbyenvidanddeployid(long envid,long depunitid);
 
     Macdepunit getmacdepbyenvidanddepid(@Param("envid")long envid, @Param("depunitid")long depunitid);
+    Macdepunit getmacdepbyenvidandassmbleid(@Param("envid")long envid, @Param("assembleid")long assembleid);
+
+
 }

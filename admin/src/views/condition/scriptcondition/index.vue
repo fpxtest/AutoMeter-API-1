@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('scriptcondition:search')">
           <el-form-item>
-            <el-select v-model="search.conditionname" placeholder="条件名">
+            <el-select v-model="search.conditionname" placeholder="父条件名">
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
                 <el-option :label="condition.conditionname" :value="condition.conditionname"/>
@@ -48,7 +48,9 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="条件名" align="center" prop="conditionname" width="200"/>
+
+      <el-table-column label="子条件名" align="center" prop="subconditionname" width="200"/>
+      <el-table-column label="父条件名" align="center" prop="conditionname" width="200"/>
       <el-table-column label="脚本" align="center" prop="script" width="150">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -105,8 +107,18 @@
         :model="tmpscriptcondition"
         ref="tmpscriptcondition"
       >
-        <el-form-item label="条件名" prop="conditionname" required >
-          <el-select v-model="tmpscriptcondition.conditionname"  placeholder="条件名" @change="ConditionselectChanged($event)" >
+        <el-form-item label="子条件名" prop="subconditionname" required>
+          <el-input
+            type="text"
+            maxlength="20"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpscriptcondition.subconditionname"
+          />
+        </el-form-item>
+
+        <el-form-item label="父条件名" prop="conditionname" required >
+          <el-select v-model="tmpscriptcondition.conditionname"  placeholder="父条件名" @change="ConditionselectChanged($event)" >
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(condition, index) in conditionList" :key="index">
               <el-option :label="condition.conditionname" :value="condition.conditionname" required/>
@@ -190,6 +202,7 @@
         },
         tmpscriptcondition: {
           id: '',
+          subconditionname: '',
           conditionid: '',
           conditionname: '',
           script: '',
@@ -306,6 +319,7 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
         this.tmpscriptcondition.id = ''
+        this.tmpscriptcondition.subconditionname = ''
         this.tmpscriptcondition.conditionname = ''
         this.tmpscriptcondition.script = ''
         this.tmpscriptcondition.creator = this.name
@@ -337,6 +351,7 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         this.tmpscriptcondition.id = this.scriptconditionList[index].id
+        this.tmpscriptcondition.subconditionname = this.scriptconditionList[index].subconditionname
         this.tmpscriptcondition.conditionname = this.scriptconditionList[index].conditionname
         this.tmpscriptcondition.script = this.scriptconditionList[index].script
         this.tmpscriptcondition.creator = this.name

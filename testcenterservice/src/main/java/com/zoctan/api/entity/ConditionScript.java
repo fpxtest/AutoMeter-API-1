@@ -28,6 +28,15 @@ public class ConditionScript {
     private String conditionname;
 
 
+    public String getSubconditionname() {
+        return subconditionname;
+    }
+
+    public void setSubconditionname(String subconditionname) {
+        this.subconditionname = subconditionname;
+    }
+
+    private String subconditionname;
     /**
      * 脚本
      */

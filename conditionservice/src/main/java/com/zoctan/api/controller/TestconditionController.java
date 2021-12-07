@@ -1,5 +1,8 @@
 package com.zoctan.api.controller;
 
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
+import cn.hutool.db.ds.simple.SimpleDataSource;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +75,12 @@ public class TestconditionController {
     @Resource
     private ConditionScriptService conditionScriptService;
 
+    @Resource
+    private ConditionDbService conditionDbService;
+
+    @Resource
+    private EnviromentAssembleService enviromentAssembleService;
+
 
     @PostMapping
     public Result add(@RequestBody Testcondition testcondition) {
@@ -92,95 +103,15 @@ public class TestconditionController {
         List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Planid, "前置条件", "执行计划");
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
-            TestconditionController.log.info("开始处理计划前置条件-API子条件-============：" );
+            TestconditionController.log.info("开始处理计划前置条件-数据库子条件-============：");
+            DBCondition(ConditionID,dispatch);
+            TestconditionController.log.info("完成处理计划前置条件-数据库子条件-============：");
+            TestconditionController.log.info("开始处理计划前置条件-接口子条件-============：");
             APICondition(ConditionID, dispatch, executeplan, Planid);
-            TestconditionController.log.info("完成处理计划前置条件-API子条件-============：" );
-
-            TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：" );
+            TestconditionController.log.info("完成处理计划前置条件-接口子条件-============：");
+            TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：");
             ScriptCondition(Caseid, dispatch, ConditionID);
-            TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：" );
-            //DBCondition();
-//            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
-//            TestconditionController.log.info("条件报告API子条件数量-============："+conditionApiList.size());
-//            for (ConditionApi conditionApi : conditionApiList) {
-//                TestconditionReport testconditionReport=new TestconditionReport();
-//                testconditionReport.setTestplanid(dispatch.getExecplanid());
-//                testconditionReport.setPlanname(dispatch.getExecplanname());
-//                testconditionReport.setBatchname(dispatch.getBatchname());
-//                testconditionReport.setConditionid(new Long(ConditionID));
-//                testconditionReport.setConditiontype("前置条件");
-//                testconditionReport.setConditionresult("");
-//                testconditionReport.setConditionstatus("");
-//                testconditionReport.setRuntime(new Long(0));
-//                testconditionReport.setSubconditionid(conditionApi.getId());
-//                testconditionReport.setSubconditiontype("接口");
-//                testconditionReport.setStatus("进行中");
-//                TestconditionController.log.info("条件报告保存子条件进行中状态-============："+testconditionReport.getPlanname()+"|"+ testconditionReport.getBatchname()+"|"+conditionApi.getCasename());
-//                testconditionReportService.save(testconditionReport);
-//
-//                Long CaseID= conditionApi.getCaseid();
-//                Apicases apicases= apicasesService.GetCaseByCaseID(CaseID);
-//                Long ApiID= apicases.getApiid();
-//                Api api =apiService.getBy("id",ApiID);
-//                Long Deployunitid= api.getDeployunitid();
-//                Deployunit deployunit=deployunitService.getBy("id",Deployunitid);
-//                List<ApiCasedata> apiCasedataList= apiCasedataService.GetCaseDatasByCaseID(CaseID);
-//                //区分环境类型
-//                Macdepunit macdepunit= macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(),deployunit.getId());
-//                Machine machine= machineService.getBy("id",macdepunit.getMachineid());
-//                TestCaseHelp testCaseHelp=new TestCaseHelp();
-//                long Start = 0;
-//                long End = 0;
-//                long CostTime=0;
-//                RequestObject requestObject= testCaseHelp.GetCaseRequestData(apiCasedataList,api,apicases,deployunit,macdepunit,machine);
-//                String Respone="";
-//                String ConditionResultStatus="成功";
-//                try
-//                {
-//                    Start = new Date().getTime();
-//                    Respone= testCaseHelp.request(requestObject);
-//                }
-//                catch (Exception ex)
-//                {
-//                    ConditionResultStatus="失败";
-//                    Respone=ex.getMessage();
-//                }
-//                finally {
-//                    End = new Date().getTime();
-//                }
-//                CostTime=End-Start;
-//                //更新条件结果表
-//                testconditionReport.setConditionresult(Respone);
-//                testconditionReport.setConditionstatus(ConditionResultStatus);
-//                testconditionReport.setRuntime(CostTime);
-//                testconditionReport.setStatus("已完成");
-//                TestconditionController.log.info("条件报告更新子条件结果-============："+testconditionReport.getPlanname()+"|"+ testconditionReport.getBatchname()+"|"+conditionApi.getCasename());
-//                testconditionReportService.update(testconditionReport);
-//
-//                //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
-//                ApicasesVariables apicasesVariables= apicasesVariablesService.getBy("caseid",apicases.getId());
-//                if(apicasesVariables!=null)
-//                {
-//                    TestconditionController.log.info("条件报告子条件处理变量-============："+apicasesVariables.getVariablesname());
-//                    Testvariables testvariables=testvariablesService.getById(apicasesVariables.getVariablesid());
-//                    String VariablesPath=testvariables.getVariablesexpress();
-//                    TestconditionController.log.info("条件报告子条件处理变量表达式-============："+VariablesPath+" 响应数据类型"+requestObject.getResponecontenttype());
-//                    ParseResponeHelp parseResponeHelp=new ParseResponeHelp();
-//                    String ParseValue= parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(),Respone,VariablesPath);
-//                    TestconditionController.log.info("条件报告子条件处理变量取值-============："+ParseValue);
-//                    TestvariablesValue testvariablesValue=new TestvariablesValue();
-//                    testvariablesValue.setPlanid(Planid);
-//                    testvariablesValue.setPlanname(dispatch.getExecplanname());
-//                    testvariablesValue.setBatchname(dispatch.getBatchname());
-//                    testvariablesValue.setCaseid(CaseID);
-//                    testvariablesValue.setCasename(apicases.getCasename());
-//                    testvariablesValue.setVariablesid(testvariables.getId());
-//                    testvariablesValue.setVariablesname(testvariables.getTestvariablesname());
-//                    testvariablesValue.setVariablesvalue(ParseValue);
-//                    testvariablesValue.setMemo("test");
-//                    testvariablesValueService.save(testvariablesValue);
-//                }
-//            }
+            TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：");
         }
         return ResultGenerator.genOkResult();
     }
@@ -195,24 +126,23 @@ public class TestconditionController {
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
             //处理接口条件
-            TestconditionController.log.info("开始处理用例前置条件-API子条件-============：" );
+            TestconditionController.log.info("开始处理用例前置条件-API子条件-============：");
             APICondition(ConditionID, dispatch, executeplan, Planid);
-            TestconditionController.log.info("完成处理用例前置条件-API子条件-============：" );
+            TestconditionController.log.info("完成处理用例前置条件-API子条件-============：");
             //处理数据库条件
             //DBCondition();
             //处理脚本条件
-            TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：" );
+            TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：");
             ScriptCondition(Caseid, dispatch, ConditionID);
-            TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：" );
+            TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：");
 
         }
         return ResultGenerator.genOkResult();
     }
 
-
     public void APICondition(long ConditionID, Dispatch dispatch, Executeplan executeplan, Long Planid) {
         List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
-        TestconditionController.log.info("条件报告API子条件数量-============：" + conditionApiList.size());
+        TestconditionController.log.info("接口子条件条件报告API子条件数量-============：" + conditionApiList.size());
         for (ConditionApi conditionApi : conditionApiList) {
             TestconditionReport testconditionReport = new TestconditionReport();
             testconditionReport.setTestplanid(dispatch.getExecplanid());
@@ -224,28 +154,60 @@ public class TestconditionController {
             testconditionReport.setConditionstatus("");
             testconditionReport.setRuntime(new Long(0));
             testconditionReport.setSubconditionid(conditionApi.getId());
+            testconditionReport.setSubconditionname(conditionApi.getSubconditionname());
             testconditionReport.setSubconditiontype("接口");
             testconditionReport.setStatus("进行中");
-            TestconditionController.log.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + conditionApi.getCasename());
+            TestconditionController.log.info("接口子条件条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + conditionApi.getCasename());
             testconditionReportService.save(testconditionReport);
 
-            Long CaseID = conditionApi.getCaseid();
-            Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
-            Long ApiID = apicases.getApiid();
-            Api api = apiService.getBy("id", ApiID);
-            Long Deployunitid = api.getDeployunitid();
-            Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
-            List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
-            //区分环境类型
-            Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(), deployunit.getId());
-            Machine machine = machineService.getBy("id", macdepunit.getMachineid());
-            TestCaseHelp testCaseHelp = new TestCaseHelp();
             long Start = 0;
             long End = 0;
             long CostTime = 0;
-            RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             String Respone = "";
             String ConditionResultStatus = "成功";
+            Long CaseID = conditionApi.getCaseid();
+            Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
+
+            if (apicases == null) {
+                Respone = "未找到条件运行的接口，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            Long ApiID = apicases.getApiid();
+            Api api = apiService.getBy("id", ApiID);
+            if (api == null) {
+                Respone = "未找到条件运行的接口的API，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            Long Deployunitid = api.getDeployunitid();
+            Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
+            if (deployunit == null) {
+                Respone = "未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
+            //区分环境类型
+            Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(), deployunit.getId());
+            if (macdepunit == null) {
+                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            Machine machine = machineService.getBy("id", macdepunit.getMachineid());
+            if (machine == null) {
+                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            TestCaseHelp testCaseHelp = new TestCaseHelp();
+            RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             try {
                 Start = new Date().getTime();
                 Respone = testCaseHelp.request(requestObject);
@@ -257,23 +219,26 @@ public class TestconditionController {
             }
             CostTime = End - Start;
             //更新条件结果表
-            testconditionReport.setConditionresult(Respone);
-            testconditionReport.setConditionstatus(ConditionResultStatus);
-            testconditionReport.setRuntime(CostTime);
-            testconditionReport.setStatus("已完成");
-            TestconditionController.log.info("条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + conditionApi.getCasename());
-            testconditionReportService.update(testconditionReport);
+            UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
 
             //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
             ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
-            if (apicasesVariables != null) {
-                TestconditionController.log.info("条件报告子条件处理变量-============：" + apicasesVariables.getVariablesname());
-                Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
+            FixApicasesVariables(apicasesVariables,requestObject,Respone,Planid,CaseID,dispatch,apicases);
+        }
+    }
+
+    private void FixApicasesVariables(ApicasesVariables apicasesVariables,RequestObject requestObject,String Respone,Long Planid,Long CaseID,Dispatch dispatch,Apicases apicases)
+    {
+        if (apicasesVariables != null) {
+            TestconditionController.log.info("接口子条件条件报告子条件处理变量-============：" + apicasesVariables.getVariablesname());
+            Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
+            if(testvariables!=null)
+            {
                 String VariablesPath = testvariables.getVariablesexpress();
-                TestconditionController.log.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
+                TestconditionController.log.info("接口子条件条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
-                TestconditionController.log.info("条件报告子条件处理变量取值-============：" + ParseValue);
+                TestconditionController.log.info("接口子条件条件报告子条件处理变量取值-============：" + ParseValue);
                 TestvariablesValue testvariablesValue = new TestvariablesValue();
                 testvariablesValue.setPlanid(Planid);
                 testvariablesValue.setPlanname(dispatch.getExecplanname());
@@ -285,18 +250,120 @@ public class TestconditionController {
                 testvariablesValue.setVariablesvalue(ParseValue);
                 testvariablesValue.setMemo("test");
                 testvariablesValueService.save(testvariablesValue);
+                TestconditionController.log.info("接口子条件条件报告子条件处理变量完成-============：" );
             }
         }
     }
 
-    public void DBCondition() {
+    public void DBCondition(long ConditionID, Dispatch dispatch) {
+        List<ConditionDb> conditionDbListList = conditionDbService.GetDBConditionByConditionID(ConditionID);
+        TestconditionController.log.info("数据库子条件条件报告数据库子条件数量-============：" + conditionDbListList.size());
+        for (ConditionDb conditionDb : conditionDbListList) {
+            TestconditionReport testconditionReport = new TestconditionReport();
+            testconditionReport.setTestplanid(dispatch.getExecplanid());
+            testconditionReport.setPlanname(dispatch.getExecplanname());
+            testconditionReport.setBatchname(dispatch.getBatchname());
+            testconditionReport.setConditionid(new Long(ConditionID));
+            testconditionReport.setConditiontype("前置条件");
+            testconditionReport.setConditionresult("");
+            testconditionReport.setConditionstatus("");
+            testconditionReport.setRuntime(new Long(0));
+            testconditionReport.setSubconditionid(conditionDb.getId());
+            testconditionReport.setSubconditionname(conditionDb.getSubconditionname());
+            testconditionReport.setSubconditiontype("数据库");
+            testconditionReport.setStatus("进行中");
+            TestconditionController.log.info("数据库子条件条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + conditionDb.getSubconditionname());
+            testconditionReportService.save(testconditionReport);
+            long Start = 0;
+            long End = 0;
+            long CostTime = 0;
+            String Respone = "";
+            String ConditionResultStatus = "成功";
+            Long Assembleid = conditionDb.getAssembleid();
+            EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
+            if (enviromentAssemble == null) {
+                Respone = "未找到环境组件，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            String AssembleType = enviromentAssemble.getAssembletype();
+            Long Envid = conditionDb.getEnviromentid();
+            String Dbtype = conditionDb.getDbtype();
+            String Sql = conditionDb.getDbcontent();
+            String ConnnectStr = enviromentAssemble.getConnectstr();
+            Macdepunit macdepunit = macdepunitService.getmacdepbyenvidandassmbleid(Envid, Assembleid);
+            if (macdepunit == null) {
+                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            Machine machine = machineService.getBy("id", macdepunit.getMachineid());
+            if (machine == null) {
+                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            String deployunitvisittype = macdepunit.getVisittype();
+            String[] ConnetcArray = ConnnectStr.split(",");
+            if(ConnetcArray.length<4)
+            {
+                Respone = "数据库连接字填写不规范，请按规则填写";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                break;
+            }
+            String username = ConnetcArray[0];
+            String pass = ConnetcArray[1];
+            String port = ConnetcArray[2];
+            String dbname = ConnetcArray[3];
+            String DBUrl = "";
+            if (AssembleType.equals("mysql")) {
+                DBUrl = "jdbc:mysql://";
+            }
+            if (AssembleType.equals("oracle")) {
+                DBUrl = "";
+            }
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equals("ip")) {
+                DBUrl = DBUrl + machine.getIp() + ":" + port + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            } else {
+                DBUrl = DBUrl + macdepunit.getDomain() + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            }
+            try {
+                Start = new Date().getTime();
+                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+                int nums=Db.use(ds).execute(Sql);
+                TestconditionController.log.info("数据库子条件Sql执行完成："+Sql );
+                Respone="成功执行，影响条数："+nums;
+            } catch (Exception ex) {
+                ConditionResultStatus = "失败";
+                Respone = ex.getMessage();
+            } finally {
+                End = new Date().getTime();
+            }
+            CostTime = End - Start;
+            //更新条件结果表
+            UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
+            TestconditionController.log.info("数据库子条件条件报告子条件完成-============：" );
+        }
+    }
+
+    private void UpdatetestconditionReport(TestconditionReport testconditionReport, String Respone, String ConditionResultStatus, Long CostTime) {
+        //更新条件结果表
+        testconditionReport.setConditionresult(Respone);
+        testconditionReport.setConditionstatus(ConditionResultStatus);
+        testconditionReport.setRuntime(CostTime);
+        testconditionReport.setStatus("已完成");
+        testconditionReportService.update(testconditionReport);
     }
 
     public void ScriptCondition(Long Caseid, Dispatch dispatch, Long ConditionID) {
         ConditionScript conditionScript = conditionScriptService.findtestconditionscriptwithid(ConditionID);
-        if(conditionScript!=null)
-        {
-            TestconditionController.log.info("脚本条件id：-============：" +conditionScript.getId());
+        if (conditionScript != null) {
+            TestconditionController.log.info("脚本条件id：-============：" + conditionScript.getId());
             TestconditionReport testconditionReport = new TestconditionReport();
             testconditionReport.setTestplanid(dispatch.getExecplanid());
             testconditionReport.setPlanname(dispatch.getTestcasename());
@@ -307,6 +374,7 @@ public class TestconditionController {
             testconditionReport.setConditionstatus("");
             testconditionReport.setRuntime(new Long(0));
             testconditionReport.setSubconditionid(conditionScript.getId());
+            testconditionReport.setSubconditionname(conditionScript.getSubconditionname());
             testconditionReport.setSubconditiontype("脚本");
             testconditionReport.setStatus("进行中");
             TestconditionController.log.info("脚本报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
@@ -326,7 +394,7 @@ public class TestconditionController {
                 dnamicCompilerHelp.CallDynamicScript(Source);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
-                Respone =  ex.getMessage();
+                Respone = ex.getMessage();
             } finally {
                 End = new Date().getTime();
             }

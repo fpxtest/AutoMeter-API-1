@@ -46,4 +46,9 @@ private MacdepunitMapper macdepunitMapper;
     public Macdepunit getmacdepbyenvidanddepid(long envid, long depunitid) {
         return macdepunitMapper.getmacdepbyenvidanddepid(envid,depunitid);
     }
+
+    @Override
+    public Macdepunit getmacdepbyenvidandassmbleid(long envid, long assembleid) {
+        return macdepunitMapper.getmacdepbyenvidandassmbleid(envid,assembleid);
+    }
 }

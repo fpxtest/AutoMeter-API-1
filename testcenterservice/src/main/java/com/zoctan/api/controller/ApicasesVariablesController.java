@@ -28,10 +28,10 @@ public class ApicasesVariablesController {
     public Result add(@RequestBody ApicasesVariables apicasesVariables) {
 
         Condition con=new Condition(Testvariables.class);
-        con.createCriteria().andCondition("variablesname = '" + apicasesVariables.getVariablesname() + "'").andCondition("casename = '" + apicasesVariables.getCasename() + "'");
+        con.createCriteria().andCondition("variablesname = '" + apicasesVariables.getVariablesname() + "'").orCondition("casename = '" + apicasesVariables.getCasename() + "'");
         if(apicasesVariablesService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该用例变量名已经存在");
+            return ResultGenerator.genFailedResult("该用例,变量已经存在绑定关系");
         }
         else {
             apicasesVariablesService.save(apicasesVariables);

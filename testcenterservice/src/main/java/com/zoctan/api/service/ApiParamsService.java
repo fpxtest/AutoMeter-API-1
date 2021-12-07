@@ -38,5 +38,8 @@ public interface ApiParamsService extends Service<ApiParams> {
 
     void SaveApiParams(ApiParams apiParams);
 
+    List<ApiParams> getApiParamsbypropertytype(Long apiid,String propertytype);
+
+
 
 }

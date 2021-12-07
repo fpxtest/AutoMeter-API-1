@@ -48,7 +48,8 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="子条件名" align="center" prop="subconditionname" width="120"/>
       <el-table-column label="发布单元名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="api名" align="center" prop="apiname" width="120"/>
       <el-table-column label="接口名" align="center" prop="casename" width="120"/>
@@ -98,8 +99,19 @@
         :model="tmpapicondition"
         ref="tmpapicondition"
       >
-        <el-form-item label="条件名" prop="conditionname" required >
-          <el-select v-model="tmpapicondition.conditionname"  placeholder="条件名" @change="ConditionselectChanged($event)">
+
+        <el-form-item label="子条件名" prop="subconditionname" required>
+          <el-input
+            type="text"
+            maxlength="20"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpapicondition.subconditionname"
+          />
+        </el-form-item>
+
+        <el-form-item label="父条件名" prop="conditionname" required >
+          <el-select v-model="tmpapicondition.conditionname"  placeholder="父条件名" @change="ConditionselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(condition, index) in conditionList" :key="index">
               <el-option :label="condition.conditionname" :value="condition.conditionname" required/>
@@ -216,6 +228,7 @@
         tmpapicondition: {
           id: '',
           conditionid: '',
+          subconditionname: '',
           conditionname: '',
           deployunitid: '',
           deployunitname: '',
@@ -411,6 +424,7 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'add'
         this.tmpapicondition.id = ''
+        this.tmpapicondition.subconditionname = ''
         this.tmpapicondition.conditionname = ''
         this.tmpapicondition.deployunitname = ''
         this.tmpapicondition.apiname = ''
@@ -446,7 +460,7 @@
         this.tmpapicondition.id = this.apiconditionList[index].id
         this.tmpapicondition.conditionname = this.apiconditionList[index].conditionname
         this.tmpapicondition.deployunitname = this.apiconditionList[index].deployunitname
-
+        this.tmpapicondition.subconditionname = this.apiconditionList[index].subconditionname
         this.deployunitQuery.deployunitname = this.tmpapicondition.deployunitname
         getapiListbydeploy(this.deployunitQuery).then(response => {
           this.apiList = response.data

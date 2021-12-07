@@ -44,8 +44,8 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="条件名" align="center" prop="conditionname" width="120"/>
-      <el-table-column label="目标名" align="center" prop="objectname" width="120"/>
+      <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
+      <el-table-column label="条件目标" align="center" prop="objectname" width="120"/>
       <el-table-column label="目标类型" align="center" prop="objecttype" width="120"/>
       <el-table-column label="条件类型" align="center" prop="conditiontype" width="120"/>
       <el-table-column label="备注" align="center" prop="memo" width="120"/>
@@ -95,7 +95,7 @@
         :model="tmpcondition"
         ref="tmpcondition"
       >
-        <el-form-item label="条件名" prop="conditionname" required>
+        <el-form-item label="父条件名" prop="conditionname" required>
           <el-input
             type="text"
             maxlength="40"
@@ -215,7 +215,7 @@
         itemKey: null,
         tmpconditionname: '',
         execplanList: [], // 计划列表
-        conditionList: [], // 环境服务器列表
+        conditionList: [], // 条件服务器列表
         apiList: [], // api列表
         caseList: [], // 用例列表
         deployunitList: [], // 发布单元列表
@@ -322,6 +322,7 @@
        * API下拉选择事件获取用例  e的值为options的选值
        */
       apiselectChanged(e) {
+        this.tmpcondition.objectname = ''
         this.apiquery.caseapiname = e
         this.apiquery.casedeployunitname = this.deployunitquery.deployunitname
         findcasesbyname(this.apiquery).then(response => {
@@ -485,6 +486,7 @@
           this.executeplanVisible = false
         }
         this.tmpcondition.id = this.conditionList[index].id
+        this.tmpcondition.apiname = ''
         this.tmpcondition.objectid = this.conditionList[index].objectid
         this.tmpcondition.conditionname = this.conditionList[index].conditionname
         this.tmpcondition.objectname = this.conditionList[index].objectname

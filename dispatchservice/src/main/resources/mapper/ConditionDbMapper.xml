@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ConditionDbMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ConditionDb">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="subconditionname" jdbcType="VARCHAR" property="subconditionname" />
+    <result column="conditionid" jdbcType="BIGINT" property="conditionid" />
+    <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
+    <result column="enviromentid" jdbcType="BIGINT" property="enviromentid" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
+    <result column="assembleid" jdbcType="BIGINT" property="assembleid" />
+    <result column="assemblename" jdbcType="VARCHAR" property="assemblename" />
+    <result column="dbtype" jdbcType="VARCHAR" property="dbtype" />
+    <result column="dbcontent" jdbcType="VARCHAR" property="dbcontent" />
+    <result column="connectstr" jdbcType="VARCHAR" property="connectstr" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+
+  <select id="finddbconditionWithName" resultMap="BaseResultMap">
+    SELECT *
+    FROM condition_db
+    <where>
+      <if test="conditionname != null and conditionname != ''">conditionname like CONCAT('%',#{conditionname},'%')</if>
+      <if test="subconditionname != null and subconditionname != ''">subconditionname like CONCAT('%',#{subconditionname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updateTestconditiondb" parameterType="com.zoctan.api.entity.ConditionDb">
+    update condition_db set conditionid = #{conditionid}, enviromentid = #{enviromentid},assembleid=#{assembleid},
+    conditionname = #{conditionname},subconditionname = #{subconditionname},enviromentname = #{enviromentname},assemblename = #{assemblename},
+     dbtype = #{dbtype},dbcontent = #{dbcontent},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+
+  <select id="GetCaseListByConditionID" resultMap="BaseResultMap">
+    SELECT *
+    FROM condition_db where conditionid = #{conditionid}
+  </select>
+</mapper>

@@ -57,6 +57,18 @@ public class TestconditionReport {
     private String planname;
     private String batchname;
 
+    public String getSubconditionname() {
+        return subconditionname;
+    }
+
+    public void setSubconditionname(String subconditionname) {
+        this.subconditionname = subconditionname;
+    }
+
+    private String subconditionname;
+
+
+
     public String getStatus() {
         return status;
     }

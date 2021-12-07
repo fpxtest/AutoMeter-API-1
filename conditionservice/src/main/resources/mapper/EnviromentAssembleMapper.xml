@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.EnviromentAssembleMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.EnviromentAssemble">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="assemblename" jdbcType="VARCHAR" property="assemblename" />
+    <result column="assembletype" jdbcType="VARCHAR" property="assembletype" />
+    <result column="connectstr" jdbcType="VARCHAR" property="connectstr" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findassembleWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM enviroment_assemble a
+    <where>
+      <if test="assembletype != null and assembletype != ''">a.assembletype =#{assembletype}</if>
+      <if test="assemblename != null and assemblename != ''">and a.assemblename like CONCAT('%',#{assemblename},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+
+
+  <update id="updateenviromentassemble" parameterType="com.zoctan.api.entity.EnviromentAssemble">
+    update enviroment_assemble set assembletype = #{assembletype}, assemblename = #{assemblename},memo = #{memo},
+    connectstr = #{connectstr},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>

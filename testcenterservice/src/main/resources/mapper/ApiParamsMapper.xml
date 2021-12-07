@@ -44,4 +44,9 @@
     insert into api_params(apiid,apiname,deployunitid,deployunitname,propertytype,keyname,keynamebak,creator,create_time,lastmodify_time)
     values(#{apiid},#{apiname},#{deployunitid},#{deployunitname},#{propertytype},#{keyname},#{keynamebak},#{creator}, DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
   </insert>
+
+  <select id="getApiParamsbypropertytype" resultMap="BaseResultMap">
+    SELECT *
+    FROM api_params a where a.apiid=#{apiid} and a.propertytype = #{propertytype}
+  </select>
 </mapper>

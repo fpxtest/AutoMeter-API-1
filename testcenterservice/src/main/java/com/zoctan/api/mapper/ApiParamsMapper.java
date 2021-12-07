@@ -38,5 +38,8 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
 
     void SaveApiParams(ApiParams apiParams);
 
+    List<ApiParams> getApiParamsbypropertytype(Long apiid,String propertytype);
+
+
 
 }

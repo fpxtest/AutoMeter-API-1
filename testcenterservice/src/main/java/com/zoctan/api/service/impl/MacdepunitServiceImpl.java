@@ -41,4 +41,14 @@ private MacdepunitMapper macdepunitMapper;
     public Integer findmachinenumbyenvidanddeployid(long envid, long depunitid) {
         return macdepunitMapper.findmachinenumbyenvidanddeployid(envid,depunitid);
     }
+
+    @Override
+    public Macdepunit getmacdepbyenvidanddepid(long envid, long depunitid) {
+        return macdepunitMapper.getmacdepbyenvidanddepid(envid,depunitid);
+    }
+
+    @Override
+    public List<Macdepunit> getenvassemblelistbyenvidandtype(long envid, String assembletype) {
+        return macdepunitMapper.getenvassemblelistbyenvidandtype(envid, assembletype);
+    }
 }

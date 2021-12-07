@@ -1,5 +1,7 @@
 package com.api.autotest.core;
 
+import cn.hutool.db.Db;
+import cn.hutool.db.ds.simple.SimpleDataSource;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.api.autotest.common.utils.*;
@@ -9,8 +11,8 @@ import com.jayway.jsonpath.JsonPath;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.log.Logger;
 
+import javax.sql.DataSource;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -514,17 +516,19 @@ public class TestCore {
     }
 
     //处理条件入口
-    public void FixCondition(RequestObject requestObject) {
+    public void FixCondition(RequestObject requestObject) throws Exception {
         Long ObjectID =Long.parseLong( requestObject.getCaseid());
         ArrayList<HashMap<String, String>> testconditionList = GetConditionByPlanIDAndConditionType(ObjectID, "前置条件", "测试用例");
         if (testconditionList.size() > 0) {
             long ConditionID =Long.parseLong(testconditionList.get(0).get("id"));
+//            SubCondition sub=new APISubCondition();
+//            sub.DoSubCondition(ConditionID,requestObject);
             //处理接口条件
             logger.info("开始处理用例前置条件-API子条件-============：");
             APICondition(ConditionID,requestObject);
             logger.info("完成处理用例前置条件-API子条件-============：");
             //处理数据库条件
-            //DBCondition();
+            DBCondition(ConditionID,requestObject);
             //处理脚本条件
             logger.info("开始处理用例前置条件-脚本子条件-============：");
             ScriptCondition(ConditionID,requestObject);
@@ -533,7 +537,7 @@ public class TestCore {
     }
 
     //处理接口条件
-    public void APICondition(long ConditionID, RequestObject requestObject) {
+    public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
         ArrayList<HashMap<String, String>> conditionApiList = GetApiConditionByConditionID(ConditionID);
         Long PlanID=Long.parseLong(requestObject.getTestplanid());
         Long CaseID=Long.parseLong(requestObject.getCaseid());
@@ -547,59 +551,105 @@ public class TestCore {
             try {
                 Start = new Date().getTime();
                 Respone = request(requestObject);
+                CostTime = End - Start;
+                SaveApiSubCondition(requestObject,PlanID,CaseID,ConditionID,conditionApi,Respone,ConditionResultStatus,CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
-            } finally {
-                End = new Date().getTime();
+                CostTime = End - Start;
+                SaveApiSubCondition(requestObject,PlanID,CaseID,ConditionID,conditionApi,Respone,ConditionResultStatus,CostTime);
+                throw new Exception("接口子条件执行异常："+ex.getMessage());
             }
-            CostTime = End - Start;
+//            TestconditionReport testconditionReport = new TestconditionReport();
+//            testconditionReport.setTestplanid(PlanID);
+//            testconditionReport.setPlanname(requestObject.getTestplanname());
+//            testconditionReport.setBatchname(requestObject.getBatchname());
+//            testconditionReport.setConditionid(new Long(ConditionID));
+//            testconditionReport.setConditiontype("前置条件");
+//            testconditionReport.setConditionresult(Respone);
+//            testconditionReport.setConditionstatus(ConditionResultStatus);
+//            testconditionReport.setRuntime(CostTime);
+//            testconditionReport.setSubconditionid(Long.parseLong(conditionApi.get("id")));
+//            testconditionReport.setSubconditiontype("接口");
+//            testconditionReport.setStatus("已完成");
+//            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
+//            SubConditionReportSave(testconditionReport);
+//            //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+//            ArrayList<HashMap<String, String>> apicasesVariablesList  = GetApiCaseVaribales(CaseID);
+//            if (apicasesVariablesList.size()>0) {
+//                logger.info("条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
+//                String Variablesid=apicasesVariablesList.get(0).get("id");
+//                ArrayList<HashMap<String, String>> VariablesList  = GetVaribales(Variablesid);
+//                if(VariablesList.size()>0)
+//                {
+//                    String VariablesPath = VariablesList.get(0).get("variablesexpress");
+//                    logger.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
+//                    TestAssert testAssert=new TestAssert(logger);
+//                    String ParseValue = testAssert.ParseJson(VariablesPath, Respone);
+//                    logger.info("条件报告子条件处理变量取值-============：" + ParseValue);
+//                    TestvariablesValue testvariablesValue = new TestvariablesValue();
+//                    testvariablesValue.setPlanid(PlanID);
+//                    testvariablesValue.setPlanname(requestObject.getTestplanname());
+//                    testvariablesValue.setBatchname(requestObject.getBatchname());
+//                    testvariablesValue.setCaseid(CaseID);
+//                    testvariablesValue.setCasename(requestObject.getCasename());
+//                    testvariablesValue.setVariablesid(Long.parseLong(VariablesList.get(0).get("id")));
+//                    testvariablesValue.setVariablesname(VariablesList.get(0).get("testvariablesname"));
+//                    testvariablesValue.setVariablesvalue(ParseValue);
+//                    testvariablesValue.setMemo("test");
+//                    testVariablesValueSave(testvariablesValue);
+//                }
+//            }
+        }
+    }
 
-            TestconditionReport testconditionReport = new TestconditionReport();
-            testconditionReport.setTestplanid(PlanID);
-            testconditionReport.setPlanname(requestObject.getTestplanname());
-            testconditionReport.setBatchname(requestObject.getBatchname());
-            testconditionReport.setConditionid(new Long(ConditionID));
-            testconditionReport.setConditiontype("前置条件");
-            testconditionReport.setConditionresult(Respone);
-            testconditionReport.setConditionstatus(ConditionResultStatus);
-            testconditionReport.setRuntime(CostTime);
-            testconditionReport.setSubconditionid(Long.parseLong(conditionApi.get("id")));
-            testconditionReport.setSubconditiontype("接口");
-            testconditionReport.setStatus("已完成");
-            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
-            SubConditionReportSave(testconditionReport);
-            //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
-            ArrayList<HashMap<String, String>> apicasesVariablesList  = GetApiCaseVaribales(CaseID);
-            if (apicasesVariablesList.size()>0) {
-                logger.info("条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
-                String Variablesid=apicasesVariablesList.get(0).get("id");
-                ArrayList<HashMap<String, String>> VariablesList  = GetVaribales(Variablesid);
-                if(VariablesList.size()>0)
-                {
-                    String VariablesPath = VariablesList.get(0).get("variablesexpress");
-                    logger.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
-                    TestAssert testAssert=new TestAssert(logger);
-                    String ParseValue = testAssert.ParseJson(VariablesPath, Respone);
-                    logger.info("条件报告子条件处理变量取值-============：" + ParseValue);
-                    TestvariablesValue testvariablesValue = new TestvariablesValue();
-                    testvariablesValue.setPlanid(PlanID);
-                    testvariablesValue.setPlanname(requestObject.getTestplanname());
-                    testvariablesValue.setBatchname(requestObject.getBatchname());
-                    testvariablesValue.setCaseid(CaseID);
-                    testvariablesValue.setCasename(requestObject.getCasename());
-                    testvariablesValue.setVariablesid(Long.parseLong(VariablesList.get(0).get("id")));
-                    testvariablesValue.setVariablesname(VariablesList.get(0).get("testvariablesname"));
-                    testvariablesValue.setVariablesvalue(ParseValue);
-                    testvariablesValue.setMemo("test");
-                    testVariablesValueSave(testvariablesValue);
-                }
+    private void SaveApiSubCondition(RequestObject requestObject,Long PlanID, Long CaseID,Long ConditionID,HashMap<String, String> conditionApi, String Respone,String ConditionResultStatus,long CostTime)
+    {
+        TestconditionReport testconditionReport = new TestconditionReport();
+        testconditionReport.setTestplanid(PlanID);
+        testconditionReport.setPlanname(requestObject.getTestplanname());
+        testconditionReport.setBatchname(requestObject.getBatchname());
+        testconditionReport.setConditionid(new Long(ConditionID));
+        testconditionReport.setConditiontype("前置条件");
+        testconditionReport.setConditionresult(Respone);
+        testconditionReport.setConditionstatus(ConditionResultStatus);
+        testconditionReport.setRuntime(CostTime);
+        testconditionReport.setSubconditionid(Long.parseLong(conditionApi.get("id")));
+        testconditionReport.setSubconditionname(conditionApi.get("subconditionname"));
+        testconditionReport.setSubconditiontype("接口");
+        testconditionReport.setStatus("已完成");
+        logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
+        SubConditionReportSave(testconditionReport);
+        //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+        ArrayList<HashMap<String, String>> apicasesVariablesList  = GetApiCaseVaribales(CaseID);
+        if (apicasesVariablesList.size()>0) {
+            logger.info("条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
+            String Variablesid=apicasesVariablesList.get(0).get("id");
+            ArrayList<HashMap<String, String>> VariablesList  = GetVaribales(Variablesid);
+            if(VariablesList.size()>0)
+            {
+                String VariablesPath = VariablesList.get(0).get("variablesexpress");
+                logger.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
+                TestAssert testAssert=new TestAssert(logger);
+                String ParseValue = testAssert.ParseJson(VariablesPath, Respone);
+                logger.info("条件报告子条件处理变量取值-============：" + ParseValue);
+                TestvariablesValue testvariablesValue = new TestvariablesValue();
+                testvariablesValue.setPlanid(PlanID);
+                testvariablesValue.setPlanname(requestObject.getTestplanname());
+                testvariablesValue.setBatchname(requestObject.getBatchname());
+                testvariablesValue.setCaseid(CaseID);
+                testvariablesValue.setCasename(requestObject.getCasename());
+                testvariablesValue.setVariablesid(Long.parseLong(VariablesList.get(0).get("id")));
+                testvariablesValue.setVariablesname(VariablesList.get(0).get("testvariablesname"));
+                testvariablesValue.setVariablesvalue(ParseValue);
+                testvariablesValue.setMemo("test");
+                testVariablesValueSave(testvariablesValue);
             }
         }
     }
 
     //处理脚本条件
-    public void ScriptCondition(Long ConditionID,RequestObject requestObject) {
+    public void ScriptCondition(long ConditionID,RequestObject requestObject) throws Exception {
         Long PlanID=Long.parseLong(requestObject.getTestplanid());
         Long CaseID=Long.parseLong(requestObject.getCaseid());
         ArrayList<HashMap<String, String>> conditionScriptList = GetScriptConditionByConditionID(ConditionID);
@@ -617,35 +667,142 @@ public class TestCore {
                 logger.info("条件报告脚本子条件:-============：" + JavaSource);
                 String Source = dnamicCompilerHelp.GetCompeleteClass(JavaSource, CaseID);
                 dnamicCompilerHelp.CallDynamicScript(Source);
+                End = new Date().getTime();
+                CostTime = End - Start;
+                SaveSubCondition("脚本",requestObject,PlanID,ConditionID,conditionScript,Respone,ConditionResultStatus,CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone =  ex.getMessage();
+                End = new Date().getTime();
+                CostTime = End - Start;
+                SaveSubCondition("脚本",requestObject,PlanID,ConditionID,conditionScript,Respone,ConditionResultStatus,CostTime);
+                throw new Exception("脚本子条件执行异常："+ex.getMessage());
+            }
+            //更新条件结果表
+//            TestconditionReport testconditionReport = new TestconditionReport();
+//            testconditionReport.setTestplanid(PlanID);
+//            testconditionReport.setPlanname(requestObject.getCasename());
+//            testconditionReport.setBatchname(requestObject.getBatchname());
+//            testconditionReport.setConditionid(new Long(ConditionID));
+//            testconditionReport.setConditiontype("前置条件");
+//            testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
+//            testconditionReport.setSubconditiontype("脚本");
+//            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+//
+//            testconditionReport.setConditionresult(Respone);
+//            testconditionReport.setConditionstatus(ConditionResultStatus);
+//            testconditionReport.setRuntime(CostTime);
+//            testconditionReport.setStatus("已完成");
+//            SubConditionReportSave(testconditionReport);
+//            logger.info("条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+        }
+    }
+
+    private  void SaveSubCondition(String SubconditionType, RequestObject requestObject, Long PlanID, Long ConditionID, HashMap<String, String> conditionScript, String Respone, String ConditionResultStatus, long CostTime)
+    {
+        //更新条件结果表
+        TestconditionReport testconditionReport = new TestconditionReport();
+        testconditionReport.setTestplanid(PlanID);
+        testconditionReport.setPlanname(requestObject.getCasename());
+        testconditionReport.setBatchname(requestObject.getBatchname());
+        testconditionReport.setConditionid(new Long(ConditionID));
+        testconditionReport.setConditiontype("前置条件");
+        testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
+        testconditionReport.setSubconditionname(conditionScript.get("subconditionname"));
+        testconditionReport.setSubconditiontype(SubconditionType);
+        logger.info(SubconditionType+"条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+
+        testconditionReport.setConditionresult(Respone);
+        testconditionReport.setConditionstatus(ConditionResultStatus);
+        testconditionReport.setRuntime(CostTime);
+        testconditionReport.setStatus("已完成");
+        SubConditionReportSave(testconditionReport);
+        logger.info(SubconditionType+"条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+
+    }
+
+    public void DBCondition(long ConditionID, RequestObject requestObject) {
+        Long PlanID=Long.parseLong(requestObject.getTestplanid());
+        Long CaseID=Long.parseLong(requestObject.getCaseid());
+        ArrayList<HashMap<String, String>> conditionDbListList = GetDBConditionByConditionID(ConditionID);
+        for (HashMap<String, String> conditionDb : conditionDbListList) {
+            TestconditionReport testconditionReport = new TestconditionReport();
+            long Start = 0;
+            long End = 0;
+            long CostTime = 0;
+            String Respone = "";
+            String ConditionResultStatus = "成功";
+            Long Assembleid =Long.parseLong(conditionDb.get("assembleid"));
+            ArrayList<HashMap<String, String>> enviromentAssemblelist = getcaseData("select * from enviroment_assemble where id=" + Assembleid);
+            if (enviromentAssemblelist.size()==0) {
+                Respone = "未找到环境组件，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                break;
+            }
+            String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
+            Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
+            String Sql = conditionDb.get("dbcontent");
+            String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
+            ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid+" and assembleid="+Assembleid);
+            if (macdepunitlist.size() == 0) {
+                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                break;
+            }
+
+            Long MachineID=Long.parseLong(macdepunitlist.get(0).get("machineid"));
+            ArrayList<HashMap<String, String>> machinelist = getcaseData("select * from machine where id=" + MachineID);
+            if (machinelist.size() == 0) {
+                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                break;
+            }
+            String deployunitvisittype = macdepunitlist.get(0).get("visittype");
+            String[] ConnetcArray = ConnnectStr.split(",");
+            if(ConnetcArray.length<4)
+            {
+                Respone = "数据库连接字填写不规范，请按规则填写";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                break;
+            }
+            String username = ConnetcArray[0];
+            String pass = ConnetcArray[1];
+            String port = ConnetcArray[2];
+            String dbname = ConnetcArray[3];
+            String DBUrl = "";
+            if (AssembleType.equals("mysql")) {
+                DBUrl = "jdbc:mysql://";
+            }
+            if (AssembleType.equals("oracle")) {
+                DBUrl = "";
+            }
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equals("ip")) {
+                String IP=machinelist.get(0).get("ip");
+                DBUrl = DBUrl + IP + ":" + port + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            } else {
+                String Domain=macdepunitlist.get(0).get("domain");
+                DBUrl = DBUrl + Domain + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            }
+            try {
+                Start = new Date().getTime();
+                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+                int nums= Db.use(ds).execute(Sql);
+                Respone="成功执行，影响条数："+nums;
+            } catch (Exception ex) {
+                ConditionResultStatus = "失败";
+                Respone = ex.getMessage();
             } finally {
                 End = new Date().getTime();
             }
             CostTime = End - Start;
             //更新条件结果表
-            TestconditionReport testconditionReport = new TestconditionReport();
-            testconditionReport.setTestplanid(PlanID);
-            testconditionReport.setPlanname(requestObject.getCasename());
-            testconditionReport.setBatchname(requestObject.getBatchname());
-            testconditionReport.setConditionid(new Long(ConditionID));
-            testconditionReport.setConditiontype("前置条件");
-            testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
-            testconditionReport.setSubconditiontype("脚本");
-            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
-
-            testconditionReport.setConditionresult(Respone);
-            testconditionReport.setConditionstatus(ConditionResultStatus);
-            testconditionReport.setRuntime(CostTime);
-            testconditionReport.setStatus("已完成");
-            SubConditionReportSave(testconditionReport);
-
-            logger.info("条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+            SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
         }
-
-
-
     }
 
     //条件逻辑是否完成
@@ -705,7 +862,7 @@ public class TestCore {
                 logger.info(logplannameandcasename + "getrequest url is ....." + Httphelp.getrequesturl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
             }
             result = Httphelp.doService(requestObject.getProtocal(), requestObject.getResource(), requestObject.getRequestmMthod(), requestObject.getApistyle(), requestObject.getParamers(), requestObject.getPostData(), requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
-            logger.info(logplannameandcasename + "request result is ....." + result);
+            //logger.info(logplannameandcasename + "request result is ....." + result);
         }
 
         if (requestObject.getProtocal().equals(new String("rpc"))) {
@@ -728,11 +885,11 @@ public class TestCore {
             logger.info(logplannameandcasename + "Sql is:  " + Sql + "  数据库异常：" + e.getMessage());
         }
         logger.info(logplannameandcasename + "list size is:  " + list.size());
-        for (HashMap<String, String> li : list) {
-            for (String key : li.keySet()) {
-                logger.info(logplannameandcasename + "key is:  " + key + " value is :" + li.get(key));
-            }
-        }
+//        for (HashMap<String, String> li : list) {
+//            for (String key : li.keySet()) {
+//                logger.info(logplannameandcasename + "key is:  " + key + " value is :" + li.get(key));
+//            }
+//        }
         return list;
     }
 
@@ -785,14 +942,30 @@ public class TestCore {
         return result;
     }
 
+    //获取数据库条件
+    private  ArrayList<HashMap<String, String>>  GetDBConditionByConditionID(Long ConditionID)
+    {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select * from condition_db where conditionid=" + ConditionID ;
+            logger.info(logplannameandcasename + "获取数据库条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+
+
     //保存条件结果
     public void  SubConditionReportSave(TestconditionReport testconditionReport)
     {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
-        String sql = "insert testcondition_report (conditionid,conditiontype,subconditionid,conditionresult,conditionstatus,runtime,create_time,lastmodify_time,creator,batchname,planname,testplanid,subconditiontype,status)" +
-                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'"+", '"+testconditionReport.getBatchname()+"',  '"+testconditionReport.getPlanname()+"',"+testconditionReport.getTestplanid()+", '"+testconditionReport.getSubconditiontype()+"', '"+testconditionReport.getStatus()+"')";
+        String sql = "insert testcondition_report (conditionid,conditiontype,subconditionid,conditionresult,conditionstatus,runtime,create_time,lastmodify_time,creator,batchname,planname,testplanid,subconditiontype,status,subconditionname)" +
+                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'"+", '"+testconditionReport.getBatchname()+"',  '"+testconditionReport.getPlanname()+"',"+testconditionReport.getTestplanid()+", '"+testconditionReport.getSubconditiontype()+"', '"+testconditionReport.getStatus()+"', '"+testconditionReport.getSubconditionname()+"')";
         logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }

@@ -74,7 +74,15 @@ public class ConditionApi {
     private String apiname;
     private String casename;
 
+    public String getSubconditionname() {
+        return subconditionname;
+    }
 
+    public void setSubconditionname(String subconditionname) {
+        this.subconditionname = subconditionname;
+    }
+
+    private String subconditionname;
 
     /**
      * 备注

@@ -13,10 +13,7 @@ import com.zoctan.api.service.impl.ExecuteplanServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -24,6 +21,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Set;
 
@@ -174,5 +172,71 @@ public class Httphelp {
         newUrl.append(query);
         hasPrepend = false;
         return newUrl.toString();
+    }
+
+    public static String getrequesturl(String url, String apistyle, HttpParamers paramsob) throws Exception {
+        String requestUrl = "";
+        String params;// 编码之后的参数
+        StringBuffer sb = new StringBuffer();// 存储参数
+        requestUrl = url;
+        Map<String, String> parameters = paramsob.getParams();
+        if (apistyle.equals(new String("restful"))) {
+            if (!(url.contains("{") && url.contains("}"))) {
+                throw new Exception("restfulapi-url:" + url + " 未包含{}参数");
+            }
+        }
+        if (parameters.size() < 1) {
+            if (apistyle.equals(new String("restful"))) {
+                throw new Exception("restfulapi-未设置url:" + url + " 中的对应的参数和用例数据");
+            } else {
+                requestUrl = url;
+            }
+        } else if (parameters.size() == 1) {
+            if (apistyle.equals(new String("restful"))) {
+                for (String name : parameters.keySet()) {
+                    if (!url.contains("{" + name + "}")) {
+                        throw new Exception("Api的参数:" + name + "和url:" + url + "中的参数不匹配");
+                    } else {
+                        requestUrl = requestUrl.replace("{" + name + "}", parameters.get(name));
+                    }
+                }
+            } else {
+                for (String name : parameters.keySet()) {
+                    try {
+                        sb.append(name).append("=").append(
+                                java.net.URLEncoder.encode(parameters.get(name),
+                                        "UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                params = sb.toString();
+                requestUrl = url + "?" + params;
+            }
+        } else {
+            if (apistyle.equals(new String("restful"))) {
+                for (String name : parameters.keySet()) {
+                    if (!url.contains("{" + name + "}")) {
+                        throw new Exception("Api的参数:" + name + "和url:" + url + "中的参数不匹配");
+                    } else {
+                        requestUrl = requestUrl.replace("{" + name + "}", parameters.get(name));
+                    }
+                }
+            } else {
+                for (String name : parameters.keySet()) {
+                    try {
+                        sb.append(name).append("=").append(
+                                java.net.URLEncoder.encode(parameters.get(name),
+                                        "UTF-8")).append("&");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                String tempParams = sb.toString();
+                params = tempParams.substring(0, tempParams.length() - 1);
+                requestUrl = url + "?" + params;
+            }
+        }
+        return requestUrl;
     }
 }

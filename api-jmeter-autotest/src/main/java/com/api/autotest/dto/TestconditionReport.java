@@ -20,7 +20,15 @@ public class TestconditionReport {
 
     private Long subconditionid;
 
+    public String getSubconditionname() {
+        return subconditionname;
+    }
 
+    public void setSubconditionname(String subconditionname) {
+        this.subconditionname = subconditionname;
+    }
+
+    private String subconditionname;
 
     public Long getTestplanid() {
         return testplanid;

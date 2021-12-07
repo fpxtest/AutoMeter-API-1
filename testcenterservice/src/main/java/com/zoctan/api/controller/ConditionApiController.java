@@ -27,13 +27,14 @@ public class ConditionApiController {
     @PostMapping
     public Result add(@RequestBody ConditionApi conditionApi) {
         Condition con=new Condition(ConditionApi.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname() + "'")
+        con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionApi.getSubconditionname()+ "'")
                 .andCondition("deployunitname = '" + conditionApi.getDeployunitname()+ "'")
                 .andCondition("apiname = '" + conditionApi.getApiname()+ "'")
                 .andCondition("casename = '" + conditionApi.getCasename()+ "'");
         if(conditionApiService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该条件名已存在此接口");
+            return ResultGenerator.genFailedResult("已存在该子条件名或者接口");
         }
         else {
             conditionApiService.save(conditionApi);
@@ -74,14 +75,15 @@ public class ConditionApiController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final ConditionApi conditionApi) {
         Condition con=new Condition(ConditionApi.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname() + "'")
+        con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionApi.getSubconditionname()+ "'")
                 .andCondition("deployunitname = '" + conditionApi.getDeployunitname()+ "'")
                 .andCondition("apiname = '" + conditionApi.getApiname()+ "'")
                 .andCondition("casename = '" + conditionApi.getCasename()+ "'")
                 .andCondition("id <> " + conditionApi.getId());
         if(conditionApiService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该条件下已存在此接口");
+            return ResultGenerator.genFailedResult("已存在该子条件名或者接口");
         }
         else {
             this.conditionApiService.updateTestconditionapi(conditionApi);

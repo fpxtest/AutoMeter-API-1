@@ -17,7 +17,7 @@ export function getconditionnum() {
 
 export function getconditionallList() {
   return request({
-    url: '/testcondition/ens',
+    url: '/testcondition/getalltestcondition',
     method: 'get'
   })
 }

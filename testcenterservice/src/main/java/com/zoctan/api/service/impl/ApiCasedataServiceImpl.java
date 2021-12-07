@@ -36,6 +36,11 @@ public class ApiCasedataServiceImpl extends AbstractService<ApiCasedata> impleme
     }
 
     @Override
+    public List<ApiCasedata> getparamvaluebycaseidandtype(Long caseid, String PrppertyType) {
+        return apiCasedataMapper.getparamvaluebycaseidandtype(caseid,PrppertyType);
+    }
+
+    @Override
     public void deletcasedatabyid(Long caseid) {
         this.apiCasedataMapper.deletcasedatabyid(caseid);
     }

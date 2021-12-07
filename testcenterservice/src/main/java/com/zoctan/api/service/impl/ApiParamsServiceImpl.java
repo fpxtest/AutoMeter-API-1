@@ -55,6 +55,11 @@ private ApiParamsMapper apiParamsMapper;
     }
 
     @Override
+    public List<ApiParams> getApiParamsbypropertytype(Long apiid, String propertytype) {
+        return apiParamsMapper.getApiParamsbypropertytype(apiid,propertytype);
+    }
+
+    @Override
     public void updateApiParams(ApiParams params) {
         String JsonKey=params.getKeyname();
         if(JSON.isValidObject(JsonKey))
