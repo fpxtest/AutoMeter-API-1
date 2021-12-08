@@ -27,7 +27,6 @@ public class EnviromentAssembleController {
     public Result add(@RequestBody EnviromentAssemble enviromentAssemble) {
         Condition con=new Condition(EnviromentAssemble.class);
         con.createCriteria().andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
-        .andCondition("connectstr = '" + enviromentAssemble.getConnectstr() + "'")
                 .andCondition("assemblename = '" + enviromentAssemble.getAssemblename() + "'");
         if(enviromentAssembleService.ifexist(con)>0)
         {
@@ -53,7 +52,6 @@ public class EnviromentAssembleController {
     public Result updateDeploy(@RequestBody final EnviromentAssemble enviromentAssemble) {
         Condition con=new Condition(EnviromentAssemble.class);
         con.createCriteria().andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
-        .andCondition("connectstr = '" + enviromentAssemble.getConnectstr() + "'")
                 .andCondition("assemblename = '" + enviromentAssemble.getAssemblename() + "'")
                 .andCondition("id <> " + enviromentAssemble.getId());
         if(enviromentAssembleService.ifexist(con)>0)

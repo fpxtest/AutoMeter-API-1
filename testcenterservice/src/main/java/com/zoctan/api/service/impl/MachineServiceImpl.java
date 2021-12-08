@@ -28,6 +28,11 @@ private MachineMapper machineMapper;
     }
 
     @Override
+    public Machine findmachinebymachineandip(String machinename, String ip, Long ID) {
+        return machineMapper.findmachinebymachineandip(machinename, ip, ID);
+    }
+
+    @Override
     public Machine findmachinebyip(String ip) {
         return machineMapper.findmachinebyip(ip);
     }

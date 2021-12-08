@@ -109,7 +109,6 @@
           <el-select v-model="tmpdepunit.protocal" placeholder="协议">
             <el-option label="http" value="http"></el-option>
             <el-option label="https" value="https"></el-option>
-            <el-option label="rpc" value="rpc"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="端口" prop="port" required>

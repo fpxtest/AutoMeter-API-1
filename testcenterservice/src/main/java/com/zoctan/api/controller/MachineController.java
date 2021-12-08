@@ -45,9 +45,12 @@ public class MachineController {
 
     @PutMapping("/detail")
     public Result update(@RequestBody Machine machine) {
-        Condition con=new Condition(Machine.class);
-        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'").andCondition("id <> " + machine.getId()).andCondition("ip = '" + machine.getIp() + "'");
-        if(machineService.ifexist(con)>0)
+//        Condition con=new Condition(Machine.class);
+//        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'")
+//                .orCondition("ip = '" + machine.getIp() + "'")
+//        .andCondition("id <> " + machine.getId());
+        Machine machine1=machineService.findmachinebymachineandip(machine.getMachinename(),machine.getIp(),machine.getId());
+        if(machine1!=null)
         {
             return ResultGenerator.genFailedResult("服务器名或者ip已经存在");
         }

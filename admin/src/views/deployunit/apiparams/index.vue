@@ -58,17 +58,9 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="api名" align="center" prop="apiname" width="120"/>
+      <el-table-column label="api名" align="center" prop="apiname" width="180"/>
       <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
-      </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
-        </template>
-      </el-table-column>
       <el-table-column label="参数名" align="center" prop="keynamebak" width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -79,6 +71,15 @@
           </el-popover>
         </template>
       </el-table-column>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
+      </el-table-column>
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
+        </template>
+      </el-table-column>
+
 
       <el-table-column label="管理" align="center"
                        v-if="hasPermission('apiparams:update')  || hasPermission('apiparams:delete')">
@@ -112,8 +113,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="150px"
-        style="width: 500px; margin-left:50px;"
+        label-width="180px"
+        style="width: 600px; margin-left:30px;"
         :model="tmpapiparams"
         ref="tmpapiparams"
       >
@@ -144,11 +145,12 @@
         <el-form-item :label="paralabel" prop="keyname" required>
           <el-input
             type="textarea"
+            rows="10" cols="50"
             maxlength="1000"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapiparams.keyname"
-            placeholder="例如key1,key2,key3"
+            :placeholder="keyholder"
           />
         </el-form-item>
       </el-form>
@@ -196,6 +198,7 @@
     data() {
       return {
         paralabel: '参数(英文逗号隔开)',
+        keyholder: '例如key1,key2,key3',
         itemKey: null,
         tmpapiname: null,
         tmpdeployunitname: null,
@@ -293,10 +296,19 @@
       },
 
       paratypeselectChanged(e) {
+        this.tmpapiparams.keyname = ''
         if (e === 'Body') {
-          this.paralabel = '参数(Json，Xml)'
+          this.paralabel = '参数(支持Json，Xml)'
+          this.keyholder = '例如：\n {\n' +
+            '  "id": "",\n' +
+            '  "enviromentname": "teste2",\n' +
+            '  "envtype": "功能",\n' +
+            '  "memo": "",\n' +
+            '  "creator": "admin"\n' +
+            '}'
         } else {
           this.paralabel = '参数(英文逗号隔开)'
+          this.keyholder = '例如： key1,key2,key3'
         }
       },
 
@@ -453,6 +465,11 @@
           if (this.deployunitList[i].deployunitname === this.tmpapiparams.deployunitname) {
             this.tmpapiparams.deployunitid = this.deployunitList[i].id
           }
+        }
+        if (this.tmpapiparams.propertytype === 'Body') {
+          this.paralabel = '参数(支持Json，Xml)'
+        } else {
+          this.paralabel = '参数(英文逗号隔开)'
         }
       },
       /**

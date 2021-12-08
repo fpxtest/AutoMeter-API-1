@@ -288,6 +288,8 @@
         this.tmpmacdepunit.deployunitname = ''
         this.tmpmacdepunit.assembleid = ''
         this.tmpmacdepunit.depunitid = ''
+        this.tmpmacdepunit.visittype = ''
+        this.tmpmacdepunit.domain = ''
       },
 
       /**
@@ -296,9 +298,11 @@
       selectChangedVisittype(e) {
         if (e === '域名') {
           this.domianVisible = true
+          this.tmpmacdepunit.domain = ''
         }
         if (e === 'ip') {
           this.domianVisible = false
+          this.tmpmacdepunit.domain = '/'
         }
       },
 
@@ -525,6 +529,7 @@
         }
         if (this.tmpmacdepunit.visittype === 'ip') {
           this.domianVisible = false
+          this.tmpmacdepunit.domain = '/'
         }
         if (this.tmpmacdepunit.visittype === '域名') {
           this.domianVisible = true
@@ -542,7 +547,7 @@
             if (this.tmpmacdepunit.assembletype === '组件') {
               // this.tmpmacdepunit.visittype = ''
               this.tmpmacdepunit.depunitid = ''
-              this.tmpmacdepunit.domain = ''
+              // this.tmpmacdepunit.domain = ''
             }
             if (this.tmpmacdepunit.assembletype === '发布单元') {
               this.tmpmacdepunit.assembleid = ''

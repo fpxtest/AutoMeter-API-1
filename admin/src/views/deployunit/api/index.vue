@@ -477,9 +477,10 @@
       visitypeselectChanged(e) {
         if (e === 'get') {
           this.requestcontenttypeVisible = false
-          this.tmpapi.requestcontenttype = ''
+          this.tmpapi.requestcontenttype = '/'
         } else {
           this.requestcontenttypeVisible = true
+          this.tmpapi.requestcontenttype = ''
         }
       },
 
@@ -662,7 +663,7 @@
         this.tmpapi.creator = this.name
         if (this.tmpapi.visittype === 'get') {
           this.requestcontenttypeVisible = false
-          this.tmpapi.requestcontenttype = ''
+          this.tmpapi.requestcontenttype = '/'
         } else {
           this.tmpapi.requestcontenttype = this.apiList[index].requestcontenttype
           this.requestcontenttypeVisible = true

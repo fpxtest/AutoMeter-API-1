@@ -27,6 +27,11 @@
     order by lastmodify_time  DESC
   </select>
 
+  <select id="findmachinebymachineandip" resultMap="BaseResultMap">
+    SELECT * FROM machine
+    WHERE ( machinename = #{machinename} or ip = #{ip}) and id != #{id}
+  </select>
+
   <select id="findmachinebymachinename" resultMap="BaseResultMap">
     SELECT *
     FROM machine a

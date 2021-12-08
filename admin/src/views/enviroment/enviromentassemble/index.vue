@@ -51,7 +51,7 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="组件名" align="center" prop="assemblename" width="100"/>
+      <el-table-column label="组件名" align="center" prop="assemblename" width="160"/>
       <el-table-column label="组件类型" align="center" prop="assembletype" width="100"/>
       <el-table-column label="连接字" align="center" prop="connectstr" width="250"/>
       <el-table-column label="备注" align="center" prop="memo" width="100"/>
@@ -111,7 +111,7 @@
           />
         </el-form-item>
         <el-form-item label="组件类型" prop="assembletype" required >
-          <el-select v-model="tmpenviroment_assemble.assembletype" placeholder="组件类型">
+          <el-select v-model="tmpenviroment_assemble.assembletype" placeholder="组件类型" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(asstype, index) in assembleypeList" :key="index">
               <el-option :label="asstype.dicitmevalue" :value="asstype.dicitmevalue" required/>
@@ -234,7 +234,9 @@
 
     methods: {
       unix2CurrentTime,
-
+      selectChanged(e) {
+        this.tmpenviroment_assemble.connectstr = ''
+      },
       /**
        * 获取组件名字典列表
        */

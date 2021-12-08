@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -177,6 +179,9 @@ public class ApiController {
             api.setDeployunitname(objectdeployunitname);
             api.setApiname(newapiname);
             api.setId(null);
+            Date date=new Date();
+            api.setCreateTime(date);
+            api.setLastmodifyTime(date);
             apiService.save(api);
             Long ApiId= api.getId();
 
@@ -187,6 +192,8 @@ public class ApiController {
                 apiParams.setDeployunitid(Long.parseLong(objectdeployunitid));
                 apiParams.setDeployunitname(objectdeployunitname);
                 apiParams.setId(null);
+                apiParams.setCreateTime(date);
+                apiParams.setLastmodifyTime(date);
                 apiParamsService.save(apiParams);
             }
             return ResultGenerator.genOkResult();
