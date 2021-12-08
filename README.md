@@ -1,7 +1,7 @@
 # AutoMeter
 
 1.AutoMeter是一款针对分布式服务，微服务API做功能和性能一体的自动化测试平台。针对接口支持分布式功能和性能测试，极大的提高了技术人员的接口测试的效率
-
+![AutoMeter](https://gitee.com/season-fan/autometer-api/blob/master/img/dashboard.jpg)
 ![image](https://gitee.com/season-fan/autometer-api/blob/master/img/dashboard.jpg)
 
 着力解决在系统，项目开发，迭代交付过程中开发人员，测试人员针对系统提供的API做调试，回归测试，性能测试。自动化测试，本质上解决API测试的5大基本问题：
