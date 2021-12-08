@@ -46,28 +46,18 @@
       </el-table-column>
       <el-table-column label="执行计划名" align="center" prop="executeplanname" width="150"/>
       <el-table-column label="批次名" align="center" prop="batchname" width="120"/>
-      <el-table-column label="状态" align="center" prop="status" width="60"/>
-      <el-table-column label="来源" align="center" prop="source" width="60"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="80"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
+      <el-table-column label="状态" align="center" prop="status" width="150"/>
+      <el-table-column label="来源" align="center" prop="source" width="150"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="150"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
-                       v-if="hasPermission('executeplanbatch:update')  || hasPermission('executeplanbatch:delete')">
-        <template slot-scope="scope">
-          <el-button
-            type="primary"
-            size="mini"
-            v-if="hasPermission('executeplanbatch:update') && scope.row.id !== id"
-            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
-          >暂停</el-button>
-        </template>
-      </el-table-column>
+
     </el-table>
     <el-pagination
       @size-change="handleSizeChange"

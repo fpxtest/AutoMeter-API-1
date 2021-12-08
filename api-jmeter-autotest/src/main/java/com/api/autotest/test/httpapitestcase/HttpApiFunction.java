@@ -191,11 +191,12 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         apicasesReportstatics.setTotalfailcases(String.valueOf(TotalFailNUms));
         apicasesReportstatics.setRuntime(String.valueOf(AllCostTime));
         core.SaveReportStatics(apicasesReportstatics);
-        //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
-        core.PlanBatchAllDipatchFinish(apicasesReportstatics);
         getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
         core.UpdateSlaverStatus(SlaverId,"空闲");
         getLogger().info("功能用例统计收集信息 完成。。。。。。。。。。。。。。。。");
+        //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
+        core.PlanBatchAllDipatchFinish(apicasesReportstatics);
+
     }
 
     //获取用例期望值

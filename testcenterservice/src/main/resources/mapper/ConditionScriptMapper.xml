@@ -24,7 +24,7 @@
   </select>
 
   <update id="updateTestconditionScript" parameterType="com.zoctan.api.entity.ConditionScript">
-    update condition_script set conditionid = #{conditionid},subconditionname=#{subconditionname}, script = #{script},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    update condition_script set conditionid = #{conditionid},conditionname=#{conditionname},subconditionname=#{subconditionname}, script = #{script},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>
