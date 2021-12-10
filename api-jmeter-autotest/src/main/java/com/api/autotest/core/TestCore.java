@@ -162,7 +162,7 @@ public class TestCore {
 
         newob.setResponecontenttype(responecontenttype);
         if (resource == null) {
-            throw new Exception("执行计划对应的环境中未部署发布单元，请在测试环境中完成部署发布单元后再运行");
+            throw new Exception("测试集合对应的环境中未部署发布单元，请在测试环境中完成部署发布单元后再运行");
         }
         newob.setResource(resource);
         newob.setRequestmMthod(RequestmMthod);
@@ -184,7 +184,13 @@ public class TestCore {
                     header = new HttpHeader();
                     for (Object map : headermaps.entrySet()) {
                         String Value = ((Map.Entry) map).getValue().toString();
-                        Value = GetVariablesValues(testplanid, caseid, batchname, Value);
+                        if (Value.startsWith("$")) {
+                            String VariablesName = Value.substring(1);
+                            String Caseid= GetCaseIdByVariablesName(VariablesName);
+                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
+                        }
+                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
                         header.addParam(((Map.Entry) map).getKey().toString(), Value);
                     }
                     newob.setHeader(header);
@@ -208,7 +214,13 @@ public class TestCore {
                     params = new HttpParamers();
                     for (Object map : paramsmaps.entrySet()) {
                         String Value = ((Map.Entry) map).getValue().toString();
-                        Value = GetVariablesValues(testplanid, caseid, batchname, Value);
+                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
+                        if (Value.startsWith("$")) {
+                            String VariablesName = Value.substring(1);
+                            String Caseid= GetCaseIdByVariablesName(VariablesName);
+                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
+                        }
                         params.addParam(((Map.Entry) map).getKey().toString(), Value);
                     }
                     newob.setParamers(params);
@@ -232,7 +244,13 @@ public class TestCore {
                     params = new HttpParamers();
                     for (Object map : paramsmaps.entrySet()) {
                         String Value = ((Map.Entry) map).getValue().toString();
-                        Value = GetVariablesValues(testplanid, caseid, batchname, Value);
+                        if (Value.startsWith("$")) {
+                            String VariablesName = Value.substring(1);
+                            String Caseid= GetCaseIdByVariablesName(VariablesName);
+                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
+                        }
+                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
                         params.addParam(((Map.Entry) map).getKey().toString(), Value);
                     }
                     newob.setParamers(params);

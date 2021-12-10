@@ -100,7 +100,7 @@ public class TestconditionController {
         Long Planid = dispatch.getExecplanid();
         Long Caseid = dispatch.getTestcaseid();
         Executeplan executeplan = executeplanService.getBy("id", Planid);
-        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Planid, "前置条件", "执行计划");
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Planid, "前置条件", "测试集合");
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
             TestconditionController.log.info("开始处理计划前置条件-数据库子条件-============：");

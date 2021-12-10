@@ -56,6 +56,8 @@ public class PerformanceDispatchScheduleTask {
     private ConditionApiService conditionApiService;
     @Autowired(required = false)
     private ConditionScriptService conditionScriptService;
+    @Autowired(required = false)
+    private ConditionDbService conditionDbService;
     private String redisKey = "";
 
 
@@ -117,43 +119,6 @@ public class PerformanceDispatchScheduleTask {
                         }
                     }
                 }
-//                List<Slaver> Slaverlist = slaverMapper.findslaverbytypeandstatus("性能", "空闲");
-//                if(Slaverlist.size()>0)
-//                {
-//                    List<Dispatch> DispatchAllList = dispatchMapper.getcasebyrunmode( "待分配","性能","多机并行");
-//                    if(DispatchAllList.size()>0)
-//                    {
-//                        //按照planid分组取第一组,再按照CaseID分组取第一组，每组请求slaver前，先查询，每组中的slaver是否空闲状态，如果空闲则发送slaver性能任务
-//                        List<Dispatch> PlanIDResultDispatchList=GetGroupList(DispatchAllList,"PlanID");
-//                        List<Dispatch> CaseResultDispatchList=GetGroupList(PlanIDResultDispatchList,"CaseID");
-//                        if(CaseResultDispatchList.size()>0)
-//                        {
-//                            int RuningSlaverNums= dispatchMapper.findbusyslavernums(Slaverlist,"已分配");
-//                            // slaver全部为空闲状态
-//                            if(RuningSlaverNums==0)
-//                            {
-//                                // 增加代码先判断是否有前置条件，如果有请求条件服务，处理完成再发送到各个性能服务器并行执行
-//                                Dispatch ConditionDispatch = CaseResultDispatchList.get(0);
-//                                RequestConditionServiceByPlanId(ConditionDispatch);
-//                                for (Slaver slaver: Slaverlist) {
-//                                    Dispatch dispatch=GetCaseDispatch(CaseResultDispatchList,slaver.getId());
-//                                    if(dispatch!=null)
-//                                    {
-//                                        String params = JSON.toJSONString(dispatch);
-//                                        HttpHeader header = new HttpHeader();
-//                                        String ServerUrl="http://"+slaver.getIp()+":"+slaver.getPort()+"/exectestplancase/execperformancetest";
-//                                        String respon= Httphelp.doPost(ServerUrl, params, header, 30000);
-//                                    }
-//                                }
-//                            }
-//                            else
-//                            {
-//                                PerformanceDispatchScheduleTask.log.info("性能任务--有"+RuningSlaverNums+"台性能机器正在运行中，无法并行执行性能测试");
-//                                return ;
-//                            }
-//                        }
-//                    }
-//                }
                 //TODO 执行任务结束后需要释放锁
                 //释放锁
                 redisUtils.deletekey(redisKey);
@@ -178,7 +143,8 @@ public class PerformanceDispatchScheduleTask {
             Long ConditionID= testconditionList.get(0).getId();
             List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
             int ApiConditionNums=conditionApiList.size();
-            int DBConditionNUms=0;//待实现数据库条件
+            List<ConditionDb> conditionDbList=conditionDbService.GetCaseListByConditionID(ConditionID);
+            int DBConditionNUms=conditionDbList.size();
             List<ConditionScript> conditionScriptList= conditionScriptService.getconditionscriptbyid(ConditionID);
             int ScriptConditionNUms=conditionScriptList.size();
             int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
@@ -264,9 +230,15 @@ public class PerformanceDispatchScheduleTask {
     private void RequestConditionServiceByPlanId(Dispatch dispatch) throws Exception {
         String params = JSON.toJSONString(dispatch);
         HttpHeader header = new HttpHeader();
-        String ServerUrl = conditionserver + "/testcondition/exec";
-        String respone= Httphelp.doPost(ServerUrl, params, header, 30000);
-        PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器请求条件服务响应: " + respone);
+        String ServerUrl = conditionserver + "/testcondition/execplancondition";
+        PerformanceDispatchScheduleTask.log.info("调度处理条件任务请求conditionserver。。。。。。。: " + ServerUrl);
+        try {
+            PerformanceDispatchScheduleTask.log.info("调度处理条件任务请求数据。。。。。。。: " + params);
+            String respone = Httphelp.doPost(ServerUrl, params, header, 30000);
+            PerformanceDispatchScheduleTask.log.info("调度处理条件任务请求条件服务响应: " + respone);
+        } catch (Exception ex) {
+            PerformanceDispatchScheduleTask.log.info("-------------调度处理条件任务请求异常: " + ex.getMessage());
+        }
     }
 
     private List<Dispatch> GetGroupList(List<Dispatch> dispatchList,String ID)
