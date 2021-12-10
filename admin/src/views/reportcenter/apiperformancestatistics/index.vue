@@ -13,16 +13,16 @@
         </el-form-item>
 
         <span v-if="hasPermission('apiperformancestatistics:search')">
-          <el-form-item label="执行计划" prop="testplanname" >
-          <el-select v-model="search.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+          <el-form-item label="测试集合" prop="testplanname" >
+          <el-select v-model="search.testplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
             </div>
           </el-select>
         </el-form-item>
-          <el-form-item label="批次" prop="batchname" >
-            <el-select v-model="search.batchname" placeholder="批次">
+          <el-form-item label="执行计划" prop="batchname" >
+            <el-select v-model="search.batchname" placeholder="执行计划">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(planbatch, index) in planbatchList" :key="index">
               <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column label="计划" align="center" prop="executeplanname" width="120"/>
       <el-table-column label="用例" align="center" prop="casename" width="120"/>
-      <el-table-column label="批次" align="center" prop="batchname" width="120"/>
+      <el-table-column label="执行计划" align="center" prop="batchname" width="120"/>
       <el-table-column label="消耗时间(s)" align="center" prop="runtime" width="120"/>
       <el-table-column label="运行次数" align="center" prop="samples" width="80"/>
       <el-table-column label="错误次数" align="center" prop="errorcount" width="80"/>
@@ -182,7 +182,7 @@
         tmpbatchname: null,
         apiperformancestatisticsList: [], // api报告列表
         apiList: [], // api列表
-        planbatchList: [], // 批次列表
+        planbatchList: [], // 执行计划列表
         execplanList: [], // 计划列表
         deployunitList: [], // 发布单元列表
         listLoading: false, // 数据加载等待动画
@@ -253,7 +253,7 @@
         getbatchbyplan(this.tmpapiperformancestatistics).then(response => {
           this.planbatchList = response.data
         }).catch(res => {
-          this.$message.error('加载批次列表失败')
+          this.$message.error('加载执行计划列表失败')
         })
       },
 
@@ -284,7 +284,7 @@
       },
 
       /**
-       * 获取执行计划列表
+       * 获取测试集合列表
        */
       getexecplanList() {
         this.tmpexecplantype.usetype = '性能'
