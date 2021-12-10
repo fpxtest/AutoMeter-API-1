@@ -5,8 +5,8 @@
       <el-form :inline="true" :model="searchcase" ref="searchcase">
         <span v-if="hasPermission('apireportstatics:search')">
 
-          <el-form-item label="执行计划" prop="testplanname" required>
-            <el-select v-model="searchcase.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+          <el-form-item label="测试集合" prop="testplanname" required>
+            <el-select v-model="searchcase.testplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
               <el-option label="请选择" value/>
               <div v-for="(testplan, index) in execplanList" :key="index">
                 <el-option :label="testplan.executeplanname" :value="testplan.executeplanname"/>
@@ -14,8 +14,8 @@
             </el-select>
           </el-form-item>
 
-        <el-form-item label="批次" prop="batchname" requied >
-          <el-select v-model="searchcase.batchname" placeholder="批次">
+        <el-form-item label="执行测试集合" prop="batchname" requied >
+          <el-select v-model="searchcase.batchname" placeholder="执行测试集合">
             <el-option label="请选择" value/>
             <div v-for="(planbatch, index) in planbatchList" :key="index">
               <el-option :label="planbatch.batchname" :value="planbatch.batchname"/>
@@ -45,8 +45,8 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="计划" align="center" prop="planname" width="200"/>
-      <el-table-column label="批次" align="center" prop="batchname" width="200"/>
+      <el-table-column label="测试集合" align="center" prop="planname" width="200"/>
+      <el-table-column label="执行测试集合" align="center" prop="batchname" width="200"/>
       <el-table-column label="用例数" align="center" prop="testcasenums" width="200"/>
       <el-table-column label="成功数" align="center" prop="passnums" width="200"/>
       <el-table-column label="失败数" align="center" prop="failnums" width="200"/>
@@ -102,8 +102,8 @@ export default {
       tmpbatchname: null,
       apireportstaticsList: [], // api报告列表
       apiList: [], // api列表
-      planbatchList: [], // 批次列表
-      execplanList: [], // 计划列表
+      planbatchList: [], // 执行测试集合列表
+      execplanList: [], // 测试集合列表
       deployunitList: [], // 发布单元列表
       listLoading: false, // 数据加载等待动画
       dicvisitypeQuery: {
@@ -129,7 +129,7 @@ export default {
       },
       btnLoading: false, // 按钮等待动画
       tmpapireportstatics: {
-        executeplanid: '', // 计划id
+        executeplanid: '', // 测试集合id
         id: '',
         deployunitid: '',
         deployunitname: '',
@@ -173,7 +173,7 @@ export default {
       getbatchbyplan(this.tmpapireportstatics).then(response => {
         this.planbatchList = response.data
       }).catch(res => {
-        this.$message.error('加载批次列表失败')
+        this.$message.error('加载执行测试集合列表失败')
       })
     },
 
@@ -204,14 +204,14 @@ export default {
     // },
 
     /**
-     * 获取执行计划列表
+     * 获取测试集合列表
      */
     getexecplanList() {
       this.tmpexecplantype.usetype = '功能'
       getallexplanbytype(this.tmpexecplantype).then(response => {
         this.execplanList = response.data
       }).catch(res => {
-        this.$message.error('加载计划列表失败')
+        this.$message.error('加载测试集合列表失败')
       })
     },
 

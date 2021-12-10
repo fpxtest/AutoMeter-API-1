@@ -13,16 +13,16 @@
         </el-form-item>
 
         <span v-if="hasPermission('apiperformancereport:search')">
-          <el-form-item label="执行计划" prop="testplanname" >
-          <el-select v-model="search.testplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+          <el-form-item label="测试集合" prop="testplanname" >
+          <el-select v-model="search.testplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
             </div>
           </el-select>
         </el-form-item>
-          <el-form-item label="批次" prop="batchname" >
-            <el-select v-model="search.batchname" placeholder="批次">
+          <el-form-item label="执行计划" prop="batchname" >
+            <el-select v-model="search.batchname" placeholder="执行计划">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(planbatch, index) in planbatchList" :key="index">
               <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
@@ -49,14 +49,14 @@
         </template>
       </el-table-column>
       <el-table-column label="用例名" align="center" prop="casename" width="120"/>
-      <el-table-column label="apiname" align="center" prop="apiname" width="80"/>
+      <el-table-column label="API" align="center" prop="apiname" width="80"/>
       <el-table-column label="状态" align="center" prop="status" width="50">
       <template slot-scope="scope">
         <span v-if="scope.row.status === '失败'" style="color:red">{{ scope.row.status }}</span>
         <span v-else style="color: #37B328">{{ scope.row.status }}</span>
       </template>
       </el-table-column>
-      <el-table-column label="批次" align="center" prop="batchname" width="80"/>
+      <el-table-column label="执行计划" align="center" prop="batchname" width="80"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
       <el-table-column label="断言" align="center" prop="expect" width="100">
       <template slot-scope="scope">
@@ -242,7 +242,7 @@
         tmpbatchname: null,
         apiperformancereportList: [], // api报告列表
         apiList: [], // api列表
-        planbatchList: [], // 批次列表
+        planbatchList: [], // 执行计划列表
         execplanList: [], // 计划列表
         deployunitList: [], // 发布单元列表
         listLoading: false, // 数据加载等待动画
@@ -315,7 +315,7 @@
         getbatchbyplan(this.tmpapiperformancereport).then(response => {
           this.planbatchList = response.data
         }).catch(res => {
-          this.$message.error('加载批次列表失败')
+          this.$message.error('加载执行计划列表失败')
         })
       },
 
@@ -346,7 +346,7 @@
       },
 
       /**
-       * 获取执行计划列表
+       * 获取测试集合列表
        */
       getexecplanList() {
         this.tmpexecplantype.usetype = '性能'
