@@ -52,6 +52,8 @@
 
 
 ## 帮助文档
+[帮助文档](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83)
+
 [开始第一个测试用例](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83)
 
   
