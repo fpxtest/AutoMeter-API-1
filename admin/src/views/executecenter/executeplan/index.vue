@@ -22,7 +22,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('executeplan:add')"
             @click.native.prevent="showAddexecuteplanDialog"
-          >添加执行计划</el-button>
+          >添加测试集合</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('executeplan:search')">
@@ -66,7 +66,7 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="执行计划名" align="center" prop="executeplanname" width="100"/>
+      <el-table-column label="集合名" align="center" prop="executeplanname" width="100"/>
       <el-table-column label="envid" align="center" v-if="show" prop="envid" width="50"/>
       <el-table-column label="状态" align="center" prop="status" v-if="show" width="50"/>
       <el-table-column label="业务类型" align="center" prop="businesstype" width="100"/>
@@ -91,7 +91,7 @@
             size="mini"
             v-if="hasPermission('executeplan:update') && scope.row.id !== id"
             @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
-          >修改计划</el-button>
+          >修改集合</el-button>
           <el-button
             type="danger"
             size="mini"
@@ -120,7 +120,7 @@
         :model="tmpexecuteplan"
         ref="tmpexecuteplan"
       >
-        <el-form-item label="计划名" prop="executeplanname" required>
+        <el-form-item label="集合名" prop="executeplanname" required>
           <el-input
             type="text"
             prefix-icon="el-icon-edit"
@@ -266,7 +266,7 @@
     <el-dialog :title="loadbatch" :visible.sync="batchdialogFormVisible">
       <div class="filter-container" >
         <el-form :inline="true" :model="tmpplanbatch" ref="tmpplanbatch" >
-          <el-form-item label="批次"  prop="batchname" required>
+          <el-form-item label="执行计划名："  prop="batchname" required>
             <el-input
               type="text"
               placeholder="例如2020-10-21-tag-101"
@@ -368,11 +368,11 @@
         casedialogFormVisible: false,
         batchdialogFormVisible: false,
         loadcase: '装载用例',
-        loadbatch: '添加批次',
+        loadbatch: '执行计划',
         textMap: {
-          updateRole: '修改执行计划',
-          update: '修改执行计划',
-          add: '添加执行计划'
+          updateRole: '修改测试集合',
+          update: '修改测试集合',
+          add: '添加测试集合'
         },
         diclevelQuery: {
           page: 1, // 页码
