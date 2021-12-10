@@ -13,8 +13,8 @@
         </el-form-item>
 
         <span v-if="hasPermission('executeplanbatch:search')">
-          <el-form-item label="执行计划" prop="executeplanname" >
-          <el-select v-model="search.executeplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+          <el-form-item label="集合：" prop="executeplanname" >
+          <el-select v-model="search.executeplanname" placeholder="集合" @change="testplanselectChanged($event)">
             <el-option label="请选择" />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -44,10 +44,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="执行计划名" align="center" prop="executeplanname" width="150"/>
-      <el-table-column label="批次名" align="center" prop="batchname" width="120"/>
-      <el-table-column label="状态" align="center" prop="status" width="150"/>
-      <el-table-column label="来源" align="center" prop="source" width="150"/>
+      <el-table-column label="测试集合名" align="center" prop="executeplanname" width="180"/>
+      <el-table-column label="执行计划" align="center" prop="batchname" width="180"/>
+      <el-table-column label="状态" align="center" prop="status" width="180"/>
+      <el-table-column label="来源" align="center" prop="source" width="160"/>
       <el-table-column label="操作人" align="center" prop="creator" width="150"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -209,7 +209,7 @@
 
       /**
        * 显示修改执行计划批次对话框
-       * @param index 执行计划批次下标
+       * @param index测试集合批次下标
        */
       showUpdateexecuteplanbatchDialog(index) {
         this.dialogFormVisible = true
@@ -221,14 +221,14 @@
       },
 
       /**
-       * 执行计划批次是否唯一
-       * @param 执行计划批次
+       *测试集合批次是否唯一
+       * @param测试集合批次
        */
       isUniqueDetail(executeplanbatch) {
         for (let i = 0; i < this.executeplanbatchList.length; i++) {
           if (this.executeplanbatchList[i].id !== executeplanbatch.id) { // 排除自己
             if (this.executeplanbatchList[i].executeplanbatchname === executeplanbatch.executeplanbatchname) {
-              this.$message.error('执行计划批次名已存在')
+              this.$message.error('执行计划执行计划已存在')
               return false
             }
           }

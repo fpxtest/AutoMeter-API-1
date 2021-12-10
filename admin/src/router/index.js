@@ -156,9 +156,9 @@ export const asyncRouterMap = [
     name: '执行中心',
     icon: 'execute',
     children: [
-      { path: 'executeplan/list', name: '执行计划', component: _import('executecenter/executeplan/index'), meta: { title: '执行计划', permission: ['executeplan:list'] }},
-      { path: 'executeplancase/list', name: '计划用例', component: _import('executecenter/executeplancase/index'), meta: { title: '计划用例', permission: ['executeplan:list'] }},
-      { path: 'executeplanbatch/list', name: '计划批次', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划批次', permission: ['executeplanbatch:list'] }}
+      { path: 'executeplan/list', name: '测试集合', component: _import('executecenter/executeplan/index'), meta: { title: '测试集合', permission: ['executeplan:list'] }},
+      { path: 'executeplancase/list', name: '集合用例', component: _import('executecenter/executeplancase/index'), meta: { title: '集合用例', permission: ['executeplan:list'] }},
+      { path: 'executeplanbatch/list', name: '计划执行', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划执行', permission: ['executeplanbatch:list'] }}
     ]
   },
 

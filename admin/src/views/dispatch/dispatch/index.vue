@@ -13,8 +13,8 @@
         </el-form-item>
 
         <span v-if="hasPermission('dispatch:search')">
-          <el-form-item label="执行计划" prop="execplanname" >
-          <el-select v-model="search.execplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+          <el-form-item label="测试集合" prop="execplanname" >
+          <el-select v-model="search.execplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -50,8 +50,8 @@
         </template>
       </el-table-column>
       <el-table-column label="执行机" align="center" prop="slavername" width="120"/>
-      <el-table-column label="执行计划" align="center" prop="execplanname" width="150"/>
-      <el-table-column label="执行批次" align="center" prop="batchname" width="150"/>
+      <el-table-column label="测试集合" align="center" prop="execplanname" width="150"/>
+      <el-table-column label="执行计划" align="center" prop="batchname" width="150"/>
       <el-table-column label="执行用例" align="center" prop="testcasename" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="60"/>
       <el-table-column label="备注" align="center" prop="memo" width="150"/>
@@ -252,13 +252,13 @@
       },
 
       /**
-       * 执行计划
+       * 测试集合
        */
       getallexplan() {
         getallexplan().then(response => {
           this.execplanList = response.data
         }).catch(res => {
-          this.$message.error('加载执行计划列表失败')
+          this.$message.error('加载测试集合列表失败')
         })
       },
 

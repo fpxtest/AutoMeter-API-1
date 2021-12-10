@@ -20,7 +20,7 @@
         </el-form-item>
         <span v-if="hasPermission('executeplan:search')">
           <el-form-item  prop="executeplanname" >
-          <el-select v-model="search.executeplanname" placeholder="执行计划" @change="loadtestplanselectChanged($event)">
+          <el-select v-model="search.executeplanname" placeholder="测试集合" @change="loadtestplanselectChanged($event)">
               <el-option label="请选择" value />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -69,7 +69,7 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="执行计划名" align="center" prop="executeplanname" width="150"/>
+      <el-table-column label="测试集合名" align="center" prop="executeplanname" width="150"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="150"/>
       <el-table-column label="用例名" align="center" prop="casename" width="150"/>
       <el-table-column label="API" align="center" prop="apiname" width="150"/>
@@ -107,8 +107,8 @@
       <div class="filter-container" >
         <el-form :inline="true" :model="searchcase" ref="searchcase" >
 
-          <el-form-item label="执行计划:"  prop="executeplanname" required>
-            <el-select v-model="searchcase.executeplanname" placeholder="执行计划" @change="testplanselectChanged($event)">
+          <el-form-item label="测试集合:"  prop="executeplanname" required>
+            <el-select v-model="searchcase.executeplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(testplan, index) in execplanList" :key="index">
                 <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -137,6 +137,8 @@
           </el-form-item>
 
         </el-form>
+
+
       </div>
       <el-table
         ref="caseTable"
@@ -229,7 +231,7 @@
         loaddeployunitList: [], // 发布单元列表
         multipleSelection: [], // 首页装载表格被选中的内容
         casemultipleSelection: [], // 查询用例表格被选中的内容
-        executeplancaseList: [], // 首页执行计划用例列表
+        executeplancaseList: [], // 首页测试集合用例列表
         testcaseList: [], // 装载用例列表
         testcaselastList: [], // 显示希望装载的用例列表
         listLoading: false, // 数据加载等待动画
@@ -305,7 +307,7 @@
       },
 
       /**
-       * 获取执行计划列表
+       * 获取测试集合列表
        */
       getexecplanList() {
         getallexplan().then(response => {
@@ -316,7 +318,7 @@
       },
 
       /**
-       * 获取执行计划列表
+       * 获取测试集合列表
        */
       getloadexecplanList() {
         getallexplan().then(response => {
@@ -327,7 +329,7 @@
       },
 
       /**
-       * 获取执行计划用例列表
+       * 获取测试集合用例列表
        */
       getexecuteplancaseList() {
         this.search.executeplanid = this.tmploadexecuteplanid
@@ -339,7 +341,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载执行计划用例列表失败')
+          this.$message.error('加载测试集合用例列表失败')
         })
       },
 
@@ -582,8 +584,8 @@
       },
 
       /**
-       * 显示修改执行计划对话框
-       * @param index 执行计划下标
+       * 显示修改测试集合对话框
+       * @param index 测试集合下标
        */
       showUpdateexecuteplanDialog(index) {
         this.dialogFormVisible = true
@@ -612,7 +614,7 @@
       },
 
       /**
-       * 装载执行计划的用例
+       * 装载测试集合的用例
        */
       addexecuteplantestcase() {
         this.testcaseList = []
@@ -679,7 +681,7 @@
       },
       /**
        * 显示用例对话框
-       * @param index 执行计划下标
+       * @param index 测试集合下标
        */
       showTestCaseDialog() {
         this.casedialogFormVisible = true
@@ -691,10 +693,10 @@
       },
       /**
        * 删除用例
-       * @param index 执行计划下标
+       * @param index 测试集合下标
        */
       removeexecuteplantestcase(index) {
-        this.$confirm('删除该执行计划用例？', '警告', {
+        this.$confirm('删除该测试集合用例？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
