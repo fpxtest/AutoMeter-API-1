@@ -111,7 +111,7 @@
 import CountTo from 'vue-count-to'
 import { getmachinenum as getmachinenum } from '@/api/assets/machine'
 import { getenviromentnum as getenviromentnum } from '@/api/enviroment/testenviroment'
-import { getcasenum as getcasenum } from '@/api/assets/apicases'
+import { getcasenum as getcasenum, getperformancecasenum as getperformancecasenum } from '@/api/assets/apicases'
 import { getapinum as getapinum } from '@/api/deployunit/api'
 import { getdeploynum as getdeploynum } from '@/api/deployunit/depunit'
 import { getslavernum as getslavernum } from '@/api/dispatch/slaver'
@@ -123,7 +123,10 @@ export default {
   },
   data() {
     return {
-      testcase: {
+      funtestcase: {
+        casetype: ''
+      },
+      pertestcase: {
         casetype: ''
       },
       machinenum: {
@@ -165,7 +168,7 @@ export default {
     this.getmachinecount()
     this.getenviromentnum()
     this.getfuncasenum()
-    this.getpercasenum()
+    this.getperformancecasenum()
     this.getapinum()
     this.getdeploynum()
     this.getslavernum()
@@ -187,16 +190,20 @@ export default {
       })
     },
     getfuncasenum() {
-      this.testcase.casetype = '功能'
-      getcasenum(this.testcase).then(response => {
+      this.funtestcase.casetype = '功能'
+      console.log('功能用例。。。。。。。。。。。。。。。。。。。。。。。。。')
+      console.log(this.funtestcase)
+      getcasenum(this.funtestcase).then(response => {
         this.funcasenum.end = response.data
       }).catch(res => {
         this.$message.error('加载服务器数量失败')
       })
     },
-    getpercasenum() {
-      this.testcase.casetype = '性能'
-      getcasenum(this.testcase).then(response => {
+    getperformancecasenum() {
+      console.log('性能用例。。。。。。。。。。。。。。。。。。。。。。。。。')
+      console.log(this.pertestcase)
+      this.pertestcase.casetype = '性能'
+      getperformancecasenum(this.pertestcase).then(response => {
         this.percasenum.end = response.data
       }).catch(res => {
         this.$message.error('加载服务器数量失败')

@@ -23,6 +23,14 @@ export function getcasenum(params) {
   })
 }
 
+export function getperformancecasenum(params) {
+  return request({
+    url: '/apicases/getperformancecasenum',
+    method: 'get',
+    params
+  })
+}
+
 export function search(apicasesForm) {
   return request({
     url: '/apicases/search',

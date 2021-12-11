@@ -39,6 +39,7 @@ public interface ApicasesService extends Service<Apicases> {
 
     Integer getcasenum(String casetype);
 
+
     List<Apicases> getstaticsdeployunitcases();
 
     List<Apicases> getcasebydeployunitid(Long deployunitid);

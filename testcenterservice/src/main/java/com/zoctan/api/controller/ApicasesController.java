@@ -150,6 +150,12 @@ public class ApicasesController {
         return ResultGenerator.genOkResult(apicasesnum);
     }
 
+    @GetMapping("/getperformancecasenum")
+    public Result getperformancecasenum(@RequestParam String casetype) {
+        Integer apicasesnum = apicasesService.getcasenum(casetype);
+        return ResultGenerator.genOkResult(apicasesnum);
+    }
+
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
                        @RequestParam(defaultValue = "0") Integer size) {

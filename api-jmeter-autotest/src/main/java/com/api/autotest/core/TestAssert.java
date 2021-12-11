@@ -36,23 +36,18 @@ public class TestAssert {
             String ActualResult = "";
             //获取期望值
             String ExpectValue = apicasesAssert.getAssertvalues();
-            if (apicasesAssert.getAsserttype().equals(new String("Json"))) {
+            if (apicasesAssert.getAsserttype().equals("Json")) {
                 ActualResult=ParseJson(apicasesAssert.getExpression(),ActualJson);
-//                try {
-//                    ActualResult = JsonPath.read(ActualJson, apicasesAssert.getExpression()).toString();
-//                } catch (Exception ex) {
-//                    ActualResult = ex.getMessage();
-//                }
                 logger.info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
                 AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
             }
             //处理Json返回值类型，类型为Respone断言处理
-            if (apicasesAssert.getAsserttype().equals(new String("Respone"))) {
-                if(apicasesAssert.getAssertsubtype().equals(new String("Code")))
+            if (apicasesAssert.getAsserttype().equals("Respone")) {
+                if(apicasesAssert.getAssertsubtype().equals("Code"))
                 {
                     ActualResult = JsonPath.read(ActualJson, "$.Code").toString();
                 }
-                if(apicasesAssert.getAssertsubtype().equals(new String("文本")))
+                if(apicasesAssert.getAssertsubtype().equals("文本"))
                 {
                     ActualResult= ActualJson;
                 }
