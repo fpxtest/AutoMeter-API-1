@@ -38,58 +38,6 @@ public class TestCore {
         GetDBConnection(MysqlUrl, MysqlUserName, MysqlPass);
     }
 
-    //获取期望值Value
-//    public String GetExpectValue(String expectname, HashMap<String, String> expectmap) throws Exception {
-//        String expectvalue = "";
-//        expectvalue = expectmap.get(expectname);
-//        if (expectvalue == null) {
-//            throw new Exception("断言处期望名称:" + expectname + "未能获取期望值，请检查用例设计的期望名称和断言代码处的期望名称是否一致");
-//        } else {
-//            return expectvalue;
-//        }
-//    }
-
-    //解析期望值map
-//    public HashMap<String, String> GetExpectMap(String expect) throws Exception {
-//        HashMap<String, String> expectmap = new HashMap<String, String>();
-//        //if(caselist.size()!=0)
-//        if (!expect.isEmpty()) {
-//            logger.info(logplannameandcasename + "期望值all为 ....." + expect);
-//            String[] exparr = expect.split("\\|");
-//            for (String str : exparr) {
-//                logger.info(logplannameandcasename + "期望值为 ....." + str);
-//                String[] value = null;
-//                if (str.contains("=")) {
-//                    value = str.split("=");
-//                }
-//                if (str.contains(">")) {
-//                    value = str.split(">");
-//                }
-//                if (str.contains("<")) {
-//                    value = str.split("<");
-//                }
-//                if (value == null) {
-//                    throw new Exception("用例的期望值:" + expect + "填写不符合规范");
-//                }
-//                if (value.length < 2) {
-//                    throw new Exception("用例的期望名称:" + value[0] + "没有期望值，请填写完整");
-//                }
-//                if (!expectmap.containsKey(value[0])) {
-//
-////                    String[] chars = value[0].split("  ");
-////                    for (int i = 0; i < chars.length; i++) {
-////                        logger.info(logplannameandcasename+"期望值key Asc为 ....." + Integer.parseInt(chars[i]));
-////                    }
-//                    String expectkey = value[0].replace((char) 12288, ' ').trim();
-//                    //expectkey = value[0].replace((char) 32, ' ').trim();
-//                    expectmap.put(expectkey, value[1]);
-//                    logger.info(logplannameandcasename + "期望值key为 ....." + expectkey + " 期望值value为" + value[1]);
-//                }
-//            }
-//        }
-//        return expectmap;
-//    }
-
     //性能初始化数据根据jmeter传递下来的数据拼装用例请求的数据
     public RequestObject InitHttpDatabyJmeter(JavaSamplerContext context) throws Exception {
         RequestObject newob = new RequestObject();
@@ -495,44 +443,6 @@ public class TestCore {
         return Result;
     }
 
-    //根据变量名获取caseid
-    private String GetCaseIdByVariablesName(String VariablesName)
-    {
-        String CaseID="";
-        try {
-            String sql = "select caseid from apicases_variables where  variablesname='" + VariablesName + "'";
-            logger.info(logplannameandcasename + "根据变量名获取caseid result sql is...........: " + sql);
-            ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
-            if (result.size() > 0) {
-                CaseID = result.get(0).get("caseid");
-            }
-        } catch (Exception e) {
-            logger.info(logplannameandcasename + "根据变量名获取caseid异常...........: " + e.getMessage());
-        }
-        return CaseID;
-    }
-
-    //获取变量值
-    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String Variables) {
-        String VariablesResult = "";
-        if (Variables.startsWith("$")) {
-            String VariablesName = Variables.substring(1);
-            try {
-                String sql = "select variablesvalue from testvariables_value where planid=" + PlanID +" and caseid="+TestCaseId+ " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
-                logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
-                ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
-                if (result.size() > 0) {
-                    VariablesResult = result.get(0).get("variablesvalue");
-                }
-            } catch (Exception e) {
-                logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量异常...........: " + e.getMessage());
-            }
-        } else {
-            VariablesResult = Variables;
-        }
-        return VariablesResult;
-    }
-
     //处理条件入口
     public void FixCondition(RequestObject requestObject) throws Exception {
         Long ObjectID =Long.parseLong( requestObject.getCaseid());
@@ -738,7 +648,6 @@ public class TestCore {
         logger.info(SubconditionType+"条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
 
     }
-
     public void DBCondition(long ConditionID, RequestObject requestObject) {
         Long PlanID=Long.parseLong(requestObject.getTestplanid());
         Long CaseID=Long.parseLong(requestObject.getCaseid());
@@ -823,54 +732,6 @@ public class TestCore {
         }
     }
 
-    //条件逻辑是否完成
-//    public boolean ConditionRequest(String CaseID,String BatchName)
-//    {
-//        boolean flag=true;
-//        ArrayList<HashMap<String, String>> result =GetConditionByPlanIDAndConditionType(CaseID,"前置条件");
-//        if(result.size()>0)
-//        {
-//            Long ConditionID= Long.parseLong(result.get(0).get("id"));
-//            ArrayList<HashMap<String, String>>  conditionApiList=GetCaseListByConditionID(ConditionID);
-//            int ApiConditionNums=conditionApiList.size();
-//            int DBConditionNUms=0;
-//            int ScriptConditionNUms=0;
-//            int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
-//            //表示有子条件需要处理
-//            if(SubConditionNums>0)
-//            {
-//                //获取条件报告此计划批次的结果
-//                ArrayList<HashMap<String, String>>  testconditionReportList= getunfinishapiconditionnums(CaseID,BatchName);
-//                //还未产生报告，需要请求条件服务
-//                if(testconditionReportList.size()==0)
-//                {
-//                    //todo发请求条件服务,异步请求
-//                    flag=false;
-//                }
-//                else //已经产生条件报告，需要查看报告结果是成功还是失败
-//                {
-//                    for(HashMap<String, String> hs :testconditionReportList)
-//                    {
-//                        if(hs.get("conditionstatus").equals(new String("失败")))
-//                        {
-//                            //有子条件已经执行失败，需要更新当前计划批次的所有调度状态为条件失败，更新计划批次状态为条件失败
-//                            //todo
-//                            flag=false;
-//                            break;
-//                        }
-//                    }
-//                    ArrayList<HashMap<String, String>>  successtestconditionReportList= getsubconditionnumswithstatus(CaseID,BatchName,"已完成","成功");
-//                    if(successtestconditionReportList.size()==SubConditionNums)
-//                    {
-//                        //条件报告中已完成，成功的条数等于子条件总条数表示子条件都已成功完成，可以开始执行用例
-//                        flag=true;
-//                    }
-//                }
-//            }
-//        }
-//        return flag;
-//    }
-
     // 发送http请求
     public String request(RequestObject requestObject) throws Exception {
         String result = "";
@@ -903,11 +764,6 @@ public class TestCore {
             logger.info(logplannameandcasename + "Sql is:  " + Sql + "  数据库异常：" + e.getMessage());
         }
         logger.info(logplannameandcasename + "list size is:  " + list.size());
-//        for (HashMap<String, String> li : list) {
-//            for (String key : li.keySet()) {
-//                logger.info(logplannameandcasename + "key is:  " + key + " value is :" + li.get(key));
-//            }
-//        }
         return list;
     }
 
@@ -916,6 +772,45 @@ public class TestCore {
         HashMap<String, String> hs = list.get(0);
         return hs.get(key).trim();
     }
+
+    //根据变量名获取caseid
+    private String GetCaseIdByVariablesName(String VariablesName)
+    {
+        String CaseID="";
+        try {
+            String sql = "select caseid from apicases_variables where  variablesname='" + VariablesName + "'";
+            logger.info(logplannameandcasename + "根据变量名获取caseid result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
+            if (result.size() > 0) {
+                CaseID = result.get(0).get("caseid");
+            }
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "根据变量名获取caseid异常...........: " + e.getMessage());
+        }
+        return CaseID;
+    }
+
+    //获取变量值
+    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String Variables) {
+        String VariablesResult = "";
+        if (Variables.startsWith("$")) {
+            String VariablesName = Variables.substring(1);
+            try {
+                String sql = "select variablesvalue from testvariables_value where planid=" + PlanID +" and caseid="+TestCaseId+ " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
+                logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
+                ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
+                if (result.size() > 0) {
+                    VariablesResult = result.get(0).get("variablesvalue");
+                }
+            } catch (Exception e) {
+                logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量异常...........: " + e.getMessage());
+            }
+        } else {
+            VariablesResult = Variables;
+        }
+        return VariablesResult;
+    }
+
 
 
     //获取条件
@@ -1259,7 +1154,7 @@ public class TestCore {
         }
     }
 
-    //生产性能报告目录
+    //生成性能报告目录
     public void genealperformacestaticsreport(String testclass, String batchname, String testplanid, String batchid, String slaverid, String caseid, String casereportfolder, double costtime) throws Exception {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

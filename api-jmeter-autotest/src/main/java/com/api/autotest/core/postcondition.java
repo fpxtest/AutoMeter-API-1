@@ -68,19 +68,7 @@ public class postcondition extends AbstractJavaSamplerClient {
         String start = ctx.getParameter("start");
 
         getLogger().info( "postcondition teardownTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
-        //后置条件
-//        try {
-//            core.fixpostcondition(testplanid,caseid);
-//            status="成功";
-//        } catch (Exception e) {
-//            status="失败";
-//            errorinfo ="后置条件处理异常："+ e.getMessage().replace("'","");
-//            getLogger().info(TestCore.logplannameandcasename + "后置条件处理发生异常:"+e.getMessage());
-//        }
-//        finally {
-//            String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"后置",casetype);
-//            getLogger().info(TestCore.logplannameandcasename + "处理后置条件完成");
-//        }
+
         //更新调度表状态已完成
         try {
             core.updatedispatchcasestatus(testplanid,caseid,slaverid,batchid);
@@ -131,21 +119,6 @@ public class postcondition extends AbstractJavaSamplerClient {
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "root");
         params.addArgument("mysqlpassword", "root");
-
-
-
-//        long start=new Date().getTime();
-//
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-//        long end=new Date().getTime();
-//
-//        long time=end-start;
-//        System.out.println(time);
 
         JavaSamplerContext ctx = new JavaSamplerContext(params);
         postcondition test = new postcondition();
