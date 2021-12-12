@@ -5,7 +5,11 @@ import com.api.autotest.core.TestCore;
 import com.api.autotest.dto.ApicasesAssert;
 import com.api.autotest.dto.ApicasesReportstatics;
 import com.api.autotest.dto.RequestObject;
+import com.api.autotest.dto.ResponeData;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -83,15 +87,9 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     try {
                         //增加条件处理逻辑
                         Core.FixCondition(requestObject);
-                        ActualResult = SendCaseRequest(requestObject, Core);
-                        String ResponeContentType = requestObject.getResponecontenttype();
-                        if (ResponeContentType.equals(new String("json"))) {
-                            AssertInfo = TestAssert.ParseJsonResult(ActualResult,requestObject);//ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
-                        }
-                        if (ResponeContentType.equals(new String("xml"))) {
-                            //处理xml
-                            AssertInfo = TestAssert.ParseXmlResult(ActualResult,requestObject);//ParseJsonResult(Core, ActualResult, TestAssert,requestObject);
-                        }
+                        ResponeData responeData = SendCaseRequest(requestObject, Core);
+                        //断言
+                        AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
                     } catch (Exception ex) {
                         ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
                     } finally {
@@ -157,8 +155,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private String SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
-        String Result = core.request(ob);
+    private ResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
+        ResponeData Result = core.request(ob);
         return Result;
     }
 
@@ -257,8 +255,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "89");
-        params.addArgument("SlaverId", "16");
+        params.addArgument("DispatchIds", "7");
+        params.addArgument("SlaverId", "19");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
         params.addArgument("mysqlpassword", "test");

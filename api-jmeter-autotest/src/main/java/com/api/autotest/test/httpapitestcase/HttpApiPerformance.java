@@ -3,8 +3,12 @@ package com.api.autotest.test.httpapitestcase;
 import com.api.autotest.core.TestAssert;
 import com.api.autotest.core.TestCore;
 import com.api.autotest.dto.RequestObject;
+import com.api.autotest.dto.ResponeData;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -66,16 +70,18 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             // 初始化用例数据
             requestObject=InitalTestData(Core,ctx);
             // 发送用例请求，并返回结果
-            ActualResult=SendCaseRequest(requestObject,Core);
-            String ResponeContentType=requestObject.getResponecontenttype();
-            if(ResponeContentType.equals(new String("json")))
-            {
-                AssertInfo= TestAssert.ParseJsonResult(ActualResult,requestObject);//ParseJsonResult(Core,ActualResult,TestAssert,requestObject);
-            }
-            if(ResponeContentType.equals(new String("xml")))
-            {
-                //处理xml
-            }
+            ResponeData responeData = SendCaseRequest(requestObject, Core);
+            //断言
+            AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
+//            String ResponeContentType=requestObject.getResponecontenttype();
+//            if(ResponeContentType.equals(new String("json")))
+//            {
+//                AssertInfo= TestAssert.ParseJsonResult(ActualResult,requestObject);//ParseJsonResult(Core,ActualResult,TestAssert,requestObject);
+//            }
+//            if(ResponeContentType.equals(new String("xml")))
+//            {
+//                //处理xml
+//            }
         } catch (Exception ex) {
             ErrorInfo=CaseException(results, TestAssert, ex.getMessage());
         } finally {
@@ -100,12 +106,9 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private String SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
-        String Result = core.request(ob);
-        getLogger().info(TestCore.logplannameandcasename + "请求结果 is:" + Result);
-        // 用例结束时间
-        //end = new Date().getTime();
-        return Result;
+    private ResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
+        ResponeData responeData = core.request(ob);
+        return responeData;
     }
 
     //用例运行过程中的异常信息处理

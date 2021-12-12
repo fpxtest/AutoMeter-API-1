@@ -79,17 +79,14 @@ public class TestCore {
         String dubbo = context.getParameter("dubbojson");
         String expect = context.getParameter("expect");
 
-        List<ApicasesAssert> apicasesAssertList=new ArrayList<>();
-        if(expect.isEmpty())
-        {
+        List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
+        if (expect.isEmpty()) {
+            newob.setApicasesAssertList(apicasesAssertList);
+        } else {
+            apicasesAssertList = JSONObject.parseArray(expect, ApicasesAssert.class);
             newob.setApicasesAssertList(apicasesAssertList);
         }
-        else
-        {
-            apicasesAssertList=JSONObject.parseArray(expect,ApicasesAssert.class);
-            newob.setApicasesAssertList(apicasesAssertList);
-        }
-        expect=GetExpectValue(apicasesAssertList);
+        expect = GetAssertInfo(apicasesAssertList);
         logger.info(logplannameandcasename + "expect is :  " + expect);
 
         String casetype = context.getParameter("casetype");
@@ -134,7 +131,7 @@ public class TestCore {
                         String Value = ((Map.Entry) map).getValue().toString();
                         if (Value.startsWith("$")) {
                             String VariablesName = Value.substring(1);
-                            String Caseid= GetCaseIdByVariablesName(VariablesName);
+                            String Caseid = GetCaseIdByVariablesName(VariablesName);
                             //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                             Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
                         }
@@ -165,7 +162,7 @@ public class TestCore {
                         //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
                         if (Value.startsWith("$")) {
                             String VariablesName = Value.substring(1);
-                            String Caseid= GetCaseIdByVariablesName(VariablesName);
+                            String Caseid = GetCaseIdByVariablesName(VariablesName);
                             //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                             Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
                         }
@@ -194,7 +191,7 @@ public class TestCore {
                         String Value = ((Map.Entry) map).getValue().toString();
                         if (Value.startsWith("$")) {
                             String VariablesName = Value.substring(1);
-                            String Caseid= GetCaseIdByVariablesName(VariablesName);
+                            String Caseid = GetCaseIdByVariablesName(VariablesName);
                             //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                             Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
                         }
@@ -243,8 +240,8 @@ public class TestCore {
         ArrayList<HashMap<String, String>> deployunitlist = getcaseData("select b.protocal,b.port,b.id from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=" + TestCaseId);
 
         //获取断言记录
-        TestAssert testAssert=new TestAssert(logger);
-        List<ApicasesAssert> apicasesAssertList= testAssert.GetApicasesAssertList(caseassertlist);
+        TestAssert testAssert = new TestAssert(logger);
+        List<ApicasesAssert> apicasesAssertList = testAssert.GetApicasesAssertList(caseassertlist);
         ro.setApicasesAssertList(apicasesAssertList);
         // url请求资源路径
         String path = getcaseValue("path", apilist);
@@ -254,7 +251,7 @@ public class TestCore {
         logplannameandcasename = ExecPlanName + "--" + TestCaseName + " :";
         String casetype = getcaseValue("casetype", caselist);
 
-        String expect = GetExpectValue(apicasesAssertList); //getcaseValue("expect", caselist);
+        String expect = GetAssertInfo(apicasesAssertList); //getcaseValue("expect", caselist);
 
         String Apiid = getcaseValue("apiid", caselist);
 
@@ -327,11 +324,10 @@ public class TestCore {
                 // 设置Body
                 HashMap<String, String> bodymap = fixhttprequestdatas("Body", casedatalist);
                 //paramers=GetHttpBody(bodymap,paramers,PlanId, TestCaseId, BatchName,requestcontenttype);
-                String PostData ="";
+                String PostData = "";
                 try {
                     PostData = GetBodyPostData(bodymap, requestcontenttype, Apiid);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     savetestcaseresult(false, 0, "", "", e.getMessage(), ro, null);
                 }
                 ro.setPostData(PostData);
@@ -341,19 +337,14 @@ public class TestCore {
     }
 
     //获取断言信息
-    private String GetExpectValue(List<ApicasesAssert> apicasesAssertList)
-    {
-        String expectValue="";
-        if(apicasesAssertList.size()>0)
-        {
-            for (ApicasesAssert apicasesAssert :apicasesAssertList) {
-                if(apicasesAssert.getAsserttype().equals(new String("Respone")))
-                {
-                    expectValue=expectValue+"[断言类型："+apicasesAssert.getAsserttype()+ " 断言子类型："+apicasesAssert.getAssertsubtype()+" 断言条件："+apicasesAssert.getAssertcondition()+" 断言值："+apicasesAssert.getAssertvalues()+" 断言值类型："+apicasesAssert.getAssertvaluetype();
-                }
-                else
-                {
-                    expectValue=expectValue+"[断言类型："+apicasesAssert.getAsserttype()+ " 断言表达式："+apicasesAssert.getExpression()+" 断言条件："+apicasesAssert.getAssertcondition()+" 断言值："+apicasesAssert.getAssertvalues()+" 断言值类型："+apicasesAssert.getAssertvaluetype();
+    private String GetAssertInfo(List<ApicasesAssert> apicasesAssertList) {
+        String expectValue = "";
+        if (apicasesAssertList.size() > 0) {
+            for (ApicasesAssert apicasesAssert : apicasesAssertList) {
+                if (apicasesAssert.getAsserttype().equals(new String("Respone"))) {
+                    expectValue = expectValue + "【断言类型：" + apicasesAssert.getAsserttype() + "， 断言子类型：" + apicasesAssert.getAssertsubtype() + "， 断言条件：" + apicasesAssert.getAssertcondition() + "， 断言值：" + apicasesAssert.getAssertvalues() + "， 断言值类型：" + apicasesAssert.getAssertvaluetype()+"】";
+                } else {
+                    expectValue = expectValue + "【断言类型：" + apicasesAssert.getAsserttype() + "， 断言表达式：" + apicasesAssert.getExpression() + "， 断言条件：" + apicasesAssert.getAssertcondition() + "， 断言值：" + apicasesAssert.getAssertvalues() + "， 断言值类型：" + apicasesAssert.getAssertvaluetype()+"】";
                 }
             }
         }
@@ -367,7 +358,7 @@ public class TestCore {
             String Value = headmap.get(key);
             if (Value.startsWith("$")) {
                 String VariablesName = Value.substring(1);
-                String Caseid= GetCaseIdByVariablesName(VariablesName);
+                String Caseid = GetCaseIdByVariablesName(VariablesName);
                 //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                 Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
             }
@@ -383,7 +374,7 @@ public class TestCore {
             String Value = paramsmap.get(key);
             if (Value.startsWith("$")) {
                 String VariablesName = Value.substring(1);
-                String Caseid= GetCaseIdByVariablesName(VariablesName);
+                String Caseid = GetCaseIdByVariablesName(VariablesName);
                 //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                 Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
             }
@@ -423,7 +414,7 @@ public class TestCore {
         String Result = "";
         if (RequestContentType.equals(new String("json"))) {
             //获取冗余字段，替换json
-            ArrayList<HashMap<String, String>> ApiParamasList = getcaseData("select * from api_params  where  propertytype= 'Body' "+ " and apiid=" + Apiid);
+            ArrayList<HashMap<String, String>> ApiParamasList = getcaseData("select * from api_params  where  propertytype= 'Body' " + " and apiid=" + Apiid);
             if (ApiParamasList.size() > 0) {
                 String JsonCompelete = ApiParamasList.get(0).get("keynamebak");
                 DocumentContext documentContext = JsonPath.parse(JsonCompelete);
@@ -445,21 +436,21 @@ public class TestCore {
 
     //处理条件入口
     public void FixCondition(RequestObject requestObject) throws Exception {
-        Long ObjectID =Long.parseLong( requestObject.getCaseid());
+        Long ObjectID = Long.parseLong(requestObject.getCaseid());
         ArrayList<HashMap<String, String>> testconditionList = GetConditionByPlanIDAndConditionType(ObjectID, "前置条件", "测试用例");
         if (testconditionList.size() > 0) {
-            long ConditionID =Long.parseLong(testconditionList.get(0).get("id"));
+            long ConditionID = Long.parseLong(testconditionList.get(0).get("id"));
 //            SubCondition sub=new APISubCondition();
 //            sub.DoSubCondition(ConditionID,requestObject);
             //处理接口条件
             logger.info("开始处理用例前置条件-API子条件-============：");
-            APICondition(ConditionID,requestObject);
+            APICondition(ConditionID, requestObject);
             logger.info("完成处理用例前置条件-API子条件-============：");
             //处理数据库条件
-            DBCondition(ConditionID,requestObject);
+            DBCondition(ConditionID, requestObject);
             //处理脚本条件
             logger.info("开始处理用例前置条件-脚本子条件-============：");
-            ScriptCondition(ConditionID,requestObject);
+            ScriptCondition(ConditionID, requestObject);
             logger.info("完成处理用例前置条件-脚本子条件-============：");
         }
     }
@@ -467,8 +458,8 @@ public class TestCore {
     //处理接口条件
     public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
         ArrayList<HashMap<String, String>> conditionApiList = GetApiConditionByConditionID(ConditionID);
-        Long PlanID=Long.parseLong(requestObject.getTestplanid());
-        Long CaseID=Long.parseLong(requestObject.getCaseid());
+        Long PlanID = Long.parseLong(requestObject.getTestplanid());
+        Long CaseID = Long.parseLong(requestObject.getCaseid());
         logger.info("条件报告API子条件数量-============：" + conditionApiList.size());
         for (HashMap<String, String> conditionApi : conditionApiList) {
             long Start = 0;
@@ -478,15 +469,16 @@ public class TestCore {
             String ConditionResultStatus = "成功";
             try {
                 Start = new Date().getTime();
-                Respone = request(requestObject);
+                ResponeData responeData=request(requestObject);
+                Respone = responeData.getRespone();
                 CostTime = End - Start;
-                SaveApiSubCondition(requestObject,PlanID,CaseID,ConditionID,conditionApi,Respone,ConditionResultStatus,CostTime);
+                SaveApiSubCondition(requestObject, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
                 CostTime = End - Start;
-                SaveApiSubCondition(requestObject,PlanID,CaseID,ConditionID,conditionApi,Respone,ConditionResultStatus,CostTime);
-                throw new Exception("接口子条件执行异常："+ex.getMessage());
+                SaveApiSubCondition(requestObject, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                throw new Exception("接口子条件执行异常：" + ex.getMessage());
             }
 //            TestconditionReport testconditionReport = new TestconditionReport();
 //            testconditionReport.setTestplanid(PlanID);
@@ -531,8 +523,7 @@ public class TestCore {
         }
     }
 
-    private void SaveApiSubCondition(RequestObject requestObject,Long PlanID, Long CaseID,Long ConditionID,HashMap<String, String> conditionApi, String Respone,String ConditionResultStatus,long CostTime)
-    {
+    private void SaveApiSubCondition(RequestObject requestObject, Long PlanID, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
         TestconditionReport testconditionReport = new TestconditionReport();
         testconditionReport.setTestplanid(PlanID);
         testconditionReport.setPlanname(requestObject.getTestplanname());
@@ -549,16 +540,15 @@ public class TestCore {
         logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
         SubConditionReportSave(testconditionReport);
         //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
-        ArrayList<HashMap<String, String>> apicasesVariablesList  = GetApiCaseVaribales(CaseID);
-        if (apicasesVariablesList.size()>0) {
+        ArrayList<HashMap<String, String>> apicasesVariablesList = GetApiCaseVaribales(CaseID);
+        if (apicasesVariablesList.size() > 0) {
             logger.info("条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
-            String Variablesid=apicasesVariablesList.get(0).get("id");
-            ArrayList<HashMap<String, String>> VariablesList  = GetVaribales(Variablesid);
-            if(VariablesList.size()>0)
-            {
+            String Variablesid = apicasesVariablesList.get(0).get("id");
+            ArrayList<HashMap<String, String>> VariablesList = GetVaribales(Variablesid);
+            if (VariablesList.size() > 0) {
                 String VariablesPath = VariablesList.get(0).get("variablesexpress");
                 logger.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
-                TestAssert testAssert=new TestAssert(logger);
+                TestAssert testAssert = new TestAssert(logger);
                 String ParseValue = testAssert.ParseJson(VariablesPath, Respone);
                 logger.info("条件报告子条件处理变量取值-============：" + ParseValue);
                 TestvariablesValue testvariablesValue = new TestvariablesValue();
@@ -577,9 +567,9 @@ public class TestCore {
     }
 
     //处理脚本条件
-    public void ScriptCondition(long ConditionID,RequestObject requestObject) throws Exception {
-        Long PlanID=Long.parseLong(requestObject.getTestplanid());
-        Long CaseID=Long.parseLong(requestObject.getCaseid());
+    public void ScriptCondition(long ConditionID, RequestObject requestObject) throws Exception {
+        Long PlanID = Long.parseLong(requestObject.getTestplanid());
+        Long CaseID = Long.parseLong(requestObject.getCaseid());
         ArrayList<HashMap<String, String>> conditionScriptList = GetScriptConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionScript : conditionScriptList) {
             long Start = 0;
@@ -591,20 +581,20 @@ public class TestCore {
                 Start = new Date().getTime();
                 DnamicCompilerHelp dnamicCompilerHelp = new DnamicCompilerHelp();
                 //数据库中获取脚本
-                String JavaSource=conditionScript.get("script");
+                String JavaSource = conditionScript.get("script");
                 logger.info("条件报告脚本子条件:-============：" + JavaSource);
                 String Source = dnamicCompilerHelp.GetCompeleteClass(JavaSource, CaseID);
                 dnamicCompilerHelp.CallDynamicScript(Source);
                 End = new Date().getTime();
                 CostTime = End - Start;
-                SaveSubCondition("脚本",requestObject,PlanID,ConditionID,conditionScript,Respone,ConditionResultStatus,CostTime);
+                SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
-                Respone =  ex.getMessage();
+                Respone = ex.getMessage();
                 End = new Date().getTime();
                 CostTime = End - Start;
-                SaveSubCondition("脚本",requestObject,PlanID,ConditionID,conditionScript,Respone,ConditionResultStatus,CostTime);
-                throw new Exception("脚本子条件执行异常："+ex.getMessage());
+                SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
+                throw new Exception("脚本子条件执行异常：" + ex.getMessage());
             }
             //更新条件结果表
 //            TestconditionReport testconditionReport = new TestconditionReport();
@@ -626,8 +616,7 @@ public class TestCore {
         }
     }
 
-    private  void SaveSubCondition(String SubconditionType, RequestObject requestObject, Long PlanID, Long ConditionID, HashMap<String, String> conditionScript, String Respone, String ConditionResultStatus, long CostTime)
-    {
+    private void SaveSubCondition(String SubconditionType, RequestObject requestObject, Long PlanID, Long ConditionID, HashMap<String, String> conditionScript, String Respone, String ConditionResultStatus, long CostTime) {
         //更新条件结果表
         TestconditionReport testconditionReport = new TestconditionReport();
         testconditionReport.setTestplanid(PlanID);
@@ -638,19 +627,20 @@ public class TestCore {
         testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
         testconditionReport.setSubconditionname(conditionScript.get("subconditionname"));
         testconditionReport.setSubconditiontype(SubconditionType);
-        logger.info(SubconditionType+"条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+        logger.info(SubconditionType + "条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
 
         testconditionReport.setConditionresult(Respone);
         testconditionReport.setConditionstatus(ConditionResultStatus);
         testconditionReport.setRuntime(CostTime);
         testconditionReport.setStatus("已完成");
         SubConditionReportSave(testconditionReport);
-        logger.info(SubconditionType+"条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+        logger.info(SubconditionType + "条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
 
     }
+
     public void DBCondition(long ConditionID, RequestObject requestObject) {
-        Long PlanID=Long.parseLong(requestObject.getTestplanid());
-        Long CaseID=Long.parseLong(requestObject.getCaseid());
+        Long PlanID = Long.parseLong(requestObject.getTestplanid());
+        Long CaseID = Long.parseLong(requestObject.getCaseid());
         ArrayList<HashMap<String, String>> conditionDbListList = GetDBConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionDb : conditionDbListList) {
             TestconditionReport testconditionReport = new TestconditionReport();
@@ -659,41 +649,40 @@ public class TestCore {
             long CostTime = 0;
             String Respone = "";
             String ConditionResultStatus = "成功";
-            Long Assembleid =Long.parseLong(conditionDb.get("assembleid"));
+            Long Assembleid = Long.parseLong(conditionDb.get("assembleid"));
             ArrayList<HashMap<String, String>> enviromentAssemblelist = getcaseData("select * from enviroment_assemble where id=" + Assembleid);
-            if (enviromentAssemblelist.size()==0) {
+            if (enviromentAssemblelist.size() == 0) {
                 Respone = "未找到环境组件，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
                 break;
             }
             String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
             Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
             String Sql = conditionDb.get("dbcontent");
             String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
-            ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid+" and assembleid="+Assembleid);
+            ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
             if (macdepunitlist.size() == 0) {
                 Respone = "未找到环境组件部署，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
                 break;
             }
 
-            Long MachineID=Long.parseLong(macdepunitlist.get(0).get("machineid"));
+            Long MachineID = Long.parseLong(macdepunitlist.get(0).get("machineid"));
             ArrayList<HashMap<String, String>> machinelist = getcaseData("select * from machine where id=" + MachineID);
             if (machinelist.size() == 0) {
                 Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
                 break;
             }
             String deployunitvisittype = macdepunitlist.get(0).get("visittype");
             String[] ConnetcArray = ConnnectStr.split(",");
-            if(ConnetcArray.length<4)
-            {
+            if (ConnetcArray.length < 4) {
                 Respone = "数据库连接字填写不规范，请按规则填写";
                 ConditionResultStatus = "失败";
-                SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
                 break;
             }
             String username = ConnetcArray[0];
@@ -709,17 +698,17 @@ public class TestCore {
             }
             // 根据访问方式来确定ip还是域名
             if (deployunitvisittype.equals("ip")) {
-                String IP=machinelist.get(0).get("ip");
-                DBUrl = DBUrl + IP + ":" + port + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                String IP = machinelist.get(0).get("ip");
+                DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             } else {
-                String Domain=macdepunitlist.get(0).get("domain");
-                DBUrl = DBUrl + Domain + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                String Domain = macdepunitlist.get(0).get("domain");
+                DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             }
             try {
                 Start = new Date().getTime();
                 DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                int nums= Db.use(ds).execute(Sql);
-                Respone="成功执行，影响条数："+nums;
+                int nums = Db.use(ds).execute(Sql);
+                Respone = "成功执行，影响条数：" + nums;
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
@@ -728,25 +717,41 @@ public class TestCore {
             }
             CostTime = End - Start;
             //更新条件结果表
-            SaveSubCondition("数据库",requestObject,PlanID,ConditionID,conditionDb,Respone,ConditionResultStatus,CostTime);
+            SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
         }
     }
 
     // 发送http请求
-    public String request(RequestObject requestObject) throws Exception {
-        String result = "";
-        if (requestObject.getProtocal().equals(new String("http")) || requestObject.getProtocal().equals(new String("https"))) {
-            //if(method.equals(new String("get")))
-            if (requestObject.getRequestmMthod().equals(new String("get"))) {
-                logger.info(logplannameandcasename + "getrequest url is ....." + Httphelp.getrequesturl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
+    public ResponeData request(RequestObject requestObject) throws Exception {
+        ResponeData result = null;
+        if (requestObject.getProtocal().equals("http") || requestObject.getProtocal().equals("https")) {
+            if (requestObject.getRequestmMthod().equals("get")) {
+                logger.info(logplannameandcasename + "get请求，request url is ....." + Httphelp.getrequesturl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
             }
             result = Httphelp.doService(requestObject.getProtocal(), requestObject.getResource(), requestObject.getRequestmMthod(), requestObject.getApistyle(), requestObject.getParamers(), requestObject.getPostData(), requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
-            //logger.info(logplannameandcasename + "request result is ....." + result);
-        }
-
-        if (requestObject.getProtocal().equals(new String("rpc"))) {
         }
         return result;
+    }
+
+
+    public String  FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList,ResponeData responeData) throws Exception {
+        String AssertInfo="";
+        for (ApicasesAssert  apicasesAssert : apicasesAssertList) {
+
+            if(apicasesAssert.getAsserttype().equals("Respone"))
+            {
+                AssertInfo = TestAssert.ParseResponeResult(responeData,apicasesAssert);
+            }
+            if(apicasesAssert.getAsserttype().equals("Json"))
+            {
+                AssertInfo = TestAssert.ParseJsonResult(responeData,apicasesAssert);
+            }
+            if(apicasesAssert.getAsserttype().equals("Xml"))
+            {
+                AssertInfo = TestAssert.ParseXmlResult(responeData,apicasesAssert);
+            }
+        }
+        return AssertInfo;
     }
 
     //初始化数据库连接
@@ -1118,8 +1123,8 @@ public class TestCore {
 
                 String conditioncaseid = hs.get("conditioncaseid");
                 RequestObject newob = GetCaseRequestData(planid, conditioncaseid, "", "", "", "", "");
-                String result = request(newob);
-                logger.info(logplannameandcasename + type + "条件接口返回：。。。。。。" + result);
+//                String result = request(newob);
+//                logger.info(logplannameandcasename + type + "条件接口返回：。。。。。。" + result);
             }
         }
     }

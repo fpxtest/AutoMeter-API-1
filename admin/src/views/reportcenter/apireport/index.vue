@@ -23,7 +23,7 @@
         </el-form-item>
           <el-form-item label="执行计划" prop="batchname" >
             <el-select v-model="search.batchname" placeholder="执行计划">
-            <el-option label="请选择" value="''" style="display: none" />
+            <el-option label="请选择"/>
             <div v-for="(planbatch, index) in planbatchList" :key="index">
               <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
             </div>

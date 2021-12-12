@@ -9,6 +9,7 @@ package com.api.autotest.common.utils;
  @create 2020/10/17
 */
 
+import com.api.autotest.dto.ResponeData;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
@@ -19,8 +20,8 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.log.Logger;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import javax.annotation.Resource;
+import java.io.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class Httphelp {
     public static final String XML_CONTENT_FORM = "application/xml;charset=UTF-8";
     public static final String CONTENT_FORM = "application/x-www-form-urlencoded;charset=UTF-8";
 
-    public static String doService(String protocal,String url, String method,String apistyle, HttpParamers paramers,String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static ResponeData doService(String protocal,String url, String method,String apistyle, HttpParamers paramers,String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         switch (method) {
             case "get":
                 String getrequesturl= getrequesturl(url, apistyle, paramers);
@@ -59,8 +60,9 @@ public class Httphelp {
      * @throws IOException
      */
     //HttpParamers paramers
-    public static String doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static ResponeData doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
         String responseData = "";
+        ResponeData responeData=null;
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -76,21 +78,12 @@ public class Httphelp {
             if (requestcontenttype.equals(new String("json"))) {
                 //json数据
                 httpPost.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
-//                paramers.setJsonParamer();
-//                query = paramers.getJsonParamer();
-//                logger.info("Post json datas is :  " + query);
             }
             if (requestcontenttype.equals(new String("xml"))) {
                 //xml数据
                 httpPost.setHeader(HTTP.CONTENT_TYPE, XML_CONTENT_FORM);
                 logger.info("Post xml datas is :  " + query);
             }
-//            else {
-//                //表单数据
-//                httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
-//                query = paramers.getQueryString(DEFAULT_CHARSET);
-//                logger.info("Post form datas is :  " + query);
-//            }
             if (query != null) {
                 HttpEntity reqEntity = new StringEntity(query,"utf-8");
                 logger.info("Post last datas is :  " + query);
@@ -104,10 +97,8 @@ public class Httphelp {
             {
                 httpClient = new SSLClient();
             }
-
             httpResponse = httpClient.execute(httpPost);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+            responeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             logger.info("Post Exception is :" + e.getMessage());
             responseData = e.getMessage();
@@ -120,7 +111,7 @@ public class Httphelp {
             }
         }
         logger.info("Post responseData is :" + responseData);
-        return responseData;
+        return responeData;
     }
 
 
@@ -134,8 +125,9 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doGet(String protocal, String url,  HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static ResponeData doGet(String protocal, String url,  HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
+        ResponeData responeData=null;
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -157,8 +149,7 @@ public class Httphelp {
                 httpClient = new SSLClient();
             }
             httpResponse = httpClient.execute(httpGet);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+            responeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             responseData = e.getMessage();
             logger.info("Exception is :" + e.getMessage());
@@ -172,7 +163,7 @@ public class Httphelp {
             }
         }
         logger.info("Get responseData is :" + responseData);
-        return responseData;
+        return responeData;
     }
 
 
@@ -187,8 +178,9 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static ResponeData doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
         String responseData = "";
+        ResponeData responeData=null;
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -222,8 +214,7 @@ public class Httphelp {
                 httpClient = new SSLClient();
             }
             httpResponse = httpClient.execute(httpGet);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+            responeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             logger.info("Put Exception is :" + e.getMessage());
             responseData = e.getMessage();
@@ -236,7 +227,7 @@ public class Httphelp {
             }
         }
         logger.info("Put responseData is :" + responseData);
-        return responseData;
+        return responeData;
     }
 
     /**
@@ -250,8 +241,9 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static ResponeData doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
         String responseData = "";
+        ResponeData responeData=null;
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -286,8 +278,7 @@ public class Httphelp {
                 httpClient = new SSLClient();
             }
             httpResponse = httpClient.execute(httpGet);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+            responeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             logger.info(" Delete Exception is :" + e.getMessage());
             responseData = e.getMessage();
@@ -300,7 +291,7 @@ public class Httphelp {
             }
         }
         logger.info("Delete responseData is :" + responseData);
-        return responseData;
+        return responeData;
     }
 
     private static void setHeader(HttpRequestBase httpRequestBase, HttpHeader header) {
@@ -403,6 +394,45 @@ public class Httphelp {
             }
         }
         return requestUrl;
+    }
+
+
+    private static ResponeData GetResponeData(CloseableHttpResponse closeableHttpResponse) throws IOException {
+        String ActualResult="";
+        String Content="";
+        int Code=0;
+        if(closeableHttpResponse!=null)
+        {
+            Code =closeableHttpResponse.getStatusLine().getStatusCode();
+            HttpEntity resEntity = closeableHttpResponse.getEntity();
+            if(resEntity!=null)
+            {
+                ActualResult = EntityUtils.toString(resEntity);
+                Content=ActualResult;
+            }
+        }
+        ResponeData responeData=new ResponeData();
+        responeData.setRespone(ActualResult);
+        responeData.setContent(Content);
+        responeData.setCode(Code);
+        return  responeData;
+    }
+
+    private static String inputStreamToString(HttpEntity resEntity) throws IOException {
+        StringBuffer buffer = new StringBuffer();
+        InputStreamReader inputStreamReader;
+        InputStream inputStream= resEntity.getContent();
+        inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String str = null;
+        while ((str = bufferedReader.readLine()) != null) {
+            buffer.append(str);
+        }
+        // 释放资源
+        bufferedReader.close();
+        inputStreamReader.close();
+        inputStream.close();
+        return buffer.toString();
     }
 }
 

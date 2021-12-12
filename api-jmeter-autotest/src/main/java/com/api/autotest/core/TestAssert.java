@@ -1,12 +1,19 @@
 package com.api.autotest.core;
 
+import cn.hutool.Hutool.*;
+import cn.hutool.core.util.XmlUtil;
 import com.api.autotest.dto.ApicasesAssert;
-import com.api.autotest.dto.RequestObject;
+import com.api.autotest.dto.ResponeData;
 import com.jayway.jsonpath.JsonPath;
-import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.log.Logger;
+import org.w3c.dom.Document;
 import sun.misc.FloatingDecimal;
 
+import javax.xml.xpath.XPathConstants;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,33 +35,21 @@ public class TestAssert {
     }
 
     //通过JsonPath获取实际值和期望值比较，返回断言信息
-    public String ParseJsonResult(String ActualJson, RequestObject ob) throws Exception {
+    public String ParseJsonResult(ResponeData responeData, ApicasesAssert apicasesAssert )  {
+        String ActualJson = "";
         String AssertInfo = "";
-        List<ApicasesAssert> apicasesAssertList = ob.getApicasesAssertList();
-        for (ApicasesAssert apicasesAssert : apicasesAssertList) {
-            //获取实际值使用JsonPath解析
-            String ActualResult = "";
-            //获取期望值
-            String ExpectValue = apicasesAssert.getAssertvalues();
-            if (apicasesAssert.getAsserttype().equals("Json")) {
-                ActualResult=ParseJson(apicasesAssert.getExpression(),ActualJson);
-                logger.info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
-                AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
-            }
-            //处理Json返回值类型，类型为Respone断言处理
-            if (apicasesAssert.getAsserttype().equals("Respone")) {
-                if(apicasesAssert.getAssertsubtype().equals("Code"))
-                {
-                    ActualResult = JsonPath.read(ActualJson, "$.Code").toString();
-                }
-                if(apicasesAssert.getAssertsubtype().equals("文本"))
-                {
-                    ActualResult= ActualJson;
-                }
-                AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
-            }
+        if (responeData!=null)
+        {
+            ActualJson = responeData.getRespone();
         }
-        logger.info(TestCore.logplannameandcasename + "AssertInfo is:" + AssertInfo );
+        //获取实际值使用JsonPath解析
+        String ExpectValue = apicasesAssert.getAssertvalues();
+        if (apicasesAssert.getAsserttype().equals("Json")) {
+            String ActualResult=ParseJson(apicasesAssert.getExpression(),ActualJson);
+            logger.info(TestCore.logplannameandcasename + "ParseJson  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+            AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
+        }
+        logger.info(TestCore.logplannameandcasename + "ParseJson AssertInfo is:" + AssertInfo );
         return AssertInfo;
     }
 
@@ -72,13 +67,59 @@ public class TestAssert {
         return Result;
     }
 
-    public String ParseXmlResult(String ActualXml, RequestObject ob) {
+    public String ParseXml(String  XPath,String ActualXml)
+    {
+        String Result="";
+        try {
+            Document docResult= XmlUtil.readXML(ActualXml);
+            Result = XmlUtil.getByXPath(XPath, docResult, XPathConstants.STRING).toString();
+        }
+        catch (Exception ex)
+        {
+            Result=ex.getMessage();
+        }
+        return Result;
+    }
+
+    public String ParseXmlResult(ResponeData responeData, ApicasesAssert apicasesAssert )  {
+        String ActualXml = "";
         String AssertInfo = "";
+        if (responeData!=null)
+        {
+            ActualXml = responeData.getRespone();
+        }
+        //获取实际值使用XPath解析
+        String ExpectValue = apicasesAssert.getAssertvalues();
+        if (apicasesAssert.getAsserttype().equals("Xml")) {
+            String ActualResult=ParseXml(apicasesAssert.getExpression(),ActualXml);
+            logger.info(TestCore.logplannameandcasename + "ParseXml  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+            AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
+        }
         return AssertInfo;
     }
 
-    public String ParseResponeResult(String ActualJson, RequestObject ob) {
+    public String ParseResponeResult(ResponeData responeData, ApicasesAssert apicasesAssert )  {
         String AssertInfo = "";
+        if (responeData!=null)
+        {
+            String ExpectValue = apicasesAssert.getAssertvalues();
+            String ActualResult="";
+            if (apicasesAssert.getAsserttype().equals("Respone")) {
+                if (apicasesAssert.getAssertsubtype().equals("Code"))
+                {
+                    int Code=responeData.getCode();
+                    ActualResult=String.valueOf(Code);
+                    logger.info(TestCore.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+                    AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
+                }
+                if (apicasesAssert.getAssertsubtype().equals("文本"))
+                {
+                    ActualResult=responeData.getContent();
+                    logger.info(TestCore.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+                    AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
+                }
+            }
+        }
         return AssertInfo;
     }
 
