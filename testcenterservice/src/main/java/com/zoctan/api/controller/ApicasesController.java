@@ -11,7 +11,9 @@ import com.zoctan.api.core.service.HttpHeader;
 import com.zoctan.api.core.service.HttpParamers;
 import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.core.service.TestRunHttphelp;
+import com.zoctan.api.dto.ResponeGeneral;
 import com.zoctan.api.dto.StaticsDataForPie;
+import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import tk.mybatis.mapper.entity.Condition;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -262,7 +265,7 @@ public class ApicasesController {
         if (macdepunit != null) {
             String testserver = "";
             String resource = "";
-            if (macdepunit.getVisittype().equals(new String("ip"))) {
+            if (macdepunit.getVisittype().equals("ip")) {
                 Long MachineID = macdepunit.getMachineid();
                 Machine machine = machineService.getBy("id", MachineID);
                 if(machine==null)
@@ -313,11 +316,11 @@ public class ApicasesController {
                         paramers.addParam(Paramdata.getApiparam(),Paramdata.getApiparamvalue());
                     }
 
-                    if (RequestContentType.equals(new String("json"))) {
+                    if (RequestContentType.equals("json")) {
                         paramers.setJsonParamer();
                         PostData = paramers.getJsonParamer();
                     }
-                    if (RequestContentType.equals(new String("form表单"))) {
+                    if (RequestContentType.equals("form表单")) {
                         try {
                             PostData = paramers.getQueryString("UTF-8");
                         } catch (IOException e) {
@@ -326,7 +329,6 @@ public class ApicasesController {
                     }
                 }
             }
-
             if(BodyApiParams.size()>0)
             {
                 if (BodyApiCasedataList.size() > 0) {
@@ -340,7 +342,7 @@ public class ApicasesController {
                     }
                     try
                     {
-                        if (RequestDataType.equals(new String("json"))) {
+                        if (RequestDataType.equals("json")) {
                             String JsonCompelete = paramsList.get(0).getKeynamebak();
                             DocumentContext documentContext = JsonPath.parse(JsonCompelete);
                             //获取参数的数据值
@@ -356,7 +358,7 @@ public class ApicasesController {
                     {
                         return ResultGenerator.genOkResult("当前用例API请求数据格式为Json，但是的Body参数类型不是Json格式，请修改后运行测试："+ex.getMessage());
                     }
-                    if (RequestDataType.equals(new String("xml"))) {
+                    if (RequestDataType.equals("xml")) {
                     }
                 }
                 else
@@ -365,7 +367,17 @@ public class ApicasesController {
                 }
             }
             try {
-                String respon= TestRunHttphelp.doService(Protocal,resource,Method,ApiStyle,paramers, PostData, RequestContentType,header, 30000, 30000);
+                long Start = new Date().getTime();
+                TestResponeData respon= TestRunHttphelp.doService(Protocal,resource,Method,ApiStyle,paramers, PostData, RequestContentType,header, 5000, 5000);
+                long End = new Date().getTime();
+                long CostTime=End-Start;
+                respon.setResponeTime(CostTime);
+                ResponeGeneral responeGeneral=new ResponeGeneral();
+                responeGeneral.setApistyle(ApiStyle);
+                responeGeneral.setMethod(Method);
+                responeGeneral.setProtocal(Protocal);
+                responeGeneral.setUrl(resource);
+                respon.setResponeGeneral(responeGeneral);
                 return ResultGenerator.genOkResult(respon);
 
             } catch (Exception exception) {

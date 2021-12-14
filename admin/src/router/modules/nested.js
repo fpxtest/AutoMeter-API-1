@@ -23,20 +23,20 @@ const nestedRouterTestManager = {
           meta: { title: '用例库' }
         }
       ]
-    },
-    {
-      path: '/cases',
-      component: () => import('../../views/assets/cases/apicasesvariables/index'), // Parent router-view
-      name: '用例变量',
-      children: [
-        {
-          path: 'apicasesvariables/list',
-          component: () => import('../../views/assets/cases/apicasesvariables/index'),
-          name: '用例变量',
-          meta: { title: '用例变量' }
-        }
-      ]
     }
+    // {
+    //   path: '/cases',
+    //   component: () => import('../../views/assets/cases/apicasesvariables/index'), // Parent router-view
+    //   name: '用例变量',
+    //   children: [
+    //     {
+    //       path: 'apicasesvariables/list',
+    //       component: () => import('../../views/assets/cases/apicasesvariables/index'),
+    //       name: '用例变量',
+    //       meta: { title: '用例变量' }
+    //     }
+    //   ]
+    // }
   ]
 }
 export default nestedRouterTestManager
