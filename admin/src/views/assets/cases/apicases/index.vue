@@ -148,7 +148,7 @@
             size="mini"
             v-if="hasPermission('apicases:params') && scope.row.id !== id"
             @click.native.prevent="showTestDialog(scope.$index)"
-          >测试
+          >运行测试
           </el-button>
         </template>
       </el-table-column>
@@ -566,29 +566,95 @@
           <el-form :inline="true"
                    :model="tmptest"
                    ref="tmptest">
-            <el-form-item label="环境" prop="enviromentname"  required>
-              <el-select v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
+            <el-form-item label="选择环境：" prop="enviromentname"  required>
+              <el-select style="width:400px" v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
                 <el-option label="请选择"  />
                 <div v-for="(enviroment, index) in enviromentnameList" :key="index">
                   <el-option :label="enviroment.enviromentname" :value="enviroment.enviromentname" required />
                 </div>
               </el-select>
               <el-button
-                type="success"
+                type="primary"
                 :loading="btnLoading"
                 @click.native.prevent="runtest"
-              >测试
+              >运行测试
               </el-button>
             </el-form-item>
 
-            <el-form-item label="响应结果：" prop="respone"  >
-              <el-input
-                type="textarea"
-                rows="20" cols="90"
-                maxlength="4000"
-                v-model="tmptest.respone"
-              />
-            </el-form-item>
+            <template>
+              <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+
+                <el-tab-pane label="通用" name="zero">
+                  <el-input
+                    type="textarea"
+                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                    rows="20" cols="90"
+                    maxlength="4000"
+                    v-model="tmptest.general"
+                  />
+                </el-tab-pane>
+
+                <el-tab-pane label="响应内容" name="first">
+                    <el-input
+                      type="textarea"
+                      style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                      rows="20" cols="90"
+                      maxlength="4000"
+                      v-model="tmptest.respone"
+                    />
+                </el-tab-pane>
+                <el-tab-pane label="响应码" name="second">
+                  <el-input
+                    type="textarea"
+                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                    rows="20" cols="90"
+                    maxlength="4000"
+                    v-model="tmptest.code"
+                  />
+                </el-tab-pane>
+                <el-tab-pane label="响应时间(ms)" name="third">
+                  <el-input
+                    type="textarea"
+                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                    rows="20" cols="90"
+                    maxlength="4000"
+                    v-model="tmptest.responeTime"
+                  />
+                </el-tab-pane>
+                <el-tab-pane label="大小(B)" name="fourth">
+                  <el-input
+                    type="textarea"
+                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                    rows="20" cols="90"
+                    maxlength="4000"
+                    v-model="tmptest.size"
+                  />
+                </el-tab-pane>
+
+                <el-tab-pane label="Header" name="five">
+                  <el-table
+                    :data="headerList"
+                    element-loading-text="loading"
+                    border
+                    fit
+                    highlight-current-row
+                  >
+                    <el-table-column label="Name" align="center" prop="name" width="250"/>
+                    <el-table-column label="Value" align="center" prop="value" width="350"/>
+                  </el-table>
+                </el-tab-pane>
+
+                <el-tab-pane label="Cookies" name="six">
+                  <el-input
+                    type="textarea"
+                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                    rows="20" cols="90"
+                    maxlength="4000"
+                    v-model="tmptest.size"
+                  />
+                </el-tab-pane>
+              </el-tabs>
+            </template>
           </el-form>
         </div>
 
@@ -629,6 +695,7 @@
     },
     data() {
       return {
+        activeName: 'zero',
         itemKey: null,
         assertitemKey: null,
         tmpasserttype: null,
@@ -648,6 +715,7 @@
         tmpcaseparamslist: [], // 获取用例参数临时列表，getcaseparamsbytype（）调用
         sourcetestcaseList: [],
         assertList: [],
+        headerList: [], // Header列表
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
         JmeterClassVisible: false, // JmeterClassVisible显示
@@ -737,7 +805,15 @@
         },
         tmptest: {
           enviromentname: '',
-          respone: ''
+          respone: '',
+          code: '',
+          responeTime: '',
+          size: '',
+          general: ''
+        },
+        tmpheader: {
+          name: '',
+          value: ''
         },
         tmptestdata: {
           caseid: '',
@@ -778,6 +854,9 @@
 
     methods: {
       unix2CurrentTime,
+
+      handleClick(tab, event) {
+      },
 
       change() {
         this.$forceUpdate()
@@ -1217,8 +1296,14 @@
       runtest() {
         this.$refs.tmptest.validate(valid => {
           if (valid) {
+            this.tmptest.general = '发送请求中................'
             runtest(this.tmptestdata).then(response => {
-              this.tmptest.respone = response.data
+              this.tmptest.general = '请求地址：' + response.data.responeGeneral.url + '\n' + '协议：' + response.data.responeGeneral.protocal + '\n' + '请求风格：' + response.data.responeGeneral.apistyle + '\n' + '请求方法：' + response.data.responeGeneral.method
+              this.headerList = response.data.headerList
+              this.tmptest.respone = response.data.responeContent
+              this.tmptest.code = response.data.responeCode
+              this.tmptest.responeTime = response.data.responeTime
+              this.tmptest.size = response.data.size
             }).catch(res => {
               this.$message.error('运行测试失败')
             })
@@ -1354,6 +1439,13 @@
        */
       showTestDialog(index) {
         this.tmptestdata.caseid = this.apicasesList[index].id
+        this.activeName = 'zero'
+        this.tmptest.general = ''
+        this.headerList = null
+        this.tmptest.size = ''
+        this.tmptest.code = ''
+        this.tmptest.responeTime = ''
+        this.tmptest.enviromentname = ''
         this.tmptest.respone = ''
         this.TestdialogFormVisible = true
       },
