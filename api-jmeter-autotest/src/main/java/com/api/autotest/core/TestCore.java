@@ -12,6 +12,7 @@ import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.log.Logger;
 
 import javax.sql.DataSource;
+import javax.swing.plaf.synth.SynthTreeUI;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -351,56 +352,54 @@ public class TestCore {
         return expectValue;
     }
 
+    //获取参数值的具体内容，支持$变量，以及$变量和字符串拼接
+    private String GetVariablesValues(String Value, String PlanId, String BatchName)
+    {
+        String Result="";
+        if(Value.contains("+"))
+        {
+            String[] Array=Value.split("\\+");
+            for (String str:Array)
+            {
+                if(str.contains("$"))
+                {
+                    String VariablesName = str.substring(1);
+                    String Caseid = GetCaseIdByVariablesName(VariablesName);
+                    //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                    String VariablesNameValue = GetVariablesValues(PlanId, Caseid, BatchName, VariablesName);
+                    Result = Result+VariablesNameValue;
+                }
+                else
+                {
+                    Result=Result+str;
+                }
+            }
+        }
+        else
+        {
+            if(Value.contains("$"))
+            {
+                String VariablesName = Value.substring(1);
+                String Caseid = GetCaseIdByVariablesName(VariablesName);
+                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                String VariablesNameValue = GetVariablesValues(PlanId, Caseid, BatchName, VariablesName);
+                Result = VariablesNameValue;
+            }
+            else
+            {
+                Result=Value;
+            }
+        }
+        return Result;
+    }
+
+
     private HttpHeader GetHttpHeader(ArrayList<HashMap<String, String>> casedatalist, HttpHeader header, String PlanId, String TestCaseId, String BatchName) {
         // 设置header
         HashMap<String, String> headmap = fixhttprequestdatas("Header", casedatalist);
         for (String key : headmap.keySet()) {
             String Value = headmap.get(key);
-
-            String Prefix="";
-            String Suffix="";
-            if (Value.contains("$")) {
-                if (Value.startsWith("$")) {
-                    if(Value.contains("+"))
-                    {
-                        int SuffixPlusPosition=Value.indexOf("+");
-                        Suffix = Value.substring(SuffixPlusPosition,Value.length()-SuffixPlusPosition-1);
-
-                        String VariablesName = Value.substring(0,SuffixPlusPosition-1);
-                        VariablesName = VariablesName.substring(1);
-                        String Caseid = GetCaseIdByVariablesName(VariablesName);
-                        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                        Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
-                        Value=Suffix+Value;
-                    }
-                    else
-                    {
-                        String VariablesName = Value.substring(1);
-                        String Caseid = GetCaseIdByVariablesName(VariablesName);
-                        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                        Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
-                    }
-                }
-                else
-                {
-                    int DollarPos=Value.indexOf("$");
-                    String Middle=Value.substring(DollarPos);
-                    //前缀
-                    String AllPrefix=Value.substring(0,DollarPos);
-                    if(AllPrefix.length()>1)
-                    {
-                        Prefix=Prefix.substring(0,AllPrefix.length()-1);
-                    }
-                    //后缀
-                    int SuffixPlusPosition=Middle.indexOf("+");
-                    Suffix = Middle.substring(SuffixPlusPosition,Value.length()-SuffixPlusPosition-1);
-                    String VariablesName=Middle.substring(1,SuffixPlusPosition-1);
-                    String Caseid = GetCaseIdByVariablesName(VariablesName);
-                    //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                    Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
-                    Value=Prefix+Value+Suffix;
-                }
-            }
+            Value=GetVariablesValues(Value,PlanId,BatchName);
             header.addParam(key, Value);
         }
         return header;
@@ -411,12 +410,7 @@ public class TestCore {
         HashMap<String, String> paramsmap = fixhttprequestdatas("Params", casedatalist);
         for (String key : paramsmap.keySet()) {
             String Value = paramsmap.get(key);
-            if (Value.startsWith("$")) {
-                String VariablesName = Value.substring(1);
-                String Caseid = GetCaseIdByVariablesName(VariablesName);
-                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
-            }
+            Value=GetVariablesValues(Value,PlanId,BatchName);
             paramers.addParam(key, Value);
         }
         return paramers;
@@ -835,22 +829,17 @@ public class TestCore {
     }
 
     //获取变量值
-    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String Variables) {
+    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String VariablesName) {
         String VariablesResult = "";
-        if (Variables.startsWith("$")) {
-            String VariablesName = Variables.substring(1);
-            try {
-                String sql = "select variablesvalue from testvariables_value where planid=" + PlanID +" and caseid="+TestCaseId+ " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
-                logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
-                ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
-                if (result.size() > 0) {
-                    VariablesResult = result.get(0).get("variablesvalue");
-                }
-            } catch (Exception e) {
-                logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量异常...........: " + e.getMessage());
+        try {
+            String sql = "select variablesvalue from testvariables_value where planid=" + PlanID +" and caseid="+TestCaseId+ " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
+            logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
+            if (result.size() > 0) {
+                VariablesResult = result.get(0).get("variablesvalue");
             }
-        } else {
-            VariablesResult = Variables;
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量异常...........: " + e.getMessage());
         }
         return VariablesResult;
     }
