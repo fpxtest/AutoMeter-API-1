@@ -76,7 +76,11 @@ private ApiParamsMapper apiParamsMapper;
     {
         JSONObject jsonObject= JSON.parseObject(JsonValue);
         for (Map.Entry entry : jsonObject.entrySet()) {
-            String Value=entry.getValue().toString();
+            String Value="";
+            if(entry.getValue()!=null)
+            {
+                Value=entry.getValue().toString();
+            }
             if(JSON.isValidObject(Value))
             {
                 String ChildKey="";
