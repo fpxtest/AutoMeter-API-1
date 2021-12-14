@@ -356,11 +356,50 @@ public class TestCore {
         HashMap<String, String> headmap = fixhttprequestdatas("Header", casedatalist);
         for (String key : headmap.keySet()) {
             String Value = headmap.get(key);
-            if (Value.startsWith("$")) {
-                String VariablesName = Value.substring(1);
-                String Caseid = GetCaseIdByVariablesName(VariablesName);
-                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
+
+            String Prefix="";
+            String Suffix="";
+            if (Value.contains("$")) {
+                if (Value.startsWith("$")) {
+                    if(Value.contains("+"))
+                    {
+                        int SuffixPlusPosition=Value.indexOf("+");
+                        Suffix = Value.substring(SuffixPlusPosition,Value.length()-SuffixPlusPosition-1);
+
+                        String VariablesName = Value.substring(0,SuffixPlusPosition-1);
+                        VariablesName = VariablesName.substring(1);
+                        String Caseid = GetCaseIdByVariablesName(VariablesName);
+                        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                        Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
+                        Value=Suffix+Value;
+                    }
+                    else
+                    {
+                        String VariablesName = Value.substring(1);
+                        String Caseid = GetCaseIdByVariablesName(VariablesName);
+                        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                        Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
+                    }
+                }
+                else
+                {
+                    int DollarPos=Value.indexOf("$");
+                    String Middle=Value.substring(DollarPos);
+                    //前缀
+                    String AllPrefix=Value.substring(0,DollarPos);
+                    if(AllPrefix.length()>1)
+                    {
+                        Prefix=Prefix.substring(0,AllPrefix.length()-1);
+                    }
+                    //后缀
+                    int SuffixPlusPosition=Middle.indexOf("+");
+                    Suffix = Middle.substring(SuffixPlusPosition,Value.length()-SuffixPlusPosition-1);
+                    String VariablesName=Middle.substring(1,SuffixPlusPosition-1);
+                    String Caseid = GetCaseIdByVariablesName(VariablesName);
+                    //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                    Value = GetVariablesValues(PlanId, Caseid, BatchName, Value);
+                    Value=Prefix+Value+Suffix;
+                }
             }
             header.addParam(key, Value);
         }
