@@ -146,7 +146,7 @@
           <el-input
             type="textarea"
             rows="10" cols="50"
-            maxlength="1000"
+            maxlength="2000"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapiparams.keyname"
@@ -478,7 +478,6 @@
       updateapiparams() {
         this.$refs.tmpapiparams.validate(valid => {
           if (valid) {
-            this.tmpapiparams.keyname = this.tmpapiparams.keyname.trim()
             updateapiparams(this.tmpapiparams).then(() => {
               this.$message.success('更新成功')
               this.getapiparamsList()

@@ -16,6 +16,14 @@ export function getcaseparatype(params) {
   })
 }
 
+export function searchparamsbyapiid(params) {
+  return request({
+    url: '/api/params/searchparamsbyapiid',
+    method: 'post',
+    data: params
+  })
+}
+
 export function search(apiparamsForm) {
   return request({
     url: '/api/params/search',
