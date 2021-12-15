@@ -25,6 +25,7 @@ public interface ApiParamsService extends Service<ApiParams> {
 
     List<ApiParams> getApiParamsbyname(final Map<String, Object> params);
 
+    List<ApiParams> getApiParamsbyapiid(final Map<String, Object> params);
 
     /**
      * 更新Api内容

@@ -89,6 +89,12 @@
             v-if="hasPermission('api:delete') && scope.row.id !== id"
             @click.native.prevent="removeapi(scope.$index)"
           >删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('api:delete') && scope.row.id !== id"
+            @click.native.prevent="ShowParamsDialog(scope.$index)"
+          >参数</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -206,7 +212,6 @@
         >修改</el-button>
       </div>
     </el-dialog>
-
     <el-dialog :title="CopyApi" :visible.sync="CopydialogFormVisible">
       <el-form
         status-icon
@@ -266,12 +271,132 @@
       </div>
     </el-dialog>
 
+    <el-dialog title='API参数' :visible.sync="ParamsdialogFormVisible">
+      <div class="filter-container">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-plus"
+              v-if="hasPermission('apiparams:add')"
+              @click.native.prevent="showAddapiparamsDialog"
+            >添加api参数</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table
+        :data="apiparamsList"
+        :key="itemKey"
+        v-loading.body="listLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="getIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="api名" align="center" prop="apiname" width="180"/>
+        <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
+        <el-table-column label="参数名" align="center" prop="keynamebak" width="100">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>{{ scope.row.keynamebak }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">...</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+
+
+        <el-table-column label="管理" align="center"
+                         v-if="hasPermission('apiparams:update')  || hasPermission('apiparams:delete')">
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              size="mini"
+              v-if="hasPermission('apiparams:update') && scope.row.id !== id"
+              @click.native.prevent="showUpdateapiparamsDialog(scope.$index)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              v-if="hasPermission('apiparams:delete') && scope.row.id !== id"
+              @click.native.prevent="removeapiparams(scope.$index)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+    </el-dialog>
+
+    <el-dialog :title="paramstextMap[ParamsdialogStatus]" :visible.sync="ModifydialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="180px"
+        style="width: 600px; margin-left:30px;"
+        :model="tmpapiparams"
+        ref="tmpapiparams"
+      >
+        <el-form-item label="参数类型" prop="propertytype" required>
+          <el-select v-model="tmpapiparams.propertytype" placeholder="参数类型" @change="paratypeselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(para, index) in paramlist" :key="index">
+              <el-option :label="para.value" :value="para.value"/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="paralabel" prop="keyname" required>
+          <el-input
+            type="textarea"
+            rows="10" cols="50"
+            maxlength="1000"
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model.trim="tmpapiparams.keyname"
+            :placeholder="keyholder"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
+        <el-button
+          type="danger"
+          v-if="ParamsdialogStatus === 'add'"
+          @click.native.prevent="$refs['tmpapiparams'].resetFields()"
+        >重置</el-button>
+        <el-button
+          type="success"
+          v-if="ParamsdialogStatus === 'add'"
+          :loading="btnLoading"
+          @click.native.prevent="addapiparams"
+        >添加</el-button>
+        <el-button
+          type="success"
+          v-if="ParamsdialogStatus === 'update'"
+          :loading="btnLoading"
+          @click.native.prevent="updateapiparams"
+        >修改</el-button>
+      </div>
+    </el-dialog>
+
+
+
+
   </div>
 </template>
 <script>
   import { search, addapi, updateapi, removeapi, getapisbydeployunitid, copyapi } from '@/api/deployunit/api'
   import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
+  import { addapiparams, updateapiparams, removeapiparams, searchparamsbyapiid as searchparamsbyapiid } from '@/api/deployunit/apiparams'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
@@ -296,6 +421,8 @@
         sourceapiList: [],
         visittypeList: [], // api访问方式列表
         deployunitList: [], // 发布单元列表
+        apiparamsList: [], // apiparams列表
+        paramlist: [],
         requestcontentList: [], // 字典表获取api请求数据格式
         responecontenttypeList: [], // 字典表获取api响应数据格式
         requestcontenttypeVisible: false, // 请求方式是否显示标志
@@ -324,13 +451,21 @@
           deployunitname: ''
         },
         dialogStatus: 'add',
+        ParamsdialogStatus: 'add',
         CopyApi: '复制API',
         CopydialogFormVisible: false,
         dialogFormVisible: false,
+        ParamsdialogFormVisible: false,
+        ModifydialogFormVisible: false,
         textMap: {
           updateRole: '修改api',
           update: '修改api',
           add: '添加api'
+        },
+        paramstextMap: {
+          updateRole: '修改api参数',
+          update: '修改api参数',
+          add: '添加api参数'
         },
         btnLoading: false, // 按钮等待动画
         tmpapi: {
@@ -346,6 +481,14 @@
           memo: '',
           creator: ''
         },
+        tmpapiforparam: {
+          apiid: '',
+          deployunitid: '',
+          deployunitname: '',
+          apiname: '',
+          visittype: '',
+          requestcontenttype: ''
+        },
         tmpcopyapi: {
           sourceapiid: '',
           sourceapiname: '',
@@ -354,6 +497,20 @@
           objectdeployunitid: '',
           objectdeployunitname: '',
           newapiname: ''
+        },
+        tmpapiparams: {
+          id: '',
+          apiid: '',
+          deployunitid: '',
+          apiname: '',
+          deployunitname: '',
+          propertytype: '',
+          keyname: '',
+          keynamebak: '',
+          creator: ''
+        },
+        tmpparamsapi: {
+          apiid: ''
         },
         search: {
           page: 1,
@@ -499,6 +656,18 @@
           this.$message.error('加载api列表失败')
         })
       },
+
+      /**
+       * 获取apiparams列表
+       */
+      searchparamsbyapiid() {
+        searchparamsbyapiid(this.tmpparamsapi).then(response => {
+          this.apiparamsList = response.data.list
+          this.total = response.data.total
+        }).catch(res => {
+          this.$message.error('加载apiparams列表失败')
+        })
+      },
       /**
        * 获取字典访问方式列表
        */
@@ -589,6 +758,40 @@
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
       },
+
+      /**
+       * 显示添加apiparams对话框
+       */
+      showAddapiparamsDialog() {
+        // 显示新增对话框
+        this.ModifydialogFormVisible = true
+        this.ParamsdialogStatus = 'add'
+        this.tmpapiparams.id = ''
+        this.tmpapiparams.keyname = ''
+        this.tmpapiparams.deployunitname = ''
+        this.tmpapiparams.apiname = ''
+        this.tmpapiparams.propertytype = ''
+        this.tmpapiparams.deployunitid = ''
+        this.tmpapiparams.creator = this.name
+
+        this.paramlist = []
+        if (this.tmpapiparams.visittype === 'get') {
+          var getheaddata = { value: 'Header' }
+          var getparamsdata = { value: 'Params' }
+          this.paramlist.push(getheaddata)
+          this.paramlist.push(getparamsdata)
+          console.log(this.paramlist)
+        } else {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+          var headdata = { value: 'Header' }
+          var paramsdata = { value: 'Params' }
+          var postdata = { value: 'Body' }
+          this.paramlist.push(headdata)
+          this.paramlist.push(paramsdata)
+          this.paramlist.push(postdata)
+          console.log(this.paramlist)
+        }
+      },
       /**
        * 显示添加api对话框
        */
@@ -644,6 +847,47 @@
           }
         })
       },
+
+      /**
+       * 添加apiparams
+       */
+      addapiparams() {
+        this.$refs.tmpapiparams.validate(valid => {
+          if (valid) {
+            this.btnLoading = true
+            this.tmpapiparams.keyname = this.tmpapiparams.keyname.trim()
+            this.tmpapiparams.keynamebak = this.tmpapiparams.keyname
+            this.tmpapiparams.apiid = this.tmpparamsapi.apiid
+            this.tmpapiparams.apiname = this.tmpparamsapi.apiname
+            this.tmpapiparams.deployunitid = this.tmpparamsapi.de
+
+            addapiparams(this.tmpapiparams).then(() => {
+              this.$message.success('添加成功')
+              this.searchparamsbyapiid()
+              this.dialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+
+      /**
+       * 显示参数对话框
+       */
+      ShowParamsDialog(index) {
+        this.tmpparamsapi.apiid = this.apiList[index].id
+        this.searchparamsbyapiid(this.tmpparamsapi)
+        this.ParamsdialogFormVisible = true
+        this.tmpapiforparam.apiid = this.apiList[index].id
+        this.tmpapiforparam.apiname = this.apiList[index].apiname
+        this.tmpapiforparam.deployunitname = this.apiList[index].deployunitname
+        this.tmpapiforparam.deployunitid = this.apiList[index].deployunitid
+        this.tmpapiforparam.visittype = this.apiList[index].id.visittype
+        this.tmpapiforparam.requestcontenttype = this.apiList[index].requestcontenttype
+      },
       /**
        * 显示修改api对话框
        * @param index api下标
@@ -689,7 +933,51 @@
       },
 
       /**
-       * 删除字典
+       * 显示修改apiparams对话框
+       * @param index apiparams下标
+       */
+      showUpdateapiparamsDialog(index) {
+        this.ModifydialogFormVisible = true
+        this.ParamsdialogStatus = 'update'
+        this.tmpapiparams.id = this.apiparamsList[index].id
+        this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
+        this.tmpapiparams.apiname = this.apiparamsList[index].apiname
+        this.tmpapiparams.keyname = this.apiparamsList[index].keynamebak
+        this.tmpapiparams.keynamebak = this.apiparamsList[index].keynamebak
+        this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
+        this.tmpapiparams.propertytype = this.apiparamsList[index].propertytype
+        this.tmpapiparams.creator = this.name
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === this.tmpapiparams.deployunitname) {
+            this.tmpapiparams.deployunitid = this.deployunitList[i].id
+          }
+        }
+        if (this.tmpapiparams.propertytype === 'Body') {
+          this.paralabel = '参数(支持Json，Xml)'
+        } else {
+          this.paralabel = '参数(英文逗号隔开)'
+        }
+      },
+
+      /**
+       * 更新apiparams
+       */
+      updateapiparams() {
+        this.$refs.tmpapiparams.validate(valid => {
+          if (valid) {
+            updateapiparams(this.tmpapiparams).then(() => {
+              this.$message.success('更新成功')
+              this.searchparamsbyapiid()
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+
+      /**
+       * 删除api
        * @param index api下标
        */
       removeapi(index) {
@@ -702,6 +990,26 @@
           removeapi(id).then(() => {
             this.$message.success('删除成功')
             this.getapiList()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+
+      /**
+       * 删除api参数
+       * @param index apiparams下标
+       */
+      removeapiparams(index) {
+        this.$confirm('删除该apiparams？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.apiparamsList[index].id
+          removeapiparams(id).then(() => {
+            this.$message.success('删除成功')
+            this.searchparamsbyapiid()
           })
         }).catch(() => {
           this.$message.info('已取消删除')

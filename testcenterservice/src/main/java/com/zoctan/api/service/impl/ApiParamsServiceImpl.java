@@ -37,6 +37,11 @@ private ApiParamsMapper apiParamsMapper;
     }
 
     @Override
+    public List<ApiParams> getApiParamsbyapiid(Map<String, Object> params) {
+        return this.apiParamsMapper.getApiParamsbyapiid(params);
+    }
+
+    @Override
     public int ifexist(Condition con) {
         return countByCondition(con);
     }
@@ -68,6 +73,7 @@ private ApiParamsMapper apiParamsMapper;
             Result=Result.substring(0,Result.length()-1);
             System.out.println("Result......................is..Result:"+Result);
             params.setKeyname(Result);
+            params.setKeynamebak(JsonKey);
         }
         apiParamsMapper.updateApiParams(params);
     }

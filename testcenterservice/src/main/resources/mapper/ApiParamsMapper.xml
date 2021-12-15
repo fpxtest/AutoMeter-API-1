@@ -33,6 +33,11 @@
     FROM api_params a where a.apiname=#{apiname} and a.deployunitname = #{deployunitname}
   </select>
 
+  <select id="getApiParamsbyapiid" resultMap="BaseResultMap">
+    SELECT *
+    FROM api_params a where a.apiid=#{apiid}
+  </select>
+
   <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">
     update api_params set apiname = #{apiname},deployunitid =#{deployunitid}, deployunitname = #{deployunitname}, propertytype = #{propertytype},
     keyname = #{keyname},keynamebak = #{keynamebak},creator = #{creator},

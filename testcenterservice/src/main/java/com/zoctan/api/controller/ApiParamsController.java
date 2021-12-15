@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.Api;
 import com.zoctan.api.entity.ApiParams;
 import com.zoctan.api.service.ApiParamsService;
 import org.springframework.web.bind.annotation.*;
@@ -100,6 +101,16 @@ public class ApiParamsController {
         Integer size= Integer.parseInt(param.get("size").toString());
         PageHelper.startPage(page, size);
         final List<ApiParams> list = this.apiParamsService.findApiParamsWithName(param);
+        final PageInfo<ApiParams> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 输入APIID获取参数列表
+     */
+    @PostMapping("/searchparamsbyapiid")
+    public Result searchparamsbyapiid(@RequestBody Map<String, Object> param) {
+        final List<ApiParams> list = this.apiParamsService.getApiParamsbyapiid(param);
         final PageInfo<ApiParams> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
