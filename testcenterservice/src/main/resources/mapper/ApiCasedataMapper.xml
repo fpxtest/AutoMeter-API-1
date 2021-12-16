@@ -9,7 +9,7 @@
     <result column="caseid" jdbcType="BIGINT" property="caseid" />
     <result column="casename" jdbcType="VARCHAR" property="casename" />
     <result column="apiparam" jdbcType="VARCHAR" property="apiparam" />
-    <result column="apiparamvalue" jdbcType="VARCHAR" property="apiparamvalue" />
+    <result column="apiparamvalue" jdbcType="LONGVARCHAR" property="apiparamvalue" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

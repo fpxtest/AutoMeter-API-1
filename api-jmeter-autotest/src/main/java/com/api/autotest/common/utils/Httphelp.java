@@ -89,11 +89,11 @@ public class Httphelp {
                 logger.info("Post last datas is :  " + query);
                 httpPost.setEntity(reqEntity);
             }
-            if(protocal.equals(new String("http")))
+            if(protocal.equals("http"))
             {
                 httpClient = HttpClients.createDefault();
             }
-            if(protocal.equals(new String("https")))
+            if(protocal.equals("https"))
             {
                 httpClient = new SSLClient();
             }
@@ -140,11 +140,11 @@ public class Httphelp {
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
-            if(protocal.equals(new String("http")))
+            if(protocal.equals("http"))
             {
                 httpClient = HttpClients.createDefault();
             }
-            if(protocal.equals(new String("https")))
+            if(protocal.equals("https"))
             {
                 httpClient = new SSLClient();
             }
@@ -202,7 +202,7 @@ public class Httphelp {
             } else {
                 //表单数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
-                query = params.getQueryString(DEFAULT_CHARSET);
+                query = params.getQueryString();
                 logger.info("Put json datas is :  " + query);
             }
             if(protocal.equals(new String("http")))
@@ -265,7 +265,7 @@ public class Httphelp {
             } else {
                 //表单数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
-                query = params.getQueryString(DEFAULT_CHARSET);
+                query = params.getQueryString();
                 logger.info("Delete json datas is :  " + query);
             }
 

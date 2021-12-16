@@ -35,6 +35,8 @@ public interface ApiParamsService extends Service<ApiParams> {
      */
     void updateApiParams(ApiParams params);
 
+    void deletebyApiid(Long apiid);
+
     int ifexist(Condition condition);
 
     void SaveApiParams(ApiParams apiParams);

@@ -52,7 +52,7 @@ public class HttpParamers {
 //        return this.httpMethod;
 //    }
 
-    public String getQueryString(String charset) throws UnsupportedEncodingException {
+    public String getQueryString() {
         if ((this.params == null) || (this.params.isEmpty())) {
             return null;
         }
@@ -62,7 +62,8 @@ public class HttpParamers {
         for (Map.Entry<String, String> entry : entries) {
             String name = entry.getKey();
             String value = entry.getValue();
-            query.append("&").append(name).append("=").append(URLEncoder.encode(value, charset));
+            query.append("&").append(name).append("=").append(value);
+            //query.append("&").append(name).append("=").append(URLEncoder.encode(value, charset));
         }
         return query.substring(1);
     }

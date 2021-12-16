@@ -370,70 +370,79 @@ public class TestPlanCaseController {
             }
             jmeterPerformanceObject.setResource(resource);
         }
-        List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
 
+        List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
         HashMap<String, String> HeaderMap = new HashMap<>();
         HashMap<String, String> ParamsMap = new HashMap<>();
         HashMap<String, String> BodyMap = new HashMap<>();
         for (ApiCasedata apiCasedata : apiCasedataList) {
-            if (apiCasedata.getPropertytype().equals(new String("Params"))) {
+            if (apiCasedata.getPropertytype().equals("Params")) {
                 ParamsMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
             }
-            if (apiCasedata.getPropertytype().equals(new String("Header"))) {
+            if (apiCasedata.getPropertytype().equals("Header")) {
                 HeaderMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
             }
-            if (apiCasedata.getPropertytype().equals(new String("Body"))) {
+            if (apiCasedata.getPropertytype().equals("Body")) {
                 BodyMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
             }
         }
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
         } else {
-            List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Header");
-            //API是否有参数，有参数无用例数据表示用例数据不完整
-            if (paramsList.size() > 0) {
-                jmeterPerformanceObject.setHeadjson("nocasedatas");
+            List<ApiParams> HeaderParamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Header");
+            //有参数无用例数据表示用例数据不完整
+            if (HeaderParamsList.size() > 0) {
+                jmeterPerformanceObject.setHeadjson("NoCaseData");
+            }
+            else
+            {
+                jmeterPerformanceObject.setHeadjson("NN");
             }
             //API是否有参数，无参数无用例数据，表示无Header
-            else {
-                jmeterPerformanceObject.setHeadjson("headjson");
-            }
+//            else {
+//                jmeterPerformanceObject.setHeadjson("headjson");
+//            }
         }
         if (ParamsMap.size() > 0) {
             jmeterPerformanceObject.setParamsjson(JSON.toJSONString(ParamsMap));
         } else {
-            List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
-            if (paramsList.size() > 0) {
-                jmeterPerformanceObject.setParamsjson("nocasedatas");
-            } else {
-                jmeterPerformanceObject.setParamsjson("paramjson");
+            List<ApiParams> ParamsparamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
+            if (ParamsparamsList.size() > 0) {
+                jmeterPerformanceObject.setParamsjson("NoCaseData");
+            }else
+            {
+                jmeterPerformanceObject.setParamsjson("NN");
             }
         }
         if (BodyMap.size() > 0) {
+            for (String Key:BodyMap.keySet()) {
+                jmeterPerformanceObject.setBodyjson(BodyMap.get(Key));
+            }
             //根据api请求数据类型处理，json，xml
-            String RequestDataType = api.getRequestcontenttype();
-            //获取冗余完整json,xml字段值
-            List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
-            if (RequestDataType.equals(new String("json"))) {
-                String JsonCompelete = paramsList.get(0).getKeynamebak();
-                DocumentContext documentContext = JsonPath.parse(JsonCompelete);
-                //获取参数的数据值
-                for (String Key : BodyMap.keySet()) {
-                    String JsonPathStr = "$." + Key;
-                    documentContext.set(JsonPathStr, BodyMap.get(Key));
-                }
-                String ResultJson = documentContext.jsonString();
-                jmeterPerformanceObject.setBodyjson(ResultJson);
-            }
-            if (RequestDataType.equals(new String("xml"))) {
-                jmeterPerformanceObject.setBodyjson(JSON.toJSONString(BodyMap));
-            }
+//            String RequestDataType = api.getRequestcontenttype();
+//            //获取冗余完整json,xml字段值
+//            List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
+//            if (RequestDataType.equals(new String("json"))) {
+//                String JsonCompelete = paramsList.get(0).getKeynamebak();
+//                DocumentContext documentContext = JsonPath.parse(JsonCompelete);
+//                //获取参数的数据值
+//                for (String Key : BodyMap.keySet()) {
+//                    String JsonPathStr = "$." + Key;
+//                    documentContext.set(JsonPathStr, BodyMap.get(Key));
+//                }
+//                String ResultJson = documentContext.jsonString();
+//                jmeterPerformanceObject.setBodyjson(ResultJson);
+//            }
+//            if (RequestDataType.equals(new String("xml"))) {
+//                jmeterPerformanceObject.setBodyjson(JSON.toJSONString(BodyMap));
+//            }
         } else {
-            List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
-            if (paramsList.size() > 0) {
-                jmeterPerformanceObject.setBodyjson("nocasedatas");
-            } else {
-                jmeterPerformanceObject.setBodyjson("bodyjson");
+            List<ApiParams> BodyparamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
+            if (BodyparamsList.size() > 0) {
+                jmeterPerformanceObject.setBodyjson("NoCaseData");
+            }else
+            {
+                jmeterPerformanceObject.setBodyjson("NN");
             }
         }
         jmeterPerformanceObject.setMysqlurl(url);
@@ -441,7 +450,6 @@ public class TestPlanCaseController {
         jmeterPerformanceObject.setMysqlpassword(password);
 
         List<ApicasesAssert> apicasesAssertList= apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());
-
         if(apicasesAssertList.size()>0)
         {
             String ExpectJson=JSON.toJSONString(apicasesAssertList);
@@ -450,7 +458,6 @@ public class TestPlanCaseController {
         else
         {
             jmeterPerformanceObject.setExpect("");
-
         }
         return jmeterPerformanceObject;
     }

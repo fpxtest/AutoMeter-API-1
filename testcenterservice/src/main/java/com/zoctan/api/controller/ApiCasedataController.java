@@ -6,7 +6,9 @@ import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.Casedata;
 import com.zoctan.api.entity.ApiCasedata;
+import com.zoctan.api.entity.ApiParams;
 import com.zoctan.api.service.ApiCasedataService;
+import com.zoctan.api.service.ApiParamsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class ApiCasedataController {
     @Resource
     private ApiCasedataService apiCasedataService;
+    @Resource
+    private ApiParamsService apiParamsService;
 
     @PostMapping
     public Result add(@RequestBody Casedata apiCasedata) {
@@ -65,12 +69,30 @@ public class ApiCasedataController {
         final PageInfo<ApiCasedata> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);    }
 
-//    /**
-//     * 根据caseid和参数类型返回参数值
-//     */
-//    @DeleteMapping("/delecasevalue")
-//    public Result deletecasevalue(@RequestBody final Map<String, Object> param) {
-//        this.apiCasedataService.deleteparamvaluebycaseidandtype(param);
-//        return ResultGenerator.genOkResult();
-//    }
+
+    /**
+     * 根据caseid,apiid,参数类型处理body，如果用例数据没数据，则取参数名
+     */
+    @PostMapping("/casevalueforbody")
+    public Result casevalueforbody(@RequestBody final Map<String, Object> param) {
+        final List<ApiCasedata> list = this.apiCasedataService.getparamvaluebycaseidandtype(param);
+        String BodyValue="";
+        if(list.size()==0)
+        {
+            Long apiid=Long.parseLong(param.get("apiid").toString());
+            String propertytype=param.get("propertytype").toString();
+            List<ApiParams> apiParams= apiParamsService.getApiParamsbypropertytype(apiid,propertytype);
+            if(apiParams.size()>0)
+            {
+                BodyValue =apiParams.get(0).getKeyname();
+            }
+            return ResultGenerator.genOkResult(BodyValue);
+        }
+        else
+        {
+            BodyValue=list.get(0).getApiparamvalue();
+            return ResultGenerator.genOkResult(BodyValue);
+        }
+    }
+
 }

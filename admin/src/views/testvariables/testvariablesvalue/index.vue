@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column label="测试集合" align="center" prop="planname" width="150"/>
       <el-table-column label="执行计划" align="center" prop="batchname" width="150"/>
-      <el-table-column label="用例名" align="center" prop="casename" width="150"/>
+      <el-table-column label="测试用例" align="center" prop="casename" width="150"/>
       <el-table-column label="变量名" align="center" prop="variablesname" width="120"/>
       <el-table-column label="变量值" align="center" prop="variablesvalue" width="150">
       <template slot-scope="scope">
