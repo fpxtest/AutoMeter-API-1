@@ -16,14 +16,14 @@
             icon="el-icon-plus"
             v-if="hasPermission('api:add')"
             @click.native.prevent="showAddapiDialog"
-          >添加api</el-button>
+          >添加API</el-button>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('api:add')"
             @click.native.prevent="showCopyapiDialog"
-          >复制api</el-button>
+          >复制API</el-button>
 
 <!--          <el-upload ref="upload" action="" :http-request="uploadSectionFile">-->
 <!--            <el-button size="small" type="primary" @click="uploadSectionFile">点击上传</el-button>-->
@@ -53,18 +53,27 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="编号" align="center" width="60">
+      <el-table-column label="编号" align="center" width="45">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="api名" align="center" prop="apiname" width="120"/>
+      <el-table-column label="API" align="center" prop="apiname" width="120"/>
       <el-table-column label="访问方式" align="center" prop="visittype" width="80"/>
-      <el-table-column label="api风格" align="center" prop="apistyle" width="80"/>
-      <el-table-column label="路径" align="center" prop="path" width="100"/>
+      <el-table-column label="风格" align="center" prop="apistyle" width="80"/>
+      <el-table-column label="路径" align="center" prop="path" width="60">
+      <template slot-scope="scope">
+        <el-popover trigger="hover" placement="top">
+          <p>{{ scope.row.path }}</p>
+          <div slot="reference" class="name-wrapper">
+            <el-tag size="medium">...</el-tag>
+          </div>
+        </el-popover>
+      </template>
+      </el-table-column>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
-      <el-table-column label="请求数据格式" align="center" prop="requestcontenttype" width="100"/>
-      <el-table-column label="响应数据格式" align="center" prop="responecontenttype" width="100"/>
+      <el-table-column label="请求格式" align="center" prop="requestcontenttype" width="80"/>
+      <el-table-column label="响应格式" align="center" prop="responecontenttype" width="80"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -94,7 +103,7 @@
             size="mini"
             v-if="hasPermission('api:delete') && scope.row.id !== id"
             @click.native.prevent="ShowParamsDialog(scope.$index)"
-          >参数</el-button>
+          >API参数</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -117,7 +126,7 @@
         :model="tmpapi"
         ref="tmpapi"
       >
-        <el-form-item label="api名" prop="apiname" required>
+        <el-form-item label="API名称:" prop="apiname" required>
           <el-input
             type="text"
             maxlength="40"
@@ -126,7 +135,7 @@
             v-model="tmpapi.apiname"
           />
         </el-form-item>
-        <el-form-item label="访问方式" prop="visittype" required>
+        <el-form-item label="访问方式:" prop="visittype" required>
           <el-select v-model="tmpapi.visittype" placeholder="访问方式" @change="visitypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(vistype, index) in visittypeList" :key="index">
@@ -135,14 +144,14 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="api风格" prop="apistyle" required >
+        <el-form-item label="API风格:" prop="apistyle" required >
           <el-select v-model="tmpapi.apistyle" placeholder="api风格">
-            <el-option label="restful" value="restful"></el-option>
             <el-option label="普通方式" value="普通方式"></el-option>
+            <el-option label="Restful" value="restful"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="资源路径" prop="path" required>
+        <el-form-item label="资源路径:" prop="path" required>
           <el-input
             type="text"
             maxlength="200"
@@ -151,7 +160,7 @@
             v-model.trim="tmpapi.path"
           />
         </el-form-item>
-        <el-form-item label="发布单元" prop="deployunitname" required >
+        <el-form-item label="发布单元:" prop="deployunitname" required >
           <el-select v-model="tmpapi.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
@@ -161,7 +170,7 @@
         </el-form-item>
 
         <div v-if="requestcontenttypeVisible">
-          <el-form-item label="请求数据格式" prop="requestcontenttype" required>
+          <el-form-item label="请求格式:" prop="requestcontenttype" required>
             <el-select v-model="tmpapi.requestcontenttype" placeholder="请求数据格式">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(type, index) in requestcontentList" :key="index">
@@ -171,8 +180,7 @@
           </el-form-item>
         </div>
 
-
-        <el-form-item label="响应数据格式" prop="responecontenttype" required>
+        <el-form-item label="响应格式:" prop="responecontenttype" required>
           <el-select v-model="tmpapi.responecontenttype" placeholder="响应数据格式">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(type, index) in responecontenttypeList" :key="index">
@@ -181,7 +189,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="备注" prop="memo">
+        <el-form-item label="备注:" prop="memo">
           <el-input
             type="text"
             maxlength="100"
@@ -281,7 +289,7 @@
               icon="el-icon-plus"
               v-if="hasPermission('apiparams:add')"
               @click.native.prevent="showAddapiparamsDialog"
-            >添加api参数</el-button>
+            >添加API参数</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -294,12 +302,12 @@
         fit
         highlight-current-row
       >
-        <el-table-column label="编号" align="center" width="60">
+        <el-table-column label="编号" align="center" width="45">
           <template slot-scope="scope">
             <span v-text="getIndex(scope.$index)"></span>
           </template>
         </el-table-column>
-        <el-table-column label="api名" align="center" prop="apiname" width="180"/>
+        <el-table-column label="API" align="center" prop="apiname" width="120"/>
         <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
         <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
         <el-table-column label="参数名" align="center" prop="keynamebak" width="100">
@@ -312,8 +320,6 @@
             </el-popover>
           </template>
         </el-table-column>
-
-
         <el-table-column label="管理" align="center"
                          v-if="hasPermission('apiparams:update')  || hasPermission('apiparams:delete')">
           <template slot-scope="scope">
@@ -332,7 +338,6 @@
           </template>
         </el-table-column>
       </el-table>
-
     </el-dialog>
 
     <el-dialog :title="paramstextMap[ParamsdialogStatus]" :visible.sync="ModifydialogFormVisible">
@@ -340,7 +345,7 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="180px"
+        label-width="100px"
         style="width: 600px; margin-left:30px;"
         :model="tmpapiparams"
         ref="tmpapiparams"
@@ -353,11 +358,10 @@
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item :label="paralabel" prop="keyname" required>
+        <el-form-item label="参数名：" prop="keyname" required>
           <el-input
             type="textarea"
             rows="10" cols="50"
-            maxlength="1000"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapiparams.keyname"
@@ -366,12 +370,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
-        <el-button
-          type="danger"
-          v-if="ParamsdialogStatus === 'add'"
-          @click.native.prevent="$refs['tmpapiparams'].resetFields()"
-        >重置</el-button>
+        <el-button @click.native.prevent="ModifydialogFormVisible = false">取消</el-button>
         <el-button
           type="success"
           v-if="ParamsdialogStatus === 'add'"
@@ -458,14 +457,14 @@
         ParamsdialogFormVisible: false,
         ModifydialogFormVisible: false,
         textMap: {
-          updateRole: '修改api',
-          update: '修改api',
-          add: '添加api'
+          updateRole: '修改API',
+          update: '修改API',
+          add: '添加API'
         },
         paramstextMap: {
-          updateRole: '修改api参数',
-          update: '修改api参数',
-          add: '添加api参数'
+          updateRole: '修改API参数',
+          update: '修改API参数',
+          add: '添加API参数'
         },
         btnLoading: false, // 按钮等待动画
         tmpapi: {
@@ -568,6 +567,10 @@
           }
           console.log(this.deployunitList[i].id)
         }
+      },
+
+      paratypeselectChanged(e) {
+        this.tmpapiparams.keyname = ''
       },
 
       /**
@@ -773,24 +776,6 @@
         this.tmpapiparams.propertytype = ''
         this.tmpapiparams.deployunitid = ''
         this.tmpapiparams.creator = this.name
-
-        this.paramlist = []
-        if (this.tmpapiparams.visittype === 'get') {
-          var getheaddata = { value: 'Header' }
-          var getparamsdata = { value: 'Params' }
-          this.paramlist.push(getheaddata)
-          this.paramlist.push(getparamsdata)
-          console.log(this.paramlist)
-        } else {
-          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-          var headdata = { value: 'Header' }
-          var paramsdata = { value: 'Params' }
-          var postdata = { value: 'Body' }
-          this.paramlist.push(headdata)
-          this.paramlist.push(paramsdata)
-          this.paramlist.push(postdata)
-          console.log(this.paramlist)
-        }
       },
       /**
        * 显示添加api对话框
@@ -857,14 +842,14 @@
             this.btnLoading = true
             this.tmpapiparams.keyname = this.tmpapiparams.keyname.trim()
             this.tmpapiparams.keynamebak = this.tmpapiparams.keyname
-            this.tmpapiparams.apiid = this.tmpparamsapi.apiid
-            this.tmpapiparams.apiname = this.tmpparamsapi.apiname
-            this.tmpapiparams.deployunitid = this.tmpparamsapi.de
-
+            this.tmpapiparams.apiid = this.tmpapiforparam.apiid
+            this.tmpapiparams.apiname = this.tmpapiforparam.apiname
+            this.tmpapiparams.deployunitid = this.tmpapiforparam.deployunitid
+            this.tmpapiparams.deployunitname = this.tmpapiforparam.deployunitname
             addapiparams(this.tmpapiparams).then(() => {
               this.$message.success('添加成功')
               this.searchparamsbyapiid()
-              this.dialogFormVisible = false
+              this.ModifydialogFormVisible = false
               this.btnLoading = false
             }).catch(res => {
               this.$message.error('添加失败')
@@ -887,6 +872,23 @@
         this.tmpapiforparam.deployunitid = this.apiList[index].deployunitid
         this.tmpapiforparam.visittype = this.apiList[index].id.visittype
         this.tmpapiforparam.requestcontenttype = this.apiList[index].requestcontenttype
+        this.paramlist = []
+        if (this.tmpapiparams.visittype === 'get') {
+          var getheaddata = { value: 'Header' }
+          var getparamsdata = { value: 'Params' }
+          this.paramlist.push(getheaddata)
+          this.paramlist.push(getparamsdata)
+          console.log(this.paramlist)
+        } else {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+          var headdata = { value: 'Header' }
+          var paramsdata = { value: 'Params' }
+          var postdata = { value: 'Body' }
+          this.paramlist.push(headdata)
+          this.paramlist.push(paramsdata)
+          this.paramlist.push(postdata)
+          console.log(this.paramlist)
+        }
       },
       /**
        * 显示修改api对话框
@@ -940,18 +942,13 @@
         this.ModifydialogFormVisible = true
         this.ParamsdialogStatus = 'update'
         this.tmpapiparams.id = this.apiparamsList[index].id
-        this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
-        this.tmpapiparams.apiname = this.apiparamsList[index].apiname
         this.tmpapiparams.keyname = this.apiparamsList[index].keynamebak
-        this.tmpapiparams.keynamebak = this.apiparamsList[index].keynamebak
+        this.tmpapiparams.apiid = this.tmpapiforparam.apiid
+        this.tmpapiparams.apiname = this.tmpapiforparam.apiname
+        this.tmpapiparams.deployunitid = this.tmpapiforparam.deployunitid
         this.tmpapiparams.deployunitname = this.apiparamsList[index].deployunitname
         this.tmpapiparams.propertytype = this.apiparamsList[index].propertytype
         this.tmpapiparams.creator = this.name
-        for (let i = 0; i < this.deployunitList.length; i++) {
-          if (this.deployunitList[i].deployunitname === this.tmpapiparams.deployunitname) {
-            this.tmpapiparams.deployunitid = this.deployunitList[i].id
-          }
-        }
         if (this.tmpapiparams.propertytype === 'Body') {
           this.paralabel = '参数(支持Json，Xml)'
         } else {
@@ -965,9 +962,11 @@
       updateapiparams() {
         this.$refs.tmpapiparams.validate(valid => {
           if (valid) {
+            this.tmpapiparams.keynamebak = this.tmpapiparams.keyname
             updateapiparams(this.tmpapiparams).then(() => {
               this.$message.success('更新成功')
               this.searchparamsbyapiid()
+              this.ModifydialogFormVisible = false
             }).catch(res => {
               this.$message.error('添加失败')
               this.btnLoading = false
@@ -1001,7 +1000,7 @@
        * @param index apiparams下标
        */
       removeapiparams(index) {
-        this.$confirm('删除该apiparams？', '警告', {
+        this.$confirm('删除该参数？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'

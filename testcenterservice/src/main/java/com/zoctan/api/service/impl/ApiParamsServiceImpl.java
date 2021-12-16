@@ -48,14 +48,14 @@ private ApiParamsMapper apiParamsMapper;
 
     @Override
     public void SaveApiParams(ApiParams params) {
-        String JsonKey=params.getKeyname();
-        if(JSON.isValidObject(JsonKey))
-        {
-            String  Result= GetJsonValue(JsonKey,"","");
-            Result=Result.substring(0,Result.length()-1);
-            System.out.println("Result......................is..Result:"+Result);
-            params.setKeyname(Result);
-        }
+//        String JsonKey=params.getKeyname();
+//        if(JSON.isValidObject(JsonKey))
+//        {
+//            String  Result= GetJsonValue(JsonKey,"","");
+//            Result=Result.substring(0,Result.length()-1);
+//            System.out.println("Result......................is..Result:"+Result);
+//            params.setKeyname(Result);
+//        }
         apiParamsMapper.SaveApiParams(params);
     }
 
@@ -66,16 +66,21 @@ private ApiParamsMapper apiParamsMapper;
 
     @Override
     public void updateApiParams(ApiParams params) {
-        String JsonKey=params.getKeyname();
-        if(JSON.isValidObject(JsonKey))
-        {
-            String  Result= GetJsonValue(JsonKey,"","");
-            Result=Result.substring(0,Result.length()-1);
-            System.out.println("Result......................is..Result:"+Result);
-            params.setKeyname(Result);
-            params.setKeynamebak(JsonKey);
-        }
+//        String JsonKey=params.getKeyname();
+//        if(JSON.isValidObject(JsonKey))
+//        {
+//            String  Result= GetJsonValue(JsonKey,"","");
+//            Result=Result.substring(0,Result.length()-1);
+//            System.out.println("Result......................is..Result:"+Result);
+//            params.setKeyname(Result);
+//            params.setKeynamebak(JsonKey);
+//        }
         apiParamsMapper.updateApiParams(params);
+    }
+
+    @Override
+    public void deletebyApiid(Long apiid) {
+        apiParamsMapper.deletebyApiid(apiid);
     }
 
     private String GetJsonValue(String JsonValue,String Key,String Parent)

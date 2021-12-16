@@ -138,6 +138,8 @@ INSERT INTO `api_casedata` VALUES (61,43,'正确用户名密码登陆','name','a
 /*!40000 ALTER TABLE `api_casedata` ENABLE KEYS */;
 UNLOCK TABLES;
 
+ALTER TABLE testcenter.api_casedata MODIFY COLUMN apiparamvalue TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '用例参数值';
+
 --
 -- Table structure for table `api_params`
 --
@@ -170,6 +172,9 @@ LOCK TABLES `api_params` WRITE;
 INSERT INTO `api_params` VALUES (10,12,'测试中心登陆',27,'testcenterservice','Params','name,password','2021-07-15 16:42:46','2021-12-07 19:43:34','admin','name,password'),(11,13,'获取执行计划统计数据',27,'testcenterservice','Header','Authorization','2021-07-15 16:49:34','2021-07-15 16:49:34','admin','Authorization'),(26,20,'添加环境',27,'testcenterservice','Body','creator,envtype,memo,id,enviromentname','2021-10-27 17:10:30','2021-12-07 20:06:30','admin','{\n  \"id\": \"\",\n  \"enviromentname\": \"teste2\",\n  \"envtype\": \"功能\",\n  \"memo\": \"\",\n  \"creator\": \"admin\"\n}'),(27,20,'添加环境',27,'testcenterservice','Header','Authorization','2021-10-27 20:10:19','2021-12-07 19:46:21','admin','Authorization'),(29,24,'添加环境复制',27,'testcenterservice','Body','creator,envtype,memo,id,enviromentname','2021-10-27 17:10:30','2021-12-07 20:06:30','admin','{\n  \"id\": \"\",\n  \"enviromentname\": \"teste2\",\n  \"envtype\": \"功能\",\n  \"memo\": \"\",\n  \"creator\": \"admin\"\n}'),(30,24,'添加环境复制',27,'testcenterservice','Header','Authorization','2021-10-27 20:10:19','2021-12-07 19:46:21','admin','Authorization'),(32,26,'复制登陆',27,'testcenterservice','Params','name,password','2021-12-07 20:23:12','2021-12-07 20:23:12','admin','name,password');
 /*!40000 ALTER TABLE `api_params` ENABLE KEYS */;
 UNLOCK TABLES;
+
+ALTER TABLE testcenter.api_params MODIFY COLUMN keynamebak TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'Key名冗余';
+ALTER TABLE testcenter.api_params MODIFY COLUMN keyname TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT 'key名';
 
 --
 -- Table structure for table `apicases`

@@ -116,94 +116,115 @@ public class TestCore {
         newob.setApistyle(apistyle);
         newob.setProtocal(protocal);
 
-        if (headjson.equals(new String("nocasedatas"))) {
+        HttpHeader header = new HttpHeader();
+        if (headjson.equals("NoCaseData")) {
             //表示api设置了header参数，但是用例无数据
-            throw new Exception("API的Header参数无测试用例数据，请完成数据后再运行");
+            throw new Exception("API的Header参数未设计测试用例数据，请完成用例数据后再运行");
         } else {
-            HttpHeader header = null;
-            if (headjson.equals(new String("headjson"))) {
-                header = new HttpHeader();
+            if (headjson.equals("NN")) {
                 newob.setHeader(header);
-            } else {
-                try {
-                    Map headermaps = (Map) JSON.parse(headjson);
-                    header = new HttpHeader();
-                    for (Object map : headermaps.entrySet()) {
-                        String Value = ((Map.Entry) map).getValue().toString();
-                        if (Value.startsWith("$")) {
-                            String VariablesName = Value.substring(1);
-                            String Caseid = GetCaseIdByVariablesName(VariablesName);
-                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
-                        }
-                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
-                        header.addParam(((Map.Entry) map).getKey().toString(), Value);
-                    }
-                    newob.setHeader(header);
-                } catch (Exception ex) {
-                    throw new Exception("Header参数用例数据异常：" + headjson);
-                }
             }
+            else {
+                Map headermaps = (Map) JSON.parse(headjson);
+                for (Object map : headermaps.entrySet()) {
+                    String Value = ((Map.Entry) map).getValue().toString();
+                    Value = GetVariablesValues(Value, testplanid, batchname);
+                    header.addParam(((Map.Entry) map).getKey().toString(), Value);
+                }
+                newob.setHeader(header);
+            }
+//            HttpHeader header = null;
+//            if (headjson.equals("headjson")) {
+//                header = new HttpHeader();
+//                newob.setHeader(header);
+//            } else {
+//
+//
         }
-        if (paramsjson.equals(new String("nocasedatas"))) {
-            throw new Exception("API的Params参数无测试用例数据，请完成数据后再运行");
+        HttpParamers params = new HttpParamers();
+        if (paramsjson.equals("NoCaseData")) {
+            throw new Exception("API的Params参数未设计测试用例数据，请完成用例数据后再运行");
         } else {
-            HttpParamers params = null;
-
-            if (paramsjson.equals(new String("paramjson"))) {
-                params = new HttpParamers();
-                newob.setParamers(params);
-                newob.setPostData("");
-            } else {
-                try {
-                    Map paramsmaps = (Map) JSON.parse(paramsjson);
-                    params = new HttpParamers();
-                    for (Object map : paramsmaps.entrySet()) {
-                        String Value = ((Map.Entry) map).getValue().toString();
-                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
-                        if (Value.startsWith("$")) {
-                            String VariablesName = Value.substring(1);
-                            String Caseid = GetCaseIdByVariablesName(VariablesName);
-                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
-                        }
-                        params.addParam(((Map.Entry) map).getKey().toString(), Value);
-                    }
-                    newob.setParamers(params);
-                } catch (Exception ex) {
-                    throw new Exception("Paras参数用例数据异常：" + paramsjson);
+            String PostData = "";
+            if (paramsjson.equals("NN")) {
+                newob.setPostData(PostData);
+            }
+            else
+            {
+                Map paramsmaps = (Map) JSON.parse(paramsjson);
+                for (Object map : paramsmaps.entrySet()) {
+                    String Value = ((Map.Entry) map).getValue().toString();
+                    Value=GetVariablesValues(Value,testplanid,batchname);
+                    params.addParam(((Map.Entry) map).getKey().toString(), Value);
+                }
+                if (params.getParams().size() > 0) {
+                    PostData = GetParasPostData(requestcontenttype, params);
+                    newob.setPostData(PostData);
                 }
             }
+            newob.setParamers(params);
+//            HttpParamers params = new HttpParamers();
+//            if (paramsjson.equals("paramjson")) {
+//                newob.setParamers(params);
+//                newob.setPostData("");
+//            } else {
+//                try {
+//                    Map paramsmaps = (Map) JSON.parse(paramsjson);
+//                    for (Object map : paramsmaps.entrySet()) {
+//                        String Value = ((Map.Entry) map).getValue().toString();
+//                        Value=GetVariablesValues(Value,testplanid,batchname);
+//                        params.addParam(((Map.Entry) map).getKey().toString(), Value);
+//                    }
+//                    if (params.getParams().size() > 0) {
+//                        String PostData = "";
+//                        try {
+//                            PostData = GetParasPostData(requestcontenttype, params);
+//                        } catch (IOException e) {
+//                            savetestcaseresult(false, 0, "", "", e.getMessage(), newob, null);
+//                        }
+//                        newob.setPostData(PostData);
+//                    }
+//                    newob.setParamers(params);
+//                } catch (Exception ex) {
+//                    throw new Exception("Paras参数用例数据异常：" + paramsjson);
+//                }
+//            }
         }
-
-        if (bodyjson.equals(new String("nocasedatas"))) {
-            throw new Exception("API的Body无测试用例数据，请完成数据后再运行");
+        if (bodyjson.equals("NoCaseData")) {
+            throw new Exception("API的Body参数未设计测试用例数据，请完成用例数据后再运行");
         } else {
-            HttpParamers params = null;
-
-            if (bodyjson.equals(new String("bodyjson"))) {
-                params = new HttpParamers();
-                newob.setParamers(params);
-            } else {
-                try {
-                    Map paramsmaps = (Map) JSON.parse(paramsjson);
-                    params = new HttpParamers();
-                    for (Object map : paramsmaps.entrySet()) {
-                        String Value = ((Map.Entry) map).getValue().toString();
-                        if (Value.startsWith("$")) {
-                            String VariablesName = Value.substring(1);
-                            String Caseid = GetCaseIdByVariablesName(VariablesName);
-                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
-                        }
-                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
-                        params.addParam(((Map.Entry) map).getKey().toString(), Value);
-                    }
-                    newob.setParamers(params);
-                } catch (Exception ex) {
-                    throw new Exception("Body参数用例数据异常：" + bodyjson);
-                }
+            String PostData = "";
+            if (paramsjson.equals("NN")) {
+                newob.setPostData(PostData);
             }
+            else
+            {
+                newob.setPostData(bodyjson);
+            }
+//            HttpParamers params = null;
+//            if (bodyjson.equals("bodyjson")) {
+//                params = new HttpParamers();
+//                newob.setParamers(params);
+//            } else {
+//                try {
+//                    Map paramsmaps = (Map) JSON.parse(bodyjson);
+//                    params = new HttpParamers();
+//                    for (Object map : paramsmaps.entrySet()) {
+//                        String Value = ((Map.Entry) map).getValue().toString();
+//                        if (Value.startsWith("$")) {
+//                            String VariablesName = Value.substring(1);
+//                            String Caseid = GetCaseIdByVariablesName(VariablesName);
+//                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+//                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
+//                        }
+//                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
+//                        params.addParam(((Map.Entry) map).getKey().toString(), Value);
+//                    }
+//                    newob.setParamers(params);
+//                } catch (Exception ex) {
+//                    throw new Exception("Body参数用例数据异常：" + bodyjson);
+//                }
+//            }
         }
         return newob;
     }
@@ -222,14 +243,14 @@ public class TestCore {
             String BatchName = getcaseValue("batchname", DispatchList);
             String ExecPlanName = getcaseValue("execplanname", DispatchList);
             String TestCaseName = getcaseValue("testcasename", DispatchList);
-            RequestObject ro = GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName, TestCaseName);
+            RequestObject ro = GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName);
             FunctionROList.add(ro);
         }
         return FunctionROList;
     }
 
     // 功能用例拼装请求需要的用例数据
-    public RequestObject GetCaseRequestData(String PlanId, String TestCaseId, String SlaverId, String BatchId, String BatchName, String ExecPlanName, String TestCaseName) {
+    public RequestObject GetCaseRequestData(String PlanId, String TestCaseId, String SlaverId, String BatchId, String BatchName, String ExecPlanName) {
         RequestObject ro = new RequestObject();
         //ArrayList<HashMap<String, String>> planlist = getcaseData("select * from executeplan where id=" + PlanId);
         ArrayList<HashMap<String, String>> deployunitmachineiplist = getcaseData("select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id=" + TestCaseId + " and c.id=" + PlanId);
@@ -249,8 +270,9 @@ public class TestCore {
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
-        logplannameandcasename = ExecPlanName + "--" + TestCaseName + " :";
         String casetype = getcaseValue("casetype", caselist);
+
+        String CaseName=getcaseValue("casename", caselist);
 
         String expect = GetAssertInfo(apicasesAssertList); //getcaseValue("expect", caselist);
 
@@ -284,7 +306,7 @@ public class TestCore {
         logger.info(logplannameandcasename + "resource is :  " + resource + "   protocal  is:   " + protocal + "  expect is :      " + expect + "  visittype is: " + method + "   path is: " + path + " casetype is: " + casetype);
 
         ro.setCaseid(TestCaseId);
-        ro.setCasename(TestCaseName);
+        ro.setCasename(CaseName);
         ro.setDeployunitid(deployunitid);
         ro.setTestplanid(PlanId);
         ro.setSlaverid(SlaverId);
@@ -304,11 +326,11 @@ public class TestCore {
         HttpHeader header = new HttpHeader();
         HttpParamers paramers = new HttpParamers();
         for (String property : PropertyList) {
-            if (property.equals(new String("Header"))) {
+            if (property.equals("Header")) {
                 header = GetHttpHeader(casedatalist, header, PlanId, TestCaseId, BatchName);
             }
             ro.setHeader(header);
-            if (property.equals(new String("Params"))) {
+            if (property.equals("Params")) {
                 paramers = GetHttpParams(casedatalist, paramers, PlanId, TestCaseId, BatchName);
                 if (paramers.getParams().size() > 0) {
                     String PostData = "";
@@ -321,15 +343,12 @@ public class TestCore {
                 }
             }
             ro.setParamers(paramers);
-            if (property.equals(new String("Body"))) {
+            if (property.equals("Body")) {
                 // 设置Body
                 HashMap<String, String> bodymap = fixhttprequestdatas("Body", casedatalist);
-                //paramers=GetHttpBody(bodymap,paramers,PlanId, TestCaseId, BatchName,requestcontenttype);
                 String PostData = "";
-                try {
-                    PostData = GetBodyPostData(bodymap, requestcontenttype, Apiid);
-                } catch (Exception e) {
-                    savetestcaseresult(false, 0, "", "", e.getMessage(), ro, null);
+                for (String Key:bodymap.keySet()) {
+                    PostData=bodymap.get(Key);
                 }
                 ro.setPostData(PostData);
             }
@@ -433,7 +452,7 @@ public class TestCore {
             Result = paramers.getJsonParamer();
         }
         if (RequestContentType.equals(new String("form表单"))) {
-            Result = paramers.getQueryString("UTF-8");
+            Result = paramers.getQueryString();
         }
         if (RequestContentType.equals(new String("xml"))) {
 
@@ -500,9 +519,12 @@ public class TestCore {
             long CostTime = 0;
             String Respone = "";
             String ConditionResultStatus = "成功";
+            RequestObject re=null;
             try {
                 Start = new Date().getTime();
-                ResponeData responeData=request(requestObject);
+                String CondionCaseID=conditionApi.get("caseid");
+                re= GetCaseRequestData(requestObject.getTestplanid(),CondionCaseID,requestObject.getSlaverid(),requestObject.getBatchid(),requestObject.getBatchname(),requestObject.getTestplanname());
+                ResponeData responeData=request(re);
                 Respone = responeData.getRespone();
                 CostTime = End - Start;
                 SaveApiSubCondition(requestObject, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
@@ -510,7 +532,7 @@ public class TestCore {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
                 CostTime = End - Start;
-                SaveApiSubCondition(requestObject, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(re, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
                 throw new Exception("接口子条件执行异常：" + ex.getMessage());
             }
 //            TestconditionReport testconditionReport = new TestconditionReport();
@@ -570,7 +592,7 @@ public class TestCore {
         testconditionReport.setSubconditionname(conditionApi.get("subconditionname"));
         testconditionReport.setSubconditiontype("接口");
         testconditionReport.setStatus("已完成");
-        logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
+        logger.info("条件报告保存子条件已完成状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
         SubConditionReportSave(testconditionReport);
         //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
         ArrayList<HashMap<String, String>> apicasesVariablesList = GetApiCaseVaribales(CaseID);
@@ -761,6 +783,7 @@ public class TestCore {
             if (requestObject.getRequestmMthod().equals("get")) {
                 logger.info(logplannameandcasename + "get请求，request url is ....." + Httphelp.getrequesturl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
             }
+            logger.info(logplannameandcasename + "doService url is ....." + Httphelp.getrequesturl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
             result = Httphelp.doService(requestObject.getProtocal(), requestObject.getResource(), requestObject.getRequestmMthod(), requestObject.getApistyle(), requestObject.getParamers(), requestObject.getPostData(), requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
         }
         return result;
@@ -1150,7 +1173,7 @@ public class TestCore {
                 String planid = hs.get("execplanid");
 
                 String conditioncaseid = hs.get("conditioncaseid");
-                RequestObject newob = GetCaseRequestData(planid, conditioncaseid, "", "", "", "", "");
+                RequestObject newob = GetCaseRequestData(planid, conditioncaseid, "", "", "", "");
 //                String result = request(newob);
 //                logger.info(logplannameandcasename + type + "条件接口返回：。。。。。。" + result);
             }

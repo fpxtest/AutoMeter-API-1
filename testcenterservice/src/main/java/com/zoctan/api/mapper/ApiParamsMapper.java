@@ -26,7 +26,7 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
      */
     List<ApiParams> getApiParamsbyname(final Map<String, Object> params);
 
-
+    void deletebyApiid(Long apiid);
     /**
      * 更新Api内容
      *

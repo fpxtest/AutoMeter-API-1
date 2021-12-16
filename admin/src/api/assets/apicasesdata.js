@@ -24,6 +24,13 @@ export function getparamvaluebycaseidandtype(params) {
   })
 }
 
+export function casevalueforbody(params) {
+  return request({
+    url: '/api/casedata/casevalueforbody',
+    method: 'post',
+    data: params
+  })
+}
 // export function deleparamvaluebycaseidandtype(params) {
 //   return request({
 //     url: '/api/casedata/delecasevalue',

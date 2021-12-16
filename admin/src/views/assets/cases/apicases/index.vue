@@ -293,8 +293,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="150px"
-        style="width: 400px; margin-left:50px;"
+        label-width="100px"
+        style="width: 600px; margin-left:50px;"
         :model="tmpapicasesdata"
         ref="tmpapicasesdata"
       >
@@ -312,17 +312,34 @@
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item
-          v-for="(param, index) in tmpcaseparamslist"
-          :label="param"
-          :key="index"
-        >
-          <el-input
-            type="text"
-            prefix-icon="el-icon-edit"
-            v-model="paraList[index]"
-          />
-        </el-form-item>
+
+        <div v-if="HeaderandParamsVisible">
+          <el-form-item
+            v-for="(param, index) in tmpcaseparamslist"
+            :label="param"
+            :key="index"
+          >
+            <el-input
+              type="text"
+              prefix-icon="el-icon-edit"
+              v-model="paraList[index]"
+            />
+          </el-form-item>
+        </div>
+
+        <div v-if="BodyVisible">
+          <el-form-item label="Body值：" prop="keyname" required>
+            <el-input
+              type="textarea"
+              rows="30" cols="50"
+              prefix-icon="el-icon-message"
+              auto-complete="off"
+              v-model.trim="tmpapicasesdata.keyname"
+              :placeholder="keyholder"
+            />
+          </el-form-item>
+        </div>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="paramdialogFormVisible = false">取消</el-button>
@@ -553,7 +570,6 @@
         </el-button>
       </div>
     </el-dialog>
-
     <el-dialog title="运行测试" :visible.sync="TestdialogFormVisible">
       <el-form
         status-icon
@@ -674,7 +690,7 @@
   } from '@/api/assets/apicases'
 
   import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
-  import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype } from '@/api/assets/apicasesdata'
+  import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype, casevalueforbody as casevalueforbody } from '@/api/assets/apicasesdata'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getcaseparatype as getcaseparatype } from '@/api/deployunit/apiparams'
   import { getdepunitLists as getdepunitLists, findDeployNameValueWithCode as findDeployNameValueWithCode } from '@/api/deployunit/depunit'
@@ -724,6 +740,8 @@
         AssertdialogFormVisible: false,
         AssertAUdialogFormVisible: false,
         TestdialogFormVisible: false,
+        HeaderandParamsVisible: false,
+        BodyVisible: false,
         caseindex: '',
         total: 0, // 数据总数
         asserttotal: 0, // 数据总数
@@ -783,7 +801,8 @@
           casename: '',
           propertytype: '',
           memo: '',
-          casedataMap: []
+          casedataMap: [],
+          keyname: ''
         },
         tmpcopycase: {
           sourcecaseid: '',
@@ -821,6 +840,7 @@
         },
 
         casevalue: {
+          apiid: '',
           caseid: '',
           propertytype: ''
         },
@@ -917,45 +937,51 @@
        * 参数类型下拉框的值为e,来获取参数值
        */
       getcaseparamsbytype(e) {
-        this.tmpcaseparamslist = null
-        // this.paraList = null
-        this.paravaluemap === null
-        for (let i = 0; i < this.caseparamsbytypelist.length; i++) {
-          if (this.caseparamsbytypelist[i].propertytype === e) {
-            this.tmpcaseparamslist = this.caseparamsbytypelist[i].keyname.split(',')
-            // todo 根据参数类型获取已存在的数据，用例id，参数类型
-            this.casevalue.caseid = this.apicasesList[this.caseindex].id
-            this.casevalue.propertytype = e
-            getparamvaluebycaseidandtype(this.casevalue).then(response => {
-              this.paraList = []
-              this.paravaluemap = new Map()
-              for (let j = 0; j < response.data.list.length; j++) {
-                // this.paraList.push(response.data.list[j].apiparamvalue)
-                this.paravaluemap.set(response.data.list[j].apiparam, response.data.list[j].apiparamvalue)
-              }
-              for (let k = 0; k < this.tmpcaseparamslist.length; k++) {
-                console.log(this.tmpcaseparamslist[k])
-                if (this.paravaluemap.has(this.tmpcaseparamslist[k])) {
-                  console.log(this.paravaluemap.get(this.tmpcaseparamslist[k]))
-                  this.paraList.push(this.paravaluemap.get(this.tmpcaseparamslist[k]))
-                } else {
-                  this.paraList.push('')
+        if (e === 'Body') {
+          console.log('Body的数据，如果没有用例值，则从参数中获取，如果有，则永远取用例中的数据')
+          this.HeaderandParamsVisible = false
+          this.BodyVisible = true
+          this.casevalue.apiid = this.apicasesList[this.caseindex].apiid
+          this.casevalue.caseid = this.apicasesList[this.caseindex].id
+          this.casevalue.propertytype = e
+          casevalueforbody(this.casevalue).then(response => {
+            this.tmpapicasesdata.keyname = response.data
+          }).catch(res => {
+            this.$message.error()
+          })
+        } else {
+          this.HeaderandParamsVisible = true
+          this.BodyVisible = false
+          this.tmpcaseparamslist = null
+          // this.paraList = null
+          this.paravaluemap === null
+          for (let i = 0; i < this.caseparamsbytypelist.length; i++) {
+            if (this.caseparamsbytypelist[i].propertytype === e) {
+              this.tmpcaseparamslist = this.caseparamsbytypelist[i].keyname.split(',')
+              // todo 根据参数类型获取已存在的数据，用例id，参数类型
+              this.casevalue.caseid = this.apicasesList[this.caseindex].id
+              this.casevalue.propertytype = e
+              getparamvaluebycaseidandtype(this.casevalue).then(response => {
+                this.paraList = []
+                this.paravaluemap = new Map()
+                for (let j = 0; j < response.data.list.length; j++) {
+                  this.paravaluemap.set(response.data.list[j].apiparam, response.data.list[j].apiparamvalue)
                 }
-                console.log(this.paraList)
-                // for (var [key, value] of this.paravaluemap) {
-                //   if (key === this.tmpcaseparamslist[k]) {
-                //     this.paraList.push(value)
-                //     console.log('paraList is......................................')
-                //     console.log(this.paraList)
-                //   }
-                // }
-              }
-              if (this.paraList === null) {
-                this.paraList = new Array(this.tmpcaseparamslist.length)
-              }
-            }).catch(res => {
-              this.$message.error()
-            })
+                for (let k = 0; k < this.tmpcaseparamslist.length; k++) {
+                  if (this.paravaluemap.has(this.tmpcaseparamslist[k])) {
+                    this.paraList.push(this.paravaluemap.get(this.tmpcaseparamslist[k]))
+                  } else {
+                    this.paraList.push('')
+                  }
+                  console.log(this.paraList)
+                }
+                if (this.paraList === null) {
+                  this.paraList = new Array(this.tmpcaseparamslist.length)
+                }
+              }).catch(res => {
+                this.$message.error()
+              })
+            }
           }
         }
       },
@@ -1317,14 +1343,18 @@
         this.tmpapicasesdata.casedataMap = []
         this.$refs.tmpapicasesdata.validate(valid => {
           if (valid) {
-            for (let i = 0; i < this.tmpcaseparamslist.length; i++) {
-              for (let j = 0; j < this.paraList.length; j++) {
-              // for (let j = 0; j < this.paravaluemap.size; j++) {
-                if (i === j) {
-                  // var paradata = { caseid: this.apicasesList[this.caseindex].id, casename: this.apicasesList[this.caseindex].casename, apiparam: this.tmpcaseparamslist[i], apiparamvalue: this.paravaluemap.get(this.tmpcaseparamslist[i]), propertytype: this.tmpapicasesdata.propertytype, memo: 'memo' }
-                  var paradata = { caseid: this.apicasesList[this.caseindex].id, casename: this.apicasesList[this.caseindex].casename, apiparam: this.tmpcaseparamslist[i], apiparamvalue: this.paraList[j], propertytype: this.tmpapicasesdata.propertytype, memo: 'memo' }
-                  console.log(paradata)
-                  this.tmpapicasesdata.casedataMap.push(paradata)
+            if (this.tmpapicasesdata.propertytype === 'Body') {
+              var Bodyparadata = { caseid: this.apicasesList[this.caseindex].id, casename: this.apicasesList[this.caseindex].casename, apiparam: 'Body', apiparamvalue: this.tmpapicasesdata.keyname, propertytype: this.tmpapicasesdata.propertytype, memo: 'memo' }
+              this.tmpapicasesdata.casedataMap.push(Bodyparadata)
+              console.log('处理Body')
+            } else {
+              console.log('处理Header，Params')
+              for (let i = 0; i < this.tmpcaseparamslist.length; i++) {
+                for (let j = 0; j < this.paraList.length; j++) {
+                  if (i === j) {
+                    var paradata = { caseid: this.apicasesList[this.caseindex].id, casename: this.apicasesList[this.caseindex].casename, apiparam: this.tmpcaseparamslist[i], apiparamvalue: this.paraList[j], propertytype: this.tmpapicasesdata.propertytype, memo: 'memo' }
+                    this.tmpapicasesdata.casedataMap.push(paradata)
+                  }
                 }
               }
             }
@@ -1376,6 +1406,8 @@
        * @param index 用例下标
        */
       showUpdateapicasesparamsDialog(index) {
+        this.BodyVisible = false
+        this.tmpapicasesdata.keyname = ''
         this.tmpapicasesdata.caseid = this.apicasesList[index].id
         this.tmpapicases.casename = this.apicasesList[index].casename
         this.tmpapicases.deployunitname = this.apicasesList[index].deployunitname

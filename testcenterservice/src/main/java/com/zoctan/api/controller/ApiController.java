@@ -29,7 +29,7 @@ import java.util.Map;
 public class ApiController {
     @Resource
     private ApiService apiService;
-    @Autowired
+    @Resource
     private ApiParamsService apiParamsService;
 
     @PostMapping
@@ -51,6 +51,7 @@ public class ApiController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         apiService.deleteById(id);
+        apiParamsService.deletebyApiid(id);
         return ResultGenerator.genOkResult();
     }
 

@@ -107,6 +107,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
 
     //用例发送请求
     private ResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
+        getLogger().error(TestCore.logplannameandcasename + "开始请求。。。。。。。。。。。。。。。。"+ob.getResource() );
         ResponeData responeData = core.request(ob);
         return responeData;
     }
