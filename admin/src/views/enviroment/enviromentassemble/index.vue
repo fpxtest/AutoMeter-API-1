@@ -54,12 +54,12 @@
       <el-table-column label="组件名" align="center" prop="assemblename" width="160"/>
       <el-table-column label="组件类型" align="center" prop="assembletype" width="100"/>
       <el-table-column label="连接字" align="center" prop="connectstr" width="250"/>
-      <el-table-column label="备注" align="center" prop="memo" width="100"/>
+      <el-table-column label="备注" align="center" prop="memo" width="60"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -111,7 +111,7 @@
           />
         </el-form-item>
         <el-form-item label="组件类型" prop="assembletype" required >
-          <el-select v-model="tmpenviroment_assemble.assembletype" placeholder="组件类型" @change="selectChanged($event)">
+          <el-select v-model="tmpenviroment_assemble.assembletype" placeholder="组件类型" style="width:100%" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(asstype, index) in assembleypeList" :key="index">
               <el-option :label="asstype.dicitmevalue" :value="asstype.dicitmevalue" required/>

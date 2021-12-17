@@ -89,8 +89,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="75px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpDictionary"
         ref="tmpDictionary"
       >

@@ -102,7 +102,7 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
+        label-width="120px"
         style="width: 600px; margin-left:50px;"
         :model="tmpscriptcondition"
         ref="tmpscriptcondition"
@@ -118,7 +118,7 @@
         </el-form-item>
 
         <el-form-item label="父条件名" prop="conditionname" required >
-          <el-select v-model="tmpscriptcondition.conditionname"  placeholder="父条件名" @change="ConditionselectChanged($event)" >
+          <el-select v-model="tmpscriptcondition.conditionname"  placeholder="父条件名" style="width:100%" @change="ConditionselectChanged($event)" >
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(condition, index) in conditionList" :key="index">
               <el-option :label="condition.conditionname" :value="condition.conditionname" required/>

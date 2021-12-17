@@ -94,8 +94,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 450px; margin-left:50px;"
         :model="tmpapicondition"
         ref="tmpapicondition"
       >
@@ -111,7 +111,7 @@
         </el-form-item>
 
         <el-form-item label="父条件名" prop="conditionname" required >
-          <el-select v-model="tmpapicondition.conditionname"  placeholder="父条件名" @change="ConditionselectChanged($event)">
+          <el-select v-model="tmpapicondition.conditionname"  placeholder="父条件名" style="width:100%" @change="ConditionselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(condition, index) in conditionList" :key="index">
               <el-option :label="condition.conditionname" :value="condition.conditionname" required/>
@@ -120,7 +120,7 @@
         </el-form-item>
 
         <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpapicondition.deployunitname" placeholder="发布单元" @change="deployunitselectChanged($event)">
+          <el-select v-model="tmpapicondition.deployunitname" placeholder="发布单元" style="width:100%" @change="deployunitselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -129,7 +129,7 @@
         </el-form-item>
 
         <el-form-item label="api" prop="apiname" required >
-          <el-select v-model="tmpapicondition.apiname" placeholder="api" @change="apiselectChanged($event)">
+          <el-select v-model="tmpapicondition.apiname" placeholder="api" style="width:100%" @change="apiselectChanged($event)">
             <el-option label="请选择" value />
             <div v-for="(api, index) in apiList" :key="index">
               <el-option :label="api.apiname" :value="api.apiname"/>
@@ -138,7 +138,7 @@
         </el-form-item>
 
         <el-form-item label="接口" prop="casename" required >
-          <el-select v-model="tmpapicondition.casename" placeholder="接口" @change="testcaseselectChanged($event)">
+          <el-select v-model="tmpapicondition.casename" placeholder="接口" style="width:100%" @change="testcaseselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testcase, index) in caseList" :key="index">
               <el-option :label="testcase.casename" :value="testcase.casename" required/>

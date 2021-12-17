@@ -90,8 +90,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpcondition"
         ref="tmpcondition"
       >
@@ -106,7 +106,7 @@
         </el-form-item>
 
         <el-form-item label="目标类型" prop="objecttype" required >
-          <el-select v-model="tmpcondition.objecttype" placeholder="目标类型" @change="targetChanged($event)">
+          <el-select v-model="tmpcondition.objecttype" placeholder="目标类型" style="width:100%" @change="targetChanged($event)">
             <el-option label="测试用例" value="测试用例"/>
             <el-option label="测试集合" value="测试集合"></el-option>
           </el-select>
@@ -114,7 +114,7 @@
 
         <div v-if="testcasevisible">
           <el-form-item label="发布单元" prop="deployunitname" required >
-            <el-select v-model="tmpcondition.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+            <el-select v-model="tmpcondition.deployunitname" placeholder="发布单元" style="width:100%" @change="selectChanged($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(depunitname, index) in deployunitList" :key="index">
                 <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -122,7 +122,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="API" prop="apiname" required >
-            <el-select v-model="tmpcondition.apiname" placeholder="API"  @change="apiselectChanged($event)">
+            <el-select v-model="tmpcondition.apiname" placeholder="API"  style="width:100%" @change="apiselectChanged($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(apiname, index) in apiList" :key="index">
                 <el-option :label="apiname.apiname" :value="apiname.apiname" required/>
@@ -130,7 +130,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="用例" prop="objectname" required >
-            <el-select v-model="tmpcondition.objectname" placeholder="用例"  @change="testcaseChanged($event)">
+            <el-select v-model="tmpcondition.objectname" placeholder="用例" style="width:100%"  @change="testcaseChanged($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(testcase, index) in caseList" :key="index">
                 <el-option :label="testcase.casename" :value="testcase.casename" required/>
@@ -141,7 +141,7 @@
 
         <div v-if="executeplanVisible">
           <el-form-item label="测试集合" prop="objectname"  required>
-            <el-select v-model="tmpcondition.objectname" placeholder="测试集合" @change="execplanChanged($event)">
+            <el-select v-model="tmpcondition.objectname" placeholder="测试集合" style="width:100%" @change="execplanChanged($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(plan, index) in execplanList" :key="index">
                 <el-option :label="plan.executeplanname" :value="plan.executeplanname" />
@@ -151,7 +151,7 @@
         </div>
 
         <el-form-item label="条件类型" prop="conditiontype" required >
-          <el-select v-model="tmpcondition.conditiontype" placeholder="条件类型">
+          <el-select v-model="tmpcondition.conditiontype" placeholder="条件类型" style="width:100%">
             <el-option label="前置条件" value="前置条件"/>
           </el-select>
         </el-form-item>

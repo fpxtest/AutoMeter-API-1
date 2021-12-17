@@ -122,7 +122,7 @@
         class="small-space"
         label-position="left"
         label-width="120px"
-        style="width: 350px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpapi"
         ref="tmpapi"
       >
@@ -136,7 +136,7 @@
           />
         </el-form-item>
         <el-form-item label="访问方式:" prop="visittype" required>
-          <el-select v-model="tmpapi.visittype" placeholder="访问方式" @change="visitypeselectChanged($event)">
+          <el-select v-model="tmpapi.visittype" placeholder="访问方式" style="width:100%" @change="visitypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(vistype, index) in visittypeList" :key="index">
               <el-option :label="vistype.dicitmevalue" :value="vistype.dicitmevalue" required/>
@@ -145,7 +145,7 @@
         </el-form-item>
 
         <el-form-item label="API风格:" prop="apistyle" required >
-          <el-select v-model="tmpapi.apistyle" placeholder="api风格">
+          <el-select v-model="tmpapi.apistyle" placeholder="api风格" style="width:100%">
             <el-option label="普通方式" value="普通方式"></el-option>
             <el-option label="Restful" value="restful"></el-option>
           </el-select>
@@ -161,7 +161,7 @@
           />
         </el-form-item>
         <el-form-item label="发布单元:" prop="deployunitname" required >
-          <el-select v-model="tmpapi.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+          <el-select v-model="tmpapi.deployunitname" placeholder="发布单元" style="width:100%" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -171,7 +171,7 @@
 
         <div v-if="requestcontenttypeVisible">
           <el-form-item label="请求格式:" prop="requestcontenttype" required>
-            <el-select v-model="tmpapi.requestcontenttype" placeholder="请求数据格式">
+            <el-select v-model="tmpapi.requestcontenttype" placeholder="请求数据格式" style="width:100%">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(type, index) in requestcontentList" :key="index">
                 <el-option :label="type.dicitmevalue" :value="type.dicitmevalue" required/>
@@ -181,7 +181,7 @@
         </div>
 
         <el-form-item label="响应格式:" prop="responecontenttype" required>
-          <el-select v-model="tmpapi.responecontenttype" placeholder="响应数据格式">
+          <el-select v-model="tmpapi.responecontenttype" placeholder="响应数据格式" style="width:100%">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(type, index) in responecontenttypeList" :key="index">
               <el-option :label="type.dicitmevalue" :value="type.dicitmevalue" required/>
@@ -226,12 +226,12 @@
         class="small-space"
         label-position="left"
         label-width="120px"
-        style="width: 350px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpcopyapi"
         ref="tmpcopyapi"
       >
         <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
-        <el-select v-model="tmpcopyapi.sourcedeployunitname" placeholder="发布单元" @change="CopyAPISourceDeployselectChanged($event)">
+        <el-select v-model="tmpcopyapi.sourcedeployunitname" placeholder="发布单元" style="width:100%" @change="CopyAPISourceDeployselectChanged($event)">
           <el-option label="请选择" value="''" style="display: none" />
           <div v-for="(depunitname, index) in deployunitList" :key="index">
             <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -240,7 +240,7 @@
       </el-form-item>
 
         <el-form-item label="API来源名" prop="sourceapiname" required >
-          <el-select v-model="tmpcopyapi.sourceapiname" placeholder="api" @change="CopySourceAPIChanged($event)">
+          <el-select v-model="tmpcopyapi.sourceapiname" placeholder="api" style="width:100%" @change="CopySourceAPIChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testapi, index) in sourceapiList" :key="index">
               <el-option :label="testapi.apiname" :value="testapi.apiname" required/>
@@ -249,7 +249,7 @@
         </el-form-item>
 
         <el-form-item label="目标发布单元" prop="objectdeployunitname" required >
-          <el-select v-model="tmpcopyapi.objectdeployunitname" placeholder="发布单元" @change="CopyObjectAPIDeployUnitChanged($event)">
+          <el-select v-model="tmpcopyapi.objectdeployunitname" placeholder="发布单元" style="width:100%" @change="CopyObjectAPIDeployUnitChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -345,13 +345,13 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
+        label-width="120px"
         style="width: 600px; margin-left:30px;"
         :model="tmpapiparams"
         ref="tmpapiparams"
       >
         <el-form-item label="参数类型" prop="propertytype" required>
-          <el-select v-model="tmpapiparams.propertytype" placeholder="参数类型" @change="paratypeselectChanged($event)">
+          <el-select v-model="tmpapiparams.propertytype" placeholder="参数类型" style="width:100%" @change="paratypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(para, index) in paramlist" :key="index">
               <el-option :label="para.value" :value="para.value"/>
@@ -361,7 +361,7 @@
         <el-form-item label="参数名：" prop="keyname" required>
           <el-input
             type="textarea"
-            rows="10" cols="50"
+            rows="20" cols="50"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model.trim="tmpapiparams.keyname"

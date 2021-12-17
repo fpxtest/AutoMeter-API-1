@@ -167,13 +167,13 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="80px"
-        style="width: 350px; margin-left:50px;"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpapicases"
         ref="tmpapicases"
       >
         <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpapicases.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+          <el-select v-model="tmpapicases.deployunitname" style="width:100%" placeholder="发布单元" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -181,7 +181,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="API" prop="apiname" required >
-          <el-select v-model="tmpapicases.apiname" placeholder="API" @change="apiselectChanged($event)">
+          <el-select v-model="tmpapicases.apiname" style="width:100%" placeholder="API" @change="apiselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(apiname, index) in apiList" :key="index">
               <el-option :label="apiname.apiname" :value="apiname.apiname" required/>
@@ -189,7 +189,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用例类型" prop="casetype" required >
-          <el-select v-model="tmpapicases.casetype" placeholder="用例类型" @change="funorperformChanged($event)">
+          <el-select v-model="tmpapicases.casetype" style="width:100%" placeholder="用例类型" @change="funorperformChanged($event)">
             <el-option label="功能" value="功能"></el-option>
             <el-option label="性能" value="性能"></el-option>
           </el-select>
@@ -294,7 +294,7 @@
         class="small-space"
         label-position="left"
         label-width="100px"
-        style="width: 600px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpapicasesdata"
         ref="tmpapicasesdata"
       >
@@ -305,7 +305,7 @@
           />
         </el-form-item>
         <el-form-item label="参数类型" prop="propertytype" required >
-          <el-select v-model="tmpapicasesdata.propertytype" placeholder="参数类型" @change="selectparamsChanged($event)">
+          <el-select v-model="tmpapicasesdata.propertytype" placeholder="参数类型" style="width:100%" @change="selectparamsChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(paramtype, index) in caseparamtypelist" :key="index">
               <el-option :label="paramtype.propertytype" :value="paramtype.propertytype" required/>
@@ -357,11 +357,11 @@
         class="small-space"
         label-position="left"
         label-width="120px"
-        style="width: 350px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpcopycase"
         ref="tmpcopycase"
       >      <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
-        <el-select v-model="tmpcopycase.sourcedeployunitname" placeholder="发布单元" @change="CopyCasesSourceDeployselectChanged($event)">
+        <el-select v-model="tmpcopycase.sourcedeployunitname" placeholder="发布单元" style="width:100%" @change="CopyCasesSourceDeployselectChanged($event)">
           <el-option label="请选择" value="''" style="display: none" />
           <div v-for="(depunitname, index) in deployunitList" :key="index">
             <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -370,7 +370,7 @@
       </el-form-item>
 
       <el-form-item label="用例来源" prop="sourcecasename" required >
-        <el-select v-model="tmpcopycase.sourcecasename" placeholder="用例" @change="CopySourceCasesChanged($event)">
+        <el-select v-model="tmpcopycase.sourcecasename" placeholder="用例" style="width:100%" @change="CopySourceCasesChanged($event)">
           <el-option label="请选择" value="''" style="display: none" />
           <div v-for="(testcase, index) in sourcetestcaseList" :key="index">
             <el-option :label="testcase.casename" :value="testcase.casename" required/>
@@ -483,13 +483,13 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="120px"
-        style="width: 350px; margin-left:50px;"
+        label-width="150px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpassert"
         ref="tmpassert"
       >
       <el-form-item label="断言类型" prop="asserttype" required >
-        <el-select v-model="tmpassert.asserttype" placeholder="断言类型" @change="asserttypeselectChanged($event)">
+        <el-select v-model="tmpassert.asserttype" style="width:100%" placeholder="断言类型" @change="asserttypeselectChanged($event)">
           <el-option label="Respone断言" value="Respone"></el-option>
           <el-option label="Json断言" value="Json"></el-option>
           <el-option label="Xml断言" value="Xml"></el-option>
@@ -498,7 +498,7 @@
 
         <div v-if="AssertSubVisible">
         <el-form-item label="断言子类型" prop="assertsubtype" required >
-          <el-select v-model="tmpassert.assertsubtype" placeholder="断言子类型">
+          <el-select v-model="tmpassert.assertsubtype" style="width:100%" placeholder="断言子类型">
             <el-option label="Code" value="Code"></el-option>
             <el-option label="文本" value="文本"></el-option>
           </el-select>
@@ -515,16 +515,16 @@
             v-model="tmpassert.expression"
           />
           <div class="right">
-            <el-tooltip placement="right-start">
+            <el-tooltip placement="right-end">
               <div slot="content">1.如果断言类型是Json则使用JsonPath表示, 例如：$.store.book[0].title  在线解析网站：http://www.e123456.com/aaaphp/online/jsonpath/<br/>2.如果断言类型为XML，则使用XPath表示， 例如：//div/h3//text()=hello|//div/h4//text()   在线解析网站： http://www.ab173.com/other/xpath.php</div>
-              <el-button>表达式语法规则</el-button>
+              <el-button>表达式语法</el-button>
             </el-tooltip>
           </div>
         </el-form-item>
         </div>
 
         <el-form-item label="条件" prop="assertcondition" required >
-          <el-select v-model="tmpassert.assertcondition" placeholder="条件" @change="assertnameselectChanged($event)">
+          <el-select v-model="tmpassert.assertcondition" style="width:100%" placeholder="条件" @change="assertnameselectChanged($event)">
             <el-option label="等于" value="="></el-option>
             <el-option label="大于" value=">"></el-option>
             <el-option label="小于" value="<"></el-option>
@@ -542,7 +542,7 @@
           />
         </el-form-item>
         <el-form-item label="断言值类型" prop="assertvaluetype" required >
-          <el-select v-model="tmpassert.assertvaluetype" placeholder="断言值类型">
+          <el-select v-model="tmpassert.assertvaluetype" style="width:100%" placeholder="断言值类型">
             <el-option label="int" value="int"></el-option>
             <el-option label="Long" value="Long"></el-option>
             <el-option label="Float" value="Float"></el-option>

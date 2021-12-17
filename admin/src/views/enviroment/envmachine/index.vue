@@ -87,13 +87,13 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpenvmachine"
         ref="tmpenvmachine"
       >
         <el-form-item label="测试环境" prop="enviromentname" required >
-          <el-select v-model="tmpenvmachine.enviromentname"  placeholder="测试环境名" @change="selectChangedEN($event)">
+          <el-select v-model="tmpenvmachine.enviromentname"  placeholder="测试环境名" style="width:100%" @change="selectChangedEN($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(envname, index) in enviromentnameList" :key="index">
               <el-option :label="envname.enviromentname" :value="envname.enviromentname" required/>
@@ -102,7 +102,7 @@
         </el-form-item>
 
         <el-form-item label="服务器" prop="machinename" required >
-          <el-select v-model="tmpenvmachine.machinename" placeholder="服务器" @change="selectChangedMN($event)">
+          <el-select v-model="tmpenvmachine.machinename" placeholder="服务器" style="width:100%" @change="selectChangedMN($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(macname, index) in machinenameList" :key="index">
               <el-option :label="`${macname.machinename} ：${macname.ip}`" :value="macname.machinename" required/>

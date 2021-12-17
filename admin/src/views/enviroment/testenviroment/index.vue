@@ -87,8 +87,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpenviroment"
         ref="tmpenviroment"
       >
@@ -103,7 +103,7 @@
         </el-form-item>
 
         <el-form-item label="环境类型" prop="envtype" required >
-          <el-select v-model="tmpenviroment.envtype" placeholder="环境类型">
+          <el-select v-model="tmpenviroment.envtype" placeholder="环境类型" style="width:100%">
             <el-option label="功能" value="功能"></el-option>
             <el-option label="性能" value="性能"></el-option>
           </el-select>
