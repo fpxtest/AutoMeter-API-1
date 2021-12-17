@@ -21,10 +21,12 @@
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="requestheader" jdbcType="VARCHAR" property="requestheader" />
     <result column="requestdatas" jdbcType="VARCHAR" property="requestdatas" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="requestmethod" jdbcType="VARCHAR" property="requestmethod" />
   </resultMap>
 
   <select id="findApicasereportWithName" resultMap="BaseResultMap">
-    SELECT b.casename,b.apiname,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time,a.requestheader,a.requestdatas
+    SELECT b.casename,b.apiname,a.status,a.url,a.requestmethod,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time,a.requestheader,a.requestdatas
     FROM apicases_report_performance a inner join apicases b on a.caseid=b.id
     <where>
       <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
