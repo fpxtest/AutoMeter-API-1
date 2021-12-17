@@ -47,12 +47,9 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         SampleResult results = new SampleResult();
         //Jmeter java实例开始执行
         results.sampleStart();
-        //用例运行开始时间
         TestCore Core = new TestCore(ctx, getLogger());
-        Map<String,List<RequestObject>> BatchRequestObjectMap = new HashMap<>();
         // 初始化用例数据
-        BatchRequestObjectMap = InitalTestData(Core, ctx);
-
+        Map<String,List<RequestObject>> BatchRequestObjectMap = InitalTestData(Core, ctx);
         for(String BatchName:BatchRequestObjectMap.keySet())
         {
             getLogger().info("BatchName 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+BatchName+" size is"+BatchRequestObjectMap.get(BatchName).size());
@@ -92,6 +89,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         //断言
                         AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
                     } catch (Exception ex) {
+                        getLogger().error(TestCore.logplannameandcasename + "CaseException11111111111 start。。。。。。。。。。。。。!" );
+                        getLogger().error(TestCore.logplannameandcasename + "CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
                         ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
                     } finally {
                         // 保存用例运行结果，Jmeter的sample运行结果
@@ -174,12 +173,19 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     //用例运行结束保存记录，并且更新dispatch状态为完成
     private void CaseFinish(TestCore core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult, JavaSamplerContext ctx, RequestObject requestObject) {
         //jmeter java实例执行完成，记录结果
-        results.setSuccessful(testAssert.isCaseresult());
-        ActualResult = ActualResult.replace("'", "");
-        assertInfo = assertInfo.replace("'", "");
-        ErrorInfo = ErrorInfo.replace("'", "");
-        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject,ctx);
-        core.updatedispatchcasestatus(requestObject.getTestplanid(),requestObject.getCaseid(),requestObject.getSlaverid(),requestObject.getBatchid());
+        try
+        {
+            results.setSuccessful(testAssert.isCaseresult());
+            ActualResult = ActualResult.replace("'", "");
+            assertInfo = assertInfo.replace("'", "");
+            ErrorInfo = ErrorInfo.replace("'", "");
+            core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject,ctx);
+            core.updatedispatchcasestatus(requestObject.getTestplanid(),requestObject.getCaseid(),requestObject.getSlaverid(),requestObject.getBatchid());
+        }
+        catch (Exception ex)
+        {
+            getLogger().error(TestCore.logplannameandcasename + "CaseFinish发生异常，请检查!" + ex.getMessage());
+        }
     }
 
     //功能用例统计收集信息

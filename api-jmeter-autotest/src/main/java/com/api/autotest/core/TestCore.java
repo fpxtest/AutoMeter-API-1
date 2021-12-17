@@ -242,7 +242,6 @@ public class TestCore {
             String BatchId = getcaseValue("batchid", DispatchList);
             String BatchName = getcaseValue("batchname", DispatchList);
             String ExecPlanName = getcaseValue("execplanname", DispatchList);
-            String TestCaseName = getcaseValue("testcasename", DispatchList);
             RequestObject ro = GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName);
             FunctionROList.add(ro);
         }
@@ -325,34 +324,28 @@ public class TestCore {
         List<String> PropertyList = GetCaseDataPropertyType(casedataptlist);
         HttpHeader header = new HttpHeader();
         HttpParamers paramers = new HttpParamers();
+        String PostData = "";
         for (String property : PropertyList) {
             if (property.equals("Header")) {
                 header = GetHttpHeader(casedatalist, header, PlanId, TestCaseId, BatchName);
             }
-            ro.setHeader(header);
             if (property.equals("Params")) {
                 paramers = GetHttpParams(casedatalist, paramers, PlanId, TestCaseId, BatchName);
                 if (paramers.getParams().size() > 0) {
-                    String PostData = "";
-                    try {
-                        PostData = GetParasPostData(requestcontenttype, paramers);
-                    } catch (IOException e) {
-                        savetestcaseresult(false, 0, "", "", e.getMessage(), ro, null);
-                    }
-                    ro.setPostData(PostData);
+                    PostData = GetParasPostData(requestcontenttype, paramers);
                 }
             }
-            ro.setParamers(paramers);
             if (property.equals("Body")) {
                 // 设置Body
                 HashMap<String, String> bodymap = fixhttprequestdatas("Body", casedatalist);
-                String PostData = "";
                 for (String Key:bodymap.keySet()) {
                     PostData=bodymap.get(Key);
                 }
-                ro.setPostData(PostData);
             }
         }
+        ro.setHeader(header);
+        ro.setParamers(paramers);
+        ro.setPostData(PostData);
         return ro;
     }
 
@@ -445,7 +438,7 @@ public class TestCore {
         return PropertyType;
     }
 
-    private String GetParasPostData(String RequestContentType, HttpParamers paramers) throws IOException {
+    private String GetParasPostData(String RequestContentType, HttpParamers paramers)  {
         String Result = "";
         if (RequestContentType.equals(new String("json"))) {
             paramers.setJsonParamer();
@@ -1002,6 +995,8 @@ public class TestCore {
             String batchname = "";
             String header = "";
             String params = "";
+            String Url="";
+            String Method="";
             if (requestObject == null) {
                 casetype = context.getParameter("casetype");
                 testplanid = context.getParameter("testplanid");
@@ -1016,6 +1011,8 @@ public class TestCore {
                 slaverid = requestObject.getSlaverid();// context.getParameter("slaverid");
                 expect = requestObject.getExpect();// context.getParameter("expect");
                 batchname = requestObject.getBatchname();// context.getParameter("batchname");
+                Url=requestObject.getResource();
+                Method=requestObject.getRequestmMthod();
                 Map<String, String> headermap = requestObject.getHeader().getParams();
                 for (String key : headermap.keySet()) {
                     header = header + key + " ：" + headermap.get(key);
@@ -1038,11 +1035,11 @@ public class TestCore {
             String dateNowStr = sdf.format(d);
             String sql = "";
             if (status) {
-                sql = "insert " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + params + "')";
+                sql = "insert " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + params +"', '" +Url + "', '" + Method + "')";
             } else {
-                sql = "insert  " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + params + "')";
+                sql = "insert  " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + params +"', '" +Url + "', '" + Method + "')";
             }
             logger.info(logplannameandcasename + "测试结果 result sql is...........: " + sql);
             System.out.println("case result sql is: " + sql);

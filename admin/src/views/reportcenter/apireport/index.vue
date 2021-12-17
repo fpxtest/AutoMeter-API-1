@@ -49,25 +49,29 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
+      <el-table-column label="执行计划" align="center" prop="batchname" width="80"/>
       <el-table-column label="用例名" align="center" prop="casename" width="120"/>
       <el-table-column label="API" align="center" prop="apiname" width="80"/>
+      <el-table-column label="请求方式" align="center" prop="requestmethod" width="80"/>
+
       <el-table-column label="状态" align="center" prop="status" width="50">
       <template slot-scope="scope">
         <span v-if="scope.row.status === '失败'" style="color:red">{{ scope.row.status }}</span>
         <span v-else style="color: #37B328">{{ scope.row.status }}</span>
       </template>
       </el-table-column>
-      <el-table-column label="执行计划" align="center" prop="batchname" width="80"/>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
-      <el-table-column label="断言" align="center" prop="expect" width="100">
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>{{ scope.row.expect }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">...</el-tag>
-          </div>
-        </el-popover>
-      </template>
+
+
+      <el-table-column label="请求地址" align="center" prop="url" width="100">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.url }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">...</el-tag>
+            </div>
+          </el-popover>
+        </template>
       </el-table-column>
 
       <el-table-column label="请求头" align="center" prop="requestheader" width="100">
@@ -103,7 +107,18 @@
       </template>
       </el-table-column>
 
-      <el-table-column label="断言详情" align="center" prop="assertvalue" width="100">
+      <el-table-column label="断言" align="center" prop="expect" width="100">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.expect }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">...</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="断言结果" align="center" prop="assertvalue" width="100">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.assertvalue }}</p>
@@ -238,6 +253,7 @@
     },
     data() {
       return {
+        itemKey: null,
         tmptestplanname: '',
         tmptestplanid: null,
         tmpbatchname: null,
@@ -279,6 +295,8 @@
           requestdatas: '',
           visittype: '',
           path: '',
+          url: '',
+          requestmethod: '',
           memo: ''
         },
         tmpexecplantype: {
@@ -397,7 +415,7 @@
       handleSizeChange(size) {
         this.search.page = 1
         this.search.size = size
-        this.searchBypageing()
+        this.getapireportList()
       },
       /**
        * 改变页码
@@ -405,7 +423,7 @@
        */
       handleCurrentChange(page) {
         this.search.page = page
-        this.searchBypageing()
+        this.getapireportList()
       },
       /**
        * 表格序号
