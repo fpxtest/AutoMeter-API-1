@@ -89,7 +89,7 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
+        label-width="120px"
         style="width: 500px; margin-left:50px;"
         :model="tmptestvariables"
         ref="tmptestvariables"
@@ -116,7 +116,7 @@
 
 
         <el-form-item label="变量类型" prop="testvariablestype" required >
-          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型">
+          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型" style="width:100%">
             <el-option label="用例变量" value="用例变量"></el-option>
           </el-select>
         </el-form-item>

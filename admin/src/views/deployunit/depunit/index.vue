@@ -92,7 +92,7 @@
         class="small-space"
         label-position="left"
         label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpdepunit"
         ref="tmpdepunit"
       >
@@ -106,7 +106,7 @@
           />
         </el-form-item>
         <el-form-item label="协议" prop="protocal" required>
-          <el-select v-model="tmpdepunit.protocal" placeholder="协议">
+          <el-select v-model="tmpdepunit.protocal" style="width:100%" placeholder="协议">
             <el-option label="http" value="http"></el-option>
             <el-option label="https" value="https"></el-option>
           </el-select>

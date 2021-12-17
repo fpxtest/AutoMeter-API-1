@@ -115,8 +115,8 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
-        style="width: 300px; margin-left:50px;"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpexecuteplan"
         ref="tmpexecuteplan"
       >
@@ -129,13 +129,13 @@
           />
         </el-form-item>
         <el-form-item label="类型" prop="usetype" required>
-          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型" @change="ustypeChanged($event)">
+          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型" style="width:100%" @change="ustypeChanged($event)">
             <el-option label="功能" value="功能" />
             <el-option label="性能" value="性能" />
           </el-select>
         </el-form-item>
         <el-form-item label="执行环境" prop="enviromentname"  required>
-          <el-select v-model="tmpexecuteplan.enviromentname" placeholder="执行环境" @change="enviromentselectChanged($event)">
+          <el-select v-model="tmpexecuteplan.enviromentname" placeholder="执行环境" style="width:100%" @change="enviromentselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(envname, index) in enviromentnameList" :key="index">
               <el-option :label="envname.enviromentname" :value="envname.enviromentname" required/>
@@ -143,7 +143,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="业务类型" prop="businesstype"  required>
-          <el-select v-model="tmpexecuteplan.businesstype" placeholder="业务类型">
+          <el-select v-model="tmpexecuteplan.businesstype" placeholder="业务类型" style="width:100%">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(dicitem, index) in planbusinessdiclist" :key="index">
               <el-option :label="dicitem.dicitmevalue" :value="dicitem.dicitmevalue" required/>
@@ -153,7 +153,7 @@
 
         <div v-if="PerformanceVisible">
           <el-form-item label="运行模式" prop="runmode" required>
-            <el-select v-model="tmpexecuteplan.runmode" placeholder="运行模式">
+            <el-select v-model="tmpexecuteplan.runmode" placeholder="运行模式" style="width:100%">
               <el-option label="单机运行" value="单机运行" />
               <el-option label="多机并行" value="多机并行" />
             </el-select>

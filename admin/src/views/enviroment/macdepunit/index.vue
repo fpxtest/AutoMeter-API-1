@@ -92,13 +92,13 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
+        label-width="120px"
         style="width: 400px; margin-left:50px;"
         :model="tmpmacdepunit"
         ref="tmpmacdepunit"
       >
         <el-form-item label="测试环境" prop="enviromentname" required >
-          <el-select v-model="tmpmacdepunit.enviromentname"  placeholder="测试环境名" @change="selectChangedEN($event)">
+          <el-select v-model="tmpmacdepunit.enviromentname"  placeholder="测试环境名" style="width:100%" @change="selectChangedEN($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(envname, index) in enviromentnameList" :key="index">
               <el-option :label="envname.enviromentname" :value="envname.enviromentname" required/>
@@ -107,7 +107,7 @@
         </el-form-item>
 
         <el-form-item label="服务器" prop="machinename" required >
-          <el-select v-model="tmpmacdepunit.machinename" placeholder="服务器" @change="selectChangedMN($event)">
+          <el-select v-model="tmpmacdepunit.machinename" placeholder="服务器" style="width:100%" @change="selectChangedMN($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(macname, index) in machinenameList" :key="index">
               <el-option :label="`${macname.machinename} ：${macname.ip}`" :value="macname.machinename" required/>
@@ -116,7 +116,7 @@
         </el-form-item>
 
         <el-form-item label="组件类型" prop="assembletype" required >
-          <el-select v-model="tmpmacdepunit.assembletype" placeholder="组件类型" @change="selectChangedAandD($event)">
+          <el-select v-model="tmpmacdepunit.assembletype" placeholder="组件类型" style="width:100%" @change="selectChangedAandD($event)">
             <el-option label="组件" value="组件"></el-option>
             <el-option label="发布单元" value="发布单元"></el-option>
           </el-select>
@@ -124,7 +124,7 @@
 
         <div v-if="deployunitVisible">
           <el-form-item label="发布单元" prop="deployunitname" required >
-            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="发布单元" @change="selectChangedDU($event)">
+            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="发布单元" style="width:100%" @change="selectChangedDU($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(depunit, index) in deployUnitList" :key="index">
                 <el-option :label="depunit.deployunitname" :value="depunit.deployunitname" required/>
@@ -133,7 +133,7 @@
           </el-form-item>
 
           <el-form-item label="访问方式" prop="visittype" required >
-            <el-select v-model="tmpmacdepunit.visittype" placeholder="访问方式" @change="selectChangedVisittype($event)">
+            <el-select v-model="tmpmacdepunit.visittype" placeholder="访问方式" style="width:100%" @change="selectChangedVisittype($event)">
               <el-option label="ip" value="ip"></el-option>
               <el-option label="域名" value="域名"></el-option>
             </el-select>
@@ -148,7 +148,7 @@
 
         <div v-if="assembleVisible">
           <el-form-item label="组件" prop="deployunitname" required >
-            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="组件" @change="selectChangedAS($event)">
+            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="组件" style="width:100%" @change="selectChangedAS($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(assemble, index) in assembleList" :key="index">
                 <el-option :label="assemble.assemblename" :value="assemble.assemblename" required/>
@@ -157,7 +157,7 @@
           </el-form-item>
 
           <el-form-item label="访问方式" prop="visittype" required >
-            <el-select v-model="tmpmacdepunit.visittype" placeholder="访问方式" @change="selectChangedVisittype($event)">
+            <el-select v-model="tmpmacdepunit.visittype" placeholder="访问方式" style="width:100%" @change="selectChangedVisittype($event)">
               <el-option label="ip" value="ip"></el-option>
               <el-option label="域名" value="域名"></el-option>
             </el-select>
