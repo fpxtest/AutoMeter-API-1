@@ -250,7 +250,7 @@ public class ApicasesController {
         Api api = apiService.getBy("id", Apiid);
         if(api==null)
         {
-            return ResultGenerator.genOkResult("当前用例的API不存在，请检查是否被删除！");
+            return ResultGenerator.genFailedResult("当前用例的API不存在，请检查是否被删除！");
         }
         String Method=api.getVisittype();
         String ApiStyle=api.getApistyle();
@@ -258,7 +258,7 @@ public class ApicasesController {
         Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
         if(deployunit==null)
         {
-            return ResultGenerator.genOkResult("当前用例的API所在的发布单元不存在，请检查是否被删除！");
+            return ResultGenerator.genFailedResult("当前用例的API所在的发布单元不存在，请检查是否被删除！");
         }
         String Protocal=deployunit.getProtocal();
         Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(Long.parseLong(enviromentid), deployunit.getId());
@@ -270,7 +270,7 @@ public class ApicasesController {
                 Machine machine = machineService.getBy("id", MachineID);
                 if(machine==null)
                 {
-                    return ResultGenerator.genOkResult("当前环境中的服务器不存在，请检查是否被删除！");
+                    return ResultGenerator.genFailedResult("当前环境中的服务器不存在，请检查是否被删除！");
                 }
                 testserver = machine.getIp();
                 resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
@@ -293,7 +293,7 @@ public class ApicasesController {
             {
                 if(HeaderApiCasedataList.size()==0)
                 {
-                    return ResultGenerator.genOkResult("当前用例API的Header参数还未设计用例数据，请先完善后运行测试！");
+                    return ResultGenerator.genFailedResult("当前用例API的Header参数还未设计用例数据，请先完善后运行测试！");
                 }
                 else
                 {
@@ -308,7 +308,7 @@ public class ApicasesController {
             {
                 if(ParamsApiCasedataList.size()==0)
                 {
-                    return ResultGenerator.genOkResult("当前用例API的Params参数还未设计用例数据，请先完善后运行测试！");
+                    return ResultGenerator.genFailedResult("当前用例API的Params参数还未设计用例数据，请先完善后运行测试！");
                 }
                 else
                 {
@@ -338,7 +338,7 @@ public class ApicasesController {
                     List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
                     if(paramsList.size()==0)
                     {
-                        return ResultGenerator.genOkResult("当前用例API无Body参数，请检查是否被删除！");
+                        return ResultGenerator.genFailedResult("当前用例API无Body参数，请检查是否被删除！");
                     }
                     try
                     {
@@ -356,14 +356,14 @@ public class ApicasesController {
                     }
                     catch (Exception ex)
                     {
-                        return ResultGenerator.genOkResult("当前用例API请求数据格式为Json，但是的Body参数类型不是Json格式，请修改后运行测试："+ex.getMessage());
+                        return ResultGenerator.genFailedResult("当前用例API请求数据格式为Json，但是的Body参数类型不是Json格式，请修改后运行测试："+ex.getMessage());
                     }
                     if (RequestDataType.equals("xml")) {
                     }
                 }
                 else
                 {
-                    return ResultGenerator.genOkResult("当前用例API的Body参数还未设计用例数据，请先完善后运行测试！");
+                    return ResultGenerator.genFailedResult("当前用例API的Body参数还未设计用例数据，请先完善后运行测试！");
                 }
             }
             try {
@@ -386,7 +386,7 @@ public class ApicasesController {
         }
         else
         {
-            return ResultGenerator.genOkResult("当前环境未部署此用例API所在的发布单元，请先完成环境下的部署！");
+            return ResultGenerator.genFailedResult("当前环境未部署此用例API所在的发布单元，请先完成环境下的部署！");
         }
     }
 }
