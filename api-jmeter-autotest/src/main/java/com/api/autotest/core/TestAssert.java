@@ -263,7 +263,7 @@ public class TestAssert {
         this.caseresult = caseresult;
     }
 
-    private boolean caseresult = false;
+    private boolean caseresult = true;
     public String assertinfo = "";
 
 
