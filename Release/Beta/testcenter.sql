@@ -437,6 +437,9 @@ LOCK TABLES `apicases_report` WRITE;
 /*!40000 ALTER TABLE `apicases_report` ENABLE KEYS */;
 UNLOCK TABLES;
 
+ALTER  table `apicases_report` add column url varchar(200) Comment '地址';
+ALTER  table `apicases_report` add column requestmethod varchar(20) Comment '请求方式';
+
 --
 -- Table structure for table `apicases_report_performance`
 --
@@ -473,6 +476,9 @@ LOCK TABLES `apicases_report_performance` WRITE;
 /*!40000 ALTER TABLE `apicases_report_performance` DISABLE KEYS */;
 /*!40000 ALTER TABLE `apicases_report_performance` ENABLE KEYS */;
 UNLOCK TABLES;
+
+ALTER  table `apicases_report_performance` add column url varchar(200) Comment '地址';
+ALTER  table `apicases_report_performance` add column requestmethod varchar(20) Comment '请求方式';
 
 --
 -- Table structure for table `apicases_reportstatics`
