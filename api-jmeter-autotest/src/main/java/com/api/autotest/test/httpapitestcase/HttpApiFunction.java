@@ -88,6 +88,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         //增加条件处理逻辑
                         Core.FixCondition(requestObject);
                         ResponeData responeData = SendCaseRequest(requestObject, Core);
+                        ActualResult=responeData.getRespone();
                         //断言
                         AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
                     } catch (Exception ex) {
