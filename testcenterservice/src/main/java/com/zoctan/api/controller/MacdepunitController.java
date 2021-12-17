@@ -26,10 +26,10 @@ public class MacdepunitController {
     @PostMapping
     public Result add(@RequestBody Macdepunit macdepunit) {
         Condition con=new Condition(Macdepunit.class);
-        con.createCriteria().andCondition("enviromentname = '" + macdepunit.getEnviromentname() + "'").andCondition("machinename = '" + macdepunit.getMachinename() + "'").andCondition("deployunitname = '" + macdepunit.getDeployunitname() + "'");
+        con.createCriteria().andCondition("enviromentname = '" + macdepunit.getEnviromentname() + "'").andCondition("deployunitname = '" + macdepunit.getDeployunitname() + "'");
         if(macdepunitService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("环境服务器上已经存在此发布单元或者组件");
+            return ResultGenerator.genFailedResult("环境上已经存在此发布单元或者组件");
         }
         else
         {
@@ -72,10 +72,10 @@ public class MacdepunitController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Macdepunit macdepunit) {
         Condition con=new Condition(Macdepunit.class);
-        con.createCriteria().andCondition("enviromentname = '" + macdepunit.getEnviromentname() + "'").andCondition("machinename = '" + macdepunit.getMachinename() + "'").andCondition("deployunitname = '" + macdepunit.getDeployunitname() + "'").andCondition("id <> " + macdepunit.getId());
+        con.createCriteria().andCondition("enviromentname = '" + macdepunit.getEnviromentname() + "'").andCondition("deployunitname = '" + macdepunit.getDeployunitname() + "'").andCondition("id <> " + macdepunit.getId());
         if(macdepunitService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("环境服务器上已经存在此发布单元或者组件");
+            return ResultGenerator.genFailedResult("环境上已经存在此发布单元或者组件");
         }
         else {
             this.macdepunitService.updateMacAndDep(macdepunit);
