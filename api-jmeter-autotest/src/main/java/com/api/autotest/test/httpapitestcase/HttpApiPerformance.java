@@ -71,6 +71,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             requestObject=InitalTestData(Core,ctx);
             // 发送用例请求，并返回结果
             ResponeData responeData = SendCaseRequest(requestObject, Core);
+            ActualResult=responeData.getRespone();
             //断言
             AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
 //            String ResponeContentType=requestObject.getResponecontenttype();

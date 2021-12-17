@@ -62,8 +62,7 @@ public class Httphelp {
      */
     //HttpParamers paramers
     public static ResponeData doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
-        String responseData = "";
-        ResponeData responeData=null;
+        ResponeData responeData=new ResponeData();
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -99,7 +98,6 @@ public class Httphelp {
                 httpClient = new SSLClient();
             }
 
-
             logger.info("..................请求地址 :  " + url);
 
             for (Header header1 :httpPost.getAllHeaders()) {
@@ -112,7 +110,9 @@ public class Httphelp {
             responeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             logger.info("Post Exception is :" + e.getMessage());
-            responseData = e.getMessage();
+            responeData.setRespone(e.getMessage());
+            responeData.setContent(e.getMessage());
+            responeData.setCode(httpResponse.getStatusLine().getStatusCode());
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -121,7 +121,7 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        logger.info("Post responseData is :" + responseData);
+        logger.info("Post 请求响应 is :" + responeData.getRespone());
         return responeData;
     }
 
