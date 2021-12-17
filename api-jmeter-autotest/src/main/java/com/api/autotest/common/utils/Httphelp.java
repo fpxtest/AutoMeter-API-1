@@ -10,6 +10,7 @@ package com.api.autotest.common.utils;
 */
 
 import com.api.autotest.dto.ResponeData;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
@@ -97,6 +98,16 @@ public class Httphelp {
             {
                 httpClient = new SSLClient();
             }
+
+
+            logger.info("..................请求地址 :  " + url);
+
+            for (Header header1 :httpPost.getAllHeaders()) {
+                logger.info("..................请求Header名 :  " + header1.getName()+"  Header值："+header1.getValue());
+            }
+            logger.info("..................请求数据 :  " + query);
+
+
             httpResponse = httpClient.execute(httpPost);
             responeData=GetResponeData(httpResponse);
         } catch (Exception e) {
