@@ -638,7 +638,7 @@
           }).catch(res => {
             this.$message.error('装载失败')
           })
-          this.casedialogFormVisible = false
+          // this.casedialogFormVisible = false
           this.getexecuteplancaseList()
         }
       },

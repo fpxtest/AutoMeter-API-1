@@ -87,17 +87,24 @@
                        v-if="hasPermission('executeplan:update')  || hasPermission('executeplan:delete')">
         <template slot-scope="scope">
           <el-button
-            type="primary"
-            size="mini"
-            v-if="hasPermission('executeplan:update') && scope.row.id !== id"
-            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
-          >修改集合</el-button>
-          <el-button
             type="danger"
             size="mini"
             v-if="hasPermission('executeplan:delete') && scope.row.id !== id"
             @click.native.prevent="removeexecuteplan(scope.$index)"
           >删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('executeplan:update') && scope.row.id !== id"
+            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
+          >修改</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('executeplan:update') && scope.row.id !== id"
+            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
+          >全局Header</el-button>
+
         </template>
       </el-table-column>
     </el-table>
