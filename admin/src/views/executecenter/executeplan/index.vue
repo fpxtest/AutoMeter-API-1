@@ -75,10 +75,10 @@
       <el-table-column label="运行模式" align="center" prop="runmode" width="80"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
       <el-table-column label="描述" align="center" prop="memo" width="80"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -86,6 +86,12 @@
       <el-table-column label="管理" align="center"
                        v-if="hasPermission('executeplan:update')  || hasPermission('executeplan:delete')">
         <template slot-scope="scope">
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('executeplan:update') && scope.row.id !== id"
+            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
+          >修改</el-button>
           <el-button
             type="danger"
             size="mini"
@@ -97,13 +103,7 @@
             size="mini"
             v-if="hasPermission('executeplan:update') && scope.row.id !== id"
             @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
-          >修改</el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            v-if="hasPermission('executeplan:update') && scope.row.id !== id"
-            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
-          >全局Header</el-button>
+          >全局参数</el-button>
 
         </template>
       </el-table-column>

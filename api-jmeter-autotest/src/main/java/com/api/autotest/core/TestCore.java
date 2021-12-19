@@ -254,9 +254,7 @@ public class TestCore {
         //ArrayList<HashMap<String, String>> planlist = getcaseData("select * from executeplan where id=" + PlanId);
         ArrayList<HashMap<String, String>> deployunitmachineiplist = getcaseData("select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id=" + TestCaseId + " and c.id=" + PlanId);
         ArrayList<HashMap<String, String>> caselist = getcaseData("select * from apicases where id=" + TestCaseId);
-        ArrayList<HashMap<String, String>> casedatalist = getcaseData("select * from api_casedata where caseid=" + TestCaseId);
         ArrayList<HashMap<String, String>> caseassertlist = getcaseData("select * from apicases_assert where caseid=" + TestCaseId);
-        ArrayList<HashMap<String, String>> casedataptlist = getcaseData("select DISTINCT propertytype  from api_casedata where caseid=" + TestCaseId);
         ArrayList<HashMap<String, String>> apilist = getcaseData("select b.visittype,b.apistyle,b.path,b.requestcontenttype,b.responecontenttype from apicases a inner join api b on a.apiid=b.id where a.id=" + TestCaseId);
         ArrayList<HashMap<String, String>> deployunitlist = getcaseData("select b.protocal,b.port,b.id from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=" + TestCaseId);
 
@@ -320,7 +318,19 @@ public class TestCore {
         ro.setRequestmMthod(method);
         ro.setResource(resource);
         ro.setResponecontenttype(responecontenttype);
+        return ro;
+    }
 
+
+    public RequestObject GetRequestParamsData(RequestObject requestObject)
+    {
+        RequestObject Result=requestObject;
+        String TestCaseId = requestObject.getCaseid();
+        String PlanId = requestObject.getTestplanid();
+        String BatchName = requestObject.getBatchname();
+        String requestcontenttype = requestObject.getRequestcontenttype();
+        ArrayList<HashMap<String, String>> casedatalist = getcaseData("select * from api_casedata where caseid=" + TestCaseId);
+        ArrayList<HashMap<String, String>> casedataptlist = getcaseData("select DISTINCT propertytype  from api_casedata where caseid=" + TestCaseId);
         List<String> PropertyList = GetCaseDataPropertyType(casedataptlist);
         HttpHeader header = new HttpHeader();
         HttpParamers paramers = new HttpParamers();
@@ -343,10 +353,10 @@ public class TestCore {
                 }
             }
         }
-        ro.setHeader(header);
-        ro.setParamers(paramers);
-        ro.setPostData(PostData);
-        return ro;
+        Result.setHeader(header);
+        Result.setParamers(paramers);
+        Result.setPostData(PostData);
+        return Result;
     }
 
     //获取断言信息
@@ -520,13 +530,12 @@ public class TestCore {
                 ResponeData responeData=request(re);
                 Respone = responeData.getRespone();
                 CostTime = End - Start;
-                SaveApiSubCondition(requestObject, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(requestObject, PlanID, Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
                 CostTime = End - Start;
                 SaveApiSubCondition(re, PlanID, CaseID, ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
-                throw new Exception("接口子条件执行异常：" + ex.getMessage());
             }
 //            TestconditionReport testconditionReport = new TestconditionReport();
 //            testconditionReport.setTestplanid(PlanID);
