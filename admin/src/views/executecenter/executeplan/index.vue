@@ -276,6 +276,7 @@
           <el-form-item label="执行计划名："  prop="batchname" required>
             <el-input
               type="text"
+              style="width:180%"
               placeholder="例如2020-10-21-tag-101"
               prefix-icon="el-icon-edit"
               auto-complete="off"
@@ -293,6 +294,12 @@
         >提交</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="全局参数" :visible.sync="CollectionParamsFormVisible">
+
+    </el-dialog>
+
+
   </div>
 </template>
 <script>
@@ -374,6 +381,7 @@
         dialogFormVisible: false,
         casedialogFormVisible: false,
         batchdialogFormVisible: false,
+        CollectionParamsFormVisible: false,
         loadcase: '装载用例',
         loadbatch: '执行计划',
         textMap: {

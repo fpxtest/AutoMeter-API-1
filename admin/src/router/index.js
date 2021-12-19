@@ -114,44 +114,6 @@ export const asyncRouterMap = [
   // nestedRouterSubCondition,
 
   {
-    path: '/condition',
-    component: Layout,
-    name: '条件管理',
-    icon: 'condition',
-    children: [
-      { path: 'condition/list', name: '父条件管理', component: _import('condition/condition/index'), meta: { title: '父条件管理', permission: ['condition:list'] }},
-      { path: 'apicondition/list', name: '接口子条件', component: _import('condition/apicondition/index'), meta: { title: '接口子条件', permission: ['apicondition:list'] }},
-      { path: 'dbcondition/list', name: 'DB子条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB子条件', permission: ['dbcondition:list'] }},
-      { path: 'scriptcondition/list', name: '脚本子条件', component: _import('condition/scriptcondition/index'), meta: { title: '脚本子条件', permission: ['scriptcondition:list'] }}
-      // { path: 'scriptcondition/list', name: '子条件顺序', component: _import('condition/scriptcondition/index'), meta: { title: '子条件顺序', permission: ['scriptcondition:list'] }}
-
-    ]
-  },
-
-  {
-    path: '/testvariables',
-    component: Layout,
-    name: '变量管理',
-    icon: 'paras',
-    children: [
-      { path: 'testvariables/list', name: '变量管理', component: _import('testvariables/testvariables/index'), meta: { title: '变量管理', permission: ['testvariables:list'] }},
-      { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }},
-      { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
-    ]
-  },
-
-  {
-    path: '/dispatch',
-    component: Layout,
-    name: '调度中心',
-    icon: 'dispatch',
-    children: [
-      { path: 'slaver/list', name: '测试执行机', component: _import('dispatch/slaver/index'), meta: { title: '测试执行机', permission: ['slaver:list'] }},
-      { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { title: '调度管理', permission: ['dispatch:list'] }}
-    ]
-  },
-
-  {
     path: '/executecenter',
     component: Layout,
     name: '执行中心',
@@ -178,6 +140,42 @@ export const asyncRouterMap = [
     ]
   },
 
+  {
+    path: '/dispatch',
+    component: Layout,
+    name: '调度中心',
+    icon: 'dispatch',
+    children: [
+      { path: 'slaver/list', name: '测试执行机', component: _import('dispatch/slaver/index'), meta: { title: '测试执行机', permission: ['slaver:list'] }},
+      { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { title: '调度管理', permission: ['dispatch:list'] }}
+    ]
+  },
+  {
+    path: '/condition',
+    component: Layout,
+    name: '条件管理',
+    icon: 'condition',
+    children: [
+      { path: 'condition/list', name: '父条件管理', component: _import('condition/condition/index'), meta: { title: '父条件管理', permission: ['condition:list'] }},
+      { path: 'apicondition/list', name: '接口子条件', component: _import('condition/apicondition/index'), meta: { title: '接口子条件', permission: ['apicondition:list'] }},
+      { path: 'dbcondition/list', name: 'DB子条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB子条件', permission: ['dbcondition:list'] }},
+      { path: 'scriptcondition/list', name: '脚本子条件', component: _import('condition/scriptcondition/index'), meta: { title: '脚本子条件', permission: ['scriptcondition:list'] }}
+      // { path: 'scriptcondition/list', name: '子条件顺序', component: _import('condition/scriptcondition/index'), meta: { title: '子条件顺序', permission: ['scriptcondition:list'] }}
+
+    ]
+  },
+
+  {
+    path: '/testvariables',
+    component: Layout,
+    name: '变量管理',
+    icon: 'paras',
+    children: [
+      { path: 'testvariables/list', name: '变量管理', component: _import('testvariables/testvariables/index'), meta: { title: '变量管理', permission: ['testvariables:list'] }},
+      { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }},
+      { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
+    ]
+  },
   // {
   //   path: '/test',
   //   component: Layout,
