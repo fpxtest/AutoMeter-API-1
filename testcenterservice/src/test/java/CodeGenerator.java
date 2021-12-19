@@ -25,7 +25,7 @@ class CodeGenerator {
       "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
   private static final String JDBC_USERNAME = "test";
   private static final String JDBC_PASSWORD = "test";
-  private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
+  private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
   // 项目在硬盘上的基础路径
   private static final String PROJECT_PATH = System.getProperty("user.dir");
   // 模板位置
@@ -59,7 +59,7 @@ class CodeGenerator {
 //    }
     System.out.print("start!!!");
 
-    CodeGenerator.genCode("condition_script");
+    CodeGenerator.genCode("executeplan_params");
     System.out.print("finish!!!");
 
     // genCodeByCustomModelName("输入表名","输入自定义Model名称");
