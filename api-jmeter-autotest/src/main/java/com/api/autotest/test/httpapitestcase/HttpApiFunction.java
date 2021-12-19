@@ -82,8 +82,9 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     String ActualResult = "";
                     TestAssert TestAssert = new TestAssert(getLogger());
                     try {
-                        //增加条件处理逻辑
+                        //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
                         Core.FixCondition(requestObject);
+                        requestObject=Core.GetRequestParamsData(requestObject);
                         ResponeData responeData = SendCaseRequest(requestObject, Core);
                         ActualResult=responeData.getRespone();
                         //断言
