@@ -1,6 +1,7 @@
 package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
+import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.entity.ExecuteplanTestcase;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,6 +22,8 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
     List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);
+
+    List<Apicases> findcasebyplanid(final @Param("executeplanid") long executeplanid, @Param("deployunitid") long deployunitid);
 
     Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
 

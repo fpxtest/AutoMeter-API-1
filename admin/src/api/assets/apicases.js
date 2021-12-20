@@ -39,6 +39,14 @@ export function search(apicasesForm) {
   })
 }
 
+export function searchleftcase(apicasesForm) {
+  return request({
+    url: '/apicases/searchleftcase',
+    method: 'post',
+    data: apicasesForm
+  })
+}
+
 export function runtest(apicasesForm) {
   return request({
     url: '/apicases/runtest',
