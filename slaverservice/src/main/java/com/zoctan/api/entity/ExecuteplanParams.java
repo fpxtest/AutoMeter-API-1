@@ -1,7 +1,7 @@
 package com.zoctan.api.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "executeplan_params")
 public class ExecuteplanParams {

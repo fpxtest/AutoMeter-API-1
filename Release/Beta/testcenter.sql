@@ -1412,4 +1412,21 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+DROP TABLE IF EXISTS `executeplan_params`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `executeplan_params`
+(
+    `id`            bigint(20) unsigned  NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+    `executeplanid`  bigint(20) unsigned  NOT NULL COMMENT '执行计划id',
+    `paramstype`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '参数类型',
+    `keyname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Key',
+    `keyvalue`   varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '值',
+    `create_time` datetime DEFAULT NOW() COMMENT '创建时间',
+    `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 4
+  DEFAULT CHARSET = utf8mb4 COMMENT ='测试集合全局参数表';
+
 -- Dump completed on 2021-12-08 14:51:04
