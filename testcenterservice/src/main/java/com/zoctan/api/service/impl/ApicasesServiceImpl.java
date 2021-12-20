@@ -2,13 +2,17 @@ package com.zoctan.api.service.impl;
 
 import com.zoctan.api.core.service.AbstractService;
 import com.zoctan.api.entity.Apicases;
+import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.mapper.ApicasesMapper;
+import com.zoctan.api.mapper.ExecuteplanTestcaseMapper;
 import com.zoctan.api.service.ApicasesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,12 +25,46 @@ import java.util.Map;
 public class ApicasesServiceImpl extends AbstractService<Apicases> implements ApicasesService {
 @Resource
 private ApicasesMapper apicasesMapper;
+    @Resource
+    private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
 
 
 
     @Override
     public List<Apicases> findApiCaseWithName(Map<String, Object> params) {
         return this.apicasesMapper.findApiCaseWithName(params);
+    }
+
+    @Override
+    public List<Apicases> findApiCaseleft(Map<String, Object> params) {
+        Long executeplanid= Long.parseLong(params.get("executeplanid").toString());
+        Long deployunitid= Long.parseLong(params.get("deployunitid").toString());
+        List<Apicases> apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid);
+        return apicasesPlanList;
+
+//        List<Apicases> last=new ArrayList<>();
+//        List<Apicases> apicasesList= apicasesMapper.getcasebydeployunitid(deployunitid);
+//        List<ExecuteplanTestcase> apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid);
+//        HashMap<Long,ExecuteplanTestcase> executeplanTestcaseHashMap=new HashMap<>();
+//
+//        for (ExecuteplanTestcase executeplanTestcase :apicasesPlanList) {
+//            executeplanTestcaseHashMap.put(executeplanTestcase.getTestcaseid(),executeplanTestcase);
+//        }
+//
+//        if(executeplanTestcaseHashMap.size()>0)
+//        {
+//            for (Apicases apicases :apicasesList) {
+//                if(!executeplanTestcaseHashMap.containsKey(apicases.getId()))
+//                {
+//                    last.add(apicases);
+//                }
+//            }
+//        }
+//        else
+//        {
+//            last=apicasesList;
+//        }
+//        return last;
     }
 
     @Override
