@@ -186,12 +186,6 @@ public class ApicasesController {
      */
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Apicases apicases) {
-//        Condition con=new Condition(Apicases.class);
-//        con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
-//                .andCondition("apiname = '" + apicases.getApiname() + "'")
-//                .andCondition("id <> " + apicases.getId())
-//                .andCondition("casename = '" + apicases.getCasename() + "'")
-//                .orCondition("casejmxname = '" + apicases.getCasejmxname() + "'");
         if(apicasesService.forupdateifexist(apicases).size() >0)
         {
             return ResultGenerator.genFailedResult("用例名或者jmx名已存在");
@@ -212,6 +206,19 @@ public class ApicasesController {
         Integer size= Integer.parseInt(param.get("size").toString());
         PageHelper.startPage(page, size);
         final List<Apicases> list = this.apicasesService.findApiCaseWithName(param);
+        final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 输入框查询
+     */
+    @PostMapping("/searchleftcase")
+    public Result searchleftcase(@RequestBody final Map<String, Object> param) {
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        PageHelper.startPage(page, size);
+        final List<Apicases> list = this.apicasesService.findApiCaseleft(param);
         final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }

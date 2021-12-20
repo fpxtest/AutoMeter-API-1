@@ -53,6 +53,11 @@
     select a.deployunitid,b.deployunitname from executeplan_testcase a join deployunit b on a.deployunitid=b.id where a.executeplanid = #{executeplanid} group by a.deployunitid
   </select>
 
+  <select id="findcasebyplanid" resultMap="BaseResultMap">
+    select a.* from apicases a  WHERE a.deployunitid  =#{deployunitid} and a.id
+      not in(select testcaseid from executeplan_testcase   WHERE executeplanid=#{executeplanid})
+  </select>
+
   <insert id="savetestplancase">
     INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time,creator)
     VALUES

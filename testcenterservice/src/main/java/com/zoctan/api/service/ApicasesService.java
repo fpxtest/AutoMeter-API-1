@@ -20,6 +20,8 @@ public interface ApicasesService extends Service<Apicases> {
      */
     List<Apicases> findApiCaseWithName(final Map<String, Object> params);
 
+    List<Apicases> findApiCaseleft(final Map<String, Object> params);
+
     //计划装载case
     List<Apicases> findApiCasebynameandcasetype(final Map<String, Object> params);
 

@@ -17,6 +17,12 @@
             v-if="hasPermission('executeplan:list')"
             @click.native.prevent="showTestCaseDialog"
           >装载用例</el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            v-if="hasPermission('executeplan:list')"
+            @click.native.prevent="DeleteBatchPlanTestCase"
+          >批量删除</el-button>
         </el-form-item>
         <span v-if="hasPermission('executeplan:search')">
           <el-form-item  prop="executeplanname" >
@@ -64,6 +70,10 @@
       fit
       highlight-current-row
     >
+      <el-table-column
+        type="selection"
+        width="40">
+      </el-table-column>
       <el-table-column label="编号" align="center" width="50">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
@@ -187,9 +197,7 @@
   </div>
 </template>
 <script>
-  import {
-    search as getapicases
-  } from '@/api/assets/apicases'
+  import { search as getapicases, searchleftcase } from '@/api/assets/apicases'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { search as searchtestplancases, addexecuteplantestcase, removebatchexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
@@ -232,6 +240,7 @@
         multipleSelection: [], // 首页装载表格被选中的内容
         casemultipleSelection: [], // 查询用例表格被选中的内容
         executeplancaseList: [], // 首页测试集合用例列表
+        executeplancaseremovetList: [], // 查询执行计划需要删除存在的用例列表
         testcaseList: [], // 装载用例列表
         testcaselastList: [], // 显示希望装载的用例列表
         listLoading: false, // 数据加载等待动画
@@ -522,9 +531,9 @@
         this.searchcase.deployunitid = this.tmpdeployunitid
         this.searchcase.apiid = this.tmpapiid
         this.searchcase.casetype = this.tmpcasecasetype
-        getapicases(this.searchcase).then(response => {
+        searchleftcase(this.searchcase).then(response => {
           this.testcaselastList = response.data.list
-          this.total = response.data.total
+          this.casetotal = response.data.total
           this.caselistLoading = false
         }).catch(res => {
           this.$message.error('加载用例列表失败')
@@ -544,7 +553,7 @@
         this.caselistLoading = true
         this.$refs.searchcase.validate(valid => {
           if (valid) {
-            getapicases(this.searchcase).then(response => {
+            searchleftcase(this.searchcase).then(response => {
               this.testcaselastList = response.data.list
               this.casetotal = response.data.total
             }).catch(res => {
@@ -638,7 +647,7 @@
           }).catch(res => {
             this.$message.error('装载失败')
           })
-          // this.casedialogFormVisible = false
+          this.casedialogFormVisible = false
           this.getexecuteplancaseList()
         }
       },
@@ -690,6 +699,7 @@
         this.searchcase.deployunitname = null
         this.searchcase.apiname = null
         this.testcaselastList = []
+        this.casetotal = 0
       },
       /**
        * 删除用例
@@ -706,6 +716,43 @@
             this.$message.success('删除成功')
             this.getexecuteplancaseList()
           })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+      /**
+       * 批量删除用例
+       */
+      DeleteBatchPlanTestCase() {
+        this.$confirm('删除所选测试集合用例？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          if (this.multipleSelection.length === 0) {
+            this.$message.error('请选择需要删除的用例')
+          } else {
+            this.executeplancaseremovetList = []
+            console.log('开始删除。。。。。。。。。。。。。。。。。。。')
+            console.log(this.multipleSelection)
+            for (let i = 0; i < this.multipleSelection.length; i++) {
+              this.executeplancaseremovetList.push({
+                'executeplanid': this.multipleSelection[i].executeplanid,
+                'deployunitname': this.multipleSelection[i].deployunitname,
+                'apiname': this.multipleSelection[i].apiname,
+                'testcaseid': this.multipleSelection[i].testcaseid,
+                'casename': this.multipleSelection[i].casename
+              })
+            }
+            console.log('删除列表是。。。。。。。。。。。。。。。。。。。')
+            console.log(this.executeplancaseremovetList)
+            removebatchexecuteplantestcase(this.executeplancaseremovetList).then(() => {
+              this.$message.success('批量删除用例成功')
+              this.getexecuteplancaseList()
+            }).catch(res => {
+              this.$message.error('批量删除用例失败')
+            })
+          }
         }).catch(() => {
           this.$message.info('已取消删除')
         })
