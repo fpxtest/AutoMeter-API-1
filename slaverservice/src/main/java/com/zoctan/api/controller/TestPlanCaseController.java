@@ -82,6 +82,9 @@ public class TestPlanCaseController {
     private ApicasesAssertService apicasesAssertService;
 
     @Autowired(required = false)
+    private ExecuteplanParamsService executeplanParamsService;
+
+    @Autowired(required = false)
     private ApicasesReportPerformanceMapper apicasesReportPerformanceMapper;
 
 
@@ -219,12 +222,12 @@ public class TestPlanCaseController {
         String JmeterClassName = "";
         String ClassName = "";
         String DeployUnitNameForJmeter = "";
-        if (Protocal.equals(new String("http")) || Protocal.equals(new String("https"))) {
+        if (Protocal.equals("http") || Protocal.equals("https")) {
             DeployUnitNameForJmeter = "httpapitestcase";
             JmeterClassName = "HttpApiPerformance";
             ClassName = "com.api.autotest.test." + DeployUnitNameForJmeter + "." + JmeterClassName;
         }
-        if (Protocal.equals(new String("rpc"))) {
+        if (Protocal.equals("rpc")) {
             DeployUnitNameForJmeter = dispatch.getDeployunitname();
             JmeterClassName = DeployUnitName;
             ClassName = "com.api.autotest.test." + DeployUnitName + "." + JmxCaseName;
@@ -372,6 +375,7 @@ public class TestPlanCaseController {
         }
 
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
+
         HashMap<String, String> HeaderMap = new HashMap<>();
         HashMap<String, String> ParamsMap = new HashMap<>();
         HashMap<String, String> BodyMap = new HashMap<>();
@@ -386,6 +390,27 @@ public class TestPlanCaseController {
                 BodyMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
             }
         }
+
+        //全局参数Header，Body
+        List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(),"Header");
+
+        //全局Header如果有参数，则替换原参数，并且加上全局Header参数
+        for (ExecuteplanParams  executeplanParams :executeplanHeaderParamList) {
+            String ParamName=executeplanParams.getKeyname();
+            String ParamValue=executeplanParams.getKeyvalue();
+            HeaderMap.put(ParamName,ParamValue);
+        }
+
+        List<ExecuteplanParams> executeplanBodyParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(),"Body");
+        //全局Body如果有参数，则替换原参数
+        for (ExecuteplanParams executeplanParams :executeplanBodyParamList) {
+            String PostData=executeplanParams.getKeyvalue();
+            for (String KEY: BodyMap.keySet()) {
+                BodyMap.put(KEY,PostData);
+            }
+        }
+
+
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
         } else {
@@ -398,10 +423,6 @@ public class TestPlanCaseController {
             {
                 jmeterPerformanceObject.setHeadjson("NN");
             }
-            //API是否有参数，无参数无用例数据，表示无Header
-//            else {
-//                jmeterPerformanceObject.setHeadjson("headjson");
-//            }
         }
         if (ParamsMap.size() > 0) {
             jmeterPerformanceObject.setParamsjson(JSON.toJSONString(ParamsMap));

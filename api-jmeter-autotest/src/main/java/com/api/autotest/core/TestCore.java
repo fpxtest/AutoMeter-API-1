@@ -123,8 +123,7 @@ public class TestCore {
         } else {
             if (headjson.equals("NN")) {
                 newob.setHeader(header);
-            }
-            else {
+            } else {
                 Map headermaps = (Map) JSON.parse(headjson);
                 for (Object map : headermaps.entrySet()) {
                     String Value = ((Map.Entry) map).getValue().toString();
@@ -148,13 +147,11 @@ public class TestCore {
             String PostData = "";
             if (paramsjson.equals("NN")) {
                 newob.setPostData(PostData);
-            }
-            else
-            {
+            } else {
                 Map paramsmaps = (Map) JSON.parse(paramsjson);
                 for (Object map : paramsmaps.entrySet()) {
                     String Value = ((Map.Entry) map).getValue().toString();
-                    Value=GetVariablesValues(Value,testplanid,batchname);
+                    Value = GetVariablesValues(Value, testplanid, batchname);
                     params.addParam(((Map.Entry) map).getKey().toString(), Value);
                 }
                 if (params.getParams().size() > 0) {
@@ -196,9 +193,7 @@ public class TestCore {
             String PostData = "";
             if (paramsjson.equals("NN")) {
                 newob.setPostData(PostData);
-            }
-            else
-            {
+            } else {
                 newob.setPostData(bodyjson);
             }
 //            HttpParamers params = null;
@@ -269,7 +264,7 @@ public class TestCore {
         }
         String casetype = getcaseValue("casetype", caselist);
 
-        String CaseName=getcaseValue("casename", caselist);
+        String CaseName = getcaseValue("casename", caselist);
 
         String expect = GetAssertInfo(apicasesAssertList); //getcaseValue("expect", caselist);
 
@@ -322,15 +317,16 @@ public class TestCore {
     }
 
 
-    public RequestObject GetRequestParamsData(RequestObject requestObject)
-    {
-        RequestObject Result=requestObject;
+    public RequestObject GetRequestParamsData(RequestObject requestObject) {
+        RequestObject Result = requestObject;
         String TestCaseId = requestObject.getCaseid();
         String PlanId = requestObject.getTestplanid();
         String BatchName = requestObject.getBatchname();
         String requestcontenttype = requestObject.getRequestcontenttype();
         ArrayList<HashMap<String, String>> casedatalist = getcaseData("select * from api_casedata where caseid=" + TestCaseId);
         ArrayList<HashMap<String, String>> casedataptlist = getcaseData("select DISTINCT propertytype  from api_casedata where caseid=" + TestCaseId);
+        ArrayList<HashMap<String, String>> planparamslist = getcaseData("select * from executeplan_params where executeplanid=" + requestObject.getTestplanid());
+
         List<String> PropertyList = GetCaseDataPropertyType(casedataptlist);
         HttpHeader header = new HttpHeader();
         HttpParamers paramers = new HttpParamers();
@@ -348,15 +344,43 @@ public class TestCore {
             if (property.equals("Body")) {
                 // 设置Body
                 HashMap<String, String> bodymap = fixhttprequestdatas("Body", casedatalist);
-                for (String Key:bodymap.keySet()) {
-                    PostData=bodymap.get(Key);
+                for (String Key : bodymap.keySet()) {
+                    PostData = bodymap.get(Key);
                 }
             }
         }
+        //处理全局参数
+        header = GetHeaderFromTestPlanParam(header, planparamslist, PlanId, BatchName);
+        PostData = GetBodyFromTestPlanParam(PostData, planparamslist);
+
         Result.setHeader(header);
         Result.setParamers(paramers);
         Result.setPostData(PostData);
         return Result;
+    }
+
+    //全局Header参数
+    private HttpHeader GetHeaderFromTestPlanParam(HttpHeader header, ArrayList<HashMap<String, String>> planparamslist, String PlanId, String BatchName) {
+        HashMap<String, String> headmapfromparam = getparamsdatabytype("Header", planparamslist);
+        for (String key : headmapfromparam.keySet()) {
+            String Value = headmapfromparam.get(key);
+            Value = GetVariablesValues(Value, PlanId, BatchName);
+            //如果有相同的参数，则以全局参数的覆盖之
+            if (header.getParams().containsKey(key)) {
+                header.getParams().put(key, Value);
+            }
+        }
+        return header;
+    }
+
+    //全局Body参数
+    private String GetBodyFromTestPlanParam(String PostData, ArrayList<HashMap<String, String>> planparamslist) {
+        HashMap<String, String> bodymapfromparam = getparamsdatabytype("Body", planparamslist);
+        for (String key : bodymapfromparam.keySet()) {
+            String Value = bodymapfromparam.get(key);
+            PostData = Value;
+        }
+        return PostData;
     }
 
     //获取断言信息
@@ -365,9 +389,9 @@ public class TestCore {
         if (apicasesAssertList.size() > 0) {
             for (ApicasesAssert apicasesAssert : apicasesAssertList) {
                 if (apicasesAssert.getAsserttype().equals(new String("Respone"))) {
-                    expectValue = expectValue + "【断言类型：" + apicasesAssert.getAsserttype() + "， 断言子类型：" + apicasesAssert.getAssertsubtype() + "， 断言条件：" + apicasesAssert.getAssertcondition() + "， 断言值：" + apicasesAssert.getAssertvalues() + "， 断言值类型：" + apicasesAssert.getAssertvaluetype()+"】";
+                    expectValue = expectValue + "【断言类型：" + apicasesAssert.getAsserttype() + "， 断言子类型：" + apicasesAssert.getAssertsubtype() + "， 断言条件：" + apicasesAssert.getAssertcondition() + "， 断言值：" + apicasesAssert.getAssertvalues() + "， 断言值类型：" + apicasesAssert.getAssertvaluetype() + "】";
                 } else {
-                    expectValue = expectValue + "【断言类型：" + apicasesAssert.getAsserttype() + "， 断言表达式：" + apicasesAssert.getExpression() + "， 断言条件：" + apicasesAssert.getAssertcondition() + "， 断言值：" + apicasesAssert.getAssertvalues() + "， 断言值类型：" + apicasesAssert.getAssertvaluetype()+"】";
+                    expectValue = expectValue + "【断言类型：" + apicasesAssert.getAsserttype() + "， 断言表达式：" + apicasesAssert.getExpression() + "， 断言条件：" + apicasesAssert.getAssertcondition() + "， 断言值：" + apicasesAssert.getAssertvalues() + "， 断言值类型：" + apicasesAssert.getAssertvaluetype() + "】";
                 }
             }
         }
@@ -375,41 +399,30 @@ public class TestCore {
     }
 
     //获取参数值的具体内容，支持$变量，以及$变量和字符串拼接
-    private String GetVariablesValues(String Value, String PlanId, String BatchName)
-    {
-        String Result="";
-        if(Value.contains("+"))
-        {
-            String[] Array=Value.split("\\+");
-            for (String str:Array)
-            {
-                if(str.contains("$"))
-                {
+    private String GetVariablesValues(String Value, String PlanId, String BatchName) {
+        String Result = "";
+        if (Value.contains("+")) {
+            String[] Array = Value.split("\\+");
+            for (String str : Array) {
+                if (str.contains("$")) {
                     String VariablesName = str.substring(1);
                     String Caseid = GetCaseIdByVariablesName(VariablesName);
                     //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                     String VariablesNameValue = GetVariablesValues(PlanId, Caseid, BatchName, VariablesName);
-                    Result = Result+VariablesNameValue;
-                }
-                else
-                {
-                    Result=Result+str;
+                    Result = Result + VariablesNameValue;
+                } else {
+                    Result = Result + str;
                 }
             }
-        }
-        else
-        {
-            if(Value.contains("$"))
-            {
+        } else {
+            if (Value.contains("$")) {
                 String VariablesName = Value.substring(1);
                 String Caseid = GetCaseIdByVariablesName(VariablesName);
                 //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
                 String VariablesNameValue = GetVariablesValues(PlanId, Caseid, BatchName, VariablesName);
                 Result = VariablesNameValue;
-            }
-            else
-            {
-                Result=Value;
+            } else {
+                Result = Value;
             }
         }
         return Result;
@@ -421,7 +434,7 @@ public class TestCore {
         HashMap<String, String> headmap = fixhttprequestdatas("Header", casedatalist);
         for (String key : headmap.keySet()) {
             String Value = headmap.get(key);
-            Value=GetVariablesValues(Value,PlanId,BatchName);
+            Value = GetVariablesValues(Value, PlanId, BatchName);
             header.addParam(key, Value);
         }
         return header;
@@ -432,7 +445,7 @@ public class TestCore {
         HashMap<String, String> paramsmap = fixhttprequestdatas("Params", casedatalist);
         for (String key : paramsmap.keySet()) {
             String Value = paramsmap.get(key);
-            Value=GetVariablesValues(Value,PlanId,BatchName);
+            Value = GetVariablesValues(Value, PlanId, BatchName);
             paramers.addParam(key, Value);
         }
         return paramers;
@@ -448,7 +461,7 @@ public class TestCore {
         return PropertyType;
     }
 
-    private String GetParasPostData(String RequestContentType, HttpParamers paramers)  {
+    private String GetParasPostData(String RequestContentType, HttpParamers paramers) {
         String Result = "";
         if (RequestContentType.equals(new String("json"))) {
             paramers.setJsonParamer();
@@ -522,12 +535,12 @@ public class TestCore {
             long CostTime = 0;
             String Respone = "";
             String ConditionResultStatus = "成功";
-            RequestObject re=null;
+            RequestObject re = null;
             try {
                 Start = new Date().getTime();
-                String CondionCaseID=conditionApi.get("caseid");
-                re= GetCaseRequestData(requestObject.getTestplanid(),CondionCaseID,requestObject.getSlaverid(),requestObject.getBatchid(),requestObject.getBatchname(),requestObject.getTestplanname());
-                ResponeData responeData=request(re);
+                String CondionCaseID = conditionApi.get("caseid");
+                re = GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
+                ResponeData responeData = request(re);
                 Respone = responeData.getRespone();
                 CostTime = End - Start;
                 SaveApiSubCondition(requestObject, PlanID, Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
@@ -792,21 +805,18 @@ public class TestCore {
     }
 
 
-    public String  FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList,ResponeData responeData) throws Exception {
-        String AssertInfo="";
-        for (ApicasesAssert  apicasesAssert : apicasesAssertList) {
+    public String FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList, ResponeData responeData) throws Exception {
+        String AssertInfo = "";
+        for (ApicasesAssert apicasesAssert : apicasesAssertList) {
 
-            if(apicasesAssert.getAsserttype().equals("Respone"))
-            {
-                AssertInfo = TestAssert.ParseResponeResult(responeData,apicasesAssert);
+            if (apicasesAssert.getAsserttype().equals("Respone")) {
+                AssertInfo = TestAssert.ParseResponeResult(responeData, apicasesAssert);
             }
-            if(apicasesAssert.getAsserttype().equals("Json"))
-            {
-                AssertInfo = TestAssert.ParseJsonResult(responeData,apicasesAssert);
+            if (apicasesAssert.getAsserttype().equals("Json")) {
+                AssertInfo = TestAssert.ParseJsonResult(responeData, apicasesAssert);
             }
-            if(apicasesAssert.getAsserttype().equals("Xml"))
-            {
-                AssertInfo = TestAssert.ParseXmlResult(responeData,apicasesAssert);
+            if (apicasesAssert.getAsserttype().equals("Xml")) {
+                AssertInfo = TestAssert.ParseXmlResult(responeData, apicasesAssert);
             }
         }
         return AssertInfo;
@@ -837,9 +847,8 @@ public class TestCore {
     }
 
     //根据变量名获取caseid
-    private String GetCaseIdByVariablesName(String VariablesName)
-    {
-        String CaseID="";
+    private String GetCaseIdByVariablesName(String VariablesName) {
+        String CaseID = "";
         try {
             String sql = "select caseid from apicases_variables where  variablesname='" + VariablesName + "'";
             logger.info(logplannameandcasename + "根据变量名获取caseid result sql is...........: " + sql);
@@ -857,7 +866,7 @@ public class TestCore {
     private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String VariablesName) {
         String VariablesResult = "";
         try {
-            String sql = "select variablesvalue from testvariables_value where planid=" + PlanID +" and caseid="+TestCaseId+ " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
+            String sql = "select variablesvalue from testvariables_value where planid=" + PlanID + " and caseid=" + TestCaseId + " and batchname= '" + BatchName + "'" + " and variablesname='" + VariablesName + "'";
             logger.info(logplannameandcasename + "查询计划下的批次中条件接口获取的中间变量 result sql is...........: " + sql);
             ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
             if (result.size() > 0) {
@@ -870,13 +879,11 @@ public class TestCore {
     }
 
 
-
     //获取条件
-    private  ArrayList<HashMap<String, String>>  GetConditionByPlanIDAndConditionType(Long Caseid,String ConditionType,String ObjectType)
-    {
-        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+    private ArrayList<HashMap<String, String>> GetConditionByPlanIDAndConditionType(Long Caseid, String ConditionType, String ObjectType) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            String sql = "select * from testcondition where objectid=" + Caseid+" and conditiontype='"+ ConditionType+"' and objecttype='"+ObjectType+"'";
+            String sql = "select * from testcondition where objectid=" + Caseid + " and conditiontype='" + ConditionType + "' and objecttype='" + ObjectType + "'";
             logger.info(logplannameandcasename + "获取条件 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -886,11 +893,10 @@ public class TestCore {
     }
 
     //获取接口条件
-    private  ArrayList<HashMap<String, String>>  GetApiConditionByConditionID(Long ConditionID)
-    {
-        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+    private ArrayList<HashMap<String, String>> GetApiConditionByConditionID(Long ConditionID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            String sql = "select * from condition_api where conditionid=" + ConditionID ;
+            String sql = "select * from condition_api where conditionid=" + ConditionID;
             logger.info(logplannameandcasename + "获取接口条件 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -900,11 +906,10 @@ public class TestCore {
     }
 
     //获取脚本条件
-    private  ArrayList<HashMap<String, String>>  GetScriptConditionByConditionID(Long ConditionID)
-    {
-        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+    private ArrayList<HashMap<String, String>> GetScriptConditionByConditionID(Long ConditionID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            String sql = "select * from condition_script where conditionid=" + ConditionID ;
+            String sql = "select * from condition_script where conditionid=" + ConditionID;
             logger.info(logplannameandcasename + "获取脚本条件 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -914,11 +919,10 @@ public class TestCore {
     }
 
     //获取数据库条件
-    private  ArrayList<HashMap<String, String>>  GetDBConditionByConditionID(Long ConditionID)
-    {
-        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+    private ArrayList<HashMap<String, String>> GetDBConditionByConditionID(Long ConditionID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            String sql = "select * from condition_db where conditionid=" + ConditionID ;
+            String sql = "select * from condition_db where conditionid=" + ConditionID;
             logger.info(logplannameandcasename + "获取数据库条件 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -928,36 +932,33 @@ public class TestCore {
     }
 
 
-
     //保存条件结果
-    public void  SubConditionReportSave(TestconditionReport testconditionReport)
-    {
+    public void SubConditionReportSave(TestconditionReport testconditionReport) {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert testcondition_report (conditionid,conditiontype,subconditionid,conditionresult,conditionstatus,runtime,create_time,lastmodify_time,creator,batchname,planname,testplanid,subconditiontype,status,subconditionname)" +
-                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'"+", '"+testconditionReport.getBatchname()+"',  '"+testconditionReport.getPlanname()+"',"+testconditionReport.getTestplanid()+", '"+testconditionReport.getSubconditiontype()+"', '"+testconditionReport.getStatus()+"', '"+testconditionReport.getSubconditionname()+"')";
+                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testconditionReport.getBatchname() + "',  '" + testconditionReport.getPlanname() + "'," + testconditionReport.getTestplanid() + ", '" + testconditionReport.getSubconditiontype() + "', '" + testconditionReport.getStatus() + "', '" + testconditionReport.getSubconditionname() + "')";
         logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
 
     //保存变量结果
-    public void  testVariablesValueSave(TestvariablesValue testvariablesValue)
-    {
+    public void testVariablesValueSave(TestvariablesValue testvariablesValue) {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,creator,batchname)" +
-                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname() + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename() + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname() + "', '" + testvariablesValue.getMemo() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')"+", '"+testvariablesValue.getBatchname()+"'";
+                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname() + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename() + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname() + "', '" + testvariablesValue.getMemo() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')" + ", '" + testvariablesValue.getBatchname() + "'";
         logger.info(logplannameandcasename + "保存变量结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
 
     //查询用例变量
-    public ArrayList<HashMap<String, String>>  GetApiCaseVaribales(Long CaseID) {
-        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+    public ArrayList<HashMap<String, String>> GetApiCaseVaribales(Long CaseID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            String sql = "select *  from apicases_variables where caseid=" + CaseID ;
+            String sql = "select *  from apicases_variables where caseid=" + CaseID;
             logger.info(logplannameandcasename + "查询用例变量 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -967,10 +968,10 @@ public class TestCore {
     }
 
     //查询变量
-    public ArrayList<HashMap<String, String>>  GetVaribales(String VaribaleID) {
-        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+    public ArrayList<HashMap<String, String>> GetVaribales(String VaribaleID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            String sql = "select *  from testvariables where id=" + VaribaleID ;
+            String sql = "select *  from testvariables where id=" + VaribaleID;
             logger.info(logplannameandcasename + "查询变量 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -991,6 +992,17 @@ public class TestCore {
         return DataMap;
     }
 
+    public HashMap<String, String> getparamsdatabytype(String MapType, ArrayList<HashMap<String, String>> casedatalist) {
+        HashMap<String, String> DataMap = new HashMap<>();
+        for (HashMap<String, String> data : casedatalist) {
+            String propertytype = data.get("paramstype");
+            if (propertytype.equals(MapType)) {
+                DataMap.put(data.get("keyname").trim(), data.get("keyvalue").trim());
+            }
+        }
+        return DataMap;
+    }
+
     // 记录用例测试结果
     public void savetestcaseresult(boolean status, long time, String respone, String assertvalue, String errorinfo, RequestObject requestObject, JavaSamplerContext context) {
         //GetDBConnection();
@@ -1004,8 +1016,8 @@ public class TestCore {
             String batchname = "";
             String header = "";
             String params = "";
-            String Url="";
-            String Method="";
+            String Url = "";
+            String Method = "";
             if (requestObject == null) {
                 casetype = context.getParameter("casetype");
                 testplanid = context.getParameter("testplanid");
@@ -1020,16 +1032,15 @@ public class TestCore {
                 slaverid = requestObject.getSlaverid();// context.getParameter("slaverid");
                 expect = requestObject.getExpect();// context.getParameter("expect");
                 batchname = requestObject.getBatchname();// context.getParameter("batchname");
-                Url=requestObject.getResource();
-                Method=requestObject.getRequestmMthod();
+                Url = requestObject.getResource();
+                Method = requestObject.getRequestmMthod();
                 Map<String, String> headermap = requestObject.getHeader().getParams();
                 for (String key : headermap.keySet()) {
                     header = header + key + " ：" + headermap.get(key);
                 }
-                params=requestObject.getPostData();
-                if(params==null)
-                {
-                    params="";
+                params = requestObject.getPostData();
+                if (params == null) {
+                    params = "";
                 }
             }
 
@@ -1045,10 +1056,10 @@ public class TestCore {
             String sql = "";
             if (status) {
                 sql = "insert " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + params +"', '" +Url + "', '" + Method + "')";
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + params + "', '" + Url + "', '" + Method + "')";
             } else {
                 sql = "insert  " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + params +"', '" +Url + "', '" + Method + "')";
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + params + "', '" + Url + "', '" + Method + "')";
             }
             logger.info(logplannameandcasename + "测试结果 result sql is...........: " + sql);
             System.out.println("case result sql is: " + sql);

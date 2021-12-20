@@ -1,9 +1,9 @@
 package com.zoctan.api.service.impl;
 
-import com.zoctan.api.mapper.ExecuteplanParamsMapper;
-import com.zoctan.api.entity.ExecuteplanParams;
-import com.zoctan.api.service.ExecuteplanParamsService;
 import com.zoctan.api.core.service.AbstractService;
+import com.zoctan.api.entity.ExecuteplanParams;
+import com.zoctan.api.mapper.ExecuteplanParamsMapper;
+import com.zoctan.api.service.ExecuteplanParamsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
@@ -28,9 +28,10 @@ private ExecuteplanParamsMapper executeplanParamsMapper;
     }
 
     @Override
-    public List<ExecuteplanParams> getParamsbyepid(Map<String, Object> params) {
-        return executeplanParamsMapper.getParamsbyepid(params);
+    public List<ExecuteplanParams> getParamsbyepid(Long executeplanid, String paramstype) {
+        return executeplanParamsMapper.getParamsbyepid(executeplanid,paramstype);
     }
+
 
     @Override
     public int ifexist(Condition condition) {

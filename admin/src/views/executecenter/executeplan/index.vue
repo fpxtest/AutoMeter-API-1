@@ -102,7 +102,7 @@
             type="primary"
             size="mini"
             v-if="hasPermission('executeplan:update') && scope.row.id !== id"
-            @click.native.prevent="showUpdateexecuteplanDialog(scope.$index)"
+            @click.native.prevent="showplanparamsDialog(scope.$index)"
           >全局参数</el-button>
 
         </template>
@@ -245,7 +245,6 @@
         <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
         <el-table-column label="API" align="center" prop="apiname" width="120"/>
         <el-table-column label="期望值" align="center" prop="expect" width="120"/>
-        </el-table-column>
       </el-table>
       <el-pagination
         @size-change="casehandleSizeChange"
@@ -296,7 +295,117 @@
     </el-dialog>
 
     <el-dialog title="全局参数" :visible.sync="CollectionParamsFormVisible">
+      <div class="filter-container">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-plus"
+              v-if="hasPermission('executeplan:add')"
+              @click.native.prevent="showAddapiparamsDialog"
+            >添加全局参数</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
 
+      <el-table
+        :data="paramsList"
+        :key="itemKey"
+        v-loading.body="listLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="45">
+          <template slot-scope="scope">
+            <span v-text="paramgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="参数类型" align="center" prop="paramstype" width="80"/>
+        <el-table-column label="参数名" align="center" prop="keyname" width="180"/>
+        <el-table-column label="参数值" align="center" prop="keyvalue" width="140">
+          <template slot-scope="scope">
+            <el-popover trigger="hover" placement="top">
+              <p>{{ scope.row.keyvalue }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">...</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="管理" align="center"
+                         v-if="hasPermission('executeplan:update')  || hasPermission('executeplan:delete')">
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              size="mini"
+              v-if="hasPermission('executeplan:update') && scope.row.id !== id"
+              @click.native.prevent="showUpdateparamsDialog(scope.$index)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              v-if="hasPermission('executeplan:delete') && scope.row.id !== id"
+              @click.native.prevent="removeexecuteplanparam(scope.$index)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <el-dialog :title="paramstextMap[ParamsdialogStatus]" :visible.sync="modifyparamdialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 600px; margin-left:30px;"
+        :model="tmpparam"
+        ref="tmpparam"
+      >
+        <el-form-item label="参数类型" prop="paramstype" required>
+          <el-select v-model="tmpparam.paramstype" placeholder="参数类型" style="width:100%" @change="paramstypeselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <el-option label="全局Header" value="Header" />
+            <el-option label="全局Body" value="Body" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="参数名：" prop="keyname" required>
+          <el-input
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model.trim="tmpparam.keyname"
+            :placeholder="keyholder"
+          />
+        </el-form-item>
+        <el-form-item label="参数值：" prop="keyvalue" required>
+          <el-input
+            type="textarea"
+            rows="15" cols="50"
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model.trim="tmpparam.keyvalue"
+            :placeholder="keyholder"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="modifyparamdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          v-if="ParamsdialogStatus === 'add'"
+          :loading="btnLoading"
+          @click.native.prevent="addparams"
+        >添加</el-button>
+        <el-button
+          type="success"
+          v-if="ParamsdialogStatus === 'update'"
+          :loading="btnLoading"
+          @click.native.prevent="updatparam"
+        >修改</el-button>
+      </div>
     </el-dialog>
 
 
@@ -315,6 +424,8 @@
   import { unix2CurrentTime } from '@/utils'
   import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
   import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
+  import { searchparamsbyepid, addexecuteplanparam, updateexecuteplanparams, removeexecuteplanparam } from '@/api/executecenter/executeplanparam'
+
   import { mapGetters } from 'vuex'
 
   export default {
@@ -353,6 +464,7 @@
         executeplancaseremovetList: [], // 查询执行计划需要删除存在的用例列表
         executeplanstopList: [], // 停止执行计划列表
         tmpplanbatchList: [], // 计划批次列表
+        paramsList: [], // 参数列表
         listLoading: false, // 数据加载等待动画
         caselistLoading: false, // 用例列表页面数据加载等待动画
         total: 0, // 数据总数
@@ -382,12 +494,18 @@
         casedialogFormVisible: false,
         batchdialogFormVisible: false,
         CollectionParamsFormVisible: false,
+        modifyparamdialogFormVisible: false,
         loadcase: '装载用例',
         loadbatch: '执行计划',
         textMap: {
           updateRole: '修改测试集合',
           update: '修改测试集合',
           add: '添加测试集合'
+        },
+        paramstextMap: {
+          updateRole: '修改参数',
+          update: '修改参数',
+          add: '添加参数'
         },
         diclevelQuery: {
           page: 1, // 页码
@@ -432,6 +550,16 @@
           memo: '',
           creator: 'admin'
         },
+        tmpparam: {
+          id: '',
+          executeplanid: '',
+          paramstype: '',
+          keyname: '',
+          keyvalue: ''
+        },
+        tmpep: {
+          executeplanid: ''
+        },
         search: {
           page: 1,
           size: 10,
@@ -445,6 +573,10 @@
           apiname: null,
           executeplanid: null,
           casetype: null
+        },
+        searchparam: {
+          page: 1,
+          size: 10
         }
       }
     },
@@ -474,6 +606,18 @@
       },
 
       unix2CurrentTime,
+
+      /**
+       * 获取params列表
+       */
+      searchparamsbyepid() {
+        console.log(this.tmpep)
+        searchparamsbyepid(this.tmpep).then(response => {
+          this.paramsList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载params列表失败')
+        })
+      },
       /**
        * 停止执行计划
        */
@@ -609,6 +753,13 @@
       },
 
       /**
+       * 参数胡类型选择  e的值为options的选值
+       */
+      paramstypeselectChanged(e) {
+        this.tmpparam.keyname = ''
+        this.tmpparam.keyvalue = ''
+      },
+      /**
        * 获取执行计划列表
        */
       getexecuteplanList() {
@@ -665,6 +816,10 @@
        */
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
+      },
+
+      paramgetIndex(index) {
+        return (this.searchparam.page - 1) * this.searchparam.size + index + 1
       },
 
       /**
@@ -882,6 +1037,32 @@
         this.tmpexecuteplan.runmode = ''
       },
 
+      showplanparamsDialog(index) {
+        // 显示新增对话框
+        this.CollectionParamsFormVisible = true
+        this.tmpparam.executeplanid = this.executeplanList[index].id
+        this.tmpep.executeplanid = this.executeplanList[index].id
+        this.searchparamsbyepid()
+      },
+
+      // 显示新增对话框
+      showAddapiparamsDialog() {
+        this.modifyparamdialogFormVisible = true
+        this.ParamsdialogStatus = 'add'
+        this.tmpparam.id = ''
+        this.tmpparam.paramstype = ''
+        this.tmpparam.keyname = ''
+        this.tmpparam.keyvalue = ''
+      },
+
+      showUpdateparamsDialog(index) {
+        this.modifyparamdialogFormVisible = true
+        this.ParamsdialogStatus = 'update'
+        this.tmpparam.id = this.paramsList[index].id
+        this.tmpparam.paramstype = this.paramsList[index].paramstype
+        this.tmpparam.keyname = this.paramsList[index].keyname
+        this.tmpparam.keyvalue = this.paramsList[index].keyvalue
+      },
       /**
        * 显示添加执行计划批次对话框
        */
@@ -934,6 +1115,61 @@
           }
         })
       },
+
+      /**
+       * 添加params
+       */
+      addparams() {
+        this.$refs.tmpparam.validate(valid => {
+          if (valid) {
+            addexecuteplanparam(this.tmpparam).then(() => {
+              this.$message.success('添加成功')
+              this.modifyparamdialogFormVisible = false
+              this.searchparamsbyepid()
+            }).catch(res => {
+              this.$message.error('添加失败')
+            })
+          }
+        })
+      },
+
+      /**
+       * 更新param
+       */
+      updatparam() {
+        this.$refs.tmpparam.validate(valid => {
+          if (valid) {
+            updateexecuteplanparams(this.tmpparam).then(() => {
+              this.$message.success('更新成功')
+              this.searchparamsbyepid()
+              this.modifyparamdialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('添加失败')
+            })
+          }
+        })
+      },
+
+      /**
+       * 删除param
+       * @param index api下标
+       */
+      removeexecuteplanparam(index) {
+        this.$confirm('删除该参数？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.paramsList[index].id
+          removeexecuteplanparam(id).then(() => {
+            this.$message.success('删除成功')
+            this.searchparamsbyepid()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+
       /**
        * 显示修改执行计划对话框
        * @param index 执行计划下标

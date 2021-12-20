@@ -304,7 +304,7 @@
       >
         <el-table-column label="编号" align="center" width="45">
           <template slot-scope="scope">
-            <span v-text="getIndex(scope.$index)"></span>
+            <span v-text="paramgetIndex(scope.$index)"></span>
           </template>
         </el-table-column>
         <el-table-column label="API" align="center" prop="apiname" width="120"/>
@@ -516,6 +516,10 @@
           size: 10,
           apiname: null,
           deployunitname: null
+        },
+        paramssearch: {
+          page: 1,
+          size: 10
         }
       }
     },
@@ -666,7 +670,7 @@
       searchparamsbyapiid() {
         searchparamsbyapiid(this.tmpparamsapi).then(response => {
           this.apiparamsList = response.data.list
-          this.total = response.data.total
+          // this.total = response.data.total
         }).catch(res => {
           this.$message.error('加载apiparams列表失败')
         })
@@ -760,6 +764,16 @@
        */
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
+      },
+      /**
+       * 表格序号
+       * 可参考自定义表格序号
+       * http://element-cn.eleme.io/#/zh-CN/component/table#zi-ding-yi-suo-yin
+       * @param index 数据下标
+       * @returns 表格序号
+       */
+      paramgetIndex(index) {
+        return (this.paramssearch.page - 1) * this.paramssearch.size + index + 1
       },
 
       /**
