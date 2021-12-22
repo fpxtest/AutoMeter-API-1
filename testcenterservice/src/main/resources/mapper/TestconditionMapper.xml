@@ -40,4 +40,7 @@
     memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
+  <select id="GetConditionByPlanIDAndConditionType" resultMap="BaseResultMap">
+    SELECT * FROM testcondition where objectid = #{objectid} and conditiontype=#{conditiontype} and objecttype = #{objecttype}
+  </select>
 </mapper>

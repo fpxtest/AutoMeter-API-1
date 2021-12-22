@@ -38,4 +38,14 @@ public class ResponeGeneral {
     private String protocal;
     private String apistyle;
     private String method;
+
+    public String getPostData() {
+        return PostData;
+    }
+
+    public void setPostData(String postData) {
+        PostData = postData;
+    }
+
+    private String PostData;
 }

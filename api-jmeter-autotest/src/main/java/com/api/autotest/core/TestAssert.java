@@ -54,6 +54,19 @@ public class TestAssert {
     }
 
 
+    public String ParseRespone(String ResponeResultType,String Respone,String Path)
+    {
+        String Result="";
+        if (ResponeResultType.equals("json")) {
+            Result = ParseJson(Path, Respone);
+        }
+        if (ResponeResultType.equals("xml")) {
+            Result = ParseXml(Path, Respone);
+            //处理xml
+        }
+        return Result;
+    }
+
     public String ParseJson(String JSPath,String JsonRespone)
     {
         String Result="";
