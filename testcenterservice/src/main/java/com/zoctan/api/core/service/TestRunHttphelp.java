@@ -65,7 +65,7 @@ public class TestRunHttphelp {
      * @throws IOException
      */
     //HttpParamers paramers
-    public static TestResponeData doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static TestResponeData doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
         TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
@@ -112,7 +112,7 @@ public class TestRunHttphelp {
             testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             TestRunHttphelp.log.info("Post Exception is :" + e.getMessage());
-            responseData = e.getMessage();
+            throw new Exception("请求"+url+"发生异常，异常原因："+e.getMessage());
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -196,7 +196,7 @@ public class TestRunHttphelp {
      * @return
      * @throws IOException
      */
-    public static TestResponeData doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static TestResponeData doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
         TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
@@ -242,7 +242,7 @@ public class TestRunHttphelp {
             testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             TestRunHttphelp.log.info("Put Exception is :" + e.getMessage());
-            responseData = e.getMessage();
+            throw new Exception("请求"+url+"发生异常，异常原因："+responseData);
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -266,7 +266,7 @@ public class TestRunHttphelp {
      * @return
      * @throws IOException
      */
-    public static TestResponeData doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws IOException {
+    public static TestResponeData doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
         TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
@@ -313,7 +313,7 @@ public class TestRunHttphelp {
             testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             TestRunHttphelp.log.info(" Delete Exception is :" + e.getMessage());
-            responseData = e.getMessage();
+            throw new Exception("请求"+url+"发生异常，异常原因："+responseData);
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();

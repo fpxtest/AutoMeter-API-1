@@ -400,7 +400,7 @@ public class ApicasesController {
                 return ResultGenerator.genOkResult(respon);
 
             } catch (Exception exception) {
-                return ResultGenerator.genOkResult(exception.getMessage());
+                return ResultGenerator.genFailedResult(exception.getMessage());
             }
         } else {
             return ResultGenerator.genFailedResult("当前环境未部署此用例API所在的发布单元，请先完成环境下的部署！");
