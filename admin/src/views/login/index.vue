@@ -34,9 +34,9 @@
           placeholder="请输入密码"
           @keyup.enter.native="handleLogin"
         />
-        <span class="show-pwd" @click.native.prevent="showPwd">
-          <icon-svg icon-class="eye" />
-        </span>
+        <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -90,8 +90,14 @@ export default {
   },
   methods: {
     showPwd() {
-      this.passwordType =
-        this.passwordType === 'password' ? '' : (this.passwordType = 'password')
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
+      } else {
+        this.passwordType = 'password'
+      }
+      this.$nextTick(() => {
+        this.$refs.password.focus()
+      })
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {

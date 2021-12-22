@@ -595,8 +595,6 @@
               <el-button type="primary" :loading="btnLoading" @click.native.prevent="runtest">调试</el-button>
             </el-form-item>
 
-
-
             <template>
               <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="通用" name="zero">
@@ -630,6 +628,16 @@
                     <el-table-column label="Name" align="center" prop="keyName" width="250"/>
                     <el-table-column label="Value" align="center" prop="keyValue" width="350"/>
                   </el-table>
+                </el-tab-pane>
+
+                <el-tab-pane label="请求数据" name="eight">
+                  <el-input
+                    type="textarea"
+                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
+                    rows="20" cols="90"
+                    maxlength="4000"
+                    v-model="tmptest.requestdata"
+                  />
                 </el-tab-pane>
 
                 <el-tab-pane label="响应Header" name="five">
@@ -843,7 +851,8 @@
           code: '',
           responeTime: '',
           size: '',
-          general: ''
+          general: '',
+          requestdata: ''
         },
         tmpheader: {
           name: '',
@@ -1343,7 +1352,8 @@
           if (valid) {
             this.tmptest.general = '发送请求中................'
             runtest(this.tmptestdata).then(response => {
-              this.tmptest.general = '1.请求地址：' + response.data.responeGeneral.url + '\n' + '2.协议：' + response.data.responeGeneral.protocal + '\n' + '3.请求风格：' + response.data.responeGeneral.apistyle + '\n' + '4.请求方法：' + response.data.responeGeneral.method + '\n' + '5.请求数据：' + '\n' + response.data.responeGeneral.postData
+              this.tmptest.general = '1.请求地址：' + response.data.responeGeneral.url + '\n' + '2.协议：' + response.data.responeGeneral.protocal + '\n' + '3.请求风格：' + response.data.responeGeneral.apistyle + '\n' + '4.请求方法：' + response.data.responeGeneral.method
+              this.tmptest.requestdata = response.data.responeGeneral.postData
               this.headerList = response.data.headerList
               this.requestHeadList = response.data.requestHeadList
               this.tmptest.respone = response.data.responeContent
