@@ -7,6 +7,8 @@ spring:
       enabled: true
   dispatchserver:
     serverurl: http://127.0.0.1:8082
+  conditionserver:
+    serverurl: http://127.0.0.1:8083
     # 数据源（应该全部加密）
   datasource:
     # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
