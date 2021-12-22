@@ -52,7 +52,6 @@
       <el-table-column label="用例名" align="center" prop="casename" width="120"/>
       <el-table-column label="API" align="center" prop="apiname" width="80"/>
       <el-table-column label="请求方式" align="center" prop="requestmethod" width="80"/>
-
       <el-table-column label="状态" align="center" prop="status" width="50">
       <template slot-scope="scope">
         <span v-if="scope.row.status === '失败'" style="color:red">{{ scope.row.status }}</span>
@@ -60,8 +59,6 @@
       </template>
       </el-table-column>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
-
-
       <el-table-column label="请求地址" align="center" prop="url" width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">

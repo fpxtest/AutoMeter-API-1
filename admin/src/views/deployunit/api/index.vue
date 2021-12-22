@@ -122,7 +122,7 @@
         class="small-space"
         label-position="left"
         label-width="120px"
-        style="width: 400px; margin-left:50px;"
+        style="width: 450px; margin-left:50px;"
         :model="tmpapi"
         ref="tmpapi"
       >
@@ -151,9 +151,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="资源路径:" prop="path" required>
+        <el-form-item label="Url路径:" prop="path" required>
           <el-input
             type="text"
+            placeholder="不用填写域名或者IP，例如：/user/login"
             maxlength="200"
             prefix-icon="el-icon-message"
             auto-complete="off"
