@@ -12,5 +12,6 @@ public interface TestconditionMapper extends MyMapper<Testcondition> {
     void updateTestcondition(Testcondition params);
     List<Testcondition> getallTestcondition();
     List<Testcondition> getallTestconditionByType(@Param("objecttype") String objecttype);
+    List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid,String conditiontype,String objecttype);
 
 }

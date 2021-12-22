@@ -114,10 +114,8 @@ public class TestCaseHelp {
     // 发送http请求
     public String request(RequestObject requestObject) throws Exception {
         String result="";
-        if (requestObject.getProtocal().equals(new String("http"))||requestObject.getProtocal().equals(new String("https"))) {
+        if (requestObject.getProtocal().equals("http")||requestObject.getProtocal().equals("https")) {
             result = Httphelp.doService(requestObject.getProtocal(),requestObject.getResource(), requestObject.getRequestmMthod(),requestObject.getApistyle(), requestObject.getParamers(),requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
-        }
-        if (requestObject.getProtocal().equals(new String("rpc"))) {
         }
         return result;
     }

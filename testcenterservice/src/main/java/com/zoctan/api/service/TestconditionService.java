@@ -21,7 +21,7 @@ public interface TestconditionService extends Service<Testcondition> {
     List<Testcondition> getallTestcondition();
     List<Testcondition> getallTestconditionByType(String objecttype);
 
-
+    List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid,String conditiontype,String objecttype);
 
 
 }
