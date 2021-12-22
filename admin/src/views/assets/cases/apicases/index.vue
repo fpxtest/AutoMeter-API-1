@@ -732,6 +732,7 @@
     },
     data() {
       return {
+        apicasesList: [],
         checked: 'false',
         activeName: 'zero',
         itemKey: null,
@@ -890,7 +891,6 @@
       this.getenviromentallList()
       this.getapicasesList()
       this.getdepunitLists()
-      this.getcaseconditionList()
     },
 
     computed: {
