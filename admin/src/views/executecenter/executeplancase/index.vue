@@ -22,7 +22,7 @@
             size="mini"
             v-if="hasPermission('executeplan:list')"
             @click.native.prevent="DeleteBatchPlanTestCase"
-          >批量删除</el-button>
+          >取消装载</el-button>
         </el-form-item>
         <span v-if="hasPermission('executeplan:search')">
           <el-form-item  prop="executeplanname" >
@@ -197,7 +197,7 @@
   </div>
 </template>
 <script>
-  import { search as getapicases, searchleftcase } from '@/api/assets/apicases'
+  import { searchleftcase } from '@/api/assets/apicases'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { search as searchtestplancases, addexecuteplantestcase, removebatchexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
@@ -724,16 +724,15 @@
        * 批量删除用例
        */
       DeleteBatchPlanTestCase() {
-        this.$confirm('删除所选测试集合用例？', '警告', {
+        this.$confirm('取消所选测试集合装载的用例？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
         }).then(() => {
           if (this.multipleSelection.length === 0) {
-            this.$message.error('请选择需要删除的用例')
+            this.$message.error('请选择需要取消的用例')
           } else {
             this.executeplancaseremovetList = []
-            console.log('开始删除。。。。。。。。。。。。。。。。。。。')
             console.log(this.multipleSelection)
             for (let i = 0; i < this.multipleSelection.length; i++) {
               this.executeplancaseremovetList.push({
@@ -744,17 +743,15 @@
                 'casename': this.multipleSelection[i].casename
               })
             }
-            console.log('删除列表是。。。。。。。。。。。。。。。。。。。')
-            console.log(this.executeplancaseremovetList)
             removebatchexecuteplantestcase(this.executeplancaseremovetList).then(() => {
-              this.$message.success('批量删除用例成功')
+              this.$message.success('取消装载用例成功')
               this.getexecuteplancaseList()
             }).catch(res => {
-              this.$message.error('批量删除用例失败')
+              this.$message.error('取消装载用例失败')
             })
           }
         }).catch(() => {
-          this.$message.info('已取消删除')
+          this.$message.info('取消装载用例异常')
         })
       }
     }

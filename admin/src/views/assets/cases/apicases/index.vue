@@ -148,7 +148,7 @@
             size="mini"
             v-if="hasPermission('apicases:params') && scope.row.id !== id"
             @click.native.prevent="showTestDialog(scope.$index)"
-          >运行测试
+          >调试
           </el-button>
         </template>
       </el-table-column>
@@ -570,7 +570,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="运行测试" :visible.sync="TestdialogFormVisible">
+    <el-dialog title="调试" :visible.sync="TestdialogFormVisible">
       <el-form
         status-icon
         class="small-space"
@@ -579,27 +579,26 @@
         style="width: 600px; margin-left:50px;"
       >
         <div class="filter-container">
-          <el-form :inline="true"
-                   :model="tmptest"
-                   ref="tmptest">
-            <el-form-item label="选择环境：" prop="enviromentname"  required>
-              <el-select style="width:400px" v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
+          <el-form :inline="true" :model="tmptest" ref="tmptest">
+            <el-form-item label="用例名：">
+              <el-input style="width:500px" readonly="true" v-model="tmpapicases.casename"/>
+            </el-form-item>
+
+            <el-form-item label="环境 ：" prop="enviromentname"  required>
+              <el-select style="width:330px" v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
                 <el-option label="请选择"  />
                 <div v-for="(enviroment, index) in enviromentnameList" :key="index">
                   <el-option :label="enviroment.enviromentname" :value="enviroment.enviromentname" required />
                 </div>
               </el-select>
-              <el-button
-                type="primary"
-                :loading="btnLoading"
-                @click.native.prevent="runtest"
-              >运行测试
-              </el-button>
+              <el-checkbox v-model="checked" @change="runprexchange">执行前置条件</el-checkbox>
+              <el-button type="primary" :loading="btnLoading" @click.native.prevent="runtest">调试</el-button>
             </el-form-item>
+
+
 
             <template>
               <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-
                 <el-tab-pane label="通用" name="zero">
                   <el-input
                     type="textarea"
@@ -619,6 +618,33 @@
                       v-model="tmptest.respone"
                     />
                 </el-tab-pane>
+
+                <el-tab-pane label="请求Header" name="seven">
+                  <el-table
+                    :data="requestHeadList"
+                    element-loading-text="loading"
+                    border
+                    fit
+                    highlight-current-row
+                  >
+                    <el-table-column label="Name" align="center" prop="keyName" width="250"/>
+                    <el-table-column label="Value" align="center" prop="keyValue" width="350"/>
+                  </el-table>
+                </el-tab-pane>
+
+                <el-tab-pane label="响应Header" name="five">
+                  <el-table
+                    :data="headerList"
+                    element-loading-text="loading"
+                    border
+                    fit
+                    highlight-current-row
+                  >
+                    <el-table-column label="Name" align="center" prop="name" width="250"/>
+                    <el-table-column label="Value" align="center" prop="value" width="350"/>
+                  </el-table>
+                </el-tab-pane>
+
                 <el-tab-pane label="响应码" name="second">
                   <el-input
                     type="textarea"
@@ -645,19 +671,6 @@
                     maxlength="4000"
                     v-model="tmptest.size"
                   />
-                </el-tab-pane>
-
-                <el-tab-pane label="Header" name="five">
-                  <el-table
-                    :data="headerList"
-                    element-loading-text="loading"
-                    border
-                    fit
-                    highlight-current-row
-                  >
-                    <el-table-column label="Name" align="center" prop="name" width="250"/>
-                    <el-table-column label="Value" align="center" prop="value" width="350"/>
-                  </el-table>
                 </el-tab-pane>
 
                 <el-tab-pane label="Cookies" name="six">
@@ -711,6 +724,7 @@
     },
     data() {
       return {
+        checked: 'false',
         activeName: 'zero',
         itemKey: null,
         assertitemKey: null,
@@ -732,6 +746,7 @@
         sourcetestcaseList: [],
         assertList: [],
         headerList: [], // Header列表
+        requestHeadList: [], // Header列表
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
         JmeterClassVisible: false, // JmeterClassVisible显示
@@ -836,7 +851,8 @@
         },
         tmptestdata: {
           caseid: '',
-          enviromentid: ''
+          enviromentid: '',
+          prixflag: ''
         },
 
         casevalue: {
@@ -888,7 +904,10 @@
       handleSelectionChange(rows) {
         this.multipleSelection = rows
       },
-
+      runprexchange(e) {
+        this.checked = e
+        this.tmptestdata.prixflag = e
+      },
       /**
        * 功能性能选择  e的值为options的选值
        */
@@ -1317,21 +1336,22 @@
       },
 
       /**
-       * 运行测试
+       * 调试
        */
       runtest() {
         this.$refs.tmptest.validate(valid => {
           if (valid) {
             this.tmptest.general = '发送请求中................'
             runtest(this.tmptestdata).then(response => {
-              this.tmptest.general = '请求地址：' + response.data.responeGeneral.url + '\n' + '协议：' + response.data.responeGeneral.protocal + '\n' + '请求风格：' + response.data.responeGeneral.apistyle + '\n' + '请求方法：' + response.data.responeGeneral.method
+              this.tmptest.general = '1.请求地址：' + response.data.responeGeneral.url + '\n' + '2.协议：' + response.data.responeGeneral.protocal + '\n' + '3.请求风格：' + response.data.responeGeneral.apistyle + '\n' + '4.请求方法：' + response.data.responeGeneral.method + '\n' + '5.请求数据：' + '\n' + response.data.responeGeneral.postData
               this.headerList = response.data.headerList
+              this.requestHeadList = response.data.requestHeadList
               this.tmptest.respone = response.data.responeContent
               this.tmptest.code = response.data.responeCode
               this.tmptest.responeTime = response.data.responeTime
               this.tmptest.size = response.data.size
             }).catch(res => {
-              this.$message.error('运行测试失败')
+              this.$message.error('调试失败')
             })
           }
         })
@@ -1471,9 +1491,12 @@
        */
       showTestDialog(index) {
         this.tmptestdata.caseid = this.apicasesList[index].id
+        this.tmptestdata.prixflag = this.checked
+        this.tmpapicases.casename = this.apicasesList[index].casename
         this.activeName = 'zero'
         this.tmptest.general = ''
         this.headerList = null
+        this.requestHeadList = null
         this.tmptest.size = ''
         this.tmptest.code = ''
         this.tmptest.responeTime = ''

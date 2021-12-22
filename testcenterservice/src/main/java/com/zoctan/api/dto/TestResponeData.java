@@ -4,10 +4,11 @@ import com.zoctan.api.entity.Resource;
 import org.apache.http.Header;
 import org.apache.http.cookie.Cookie;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestResponeData {
-
 
     public List<Header> getHeaderList() {
         return headerList;
@@ -26,6 +27,18 @@ public class TestResponeData {
     }
 
     private List<Header> headerList;
+
+    public List<RequestHead> getRequestHeadList() {
+        return requestHeadList;
+    }
+
+    public void setRequestHeadList(List<RequestHead> requestHeadList) {
+        this.requestHeadList = requestHeadList;
+    }
+
+    private List<RequestHead> requestHeadList;
+
+
     private String ResponeContent;
 
     public int getResponeCode() {

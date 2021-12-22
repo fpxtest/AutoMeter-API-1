@@ -14,6 +14,7 @@ import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
 import com.zoctan.api.util.DnamicCompilerHelp;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +38,10 @@ public class TestconditionController {
     @Resource
     private TestconditionService testconditionService;
 
-    @Resource
+    @Autowired(required = false)
     private ConditionApiService conditionApiService;
 
-    @Resource
+    @Autowired(required = false)
     private ApicasesService apicasesService;
 
     @Resource
@@ -104,7 +106,7 @@ public class TestconditionController {
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
             TestconditionController.log.info("开始处理计划前置条件-数据库子条件-============：");
-            DBCondition(ConditionID,dispatch);
+            DBCondition(ConditionID, dispatch);
             TestconditionController.log.info("完成处理计划前置条件-数据库子条件-============：");
             TestconditionController.log.info("开始处理计划前置条件-接口子条件-============：");
             APICondition(ConditionID, dispatch, executeplan, Planid);
@@ -117,8 +119,8 @@ public class TestconditionController {
     }
 
     @PostMapping("/execcasecondition")
-    @Async
     public Result execcasecondition(@RequestBody Dispatch dispatch) throws Exception {
+        HashMap<String, String> VariablesNameVlaueMap = new HashMap<>();
         Long Caseid = dispatch.getTestcaseid();
         Long Planid = dispatch.getExecplanid();
         Executeplan executeplan = executeplanService.getBy("id", Planid);
@@ -127,20 +129,21 @@ public class TestconditionController {
             long ConditionID = testconditionList.get(0).getId();
             //处理接口条件
             TestconditionController.log.info("开始处理用例前置条件-API子条件-============：");
-            APICondition(ConditionID, dispatch, executeplan, Planid);
+            VariablesNameVlaueMap = APICondition(ConditionID, dispatch, executeplan, Planid);
             TestconditionController.log.info("完成处理用例前置条件-API子条件-============：");
             //处理数据库条件
-            //DBCondition();
+            DBCondition(ConditionID, dispatch);
             //处理脚本条件
             TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：");
             ScriptCondition(Caseid, dispatch, ConditionID);
             TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：");
 
         }
-        return ResultGenerator.genOkResult();
+        return ResultGenerator.genOkResult(VariablesNameVlaueMap);
     }
 
-    public void APICondition(long ConditionID, Dispatch dispatch, Executeplan executeplan, Long Planid) {
+    public HashMap<String, String> APICondition(long ConditionID, Dispatch dispatch, Executeplan executeplan, Long Planid) {
+        HashMap<String, String> VariableNameValueMap = new HashMap<>();
         List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
         TestconditionController.log.info("接口子条件条件报告API子条件数量-============：" + conditionApiList.size());
         for (ConditionApi conditionApi : conditionApiList) {
@@ -223,23 +226,23 @@ public class TestconditionController {
 
             //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
             ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
-            FixApicasesVariables(apicasesVariables,requestObject,Respone,Planid,CaseID,dispatch,apicases);
+            TestvariablesValue testvariablesValue = FixApicasesVariables(apicasesVariables, requestObject, Respone, Planid, CaseID, dispatch, apicases);
+            VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
         }
+        return VariableNameValueMap;
     }
 
-    private void FixApicasesVariables(ApicasesVariables apicasesVariables,RequestObject requestObject,String Respone,Long Planid,Long CaseID,Dispatch dispatch,Apicases apicases)
-    {
+    private TestvariablesValue FixApicasesVariables(ApicasesVariables apicasesVariables, RequestObject requestObject, String Respone, Long Planid, Long CaseID, Dispatch dispatch, Apicases apicases) {
+        TestvariablesValue testvariablesValue = new TestvariablesValue();
         if (apicasesVariables != null) {
             TestconditionController.log.info("接口子条件条件报告子条件处理变量-============：" + apicasesVariables.getVariablesname());
             Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
-            if(testvariables!=null)
-            {
+            if (testvariables != null) {
                 String VariablesPath = testvariables.getVariablesexpress();
                 TestconditionController.log.info("接口子条件条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
                 TestconditionController.log.info("接口子条件条件报告子条件处理变量取值-============：" + ParseValue);
-                TestvariablesValue testvariablesValue = new TestvariablesValue();
                 testvariablesValue.setPlanid(Planid);
                 testvariablesValue.setPlanname(dispatch.getExecplanname());
                 testvariablesValue.setBatchname(dispatch.getBatchname());
@@ -250,9 +253,148 @@ public class TestconditionController {
                 testvariablesValue.setVariablesvalue(ParseValue);
                 testvariablesValue.setMemo("test");
                 testvariablesValueService.save(testvariablesValue);
-                TestconditionController.log.info("接口子条件条件报告子条件处理变量完成-============：" );
+                TestconditionController.log.info("接口子条件条件报告子条件处理变量完成-============：");
             }
         }
+        return testvariablesValue;
+    }
+
+    @PostMapping("/execcasecondition/script")
+    public Result DBConditionForScript(@RequestBody final Map<String, Object> param) throws Exception {
+        Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
+        Long Caseid = Long.parseLong(param.get("caseid").toString());
+        ConditionScript conditionScript = conditionScriptService.findtestconditionscriptwithid(ConditionID);
+        if (conditionScript != null) {
+            String Respone = "";
+            try {
+                DnamicCompilerHelp dnamicCompilerHelp = new DnamicCompilerHelp();
+                //数据库中获取脚本
+                String Script = conditionScript.getScript();
+                TestconditionController.log.info("调试脚本报告脚本子条件:-============：" + conditionScript.getScript());
+                String Source = dnamicCompilerHelp.GetCompeleteClass(Script, Caseid);
+                dnamicCompilerHelp.CallDynamicScript(Source);
+            } catch (Exception ex) {
+                Respone = ex.getMessage();
+                throw new Exception("数据库条件执行异常：" + Respone);
+            }
+            TestconditionController.log.info("调试脚本报告更新子条件结果-============：");
+        }
+        return ResultGenerator.genOkResult("数据库条件执行完成");
+    }
+
+    @PostMapping("/execcasecondition/api")
+    public Result DBConditionForAPI(@RequestBody final Map<String, Object> param) throws Exception {
+        Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
+        Long EnviromentID = Long.parseLong(param.get("enviromentid").toString());
+        HashMap<String, String> VariableNameValueMap = new HashMap<>();
+        List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
+        TestconditionController.log.info("调试接口子条件条件报告API子条件数量-============：" + conditionApiList.size());
+        for (ConditionApi conditionApi : conditionApiList) {
+            Long CaseID = conditionApi.getCaseid();
+            Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
+            if (apicases == null) {
+                throw new Exception("接口子条件未找到条件运行的接口，请检查是否存在或已被删除！");
+            }
+            Long ApiID = apicases.getApiid();
+            Api api = apiService.getBy("id", ApiID);
+            if (api == null) {
+                throw new Exception("接口子条件未找到条件运行的接口的API，请检查是否存在或已被删除！");
+            }
+            Long Deployunitid = api.getDeployunitid();
+            Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
+            if (deployunit == null) {
+                throw new Exception("接口子条件未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除！");
+            }
+            List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
+            //区分环境类型
+            Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnviromentID, deployunit.getId());
+            if (macdepunit == null) {
+                throw new Exception("接口子条件未找到环境组件部署，请检查是否存在或已被删除！");
+            }
+            Machine machine = machineService.getBy("id", macdepunit.getMachineid());
+            if (machine == null) {
+                throw new Exception("接口子条件未找到环境组件部署的服务器，请检查是否存在或已被删除！");
+            }
+            TestCaseHelp testCaseHelp = new TestCaseHelp();
+            String Respone = "";
+            RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+            try {
+                Respone = testCaseHelp.request(requestObject);
+            } catch (Exception ex) {
+                Respone = ex.getMessage();
+            }
+            //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+            ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
+            if (apicasesVariables != null) {
+                ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
+                Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
+                if (testvariables != null)
+                {
+                    String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
+                    VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
+                }
+            }
+        }
+        return ResultGenerator.genOkResult(VariableNameValueMap);
+    }
+
+    @PostMapping("/execcasecondition/db")
+    public Result DBConditionForDebug(@RequestBody final Map<String, Object> param) throws Exception {
+        Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
+        List<ConditionDb> conditionDbListList = conditionDbService.GetDBConditionByConditionID(ConditionID);
+        for (ConditionDb conditionDb : conditionDbListList) {
+            Long Assembleid = conditionDb.getAssembleid();
+            EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
+            if (enviromentAssemble == null) {
+                throw new Exception("数据库子条件未找到环境组件，请检查是否存在或已被删除！");
+            }
+            String AssembleType = enviromentAssemble.getAssembletype();
+            Long Envid = conditionDb.getEnviromentid();
+            String Dbtype = conditionDb.getDbtype();
+            String Sql = conditionDb.getDbcontent();
+            String ConnnectStr = enviromentAssemble.getConnectstr();
+            Macdepunit macdepunit = macdepunitService.getmacdepbyenvidandassmbleid(Envid, Assembleid);
+            if (macdepunit == null) {
+                throw new Exception("数据库子条件未找到环境组件部署，请检查是否存在或已被删除");
+            }
+            Machine machine = machineService.getBy("id", macdepunit.getMachineid());
+            if (machine == null) {
+                throw new Exception("数据库子条件未找到环境组件部署的服务器，请检查是否存在或已被删除");
+            }
+            String deployunitvisittype = macdepunit.getVisittype();
+            String[] ConnetcArray = ConnnectStr.split(",");
+            if (ConnetcArray.length < 4) {
+                throw new Exception("数据库子条件数据库连接字填写不规范，请按规则填写");
+            }
+            String username = ConnetcArray[0];
+            String pass = ConnetcArray[1];
+            String port = ConnetcArray[2];
+            String dbname = ConnetcArray[3];
+            String DBUrl = "";
+            if (AssembleType.equals("mysql")) {
+                DBUrl = "jdbc:mysql://";
+            }
+            if (AssembleType.equals("oracle")) {
+                DBUrl = "";
+            }
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equals("ip")) {
+                DBUrl = DBUrl + machine.getIp() + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            } else {
+                DBUrl = DBUrl + macdepunit.getDomain() + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            }
+            try {
+                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+                int nums = Db.use(ds).execute(Sql);
+                TestconditionController.log.info("调试数据库子条件Sql执行完成：" + Sql);
+                return ResultGenerator.genOkResult("成功执行，影响条数：" + nums);
+            } catch (Exception ex) {
+                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
+            }
+        }
+        //更新条件结果表
+        TestconditionController.log.info("调试数据库子条件条件报告子条件完成-============：");
+        return ResultGenerator.genOkResult("调试数据库子条件执行完成");
     }
 
     public void DBCondition(long ConditionID, Dispatch dispatch) {
@@ -308,8 +450,7 @@ public class TestconditionController {
             }
             String deployunitvisittype = macdepunit.getVisittype();
             String[] ConnetcArray = ConnnectStr.split(",");
-            if(ConnetcArray.length<4)
-            {
+            if (ConnetcArray.length < 4) {
                 Respone = "数据库连接字填写不规范，请按规则填写";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
@@ -328,16 +469,16 @@ public class TestconditionController {
             }
             // 根据访问方式来确定ip还是域名
             if (deployunitvisittype.equals("ip")) {
-                DBUrl = DBUrl + machine.getIp() + ":" + port + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                DBUrl = DBUrl + machine.getIp() + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             } else {
-                DBUrl = DBUrl + macdepunit.getDomain() + "/" + dbname+"?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                DBUrl = DBUrl + macdepunit.getDomain() + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             }
             try {
                 Start = new Date().getTime();
                 DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                int nums=Db.use(ds).execute(Sql);
-                TestconditionController.log.info("数据库子条件Sql执行完成："+Sql );
-                Respone="成功执行，影响条数："+nums;
+                int nums = Db.use(ds).execute(Sql);
+                TestconditionController.log.info("数据库子条件Sql执行完成：" + Sql);
+                Respone = "成功执行，影响条数：" + nums;
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
@@ -347,7 +488,7 @@ public class TestconditionController {
             CostTime = End - Start;
             //更新条件结果表
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
-            TestconditionController.log.info("数据库子条件条件报告子条件完成-============：" );
+            TestconditionController.log.info("数据库子条件条件报告子条件完成-============：");
         }
     }
 
