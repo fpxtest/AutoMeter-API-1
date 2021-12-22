@@ -62,7 +62,10 @@
 ## 在线体验
 [在线体验](http://81.69.0.136/#/login) 
 账号密码: test  test123
-  
+
+## Gitee(码云)
+[码云](https://gitee.com/season-fan/autometer-api)
+
 
  欢迎联系一起讨论
 ![输入图片说明](img/fanfanxiao.png)
