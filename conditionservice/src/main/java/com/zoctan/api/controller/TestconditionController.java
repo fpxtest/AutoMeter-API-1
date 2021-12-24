@@ -385,9 +385,14 @@ public class TestconditionController {
             }
             try {
                 DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                int nums = Db.use(ds).execute(Sql);
-                TestconditionController.log.info("调试数据库子条件Sql执行完成：" + Sql);
-                return ResultGenerator.genOkResult("成功执行，影响条数：" + nums);
+                String Respone="";
+                String[] SqlArr=Sql.split(";");
+                for (String ExecSql: SqlArr) {
+                    int nums = Db.use(ds).execute(ExecSql);
+                    Respone=Respone+ " 成功执行Sql:"+Sql+" 影响条数：" + nums;
+                    TestconditionController.log.info("调试数据库子条件Sql执行完成：" + Sql);
+                }
+                return ResultGenerator.genOkResult(Respone);
             } catch (Exception ex) {
                 throw new Exception("数据库子条件执行异常：" + ex.getMessage());
             }
@@ -475,10 +480,14 @@ public class TestconditionController {
             }
             try {
                 Start = new Date().getTime();
+
                 DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                int nums = Db.use(ds).execute(Sql);
-                TestconditionController.log.info("数据库子条件Sql执行完成：" + Sql);
-                Respone = "成功执行，影响条数：" + nums;
+                String[] SqlArr=Sql.split(";");
+                for (String ExecSql: SqlArr) {
+                    int nums = Db.use(ds).execute(ExecSql);
+                    TestconditionController.log.info("数据库子条件Sql执行完成：" + Sql);
+                    Respone =Respone+ " 成功执行Sql:"+Sql+" 影响条数：" + nums;
+                }
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
