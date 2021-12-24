@@ -68,6 +68,12 @@
                        v-if="hasPermission('enviroment_assemble:update')  || hasPermission('enviroment_assemble:delete')">
         <template slot-scope="scope">
           <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('enviroment_assemble:update') && scope.row.id !== id"
+            @click.native.prevent="showassembletestDialog(scope.$index)"
+          >测试</el-button>
+          <el-button
             type="warning"
             size="mini"
             v-if="hasPermission('enviroment_assemble:update') && scope.row.id !== id"
@@ -159,13 +165,54 @@
         >修改</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="测试连接" :visible.sync="testdialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 500px; margin-left:50px;"
+        :model="tmptest"
+        ref="tmptest"
+      >
+        <el-form-item label="连接服务器：" prop="machinename" required >
+          <el-select v-model="tmptest.machinename" placeholder="连接服务器" style="width:100%" @change="selectChangedMN($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(macname, index) in machinenameList" :key="index">
+              <el-option :label="`${macname.machinename} ：${macname.ip}`" :value="macname.machinename" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="访问方式" prop="visittype" required >
+          <el-select v-model="tmptest.visittype" placeholder="访问方式" style="width:100%" @change="selectChangedVisittype($event)">
+            <el-option label="IP" value="IP"></el-option>
+            <el-option label="域名" value="域名"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <div v-if="domianVisible">
+          <el-form-item label="访问域名" prop="domain" required>
+            <el-input v-model="tmptest.domain"  placeholder="访问域名" required></el-input>
+          </el-form-item>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="testdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="runtest"
+        >测试</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-  import { searchenviroment_assemble as searchenviroment_assemble, addenviroment_assemble, updateenviroment_assemble, removeenviroment_assemble } from '@/api/enviroment/enviromentassemble'
+  import { searchenviroment_assemble as searchenviroment_assemble, addenviroment_assemble, updateenviroment_assemble, removeenviroment_assemble, runtest } from '@/api/enviroment/enviromentassemble'
   import { unix2CurrentTime } from '@/utils'
   import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
   import { mapGetters } from 'vuex'
+  import { getmachineLists as getmachineLists } from '@/api/assets/machine'
 
   export default {
     filters: {
@@ -184,8 +231,10 @@
         tmpassemblename: null,
         tmpassembletype: null,
         enviroment_assembleList: [], // 环境列表
+        machinenameList: [], // 服务器列表
         assembleypeList: [], // 环境列表
         listLoading: false, // 数据加载等待动画
+        domianVisible: false,
         total: 0, // 数据总数
         listQuery: {
           page: 1, // 页码
@@ -195,6 +244,7 @@
         },
         dialogStatus: 'add',
         dialogFormVisible: false,
+        testdialogFormVisible: false,
         textMap: {
           updateRole: '修改环境组件',
           update: '修改环境组件',
@@ -214,6 +264,14 @@
           memo: '',
           creator: ''
         },
+        tmptest: {
+          machineid: '',
+          machinename: '',
+          visittype: '',
+          assembletype: '',
+          domain: '',
+          constr: ''
+        },
         search: {
           page: 1,
           size: 10,
@@ -230,6 +288,7 @@
     created() {
       this.getenviroment_assembleList()
       this.getdatabydiccodeList()
+      this.getmachineLists()
     },
 
     methods: {
@@ -249,6 +308,16 @@
         })
       },
 
+      /**
+       * 获取服务器列表
+       */
+      getmachineLists() {
+        getmachineLists().then(response => {
+          this.machinenameList = response.data
+        }).catch(res => {
+          this.$message.error('加载服务器列表失败')
+        })
+      },
       /**
        * 获取组件列表
        */
@@ -281,6 +350,29 @@
         this.tmpassemblename = this.search.assemblename
       },
 
+      /**
+       * 发布单元访问方式下拉控制是否显示域名  e的值为options的选值
+       */
+      selectChangedVisittype(e) {
+        if (e === '域名') {
+          this.domianVisible = true
+        }
+        if (e === 'IP') {
+          this.domianVisible = false
+        }
+      },
+
+      /**
+       * 服务器下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      selectChangedMN(e) {
+        for (let i = 0; i < this.machinenameList.length; i++) {
+          if (this.machinenameList[i].machinename === e) {
+            this.tmptest.machineid = this.machinenameList[i].id
+            console.log(this.tmptest.machineid)
+          }
+        }
+      },
       /**
        * 改变每页数量
        * @param size 页大小
@@ -341,6 +433,34 @@
           }
         })
       },
+      /**
+       * 测试
+       */
+      runtest() {
+        this.$refs.tmptest.validate(valid => {
+          if (valid) {
+            runtest(this.tmptest).then(() => {
+              this.$message.success('连接成功！')
+            }).catch(res => {
+              this.$message.error('添加失败')
+            })
+          }
+        })
+      },
+      /**
+       * 显示测试对话框
+       * @param index 测试环境下标
+       */
+      showassembletestDialog(index) {
+        this.testdialogFormVisible = true
+        this.tmptest.machinename = ''
+        this.tmptest.visittype = ''
+        this.tmptest.domain = ''
+        this.domianVisible = false
+        this.tmptest.assembletype = this.enviroment_assembleList[index].assembletype
+        this.tmptest.constr = this.enviroment_assembleList[index].connectstr
+      },
+
       /**
        * 显示修改测试环境对话框
        * @param index 测试环境下标

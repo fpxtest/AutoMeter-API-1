@@ -30,6 +30,14 @@ export function searchenviroment_assemble(enviroment_assembleForm) {
   })
 }
 
+export function runtest(enviroment_assembleForm) {
+  return request({
+    url: '/enviroment_assemble/runtest',
+    method: 'post',
+    data: enviroment_assembleForm
+  })
+}
+
 export function addenviroment_assemble(enviroment_assembleForm) {
   return request({
     url: '/enviroment_assemble',
