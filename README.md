@@ -66,6 +66,8 @@
 ## Gitee(码云)
 [码云](https://gitee.com/season-fan/autometer-api)
 
+## GitHub
+[GitHub](https://github.com/AutoMeter/AutoMeter-API)
 
  欢迎联系一起讨论
 ![输入图片说明](img/fanfanxiao.png)
