@@ -18,27 +18,27 @@ public class precondition extends AbstractJavaSamplerClient {
     public void setupTest(JavaSamplerContext context) {
         super.setupTest(context);
         getLogger().info( "precondition setupTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
-        String status="";
-        TestCore core = new TestCore(context,getLogger());
-        String errorinfo = "";
-        String caseid = context.getParameter("caseid");
-        String testplanid = context.getParameter("testplanid");
-        String batchid = context.getParameter("batchid");
-        String batchname = context.getParameter("batchname");
-        String slaverid = context.getParameter("slaverid");
-        String casetype = context.getParameter("casetype");
-        //前置条件
-        try {
-            core.fixprecondition(testplanid,caseid);
-            status="成功";
-        } catch (Exception e) {
-            status="失败";
-            errorinfo ="前置条件处理异常："+ e.getMessage().replace("'","");
-        }
-        finally {
-           String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"前置",casetype);
-           getLogger().info(TestCore.logplannameandcasename + "处理前置条件完成:"+result);
-        }
+//        String status="";
+//        TestCore core = new TestCore(context,getLogger());
+//        String errorinfo = "";
+//        String caseid = context.getParameter("caseid");
+//        String testplanid = context.getParameter("testplanid");
+//        String batchid = context.getParameter("batchid");
+//        String batchname = context.getParameter("batchname");
+//        String slaverid = context.getParameter("slaverid");
+//        String casetype = context.getParameter("casetype");
+//        //前置条件
+//        try {
+//            core.fixprecondition(testplanid,caseid);
+//            status="成功";
+//        } catch (Exception e) {
+//            status="失败";
+//            errorinfo ="前置条件处理异常："+ e.getMessage().replace("'","");
+//        }
+//        finally {
+//           String result= core.savetestcaseconditionresult(caseid,testplanid,batchid,batchname,slaverid,status,errorinfo,"前置",casetype);
+//           getLogger().info(TestCore.logplannameandcasename + "处理前置条件完成:"+result);
+//        }
     }
 
     // 设置传入的参数，可以设置多个，已设置的参数会显示到Jmeter的参数列表中

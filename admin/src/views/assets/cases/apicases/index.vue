@@ -1350,7 +1350,6 @@
       runtest() {
         this.$refs.tmptest.validate(valid => {
           if (valid) {
-            this.tmptest.general = '发送请求中................'
             runtest(this.tmptestdata).then(response => {
               this.tmptest.general = '1.请求地址：' + response.data.responeGeneral.url + '\n' + '2.协议：' + response.data.responeGeneral.protocal + '\n' + '3.请求风格：' + response.data.responeGeneral.apistyle + '\n' + '4.请求方法：' + response.data.responeGeneral.method
               this.tmptest.requestdata = response.data.responeGeneral.postData
