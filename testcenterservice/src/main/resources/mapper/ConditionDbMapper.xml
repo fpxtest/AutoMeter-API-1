@@ -14,7 +14,7 @@
     <result column="assembleid" jdbcType="BIGINT" property="assembleid" />
     <result column="assemblename" jdbcType="VARCHAR" property="assemblename" />
     <result column="dbtype" jdbcType="VARCHAR" property="dbtype" />
-    <result column="dbcontent" jdbcType="VARCHAR" property="dbcontent" />
+    <result column="dbcontent" jdbcType="LONGVARCHAR" property="dbcontent" />
     <result column="connectstr" jdbcType="VARCHAR" property="connectstr" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

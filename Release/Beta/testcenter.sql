@@ -1429,4 +1429,7 @@ CREATE TABLE `executeplan_params`
   AUTO_INCREMENT = 4
   DEFAULT CHARSET = utf8mb4 COMMENT ='测试集合全局参数表';
 
+  ALTER TABLE testcenter.condition_db MODIFY COLUMN dbcontent TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'db执行内容';
+
+
 -- Dump completed on 2021-12-08 14:51:04

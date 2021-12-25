@@ -262,12 +262,34 @@ public class ApicasesController {
                 try {
                     //请求API条件
                     APIRespone = Httphelp.doPost(APIConditionServerurl, params, header, 30000, 30000);
+                    if(APIRespone.contains("接口子条件执行异常"))
+                    {
+                        JSONObject object= JSON.parseObject(APIRespone);
+                        throw new Exception(object.getString("message"));
+                    }
                     //请求脚本条件
-                    Httphelp.doPost(ScriptConditionServerurl, params, header, 30000, 30000);
+                    String ScriptRespone =Httphelp.doPost(ScriptConditionServerurl, params, header, 30000, 30000);
+                    if(ScriptRespone.contains("脚本条件执行异常"))
+                    {
+                        JSONObject object= JSON.parseObject(ScriptRespone);
+                        throw new Exception(object.getString("message"));
+                    }
                     //请求DB条件
-                    Httphelp.doPost(DBConditionServerurl, params, header, 30000, 30000);
+                    String DBRespone =Httphelp.doPost(DBConditionServerurl, params, header, 30000, 30000);
+                    if(DBRespone.contains("数据库子条件执行异常"))
+                    {
+                        JSONObject object= JSON.parseObject(DBRespone);
+                        throw new Exception(object.getString("message"));
+                    }
                 } catch (Exception ex) {
-                    return ResultGenerator.genFailedResult("执行前置条件异常：" + ex.getMessage());
+                    if(ex.getMessage().contains("Connection refused"))
+                    {
+                        return ResultGenerator.genFailedResult("无法连接条件服务器，请检查ConditionService是否正常启动！");
+                    }
+                    else
+                    {
+                        return ResultGenerator.genFailedResult("执行前置条件异常：" + ex.getMessage());
+                    }
                 }
             }
             if (APIRespone != "") {
