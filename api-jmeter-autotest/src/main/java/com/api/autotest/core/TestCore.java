@@ -132,13 +132,6 @@ public class TestCore {
                 }
                 newob.setHeader(header);
             }
-//            HttpHeader header = null;
-//            if (headjson.equals("headjson")) {
-//                header = new HttpHeader();
-//                newob.setHeader(header);
-//            } else {
-//
-//
         }
         HttpParamers params = new HttpParamers();
         if (paramsjson.equals("NoCaseData")) {
@@ -160,32 +153,6 @@ public class TestCore {
                 }
             }
             newob.setParamers(params);
-//            HttpParamers params = new HttpParamers();
-//            if (paramsjson.equals("paramjson")) {
-//                newob.setParamers(params);
-//                newob.setPostData("");
-//            } else {
-//                try {
-//                    Map paramsmaps = (Map) JSON.parse(paramsjson);
-//                    for (Object map : paramsmaps.entrySet()) {
-//                        String Value = ((Map.Entry) map).getValue().toString();
-//                        Value=GetVariablesValues(Value,testplanid,batchname);
-//                        params.addParam(((Map.Entry) map).getKey().toString(), Value);
-//                    }
-//                    if (params.getParams().size() > 0) {
-//                        String PostData = "";
-//                        try {
-//                            PostData = GetParasPostData(requestcontenttype, params);
-//                        } catch (IOException e) {
-//                            savetestcaseresult(false, 0, "", "", e.getMessage(), newob, null);
-//                        }
-//                        newob.setPostData(PostData);
-//                    }
-//                    newob.setParamers(params);
-//                } catch (Exception ex) {
-//                    throw new Exception("Paras参数用例数据异常：" + paramsjson);
-//                }
-//            }
         }
         if (bodyjson.equals("NoCaseData")) {
             throw new Exception("API的Body参数未设计测试用例数据，请完成用例数据后再运行");
@@ -196,30 +163,6 @@ public class TestCore {
             } else {
                 newob.setPostData(bodyjson);
             }
-//            HttpParamers params = null;
-//            if (bodyjson.equals("bodyjson")) {
-//                params = new HttpParamers();
-//                newob.setParamers(params);
-//            } else {
-//                try {
-//                    Map paramsmaps = (Map) JSON.parse(bodyjson);
-//                    params = new HttpParamers();
-//                    for (Object map : paramsmaps.entrySet()) {
-//                        String Value = ((Map.Entry) map).getValue().toString();
-//                        if (Value.startsWith("$")) {
-//                            String VariablesName = Value.substring(1);
-//                            String Caseid = GetCaseIdByVariablesName(VariablesName);
-//                            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-//                            Value = GetVariablesValues(testplanid, Caseid, batchname, Value);
-//                        }
-//                        //Value = GetVariablesValues(testplanid, caseid, batchname, Value);
-//                        params.addParam(((Map.Entry) map).getKey().toString(), Value);
-//                    }
-//                    newob.setParamers(params);
-//                } catch (Exception ex) {
-//                    throw new Exception("Body参数用例数据异常：" + bodyjson);
-//                }
-//            }
         }
         return newob;
     }
@@ -524,7 +467,7 @@ public class TestCore {
     }
 
     //处理接口条件
-    public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
+    public void APICondition(long ConditionID, RequestObject requestObject) {
         ArrayList<HashMap<String, String>> conditionApiList = GetApiConditionByConditionID(ConditionID);
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         logger.info("条件报告API子条件数量-============：" + conditionApiList.size());
@@ -535,24 +478,25 @@ public class TestCore {
             String Respone = "";
             String ConditionResultStatus = "成功";
             RequestObject re = null;
-            String CondionCaseID = conditionApi.get("caseid");
+            String CondionCaseID = "";
             try {
+                CondionCaseID = conditionApi.get("caseid");
                 Start = new Date().getTime();
                 re = GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
                 ResponeData responeData = request(re);
                 Respone = responeData.getRespone();
                 CostTime = End - Start;
-                SaveApiSubCondition(re, PlanID,requestObject.getTestplanname(),requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(re, PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
                 CostTime = End - Start;
-                SaveApiSubCondition(re, PlanID,requestObject.getTestplanname(),requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(re, PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             }
         }
     }
 
-    private void SaveApiSubCondition(RequestObject requestObject, Long PlanID,String PlanName,String BatchName, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
+    private void SaveApiSubCondition(RequestObject requestObject, Long PlanID, String PlanName, String BatchName, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
         TestconditionReport testconditionReport = new TestconditionReport();
         testconditionReport.setTestplanid(PlanID);
         testconditionReport.setPlanname(PlanName);
@@ -578,7 +522,7 @@ public class TestCore {
                 String VariablesPath = VariablesList.get(0).get("variablesexpress");
                 logger.info("条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
                 TestAssert testAssert = new TestAssert(logger);
-                String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(),VariablesPath, Respone);
+                String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
                 logger.info("条件报告子条件处理变量取值-============：" + ParseValue);
                 TestvariablesValue testvariablesValue = new TestvariablesValue();
                 testvariablesValue.setPlanid(PlanID);
@@ -625,23 +569,6 @@ public class TestCore {
                 SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
                 throw new Exception("脚本子条件执行异常：" + ex.getMessage());
             }
-            //更新条件结果表
-//            TestconditionReport testconditionReport = new TestconditionReport();
-//            testconditionReport.setTestplanid(PlanID);
-//            testconditionReport.setPlanname(requestObject.getCasename());
-//            testconditionReport.setBatchname(requestObject.getBatchname());
-//            testconditionReport.setConditionid(new Long(ConditionID));
-//            testconditionReport.setConditiontype("前置条件");
-//            testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
-//            testconditionReport.setSubconditiontype("脚本");
-//            logger.info("条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
-//
-//            testconditionReport.setConditionresult(Respone);
-//            testconditionReport.setConditionstatus(ConditionResultStatus);
-//            testconditionReport.setRuntime(CostTime);
-//            testconditionReport.setStatus("已完成");
-//            SubConditionReportSave(testconditionReport);
-//            logger.info("条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
         }
     }
 
@@ -669,84 +596,94 @@ public class TestCore {
 
     public void DBCondition(long ConditionID, RequestObject requestObject) {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
-        Long CaseID = Long.parseLong(requestObject.getCaseid());
         ArrayList<HashMap<String, String>> conditionDbListList = GetDBConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionDb : conditionDbListList) {
-            TestconditionReport testconditionReport = new TestconditionReport();
             long Start = 0;
             long End = 0;
             long CostTime = 0;
             String Respone = "";
             String ConditionResultStatus = "成功";
             Long Assembleid = Long.parseLong(conditionDb.get("assembleid"));
-            ArrayList<HashMap<String, String>> enviromentAssemblelist = getcaseData("select * from enviroment_assemble where id=" + Assembleid);
-            if (enviromentAssemblelist.size() == 0) {
-                Respone = "未找到环境组件，请检查是否存在或已被删除";
-                ConditionResultStatus = "失败";
-                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                break;
-            }
-            String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
-            Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
-            String Sql = conditionDb.get("dbcontent");
-            String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
-            ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
-            if (macdepunitlist.size() == 0) {
-                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
-                ConditionResultStatus = "失败";
-                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                break;
-            }
-
-            Long MachineID = Long.parseLong(macdepunitlist.get(0).get("machineid"));
-            ArrayList<HashMap<String, String>> machinelist = getcaseData("select * from machine where id=" + MachineID);
-            if (machinelist.size() == 0) {
-                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
-                ConditionResultStatus = "失败";
-                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                break;
-            }
-            String deployunitvisittype = macdepunitlist.get(0).get("visittype");
-            String[] ConnetcArray = ConnnectStr.split(",");
-            if (ConnetcArray.length < 4) {
-                Respone = "数据库连接字填写不规范，请按规则填写";
-                ConditionResultStatus = "失败";
-                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                break;
-            }
-            String username = ConnetcArray[0];
-            String pass = ConnetcArray[1];
-            String port = ConnetcArray[2];
-            String dbname = ConnetcArray[3];
-            String DBUrl = "";
-            if (AssembleType.equals("mysql")) {
-                DBUrl = "jdbc:mysql://";
-            }
-            if (AssembleType.equals("oracle")) {
-                DBUrl = "";
-            }
-            // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
-                String IP = machinelist.get(0).get("ip");
-                DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            } else {
-                String Domain = macdepunitlist.get(0).get("domain");
-                DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            }
             try {
+                ArrayList<HashMap<String, String>> enviromentAssemblelist = getcaseData("select * from enviroment_assemble where id=" + Assembleid);
+                if (enviromentAssemblelist.size() == 0) {
+                    Respone = "未找到环境组件，请检查是否存在或已被删除";
+                    ConditionResultStatus = "失败";
+                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+                    break;
+                }
+                String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
+                Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
+                String Sql = conditionDb.get("dbcontent");
+                String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
+                ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
+                if (macdepunitlist.size() == 0) {
+                    Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                    ConditionResultStatus = "失败";
+                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+                    break;
+                }
+
+                Long MachineID = Long.parseLong(macdepunitlist.get(0).get("machineid"));
+                ArrayList<HashMap<String, String>> machinelist = getcaseData("select * from machine where id=" + MachineID);
+                if (machinelist.size() == 0) {
+                    Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                    ConditionResultStatus = "失败";
+                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+                    break;
+                }
+                String deployunitvisittype = macdepunitlist.get(0).get("visittype");
+                String[] ConnetcArray = ConnnectStr.split(",");
+                if (ConnetcArray.length < 4) {
+                    Respone = "数据库连接字填写不规范，请按规则填写";
+                    ConditionResultStatus = "失败";
+                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+                    break;
+                }
+                String username = ConnetcArray[0];
+                String pass = ConnetcArray[1];
+                String port = ConnetcArray[2];
+                String dbname = ConnetcArray[3];
+                String DBUrl = "";
+                if (AssembleType.equals("mysql")) {
+                    DBUrl = "jdbc:mysql://";
+                    // 根据访问方式来确定ip还是域名
+                    if (deployunitvisittype.equals("ip")) {
+                        String IP = machinelist.get(0).get("ip");
+                        DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                    } else {
+                        String Domain = macdepunitlist.get(0).get("domain");
+                        DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                    }
+                }
+                if (AssembleType.equals("oracle")) {
+                    DBUrl = "jdbc:oracle:thin:@";
+                    // 根据访问方式来确定ip还是域名
+                    if (deployunitvisittype.equals("ip")) {
+                        String IP = machinelist.get(0).get("ip");
+                        DBUrl = DBUrl + IP + ":" + port + ":" + dbname ;
+                    } else {
+                        String Domain = macdepunitlist.get(0).get("domain");
+                        DBUrl = DBUrl + Domain + ":" + dbname ;
+                    }
+                }
                 Start = new Date().getTime();
                 DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                int nums = Db.use(ds).execute(Sql);
-                Respone = "成功执行，影响条数：" + nums;
+
+                String[] SqlArr = Sql.split(";");
+                for (String ExecSql : SqlArr) {
+                    int nums = Db.use(ds).execute(ExecSql);
+                    Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+                }
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
             } finally {
                 End = new Date().getTime();
+                CostTime = End - Start;
+                //更新条件结果表
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
             }
-            CostTime = End - Start;
-            //更新条件结果表
-            SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
         }
     }
 
@@ -782,7 +719,6 @@ public class TestCore {
     }
 
 
-
     //初始化数据库连接
     public void GetDBConnection(String mysqluel, String mysqlusername, String mysqlpass) {
         MysqlConnectionUtils.initDbResource(mysqluel, mysqlusername, mysqlpass);
@@ -791,7 +727,7 @@ public class TestCore {
     //获取数据库用例相关数据
     public ArrayList<HashMap<String, String>> getcaseData(String Sql) {
         logger.info(logplannameandcasename + "Sql is:  " + Sql);
-        ArrayList<HashMap<String, String>> list = null;
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
         try {
             list = MysqlConnectionUtils.query(Sql);
         } catch (Exception e) {
@@ -1038,7 +974,6 @@ public class TestCore {
         String sql = "insert apicases_reportstatics (testplanid,deployunitid,batchname,slaverid,totalcases,totalpasscases,totalfailcases,runtime,create_time,lastmodify_time,creator)" +
                 " values(" + apicasesReportstatics.getTestplanid() + "," + apicasesReportstatics.getDeployunitid() + ", '" + apicasesReportstatics.getBatchname() + "', " + apicasesReportstatics.getSlaverid() + ", " + apicasesReportstatics.getTotalcases() + ", " + apicasesReportstatics.getTotalpasscases() + ", " + apicasesReportstatics.getTotalfailcases() + ", " + apicasesReportstatics.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')";
         logger.info(logplannameandcasename + "功能测试统计结果 result sql is...........: " + sql);
-        System.out.println("case result sql is: " + sql);
         logger.info(logplannameandcasename + "功能测试统计结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
 
@@ -1091,86 +1026,6 @@ public class TestCore {
         logger.info(logplannameandcasename + "更新Slaver状态结果完成  sql is...........: " + UpdateSql);
         logger.info(logplannameandcasename + "更新Slaver状态结果完成 result sql is...........: " + MysqlConnectionUtils.update(UpdateSql));
     }
-
-    //处理前置条件
-    public void fixprecondition(String planid, String testcaseid) throws Exception {
-        ArrayList<HashMap<String, String>> preconditionlist = getcaseData("select * from apicases_condition where basetype ='前置条件' and target='用例' and  caseid=" + testcaseid);
-        fixcondition(preconditionlist, "前置", planid);
-    }
-
-    //处理后置条件
-    public void fixpostcondition(String planid, String testcaseid) throws Exception {
-        ArrayList<HashMap<String, String>> postconditionlist = getcaseData("select * from apicases_condition where basetype ='后置条件' and target='用例' and  caseid=" + testcaseid);
-        fixcondition(postconditionlist, "后置", planid);
-    }
-
-    //处理前后置条件
-    public void fixcondition(ArrayList<HashMap<String, String>> list, String type, String testplanid) throws Exception {
-        for (HashMap<String, String> hs : list) {
-            // 数据库
-            if (hs.get("conditionbasetype").equals(new String("数据库"))) {
-                String sql = hs.get("conditionvalue");
-                String[] sqlarray = sql.split(";");
-                logger.info(logplannameandcasename + type + "条件数据库sql语句。。。。。。" + sql);
-                String assembleid = hs.get("envassemid");
-                String machineipsql = "select d.ip,b.connectstr from  enviroment_assemble b join macdepunit c join machine d join executeplan e on e.envid=c.envid and c.machineid=d.id and b.id=c.assembleid where c.assembleid =" + assembleid + " and e.id=" + testplanid;
-                logger.info(logplannameandcasename + type + "获取数据库机器ip和连接字sql：。。。。。。" + machineipsql);
-
-                ArrayList<HashMap<String, String>> ipconnectstrlist = getcaseData(machineipsql);
-                String dbip = getcaseValue("ip", ipconnectstrlist);
-                String connectstrvalue = getcaseValue("connectstr", ipconnectstrlist);
-                logger.info(logplannameandcasename + type + "条件数据库连接字。。。。。。" + connectstrvalue);
-
-                String[] connectstrarray = connectstrvalue.split(",");
-                HashMap<String, String> tmpmap = new HashMap<String, String>();
-                for (String value : connectstrarray) {
-                    if (value.contains("=")) {
-                        tmpmap.put(value.split("=")[0], value.split("=")[1]);
-                    } else {
-                        throw new Exception(type + "连接字不符合规范：" + connectstrvalue);
-                    }
-                }
-                String username = tmpmap.get("username");
-                String password = tmpmap.get("password");
-                String dbname = tmpmap.get("db");
-                String port = tmpmap.get("port");
-                String dbconnect = "jdbc:mysql://" + dbip + ":" + port + "/" + dbname;
-                logger.info(logplannameandcasename + type + "条件数据库连接url。。。。。。" + dbconnect);
-
-                if (hs.get("conditiontype").equals(new String("mysql"))) {
-                    MysqlConnectionUtils.getConnectionbycon(dbconnect, username, password);
-                    for (String execsql : sqlarray) {
-                        MysqlConnectionUtils.execsql(execsql);
-                    }
-                }
-            }
-            if (hs.get("conditionbasetype").equals(new String("接口"))) {
-                // 接口
-                logger.info(logplannameandcasename + type + "条件接口。。。。。。");
-                // 根据caseid获取请求准备数据，然后发送请求
-                String planid = hs.get("execplanid");
-
-                String conditioncaseid = hs.get("conditioncaseid");
-                RequestObject newob = GetCaseRequestData(planid, conditioncaseid, "", "", "", "");
-//                String result = request(newob);
-//                logger.info(logplannameandcasename + type + "条件接口返回：。。。。。。" + result);
-            }
-        }
-    }
-
-    // 记录前后置条件测试结果
-    public String savetestcaseconditionresult(String testcaseid, String planid, String batchnameid, String batchnames, String slaverids, String status, String error, String condition, String testcasetype) {
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateNowStr = sdf.format(d);
-        String sql = "";
-        sql = "insert apicases_condition_report (caseid,testplanid,batchid,batchname,slaverid,conditiontype,casetype,status,errorinfo,create_time,lastmodify_time,creator)" +
-                " values(" + testcaseid + "," + planid + ", " + batchnameid + ", '" + batchnames + "', " + slaverids + ", '" + condition + "', '" + testcasetype + "', '" + status + "','" + error + "','" + dateNowStr + "', '" + dateNowStr + "','admin')";
-        logger.info(logplannameandcasename + "前后置条件测试结果 result sql is...........: " + sql);
-        logger.info(logplannameandcasename + "前后置条件测试结果 result  is...........: " + MysqlConnectionUtils.update(sql));
-        return MysqlConnectionUtils.update(sql);
-    }
-
 
     // 更新用例调度结果
     public void updatedispatchcasestatus(String testplanid, String caseid, String slaverid, String batchid) {

@@ -90,7 +90,6 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         //断言
                         AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
                     } catch (Exception ex) {
-                        getLogger().error(TestCore.logplannameandcasename + "CaseException11111111111 start。。。。。。。。。。。。。!" );
                         getLogger().error(TestCore.logplannameandcasename + "CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
                         ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
                     } finally {
@@ -110,9 +109,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     }
                 }
                 //收集本次运行的功能用例统计结果
-                getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
                 CollectionReportStatics(Core,apicasesReportstatics,BatchName, BatchDeployTotalCaseNums,BatchDeployTotalPassNums,BatchDeployTotalFailNUms,AllCostTime,SlaverId);
-                //
             }
         }
         //Jmeter事务，表示这是事务的结束点

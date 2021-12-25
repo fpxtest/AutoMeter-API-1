@@ -22,10 +22,7 @@ import tk.mybatis.mapper.entity.Condition;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author SeasonFan
@@ -275,7 +272,7 @@ public class TestconditionController {
                 dnamicCompilerHelp.CallDynamicScript(Source);
             } catch (Exception ex) {
                 Respone = ex.getMessage();
-                throw new Exception("数据库条件执行异常：" + Respone);
+                ResultGenerator.genFailedResult("脚本条件执行异常:" + Respone);
             }
             TestconditionController.log.info("调试脚本报告更新子条件结果-============：");
         }
@@ -293,27 +290,27 @@ public class TestconditionController {
             Long CaseID = conditionApi.getCaseid();
             Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
             if (apicases == null) {
-                throw new Exception("接口子条件未找到条件运行的接口，请检查是否存在或已被删除！");
+                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行的接口，请检查是否存在或已被删除！");
             }
             Long ApiID = apicases.getApiid();
             Api api = apiService.getBy("id", ApiID);
             if (api == null) {
-                throw new Exception("接口子条件未找到条件运行的接口的API，请检查是否存在或已被删除！");
+                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行的接口的API，请检查是否存在或已被删除！");
             }
             Long Deployunitid = api.getDeployunitid();
             Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
             if (deployunit == null) {
-                throw new Exception("接口子条件未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除！");
+                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除！");
             }
             List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
             //区分环境类型
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnviromentID, deployunit.getId());
             if (macdepunit == null) {
-                throw new Exception("接口子条件未找到环境组件部署，请检查是否存在或已被删除！");
+                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到环境组件部署，请检查是否存在或已被删除！");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                throw new Exception("接口子条件未找到环境组件部署的服务器，请检查是否存在或已被删除！");
+                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到环境组件部署的服务器，请检查是否存在或已被删除！");
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
             String Respone = "";
@@ -328,8 +325,7 @@ public class TestconditionController {
             if (apicasesVariables != null) {
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
-                if (testvariables != null)
-                {
+                if (testvariables != null) {
                     String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
                     VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
                 }
@@ -346,58 +342,68 @@ public class TestconditionController {
             Long Assembleid = conditionDb.getAssembleid();
             EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
             if (enviromentAssemble == null) {
-                throw new Exception("数据库子条件未找到环境组件，请检查是否存在或已被删除！");
+                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件未找到环境组件，请检查是否存在或已被删除！");
             }
+            String Respone = "";
             String AssembleType = enviromentAssemble.getAssembletype();
             Long Envid = conditionDb.getEnviromentid();
-            String Dbtype = conditionDb.getDbtype();
             String Sql = conditionDb.getDbcontent();
             String ConnnectStr = enviromentAssemble.getConnectstr();
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidandassmbleid(Envid, Assembleid);
             if (macdepunit == null) {
-                throw new Exception("数据库子条件未找到环境组件部署，请检查是否存在或已被删除");
+                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件未找到环境组件部署，请检查是否存在或已被删除");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                throw new Exception("数据库子条件未找到环境组件部署的服务器，请检查是否存在或已被删除");
+                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件未找到环境组件部署的服务器，请检查是否存在或已被删除");
             }
             String deployunitvisittype = macdepunit.getVisittype();
             String[] ConnetcArray = ConnnectStr.split(",");
             if (ConnetcArray.length < 4) {
-                throw new Exception("数据库子条件数据库连接字填写不规范，请按规则填写");
-            }
-            String username = ConnetcArray[0];
-            String pass = ConnetcArray[1];
-            String port = ConnetcArray[2];
-            String dbname = ConnetcArray[3];
-            String DBUrl = "";
-            if (AssembleType.equals("mysql")) {
-                DBUrl = "jdbc:mysql://";
-            }
-            if (AssembleType.equals("oracle")) {
-                DBUrl = "";
-            }
-            // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
-                DBUrl = DBUrl + machine.getIp() + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            } else {
-                DBUrl = DBUrl + macdepunit.getDomain() + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件数据库连接字填写不规范，请按规则填写,"+ConnnectStr);
             }
             try {
-                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                String Respone="";
-                String[] SqlArr=Sql.split(";");
-                for (String ExecSql: SqlArr) {
-                    int nums = Db.use(ds).execute(ExecSql);
-                    Respone=Respone+ " 成功执行Sql:"+Sql+" 影响条数：" + nums;
-                    TestconditionController.log.info("调试数据库子条件Sql执行完成：" + Sql);
-                }
+                Respone = Rundb(ConnetcArray, AssembleType, deployunitvisittype, machine, macdepunit, Sql);
+//                String username = ConnetcArray[0];
+//                String pass = ConnetcArray[1];
+//                String port = ConnetcArray[2];
+//                String dbname = ConnetcArray[3];
+//                String DBUrl = "";
+//                if (AssembleType.equals("mysql")) {
+//                    DBUrl = "jdbc:mysql://";
+//                    // 根据访问方式来确定ip还是域名
+//                    if (deployunitvisittype.equals("ip")) {
+//                        String IP = machine.getIp();
+//                        DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+//                    } else {
+//                        String Domain = macdepunit.getDomain();
+//                        DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+//                    }
+//                }
+//                if (AssembleType.equals("oracle")) {
+//                    DBUrl = "jdbc:oracle:thin:@";
+//                    // 根据访问方式来确定ip还是域名
+//                    if (deployunitvisittype.equals("ip")) {
+//                        String IP = machine.getIp();
+//                        DBUrl = DBUrl + IP + ":" + port + ":" + dbname;
+//                    } else {
+//                        String Domain = macdepunit.getDomain();
+//                        DBUrl = DBUrl + Domain + ":" + dbname;
+//                    }
+//                }
+//                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+//                String Respone = "";
+//                String[] SqlArr = Sql.split(";");
+//                for (String ExecSql : SqlArr) {
+//                    int nums = Db.use(ds).execute(ExecSql);
+//                    Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+//                    TestconditionController.log.info("调试数据库子条件Sql执行完成：" + Sql);
+//                }
                 return ResultGenerator.genOkResult(Respone);
             } catch (Exception ex) {
-                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
+                return ResultGenerator.genFailedResult("数据库子条件执行异常：" + ex.getMessage());
             }
         }
-        //更新条件结果表
         TestconditionController.log.info("调试数据库子条件条件报告子条件完成-============：");
         return ResultGenerator.genOkResult("调试数据库子条件执行完成");
     }
@@ -421,10 +427,11 @@ public class TestconditionController {
             testconditionReport.setStatus("进行中");
             TestconditionController.log.info("数据库子条件条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + conditionDb.getSubconditionname());
             testconditionReportService.save(testconditionReport);
+
+            String Respone = "";
             long Start = 0;
             long End = 0;
             long CostTime = 0;
-            String Respone = "";
             String ConditionResultStatus = "成功";
             Long Assembleid = conditionDb.getAssembleid();
             EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
@@ -461,45 +468,120 @@ public class TestconditionController {
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
                 break;
             }
-            String username = ConnetcArray[0];
-            String pass = ConnetcArray[1];
-            String port = ConnetcArray[2];
-            String dbname = ConnetcArray[3];
-            String DBUrl = "";
-            if (AssembleType.equals("mysql")) {
-                DBUrl = "jdbc:mysql://";
-            }
-            if (AssembleType.equals("oracle")) {
-                DBUrl = "";
-            }
-            // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
-                DBUrl = DBUrl + machine.getIp() + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            } else {
-                DBUrl = DBUrl + macdepunit.getDomain() + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            }
             try {
                 Start = new Date().getTime();
-
-                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-                String[] SqlArr=Sql.split(";");
-                for (String ExecSql: SqlArr) {
-                    int nums = Db.use(ds).execute(ExecSql);
-                    TestconditionController.log.info("数据库子条件Sql执行完成：" + Sql);
-                    Respone =Respone+ " 成功执行Sql:"+Sql+" 影响条数：" + nums;
-                }
+                Rundb(ConnetcArray, AssembleType, deployunitvisittype, machine, macdepunit, Sql);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
             } finally {
+//            String username = ConnetcArray[0];
+//            String pass = ConnetcArray[1];
+//            String port = ConnetcArray[2];
+//            String dbname = ConnetcArray[3];
+//            String DBUrl = "";
+//            if (AssembleType.equals("mysql")) {
+//                DBUrl = "jdbc:mysql://";
+//                // 根据访问方式来确定ip还是域名
+//                if (deployunitvisittype.equals("ip")) {
+//                    String IP = machine.getIp();
+//                    DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+//                } else {
+//                    String Domain = macdepunit.getDomain();
+//                    DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+//                }
+//            }
+//            if (AssembleType.equals("oracle")) {
+//                DBUrl = "jdbc:oracle:thin:@";
+//                // 根据访问方式来确定ip还是域名
+//                if (deployunitvisittype.equals("ip")) {
+//                    String IP = machine.getIp();
+//                    DBUrl = DBUrl + IP + ":" + port + ":" + dbname ;
+//                } else {
+//                    String Domain = macdepunit.getDomain();
+//                    DBUrl = DBUrl + Domain + ":" + dbname ;
+//                }
+//            }
+//            try {
+//                Start = new Date().getTime();
+//
+//                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+//                String[] SqlArr = Sql.split(";");
+//                for (String ExecSql : SqlArr) {
+//                    int nums = Db.use(ds).execute(ExecSql);
+//                    TestconditionController.log.info("数据库子条件Sql执行完成：" + Sql);
+//                    Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+//                }
+//            } catch (Exception ex) {
+//                ConditionResultStatus = "失败";
+//                Respone = ex.getMessage();
+//            } finally {
                 End = new Date().getTime();
+                CostTime = End - Start;
+                //更新条件结果表
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
+                TestconditionController.log.info("数据库子条件条件报告子条件完成-============：");
             }
-            CostTime = End - Start;
-            //更新条件结果表
-            UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
-            TestconditionController.log.info("数据库子条件条件报告子条件完成-============：");
         }
     }
+
+    private String Rundb(String[] ConnetcArray, String AssembleType, String deployunitvisittype, Machine machine, Macdepunit macdepunit, String Sql) throws Exception {
+        String Respone = "";
+
+        String username = ConnetcArray[0];
+        String pass = ConnetcArray[1];
+        String port = ConnetcArray[2];
+        String dbname = ConnetcArray[3];
+        String DBUrl = "";
+        if (AssembleType.equals("mysql")) {
+            DBUrl = "jdbc:mysql://";
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equals("ip")) {
+                String IP = machine.getIp();
+                DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            } else {
+                String Domain = macdepunit.getDomain();
+                DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            }
+        }
+        if (AssembleType.equals("oracle")) {
+            DBUrl = "jdbc:oracle:thin:@";
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equals("ip")) {
+                String IP = machine.getIp();
+                DBUrl = DBUrl + IP + ":" + port + ":" + dbname;
+            } else {
+                String Domain = macdepunit.getDomain();
+                DBUrl = DBUrl + Domain + ":" + dbname;
+            }
+        }
+        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+        String[] SqlArr = Sql.split(";");
+        //Db.use(ds).getConnection().setAutoCommit(false);
+//        try
+//        {
+            for (String ExecSql : SqlArr) {
+                TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
+                int nums = Db.use(ds).execute(ExecSql);
+                TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
+                Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+            }
+            //Db.use(ds).getConnection().commit();
+       // }
+//        catch (Exception ex)
+//        {
+//            Db.use(ds).getConnection().rollback();
+//            throw new Exception(ex.getMessage());
+//        }
+//        finally {
+//            System.out.println("Connection is:"+Db.use(ds).getConnection());
+//            Db.use(ds).getConnection().close();
+//            System.out.println("Connection is h:"+Db.use(ds).getConnection());
+//
+//        }
+        return Respone;
+    }
+
 
     private void UpdatetestconditionReport(TestconditionReport testconditionReport, String Respone, String ConditionResultStatus, Long CostTime) {
         //更新条件结果表
