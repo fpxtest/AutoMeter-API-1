@@ -54,7 +54,7 @@
   </select>
 
   <select id="findcasebyplanid" resultMap="BaseResultMap">
-    select a.* from apicases a  WHERE a.deployunitid  =#{deployunitid} and a.id
+    select a.* from apicases a  WHERE a.deployunitid  =#{deployunitid} and a.casetype=#{casetype} and a.id
       not in(select testcaseid from executeplan_testcase   WHERE executeplanid=#{executeplanid})
   </select>
 

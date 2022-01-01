@@ -49,7 +49,7 @@ public class ExecuteplanbatchController {
                 .andCondition("executeplanid = " + executeplanbatch.getExecuteplanid());
         if(executeplanbatchService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该执行计划下已经存在此批次");
+            return ResultGenerator.genFailedResult("该测试集合下已经存在此执行计划");
         }
         else {
             Long execplanid = executeplanbatch.getExecuteplanid();
@@ -123,7 +123,7 @@ public class ExecuteplanbatchController {
                 testplanandbatch.setBatchname(BatchName);
                 testplanandbatch.setPlanid(PlanID);
                 list.add(testplanandbatch);
-                executeplanService.executeplancase(list);
+                executeplanService.executeplancase(list,"立即执行");
                 return ResultGenerator.genOkResult();
             }
         }
