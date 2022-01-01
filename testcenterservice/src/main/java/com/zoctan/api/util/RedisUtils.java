@@ -435,4 +435,25 @@ public class RedisUtils {
       @NotBlank final String key, @NotBlank final Long count, @NotBlank final Object value) {
     return this.redisTemplate.opsForList().remove(key, count, value);
   }
+
+  public boolean tryLock(String key, Object value, long timeout) {
+    //底层原理就是Redis的setnx方法
+    boolean isSuccess = redisTemplate.opsForValue().setIfAbsent(key, value);
+    if (isSuccess) {
+      //设置分布式锁的过期时间
+      redisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+    }
+    return isSuccess;
+  }
+
+
+  public void deletekey(String key)
+  {
+    redisTemplate.delete(key);
+  }
+
+  public String getkey(Object key)
+  {
+    return redisTemplate.opsForValue().get(key).toString();
+  }
 }

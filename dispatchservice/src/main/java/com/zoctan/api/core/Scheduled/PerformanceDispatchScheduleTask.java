@@ -61,7 +61,6 @@ public class PerformanceDispatchScheduleTask {
     private String redisKey = "";
 
 
-
     //3.添加定时任务,处理并行多机并发性能测试任务
     @Scheduled(cron = "0/5 * * * * ?")
     //或直接指定时间间隔，例如：5秒
@@ -83,18 +82,17 @@ public class PerformanceDispatchScheduleTask {
                 if (dispatch != null) {
                     Long PlanID = dispatch.getExecplanid();
                     String BatchName = dispatch.getBatchname();
-                    Long caseid=dispatch.getTestcaseid();
+                    Long caseid = dispatch.getTestcaseid();
                     //判断计划的所有前置条件是否已经完成，并且全部成功，否则更新Dispatch状态为前置条件失败
-                    boolean flag=ConditionRequest(PlanID,BatchName,dispatch);   //IsConditionFinish(PlanID,BatchName);
-                    if(flag)
-                    {
-                        List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaveridandcaaseid("待分配", "性能", PlanID, BatchName,caseid);
-                        int SleepSlaverNums= slaverMapper.findbusyslavernums(SlaverIDList,"空闲","性能");
+                    boolean flag = ConditionRequest(PlanID, BatchName, dispatch);   //IsConditionFinish(PlanID,BatchName);
+                    if (flag) {
+                        List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaveridandcaaseid("待分配", "性能", PlanID, BatchName, caseid);
+                        int SleepSlaverNums = slaverMapper.findbusyslavernums(SlaverIDList, "空闲", "性能");
                         //判断SlaverIDList中的所有slaver都是空闲状态才请求slaver执行
                         if (SlaverIDList.size() == SleepSlaverNums) {
                             try {
                                 for (Dispatch dispatch1 : SlaverIDList) {
-                                    Long Slaverid =dispatch1.getSlaverid();
+                                    Long Slaverid = dispatch1.getSlaverid();
                                     PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
                                     Slaver slaver = slaverMapper.findslaverbyid(Slaverid);
                                     if (slaver != null) {
@@ -113,7 +111,7 @@ public class PerformanceDispatchScheduleTask {
                                     }
                                 }
                             } catch (Exception ex) {
-                                dispatchMapper.updatedispatchstatusandmemo("调度异常",ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+                                dispatchMapper.updatedispatchstatusandmemo("调度异常", ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                                 PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器请求执行服务异常：" + ex.getMessage());
                             }
                         }
@@ -135,53 +133,46 @@ public class PerformanceDispatchScheduleTask {
     }
 
 
-    private boolean ConditionRequest(Long PlanID,String BatchName,Dispatch dispatch) throws Exception {
-        boolean flag=true;
-        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
-        if(testconditionList.size()>0)
-        {
-            Long ConditionID= testconditionList.get(0).getId();
-            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
-            int ApiConditionNums=conditionApiList.size();
-            List<ConditionDb> conditionDbList=conditionDbService.GetCaseListByConditionID(ConditionID);
-            int DBConditionNUms=conditionDbList.size();
-            List<ConditionScript> conditionScriptList= conditionScriptService.getconditionscriptbyid(ConditionID);
-            int ScriptConditionNUms=conditionScriptList.size();
-            int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
+    private boolean ConditionRequest(Long PlanID, String BatchName, Dispatch dispatch) throws Exception {
+        boolean flag = true;
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件");
+        if (testconditionList.size() > 0) {
+            Long ConditionID = testconditionList.get(0).getId();
+            List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
+            int ApiConditionNums = conditionApiList.size();
+            List<ConditionDb> conditionDbList = conditionDbService.GetCaseListByConditionID(ConditionID);
+            int DBConditionNUms = conditionDbList.size();
+            List<ConditionScript> conditionScriptList = conditionScriptService.getconditionscriptbyid(ConditionID);
+            int ScriptConditionNUms = conditionScriptList.size();
+            int SubConditionNums = ApiConditionNums + DBConditionNUms + ScriptConditionNUms;
             //表示有子条件需要处理
-            if(SubConditionNums>0)
-            {
+            if (SubConditionNums > 0) {
                 //获取此计划批次条件报告的结果
-                List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
+                List<TestconditionReport> testconditionReportList = testconditionReportMapper.getunfinishapiconditionnums(PlanID, BatchName);
                 //还未产生报告，需要请求条件服务
-                if(testconditionReportList.size()==0)
-                {
+                if (testconditionReportList.size() == 0) {
                     //todo发请求条件服务,异步请求
                     RequestConditionServiceByPlanId(dispatch);
-                    flag=false;
-                }
-                else //已经产生条件报告，需要查看报告结果是成功还是失败
+                    flag = false;
+                } else //已经产生条件报告，需要查看报告结果是成功还是失败
                 {
-                    for(TestconditionReport testconditionReport :testconditionReportList)
-                    {
-                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
-                        {
+                    for (TestconditionReport testconditionReport : testconditionReportList) {
+                        if (testconditionReport.getConditionstatus().equals(new String("失败"))) {
                             //有子条件已经执行失败，则此计划批次不再执行，更新当前计划批次的所有调度状态为条件失败，更新计划批次状态为条件失败
                             //todo
-                            dispatchMapper.updatedispatchstatusbyplanandbatch("条件失败",PlanID,BatchName);
-                            PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的所有调度状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
-                            executeplanbatchMapper.updatestatusbyplanandbatch("条件失败",PlanID,BatchName);
-                            PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
-                            flag=false;
+                            dispatchMapper.updatedispatchstatusbyplanandbatch("条件失败", PlanID, BatchName);
+                            PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的所有调度状态为条件失败,计划： " + dispatch.getExecplanname() + "批次：" + BatchName);
+                            executeplanbatchMapper.updatestatusbyplanandbatch("条件失败", PlanID, BatchName);
+                            PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的状态为条件失败,计划： " + dispatch.getExecplanname() + "批次：" + BatchName);
+                            flag = false;
                             break;
                         }
                     }
-                    List<TestconditionReport> successtestconditionReportList= testconditionReportMapper.getsubconditionnumswithstatus(PlanID,BatchName,"已完成","成功");
-                    if(successtestconditionReportList.size()==SubConditionNums)
-                    {
+                    List<TestconditionReport> successtestconditionReportList = testconditionReportMapper.getsubconditionnumswithstatus(PlanID, BatchName, "已完成", "成功");
+                    if (successtestconditionReportList.size() == SubConditionNums) {
                         //条件报告中已完成，成功的条数等于子条件总条数表示子条件都已成功完成，可以开始执行用例
-                        PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件报告已完成成功的数量: " + successtestconditionReportList.size()+ "  子条件总条数："+SubConditionNums);
-                        flag=true;
+                        PerformanceDispatchScheduleTask.log.info("调度服务【功能】条件报告已完成成功的数量: " + successtestconditionReportList.size() + "  子条件总条数：" + SubConditionNums);
+                        flag = true;
                     }
                 }
             }
@@ -189,39 +180,32 @@ public class PerformanceDispatchScheduleTask {
         return flag;
     }
 
-    private boolean IsConditionFinish(Long PlanID,String BatchName)
-    {
-        boolean flag=true;
-        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
+    private boolean IsConditionFinish(Long PlanID, String BatchName) {
+        boolean flag = true;
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件");
         PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器前置条件数量..................PlanID:" + PlanID + " BatchName:" + BatchName + testconditionList.size());
-        if(testconditionList.size()>0) {
-            long ConditionID= testconditionList.get(0).getId();
-            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
+        if (testconditionList.size() > 0) {
+            long ConditionID = testconditionList.get(0).getId();
+            List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
             PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器API条件数量..................PlanID:" + PlanID + " BatchName:" + BatchName + conditionApiList.size());
-            if(conditionApiList.size()>0)
-            {
-                List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
+            if (conditionApiList.size() > 0) {
+                List<TestconditionReport> testconditionReportList = testconditionReportMapper.getunfinishapiconditionnums(PlanID, BatchName);
                 PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器条件报告数量..................PlanID:" + PlanID + " BatchName:" + BatchName + testconditionReportList.size());
                 //配置了API条件，但是还未执行
-                if(testconditionReportList.size()==0)
-                {
-                    flag=false;
-                }
-                else
-                {
-                    List<TestconditionReport> testconditionstatusReportList= testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID,BatchName,"进行中","");
+                if (testconditionReportList.size() == 0) {
+                    flag = false;
+                } else {
+                    List<TestconditionReport> testconditionstatusReportList = testconditionReportMapper.getunfinishapiconditionnumswithstatus(PlanID, BatchName, "进行中", "");
                     PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器条件报告进行中数量..................PlanID:" + PlanID + " BatchName:" + BatchName + testconditionstatusReportList.size());
                     //配置了API条件，开始执行，状态为进行中的条数为0表示都已经执行完成
-                    if(testconditionstatusReportList.size()==0)
-                    {
-                        flag=true;
+                    if (testconditionstatusReportList.size() == 0) {
+                        flag = true;
                     }
                 }
             }
             //配置了条件，但是未配置API条件，认为是无API条件，可以执行用例
-            if(conditionApiList.size()==0)
-            {
-                flag=true;
+            if (conditionApiList.size() == 0) {
+                flag = true;
             }
         }
         return flag;
@@ -241,49 +225,39 @@ public class PerformanceDispatchScheduleTask {
         }
     }
 
-    private List<Dispatch> GetGroupList(List<Dispatch> dispatchList,String ID)
-    {
-        Long ObjectID=new Long(0);
-        HashMap<Long,List<Dispatch>> ResultGroup=new HashMap<>();
-        for (Dispatch dispatch : dispatchList )
-        {
-            if(!ResultGroup.containsKey(dispatch.getExecplanid()))
-            {
-                List<Dispatch> tmp=new ArrayList<>();
+    private List<Dispatch> GetGroupList(List<Dispatch> dispatchList, String ID) {
+        Long ObjectID = new Long(0);
+        HashMap<Long, List<Dispatch>> ResultGroup = new HashMap<>();
+        for (Dispatch dispatch : dispatchList) {
+            if (!ResultGroup.containsKey(dispatch.getExecplanid())) {
+                List<Dispatch> tmp = new ArrayList<>();
                 tmp.add(dispatch);
-                if(ID.equals(new String("PlanID")))
-                {
-                    ObjectID=dispatch.getExecplanid();
+                if (ID.equals(new String("PlanID"))) {
+                    ObjectID = dispatch.getExecplanid();
                 }
-                if(ID.equals(new String("CaseID")))
-                {
-                    ObjectID=dispatch.getTestcaseid();
+                if (ID.equals(new String("CaseID"))) {
+                    ObjectID = dispatch.getTestcaseid();
                 }
-                ResultGroup.put(dispatch.getExecplanid(),tmp);
-            }
-            else
-            {
+                ResultGroup.put(dispatch.getExecplanid(), tmp);
+            } else {
                 ResultGroup.get(ObjectID).add(dispatch);
             }
         }
-        List<Dispatch> ResultDispatchList=new ArrayList<>();
-        for(Long Planid : ResultGroup.keySet())
-        {
+        List<Dispatch> ResultDispatchList = new ArrayList<>();
+        for (Long Planid : ResultGroup.keySet()) {
             ResultDispatchList = ResultGroup.get(Planid);
             break;
         }
         return ResultDispatchList;
     }
 
-    private Dispatch GetCaseDispatch(List<Dispatch> dispatchList,Long SlaverID)
-    {
-        for (Dispatch dis: dispatchList) {
-            if(SlaverID.equals(dis.getSlaverid()))
-            {
+    private Dispatch GetCaseDispatch(List<Dispatch> dispatchList, Long SlaverID) {
+        for (Dispatch dis : dispatchList) {
+            if (SlaverID.equals(dis.getSlaverid())) {
                 return dis;
             }
         }
-        return  null;
+        return null;
     }
 
     @PostConstruct

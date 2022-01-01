@@ -37,9 +37,10 @@ private ApicasesMapper apicasesMapper;
 
     @Override
     public List<Apicases> findApiCaseleft(Map<String, Object> params) {
+        String  casetype= params.get("casetype").toString();
         Long executeplanid= Long.parseLong(params.get("executeplanid").toString());
         Long deployunitid= Long.parseLong(params.get("deployunitid").toString());
-        List<Apicases> apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid);
+        List<Apicases> apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid,casetype);
         return apicasesPlanList;
 
 //        List<Apicases> last=new ArrayList<>();

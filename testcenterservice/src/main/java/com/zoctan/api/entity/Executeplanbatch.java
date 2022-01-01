@@ -72,6 +72,26 @@ public class Executeplanbatch {
      */
     private String creator;
 
+    public String getExectype() {
+        return exectype;
+    }
+
+    public void setExectype(String exectype) {
+        this.exectype = exectype;
+    }
+
+    public String getExecdate() {
+        return execdate;
+    }
+
+    public void setExecdate(String execdate) {
+        this.execdate = execdate;
+    }
+
+    private String exectype;
+    private String execdate;
+
+
     /**
      * 获取执行计划Id
      *

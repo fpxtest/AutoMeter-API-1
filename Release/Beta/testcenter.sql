@@ -1432,4 +1432,25 @@ CREATE TABLE `executeplan_params`
   ALTER TABLE testcenter.condition_db MODIFY COLUMN dbcontent TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'db执行内容';
 
 
+
+  DROP TABLE IF EXISTS `planbantchexeclog`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+-- testcenter.planbantchexeclog definition
+
+CREATE TABLE `planbantchexeclog` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
+  `batchid` bigint(20) unsigned NOT NULL COMMENT '批次Id',
+  `exec_time` varchar(20) DEFAULT NULL COMMENT '执行时间',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `lastmodify_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上一次修改时间',
+  `memo` text COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='计划执行日志表';
+
+
+ALTER  table `executeplanbatch` add column exectype varchar(20) Comment '执行类型，立即，某天定时，每天定时';
+ALTER  table `executeplanbatch` add column execdate varchar(20) Comment '执行时间';
+
+
 -- Dump completed on 2021-12-08 14:51:04

@@ -80,14 +80,13 @@ public class FunctionDispatchScheduleTask {
                     Long PlanID = dispatch.getExecplanid();
                     String BatchName = dispatch.getBatchname();
                     //判断计划的所有前置条件是否已经完成，并且全部成功，否则更新Dispatch状态为前置条件失败
-                    boolean flag=ConditionRequest(PlanID,BatchName,dispatch);   //IsConditionFinish(PlanID,BatchName);
-                    if(flag)
-                    {
+                    boolean flag = ConditionRequest(PlanID, BatchName, dispatch);   //IsConditionFinish(PlanID,BatchName);
+                    if (flag) {
                         List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaverid("待分配", "功能", PlanID, BatchName);
                         if (SlaverIDList.size() > 0) {
                             try {
                                 for (Dispatch dispatch1 : SlaverIDList) {
-                                    Long Slaverid =dispatch1.getSlaverid();
+                                    Long Slaverid = dispatch1.getSlaverid();
                                     FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
                                     Slaver slaver = slaverMapper.findslaverbyid(Slaverid);
                                     FunctionDispatchScheduleTask.log.info("调度服务【功能】执行机 SlaverIP:" + slaver.getIp() + " 状态：" + slaver.getStatus());
@@ -107,7 +106,7 @@ public class FunctionDispatchScheduleTask {
                                     }
                                 }
                             } catch (Exception ex) {
-                                dispatchMapper.updatedispatchstatusandmemo("调度异常",ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+                                dispatchMapper.updatedispatchstatusandmemo("调度异常", ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                                 FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器请求执行服务异常：" + ex.getMessage());
                             }
                         }
@@ -131,53 +130,46 @@ public class FunctionDispatchScheduleTask {
     }
 
 
-    private boolean ConditionRequest(Long PlanID,String BatchName,Dispatch dispatch) throws Exception {
-        boolean flag=true;
-        List<Testcondition> testconditionList=testconditionService.GetConditionByPlanIDAndConditionType(PlanID,"前置条件");
-        if(testconditionList.size()>0)
-        {
-            Long ConditionID= testconditionList.get(0).getId();
-            List<ConditionApi> conditionApiList=conditionApiService.GetCaseListByConditionID(ConditionID);
-            int ApiConditionNums=conditionApiList.size();
-            List<ConditionDb> conditionDbList=conditionDbService.GetCaseListByConditionID(ConditionID);
-            int DBConditionNUms=conditionDbList.size();
-            List<ConditionScript> conditionScriptList= conditionScriptService.getconditionscriptbyid(ConditionID);
-            int ScriptConditionNUms=conditionScriptList.size();
-            int SubConditionNums=ApiConditionNums+DBConditionNUms+ScriptConditionNUms;
+    private boolean ConditionRequest(Long PlanID, String BatchName, Dispatch dispatch) throws Exception {
+        boolean flag = true;
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件");
+        if (testconditionList.size() > 0) {
+            Long ConditionID = testconditionList.get(0).getId();
+            List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
+            int ApiConditionNums = conditionApiList.size();
+            List<ConditionDb> conditionDbList = conditionDbService.GetCaseListByConditionID(ConditionID);
+            int DBConditionNUms = conditionDbList.size();
+            List<ConditionScript> conditionScriptList = conditionScriptService.getconditionscriptbyid(ConditionID);
+            int ScriptConditionNUms = conditionScriptList.size();
+            int SubConditionNums = ApiConditionNums + DBConditionNUms + ScriptConditionNUms;
             //表示有子条件需要处理
-            if(SubConditionNums>0)
-            {
+            if (SubConditionNums > 0) {
                 //获取此计划批次条件报告的结果
-                List<TestconditionReport> testconditionReportList= testconditionReportMapper.getunfinishapiconditionnums(PlanID,BatchName);
+                List<TestconditionReport> testconditionReportList = testconditionReportMapper.getunfinishapiconditionnums(PlanID, BatchName);
                 //还未产生报告，需要请求条件服务
-                if(testconditionReportList.size()==0)
-                {
+                if (testconditionReportList.size() == 0) {
                     //todo发请求条件服务,异步请求
                     RequestConditionServiceByPlanId(dispatch);
-                    flag=false;
-                }
-                else //已经产生条件报告，需要查看报告结果是成功还是失败
+                    flag = false;
+                } else //已经产生条件报告，需要查看报告结果是成功还是失败
                 {
-                    for(TestconditionReport testconditionReport :testconditionReportList)
-                    {
-                        if(testconditionReport.getConditionstatus().equals(new String("失败")))
-                        {
+                    for (TestconditionReport testconditionReport : testconditionReportList) {
+                        if (testconditionReport.getConditionstatus().equals(new String("失败"))) {
                             //有子条件已经执行失败，则此计划批次不再执行，更新当前计划批次的所有调度状态为条件失败，更新计划批次状态为条件失败
                             //todo
-                            dispatchMapper.updatedispatchstatusbyplanandbatch("条件失败",PlanID,BatchName);
-                            FunctionDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的所有调度状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
-                            executeplanbatchMapper.updatestatusbyplanandbatch("条件失败",PlanID,BatchName);
-                            FunctionDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的状态为条件失败,计划： "+dispatch.getExecplanname()+ "批次："+BatchName);
-                            flag=false;
+                            dispatchMapper.updatedispatchstatusbyplanandbatch("条件失败", PlanID, BatchName);
+                            FunctionDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的所有调度状态为条件失败,计划： " + dispatch.getExecplanname() + "批次：" + BatchName);
+                            executeplanbatchMapper.updatestatusbyplanandbatch("条件失败", PlanID, BatchName);
+                            FunctionDispatchScheduleTask.log.info("调度服务【功能】条件处理更新当前计划批次的状态为条件失败,计划： " + dispatch.getExecplanname() + "批次：" + BatchName);
+                            flag = false;
                             break;
                         }
                     }
-                    List<TestconditionReport> successtestconditionReportList= testconditionReportMapper.getsubconditionnumswithstatus(PlanID,BatchName,"已完成","成功");
-                    if(successtestconditionReportList.size()==SubConditionNums)
-                    {
+                    List<TestconditionReport> successtestconditionReportList = testconditionReportMapper.getsubconditionnumswithstatus(PlanID, BatchName, "已完成", "成功");
+                    if (successtestconditionReportList.size() == SubConditionNums) {
                         //条件报告中已完成，成功的条数等于子条件总条数表示子条件都已成功完成，可以开始执行用例
-                        FunctionDispatchScheduleTask.log.info("调度服务【功能】条件报告已完成成功的数量: " + successtestconditionReportList.size()+ "  子条件总条数："+SubConditionNums);
-                        flag=true;
+                        FunctionDispatchScheduleTask.log.info("调度服务【功能】条件报告已完成成功的数量: " + successtestconditionReportList.size() + "  子条件总条数：" + SubConditionNums);
+                        flag = true;
                     }
                 }
             }
@@ -186,7 +178,7 @@ public class FunctionDispatchScheduleTask {
     }
 
 
-    private void PlanCondition(Dispatch dispatch,Long PlanID,String BatchName) throws Exception {
+    private void PlanCondition(Dispatch dispatch, Long PlanID, String BatchName) throws Exception {
         //判断此计划是否有条件需要处理
         Condition testcondition = new Condition(Testcondition.class);
         testcondition.createCriteria().andCondition("objectid = " + PlanID).andCondition("objecttype = '执行计划'");
@@ -203,7 +195,7 @@ public class FunctionDispatchScheduleTask {
         }
     }
 
-    private void CaseCondition(Dispatch dispatch,Long CaseID,String BatchName) throws Exception {
+    private void CaseCondition(Dispatch dispatch, Long CaseID, String BatchName) throws Exception {
         //判断此用例是否有条件需要处理
         Condition testconditioncase = new Condition(Testcondition.class);
         testconditioncase.createCriteria().andCondition("objectid = " + CaseID).andCondition("objecttype = '测试用例'");

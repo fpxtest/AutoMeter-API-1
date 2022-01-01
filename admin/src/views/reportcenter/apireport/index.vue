@@ -60,10 +60,10 @@
         <span v-else style="color: #37B328">{{ scope.row.status }}</span>
       </template>
       </el-table-column>
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
+      <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
 
 
-      <el-table-column label="请求地址" align="center" prop="url" width="100">
+      <el-table-column label="请求地址" align="center" prop="url" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.url }}</p>
@@ -74,7 +74,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="请求头" align="center" prop="requestheader" width="100">
+      <el-table-column label="请求头" align="center" prop="requestheader" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.requestheader }}</p>
@@ -85,7 +85,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="请求数据" align="center" prop="requestdatas" width="100">
+      <el-table-column label="请求数据" align="center" prop="requestdatas" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.requestdatas }}</p>
@@ -96,7 +96,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="响应" align="center" prop="respone" width="100">
+      <el-table-column label="响应" align="center" prop="respone" width="80">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.respone }}</p>
@@ -107,7 +107,7 @@
       </template>
       </el-table-column>
 
-      <el-table-column label="断言" align="center" prop="expect" width="100">
+      <el-table-column label="断言" align="center" prop="expect" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.expect }}</p>
@@ -118,7 +118,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="断言结果" align="center" prop="assertvalue" width="100">
+      <el-table-column label="断言结果" align="center" prop="assertvalue" width="80">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.assertvalue }}</p>
@@ -130,7 +130,7 @@
       </el-table-column>
 
       <el-table-column label="运行时间(ms)" align="center" prop="runtime" width="100"/>
-      <el-table-column label="运行信息" align="center" prop="errorinfo" width="100">
+      <el-table-column label="运行信息" align="center" prop="errorinfo" width="80">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.errorinfo }}</p>
