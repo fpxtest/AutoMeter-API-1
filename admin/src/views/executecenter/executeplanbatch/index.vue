@@ -46,9 +46,11 @@
       </el-table-column>
       <el-table-column label="测试集合名" align="center" prop="executeplanname" width="180"/>
       <el-table-column label="执行计划" align="center" prop="batchname" width="180"/>
-      <el-table-column label="状态" align="center" prop="status" width="180"/>
-      <el-table-column label="来源" align="center" prop="source" width="160"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="150"/>
+      <el-table-column label="状态" align="center" prop="status" width="80"/>
+      <el-table-column label="来源" align="center" prop="source" width="60"/>
+      <el-table-column label="执行类型" align="center" prop="exectype" width="80"/>
+      <el-table-column label="执行时间" align="center" prop="execdate" width="160"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

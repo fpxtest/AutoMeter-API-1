@@ -30,7 +30,7 @@ public interface ExecuteplanService extends Service<Executeplan> {
      */
     void updateexecuteplanname(Executeplan params);
 
-    void executeplancase(final List<Testplanandbatch> executeplan);
+    void executeplancase(final List<Testplanandbatch> executeplan,String Exectype);
 
     void updatetestplanstatus(Long id, String status);
 

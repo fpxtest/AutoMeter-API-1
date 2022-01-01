@@ -145,9 +145,7 @@
           <el-form-item>
             <el-button type="primary" @click="searchcaseBy" :loading="btnLoading">查询</el-button>
           </el-form-item>
-
         </el-form>
-
 
       </div>
       <el-table

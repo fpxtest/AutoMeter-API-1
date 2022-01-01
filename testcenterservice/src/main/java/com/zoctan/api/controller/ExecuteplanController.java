@@ -57,7 +57,7 @@ public class ExecuteplanController {
     public Result execcases(@RequestBody final List<Testplanandbatch> planbatchList) {
         //暂时支持单计划执行
         try {
-            executeplanService.executeplancase(planbatchList);
+            executeplanService.executeplancase(planbatchList,"立即执行");
             return ResultGenerator.genOkResult();
         }
         catch (ServiceException se)

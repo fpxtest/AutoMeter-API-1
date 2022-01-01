@@ -477,18 +477,21 @@ public class TestCore {
             long CostTime = 0;
             String Respone = "";
             String ConditionResultStatus = "成功";
-            RequestObject re = null;
+            RequestObject re = new RequestObject();
             String CondionCaseID = "";
             try {
                 CondionCaseID = conditionApi.get("caseid");
                 Start = new Date().getTime();
                 re = GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
+                re = GetRequestParamsData(re);
+                End = new Date().getTime();
                 ResponeData responeData = request(re);
                 Respone = responeData.getRespone();
                 CostTime = End - Start;
                 SaveApiSubCondition(re, PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
+                End = new Date().getTime();
                 Respone = ex.getMessage();
                 CostTime = End - Start;
                 SaveApiSubCondition(re, PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);

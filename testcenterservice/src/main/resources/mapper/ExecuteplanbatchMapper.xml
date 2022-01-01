@@ -14,6 +14,9 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="exectype" jdbcType="VARCHAR" property="exectype" />
+    <result column="execdate" jdbcType="VARCHAR" property="execdate" />
+
   </resultMap>
 
   <select id="getbatchbyplan" resultMap="BaseResultMap">
@@ -32,6 +35,13 @@
     SELECT a.*
     FROM executeplanbatch a
     where a.executeplanid=#{executeplanid} and batchname =#{batchname}
+  </select>
+
+  <select id="getbatchbyexectype" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplanbatch a
+    where a.exectype=#{exectype} and a.execdate between DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+      and  DATE_FORMAT(date_sub(curdate(),interval -1 day),'%Y-%m-%d %H:%i:%s')
   </select>
 
 

@@ -271,26 +271,57 @@
     </el-dialog>
     <el-dialog :title="loadbatch" :visible.sync="batchdialogFormVisible">
       <div class="filter-container" >
-        <el-form :inline="true" :model="tmpplanbatch" ref="tmpplanbatch" >
-          <el-form-item label="执行计划名："  prop="batchname" required>
+        <el-form  :model="tmpplanbatch" ref="tmpplanbatch" >
+          <el-form-item label="执行计划："  prop="batchname" required>
             <el-input
               type="text"
-              style="width:180%"
+              style="width:60%"
               placeholder="例如2020-10-21-tag-101"
               prefix-icon="el-icon-edit"
               auto-complete="off"
               v-model="tmpplanbatch.batchname"
             />
           </el-form-item>
+          <el-form-item label="执行类型：" prop="exectype" required >
+            <el-select v-model="tmpplanbatch.exectype" placeholder="执行类型" style="width:60%" @change="exectypeselectChanged($event)">
+              <el-option label="立即执行" value="立即执行"></el-option>
+              <el-option label="某天定时" value="某天定时"></el-option>
+              <el-option label="每天定时" value="每天定时"></el-option>
+            </el-select>
+          </el-form-item>
+          <div v-if="datevisible">
+            <el-form-item label="选择日期：" prop="exectmpdate" required >
+              <el-date-picker style="width:60%"
+                              v-model="tmpplanbatch.exectmpdate"
+                              type="date"
+                              format="yyyy-MM-dd"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择日期">
+              </el-date-picker>
+            </el-form-item>
+          </div>
+          <div v-if="timevisible">
+            <el-form-item label="选择时刻：" prop="exectime" required >
+              <el-time-select style="width:60%"
+                              v-model="tmpplanbatch.exectime"
+                              :picker-options="{
+              start: '00:05',
+              step: '00:10',
+              end: '23:55'
+            }"
+                              placeholder="选择时间">
+              </el-time-select>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="batchdialogFormVisible = false">取消</el-button>
         <el-button
           type="success"
-          :loading="btnLoading"
+          :loading="execbtnLoading"
           @click.native.prevent="savebatchandexecuteplancase"
-        >提交</el-button>
+        >执行</el-button>
       </div>
     </el-dialog>
 
@@ -441,6 +472,8 @@
     },
     data() {
       return {
+        datevisible: false,
+        timevisible: false,
         itemplanKey: null,
         itemcaseKey: null,
         planbusinessdiclist: [], // 执行计划字典表业务类型列表
@@ -514,6 +547,7 @@
         },
         btnLoading: false, // 按钮等待动画
         casebtnLoading: false, // 按钮等待动画
+        execbtnLoading: false, // 按钮等待动画
         tmpexecuteplan: {
           id: '',
           executeplanname: '',
@@ -531,7 +565,11 @@
           executeplanid: '',
           executeplanname: '',
           batchname: '',
-          creator: ''
+          creator: '',
+          exectype: '',
+          exectmpdate: '',
+          execdate: '',
+          exectime: ''
         },
         tmpplanenv: {
           id: '',
@@ -662,12 +700,18 @@
               return
             }
             this.tmpplanbatch.executeplanname = this.multipleSelection[0].executeplanname
+            this.tmpplanbatch.execdate = this.tmpplanbatch.exectmpdate + ' ' + this.tmpplanbatch.exectime + ':00'
+            if (this.tmpplanbatch.execdate === ':00') {
+              this.tmpplanbatch.execdate = '/'
+            }
+            if (this.tmpplanbatch.exectmpdate === '') {
+              this.tmpplanbatch.execdate = this.tmpplanbatch.exectime + ':00'
+            }
             addexecuteplanbatch(this.tmpplanbatch).then(() => {
               this.executeplancase()
               this.batchdialogFormVisible = false
-              this.btnLoading = false
             }).catch(res => {
-              this.btnLoading = false
+              this.$message.error('计划执行失败')
             })
           }
         })
@@ -705,11 +749,9 @@
                   })
                 }
                 executeplan(this.tmpplanbatchList).then(() => {
-                  this.$message.success('计划即将开始执行')
-                  this.btnLoading = false
+                  this.$message.success('测试集合已经提交，即将开始执行')
                 }).catch(res => {
-                  this.$message.error('计划执行失败')
-                  this.btnLoading = false
+                  this.$message.error('计划失败')
                 })
               }
             }
@@ -729,7 +771,6 @@
         console.log('00000000000000000000000000')
         console.log(this.multipleSelection)
       },
-
       casehandleClickTableRow(row, event, column) {
         console.log(row)
       },
@@ -752,6 +793,23 @@
         }
       },
 
+      exectypeselectChanged(e) {
+        if (e === '立即执行') {
+          this.datevisible = false
+          this.timevisible = false
+        }
+        if (e === '某天定时') {
+          this.datevisible = true
+          this.timevisible = true
+          this.tmpplanbatch.execdate = ''
+          this.tmpplanbatch.exectime = ''
+        }
+        if (e === '每天定时') {
+          this.datevisible = false
+          this.timevisible = true
+          this.tmpplanbatch.exectime = ''
+        }
+      },
       /**
        * 参数胡类型选择  e的值为options的选值
        */
@@ -1067,6 +1125,12 @@
        * 显示添加执行计划批次对话框
        */
       showplanbatchDialog() {
+        this.tmpplanbatch.exectmpdate = ''
+        this.tmpplanbatch.exectime = ''
+        this.tmpplanbatch.execdate = ''
+        this.tmpplanbatch.exectype = ''
+        this.timevisible = false
+        this.datevisible = false
         // 显示新增对话框
         for (let i = 0; i < this.multipleSelection.length; i++) {
           if (this.multipleSelection[i].status === 'running') {

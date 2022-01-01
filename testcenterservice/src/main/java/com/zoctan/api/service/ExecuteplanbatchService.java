@@ -20,5 +20,4 @@ public interface ExecuteplanbatchService extends Service<Executeplanbatch> {
 
     List<Executeplanbatch> findexplanbatchWithName(final Map<String, Object> params);
 
-
 }

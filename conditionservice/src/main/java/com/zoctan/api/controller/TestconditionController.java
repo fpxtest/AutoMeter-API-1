@@ -470,52 +470,11 @@ public class TestconditionController {
             }
             try {
                 Start = new Date().getTime();
-                Rundb(ConnetcArray, AssembleType, deployunitvisittype, machine, macdepunit, Sql);
+                Respone=Rundb(ConnetcArray, AssembleType, deployunitvisittype, machine, macdepunit, Sql);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
             } finally {
-//            String username = ConnetcArray[0];
-//            String pass = ConnetcArray[1];
-//            String port = ConnetcArray[2];
-//            String dbname = ConnetcArray[3];
-//            String DBUrl = "";
-//            if (AssembleType.equals("mysql")) {
-//                DBUrl = "jdbc:mysql://";
-//                // 根据访问方式来确定ip还是域名
-//                if (deployunitvisittype.equals("ip")) {
-//                    String IP = machine.getIp();
-//                    DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-//                } else {
-//                    String Domain = macdepunit.getDomain();
-//                    DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
-//                }
-//            }
-//            if (AssembleType.equals("oracle")) {
-//                DBUrl = "jdbc:oracle:thin:@";
-//                // 根据访问方式来确定ip还是域名
-//                if (deployunitvisittype.equals("ip")) {
-//                    String IP = machine.getIp();
-//                    DBUrl = DBUrl + IP + ":" + port + ":" + dbname ;
-//                } else {
-//                    String Domain = macdepunit.getDomain();
-//                    DBUrl = DBUrl + Domain + ":" + dbname ;
-//                }
-//            }
-//            try {
-//                Start = new Date().getTime();
-//
-//                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-//                String[] SqlArr = Sql.split(";");
-//                for (String ExecSql : SqlArr) {
-//                    int nums = Db.use(ds).execute(ExecSql);
-//                    TestconditionController.log.info("数据库子条件Sql执行完成：" + Sql);
-//                    Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
-//                }
-//            } catch (Exception ex) {
-//                ConditionResultStatus = "失败";
-//                Respone = ex.getMessage();
-//            } finally {
                 End = new Date().getTime();
                 CostTime = End - Start;
                 //更新条件结果表
