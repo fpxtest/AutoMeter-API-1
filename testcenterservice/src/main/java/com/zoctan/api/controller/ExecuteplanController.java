@@ -41,7 +41,7 @@ public class ExecuteplanController {
     public Result add(@RequestBody Executeplan executeplan) {
 
         Condition con=new Condition(Executeplan.class);
-        con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname() + "'")
+        con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
                 .andCondition("enviromentname = '" + executeplan.getEnviromentname() + "'");
         if(executeplanService.ifexist(con)>0)
         {
@@ -172,7 +172,7 @@ public class ExecuteplanController {
     @PutMapping("/detail")
     public Result updateExecuteplan(@RequestBody final Executeplan executeplan) {
         Condition con=new Condition(Executeplan.class);
-        con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname() + "'")
+        con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
                 .andCondition("id <> " + executeplan.getId())
                 .andCondition("enviromentname = '" + executeplan.getEnviromentname() + "'");
         if(executeplanService.ifexist(con)>0)

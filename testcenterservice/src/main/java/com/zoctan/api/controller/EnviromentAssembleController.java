@@ -36,7 +36,7 @@ public class EnviromentAssembleController {
     public Result add(@RequestBody EnviromentAssemble enviromentAssemble) {
         Condition con=new Condition(EnviromentAssemble.class);
         con.createCriteria().andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
-                .andCondition("assemblename = '" + enviromentAssemble.getAssemblename() + "'");
+                .andCondition("assemblename = '" + enviromentAssemble.getAssemblename().replace("'","''") + "'");
         if(enviromentAssembleService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("已存在相同的环境组件");
@@ -61,7 +61,7 @@ public class EnviromentAssembleController {
     public Result updateDeploy(@RequestBody final EnviromentAssemble enviromentAssemble) {
         Condition con=new Condition(EnviromentAssemble.class);
         con.createCriteria().andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
-                .andCondition("assemblename = '" + enviromentAssemble.getAssemblename() + "'")
+                .andCondition("assemblename = '" + enviromentAssemble.getAssemblename().replace("'","''") + "'")
                 .andCondition("id <> " + enviromentAssemble.getId());
         if(enviromentAssembleService.ifexist(con)>0)
         {

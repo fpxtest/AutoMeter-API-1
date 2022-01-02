@@ -29,7 +29,7 @@ public class ConditionDbController {
 
         Condition con=new Condition(ConditionDb.class);
         con.createCriteria().andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
-                .andCondition("subconditionname = '" + conditionDb.getSubconditionname()+ "'");
+                .andCondition("subconditionname = '" + conditionDb.getSubconditionname().replace("'","''")+ "'");
         if(conditionDbService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("已经存在该子条件名");
@@ -74,7 +74,7 @@ public class ConditionDbController {
     public Result updateDeploy(@RequestBody final ConditionDb conditionDb) {
         Condition con=new Condition(ConditionApi.class);
         con.createCriteria().andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
-                .andCondition("subconditionname = '" + conditionDb.getSubconditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionDb.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("id <> " + conditionDb.getId());
         if(conditionDbService.ifexist(con)>0)
         {

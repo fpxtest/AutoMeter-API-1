@@ -45,7 +45,7 @@ public class ExecuteplanParamsController {
         {
             Condition con=new Condition(ExecuteplanParams.class);
             con.createCriteria().andCondition("paramstype = '" + executeplanParams.getParamstype() + "'")
-                    .andCondition("keyname = '" + executeplanParams.getKeyname() + "'")
+                    .andCondition("keyname = '" + executeplanParams.getKeyname().replace("'","''") + "'")
                     .andCondition("executeplanid = '" + executeplanParams.getExecuteplanid() + "'");
             if(executeplanParamsService.ifexist(con)>0)
             {
@@ -100,7 +100,7 @@ public class ExecuteplanParamsController {
         {
             Condition con=new Condition(ExecuteplanParams.class);
             con.createCriteria().andCondition("paramstype = '" + executeplanParams.getParamstype() + "'")
-                    .andCondition("keyname = '" + executeplanParams.getKeyname() + "'")
+                    .andCondition("keyname = '" + executeplanParams.getKeyname().replace("'","''") + "'")
                     .andCondition("id <> " + executeplanParams.getId())
                     .andCondition("executeplanid = " + executeplanParams.getExecuteplanid());
             if(executeplanParamsService.ifexist(con)>0)

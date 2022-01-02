@@ -62,7 +62,7 @@ public class ApicasesController {
 
         Condition con = new Condition(Apicases.class);
         con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
-                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename() + "'")
+                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename().replace("'","''") + "'")
         ;
         //.orCondition("casejmxname = '" + apicases.getCasejmxname() + "'")
         if (apicasesService.ifexist(con) > 0) {

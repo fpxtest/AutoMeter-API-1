@@ -45,7 +45,7 @@ public class ExecuteplanbatchController {
     @PostMapping
     public Result add(@RequestBody Executeplanbatch executeplanbatch) {
         Condition con=new Condition(Executeplanbatch.class);
-        con.createCriteria().andCondition("batchname = '" + executeplanbatch.getBatchname() + "'")
+        con.createCriteria().andCondition("batchname = '" + executeplanbatch.getBatchname().replace("'","''") + "'")
                 .andCondition("executeplanid = " + executeplanbatch.getExecuteplanid());
         if(executeplanbatchService.ifexist(con)>0)
         {

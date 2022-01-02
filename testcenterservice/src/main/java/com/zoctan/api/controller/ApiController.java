@@ -36,7 +36,7 @@ public class ApiController {
     public Result add(@RequestBody Api api) {
         Condition con=new Condition(Api.class);
         con.createCriteria().andCondition("deployunitname = '" + api.getDeployunitname() + "'")
-                .andCondition("apiname = '" + api.getApiname() + "'");
+                .andCondition("apiname = '" + api.getApiname().replace("'","''") + "'");
         if(apiService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("此发布单元下已经存在此API");
@@ -125,7 +125,7 @@ public class ApiController {
     public Result updateDeploy(@RequestBody final Api api) {
         Condition con=new Condition(Api.class);
         con.createCriteria().andCondition("deployunitname = '" + api.getDeployunitname() + "'")
-                .andCondition("apiname = '" + api.getApiname() + "'")
+                .andCondition("apiname = '" + api.getApiname().replace("'","''") + "'")
                 .andCondition("id <> " + api.getId());
         if(apiService.ifexist(con)>0)
         {
