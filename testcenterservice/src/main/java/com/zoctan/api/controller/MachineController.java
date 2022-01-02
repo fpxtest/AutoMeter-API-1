@@ -26,7 +26,7 @@ public class MachineController {
     @PostMapping
     public Result add(@RequestBody Machine machine) {
         Condition con=new Condition(Machine.class);
-        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'").orCondition("ip = '" + machine.getIp() + "'");
+        con.createCriteria().andCondition("machinename = '" + machine.getMachinename().replace("'","''") + "'").orCondition("ip = '" + machine.getIp() + "'");
         if(machineService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("机器名或者ip已经存在");

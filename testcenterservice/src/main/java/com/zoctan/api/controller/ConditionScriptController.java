@@ -29,7 +29,7 @@ public class ConditionScriptController {
 
         Condition con=new Condition(ConditionScript.class);
         con.createCriteria().andCondition("conditionname = '" + conditionScript.getConditionname()+ "'")
-                .orCondition("subconditionname = '" + conditionScript.getSubconditionname() + "'");
+                .orCondition("subconditionname = '" + conditionScript.getSubconditionname().replace("'","''") + "'");
         if(conditionScriptService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("已存在该条件名或子条件名");
@@ -75,7 +75,7 @@ public class ConditionScriptController {
     public Result updateDeploy(@RequestBody final ConditionScript conditionScript) {
         Condition con=new Condition(ConditionScript.class);
         con.createCriteria().andCondition("conditionname = '" + conditionScript.getConditionname() + "'")
-                .andCondition("subconditionname = '" + conditionScript.getSubconditionname() + "'")
+                .andCondition("subconditionname = '" + conditionScript.getSubconditionname().replace("'","''") + "'")
                 .andCondition("id <> " + conditionScript.getId());
         if(conditionScriptService.ifexist(con)>0)
         {

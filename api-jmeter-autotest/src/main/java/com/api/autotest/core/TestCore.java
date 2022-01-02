@@ -838,7 +838,7 @@ public class TestCore {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert testcondition_report (conditionid,conditiontype,subconditionid,conditionresult,conditionstatus,runtime,create_time,lastmodify_time,creator,batchname,planname,testplanid,subconditiontype,status,subconditionname)" +
-                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testconditionReport.getBatchname() + "',  '" + testconditionReport.getPlanname() + "'," + testconditionReport.getTestplanid() + ", '" + testconditionReport.getSubconditiontype() + "', '" + testconditionReport.getStatus() + "', '" + testconditionReport.getSubconditionname() + "')";
+                " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testconditionReport.getBatchname().replace("'","''") + "',  '" + testconditionReport.getPlanname().replace("'","''") + "'," + testconditionReport.getTestplanid() + ", '" + testconditionReport.getSubconditiontype() + "', '" + testconditionReport.getStatus() + "', '" + testconditionReport.getSubconditionname().replace("'","''") + "')";
         logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "接口条件报告结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
@@ -849,7 +849,7 @@ public class TestCore {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,creator,batchname)" +
-                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname() + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename() + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname() + "', '" + testvariablesValue.getMemo() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')" + ", '" + testvariablesValue.getBatchname() + "'";
+                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname().replace("'","''") + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename().replace("'","''") + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname().replace("'","''") + "', '" + testvariablesValue.getMemo().replace("'","''") + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')" + ", '" + testvariablesValue.getBatchname().replace("'","''") + "'";
         logger.info(logplannameandcasename + "保存变量结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
@@ -924,24 +924,26 @@ public class TestCore {
                 caseid = context.getParameter("caseid");
                 slaverid = context.getParameter("slaverid");
                 expect = context.getParameter("expect");
-                batchname = context.getParameter("batchname");
+                batchname = context.getParameter("batchname").replace("'","''");
             } else {
                 casetype = requestObject.getCasetype();// context.getParameter("casetype");
                 testplanid = requestObject.getTestplanid();// context.getParameter("testplanid");
                 caseid = requestObject.getCaseid();// context.getParameter("caseid");
                 slaverid = requestObject.getSlaverid();// context.getParameter("slaverid");
                 expect = requestObject.getExpect();// context.getParameter("expect");
-                batchname = requestObject.getBatchname();// context.getParameter("batchname");
-                Url = requestObject.getResource();
+                batchname = requestObject.getBatchname().replace("'","''");// context.getParameter("batchname");
+                Url = requestObject.getResource().replace("'","''");
                 Method = requestObject.getRequestmMthod();
                 Map<String, String> headermap = requestObject.getHeader().getParams();
                 for (String key : headermap.keySet()) {
                     header = header + key + " ：" + headermap.get(key);
                 }
+                header=header.replace("'","''");
                 params = requestObject.getPostData();
                 if (params == null) {
                     params = "";
                 }
+                params=params.replace("'","''");
             }
 
             if (casetype.equals(new String("功能"))) {
@@ -956,10 +958,10 @@ public class TestCore {
             String sql = "";
             if (status) {
                 sql = "insert " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone + "' ,'" + assertvalue + "', " + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + params + "', '" + Url + "', '" + Method + "')";
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone.replace("'","''") + "' ,'" + assertvalue.replace("'","''") + "', " + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + params + "', '" + Url + "', '" + Method + "')";
             } else {
                 sql = "insert  " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone + "','" + assertvalue + "'," + time + ",'" + expect + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + params + "', '" + Url + "', '" + Method + "')";
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone.replace("'","''") + "','" + assertvalue.replace("'","''") + "'," + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + params + "', '" + Url + "', '" + Method + "')";
             }
             logger.info(logplannameandcasename + "测试结果 result sql is...........: " + sql);
             System.out.println("case result sql is: " + sql);
@@ -975,7 +977,7 @@ public class TestCore {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert apicases_reportstatics (testplanid,deployunitid,batchname,slaverid,totalcases,totalpasscases,totalfailcases,runtime,create_time,lastmodify_time,creator)" +
-                " values(" + apicasesReportstatics.getTestplanid() + "," + apicasesReportstatics.getDeployunitid() + ", '" + apicasesReportstatics.getBatchname() + "', " + apicasesReportstatics.getSlaverid() + ", " + apicasesReportstatics.getTotalcases() + ", " + apicasesReportstatics.getTotalpasscases() + ", " + apicasesReportstatics.getTotalfailcases() + ", " + apicasesReportstatics.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')";
+                " values(" + apicasesReportstatics.getTestplanid() + "," + apicasesReportstatics.getDeployunitid() + ", '" + apicasesReportstatics.getBatchname().replace("'","''") + "', " + apicasesReportstatics.getSlaverid() + ", " + apicasesReportstatics.getTotalcases() + ", " + apicasesReportstatics.getTotalpasscases() + ", " + apicasesReportstatics.getTotalfailcases() + ", " + apicasesReportstatics.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')";
         logger.info(logplannameandcasename + "功能测试统计结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "功能测试统计结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }
@@ -1053,7 +1055,7 @@ public class TestCore {
         String dateNowStr = sdf.format(d);
         String sql = "";
         sql = "insert performancereportsource (planid,batchid,batchname,slaverid,caseid,testclass,runtime,source,status,create_time,lastmodify_time)" +
-                " values(" + testplanid + "," + batchid + ", '" + batchname + "', " + slaverid + ", " + caseid + " , '" + testclass + "' ," + costtime + " , '" + casereportfolder + "', '待解析', '" + dateNowStr + "', '" + dateNowStr + "')";
+                " values(" + testplanid + "," + batchid + ", '" + batchname.replace("'","''") + "', " + slaverid + ", " + caseid + " , '" + testclass + "' ," + costtime + " , '" + casereportfolder + "', '待解析', '" + dateNowStr + "', '" + dateNowStr + "')";
         logger.info(logplannameandcasename + "保存性能结果 sql is...........: " + sql);
         logger.info(logplannameandcasename + "保存性能结果 is...........: " + MysqlConnectionUtils.update(sql));
     }

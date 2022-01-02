@@ -26,7 +26,7 @@ public class DeployunitController {
     @PostMapping
     public Result add(@RequestBody Deployunit deployunit) {
         Condition con=new Condition(Deployunit.class);
-        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname() + "'");
+        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'");
         if(deployunitService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("此发布单元已经存在");
@@ -97,7 +97,7 @@ public class DeployunitController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Deployunit deployunit) {
         Condition con=new Condition(Deployunit.class);
-        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname() + "'")
+        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'")
                 .andCondition("id <> " + deployunit.getId());
         if(deployunitService.ifexist(con)>0)
         {
