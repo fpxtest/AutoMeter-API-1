@@ -260,7 +260,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "135");
+        params.addArgument("DispatchIds", "18");
         params.addArgument("SlaverId", "19");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");

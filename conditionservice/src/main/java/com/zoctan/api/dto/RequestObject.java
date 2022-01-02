@@ -189,4 +189,14 @@ public class RequestObject {
     }
 
     private HttpHeader header;
+
+    public String getPostData() {
+        return PostData;
+    }
+
+    public void setPostData(String postData) {
+        PostData = postData;
+    }
+
+    private String PostData;
 }

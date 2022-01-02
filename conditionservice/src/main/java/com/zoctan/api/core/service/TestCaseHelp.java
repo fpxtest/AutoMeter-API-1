@@ -10,8 +10,10 @@ package com.zoctan.api.core.service;
 */
 
 import com.zoctan.api.dto.RequestObject;
+import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.entity.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,26 +26,6 @@ public class TestCaseHelp {
     // 拼装请求需要的用例数据
     public RequestObject GetCaseRequestData(List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) {
         RequestObject ro=new RequestObject();
-        HashMap<String, String> headmap=fixhttprequestdatas("Header",apiCasedataList);
-        HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
-        HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
-        // 设置header
-        HttpHeader header = new HttpHeader();
-        for (String key : headmap.keySet()) {
-            header.addParam(key, headmap.get(key));
-        }
-        // 设置参数
-        HttpParamers paramers = new  HttpParamers();
-
-        for (String key : paramsmap.keySet()) {
-            paramers.addParam(key, paramsmap.get(key));
-        }
-
-        // 如果参数为空，设置body
-        for (String key : bodymap.keySet()) {
-            paramers.addParam(key, bodymap.get(key));
-        }
-
         // url请求资源路径
         String path = api.getPath();
         if (!path.startsWith("/")) {
@@ -78,7 +60,31 @@ public class TestCaseHelp {
             testserver= macdepunit.getDomain();
             resource = protocal + "://" + testserver  + path;
         }
-
+        HashMap<String, String> headmap=fixhttprequestdatas("Header",apiCasedataList);
+        HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
+        HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
+        // 设置header
+        HttpHeader header = new HttpHeader();
+        for (String key : headmap.keySet()) {
+            header.addParam(key, headmap.get(key));
+        }
+        // 设置参数
+        String PostData = "";
+        HttpParamers paramers = new  HttpParamers();
+        for (String key : paramsmap.keySet()) {
+            paramers.addParam(key, paramsmap.get(key));
+        }
+        try {
+            PostData=GetParasPostData(requestcontenttype,paramers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 如果参数为空，设置body
+        for (String key : bodymap.keySet()) {
+            //paramers.addParam(key, bodymap.get(key));
+            PostData = bodymap.get(key);
+        }
+        ro.setPostData(PostData);
         ro.setExpect(expect);
         ro.setCasetype(casetype);
         ro.setHeader(header);
@@ -104,18 +110,28 @@ public class TestCaseHelp {
         return DataMap;
     }
 
-    // 获取用例期望值
-    public String getcaseValue(String key, ArrayList<HashMap<String, String>> list) {
-        HashMap<String, String> hs = list.get(0);
-        return hs.get(key).trim();
+    private String GetParasPostData(String RequestContentType, HttpParamers paramers) throws IOException {
+        String Result = "";
+        if (RequestContentType.equals("json")) {
+            paramers.setJsonParamer();
+            Result = paramers.getJsonParamer();
+        }
+        if (RequestContentType.equals("form表单")) {
+            Result = paramers.getQueryString("UTF-8");
+        }
+        if (RequestContentType.equals("xml")) {
+
+        } else {
+
+        }
+        return Result;
     }
 
-
     // 发送http请求
-    public String request(RequestObject requestObject) throws Exception {
-        String result="";
+    public TestResponeData request(RequestObject requestObject) throws Exception {
+        TestResponeData result=new TestResponeData();
         if (requestObject.getProtocal().equals("http")||requestObject.getProtocal().equals("https")) {
-            result = Httphelp.doService(requestObject.getProtocal(),requestObject.getResource(), requestObject.getRequestmMthod(),requestObject.getApistyle(), requestObject.getParamers(),requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
+            result = Httphelp.doService(requestObject.getProtocal(),requestObject.getResource(), requestObject.getRequestmMthod(),requestObject.getApistyle(), requestObject.getParamers(),requestObject.getPostData(),requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
         }
         return result;
     }

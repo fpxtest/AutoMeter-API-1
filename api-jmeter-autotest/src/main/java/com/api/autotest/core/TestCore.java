@@ -406,14 +406,14 @@ public class TestCore {
 
     private String GetParasPostData(String RequestContentType, HttpParamers paramers) {
         String Result = "";
-        if (RequestContentType.equals(new String("json"))) {
+        if (RequestContentType.equals("json")) {
             paramers.setJsonParamer();
             Result = paramers.getJsonParamer();
         }
-        if (RequestContentType.equals(new String("form表单"))) {
+        if (RequestContentType.equals("form表单")) {
             Result = paramers.getQueryString();
         }
-        if (RequestContentType.equals(new String("xml"))) {
+        if (RequestContentType.equals("xml")) {
 
         } else {
 
