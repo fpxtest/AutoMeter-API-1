@@ -28,7 +28,7 @@ public class ConditionApiController {
     public Result add(@RequestBody ConditionApi conditionApi) {
         Condition con=new Condition(ConditionApi.class);
         con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
-                .andCondition("subconditionname = '" + conditionApi.getSubconditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionApi.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("deployunitname = '" + conditionApi.getDeployunitname()+ "'")
                 .andCondition("apiname = '" + conditionApi.getApiname()+ "'")
                 .andCondition("casename = '" + conditionApi.getCasename()+ "'");
@@ -76,7 +76,7 @@ public class ConditionApiController {
     public Result updateDeploy(@RequestBody final ConditionApi conditionApi) {
         Condition con=new Condition(ConditionApi.class);
         con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
-                .andCondition("subconditionname = '" + conditionApi.getSubconditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionApi.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("deployunitname = '" + conditionApi.getDeployunitname()+ "'")
                 .andCondition("apiname = '" + conditionApi.getApiname()+ "'")
                 .andCondition("casename = '" + conditionApi.getCasename()+ "'")

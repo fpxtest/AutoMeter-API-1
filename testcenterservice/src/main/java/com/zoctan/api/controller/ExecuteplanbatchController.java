@@ -45,7 +45,7 @@ public class ExecuteplanbatchController {
     @PostMapping
     public Result add(@RequestBody Executeplanbatch executeplanbatch) {
         Condition con=new Condition(Executeplanbatch.class);
-        con.createCriteria().andCondition("batchname = '" + executeplanbatch.getBatchname() + "'")
+        con.createCriteria().andCondition("batchname = '" + executeplanbatch.getBatchname().replace("'","''") + "'")
                 .andCondition("executeplanid = " + executeplanbatch.getExecuteplanid());
         if(executeplanbatchService.ifexist(con)>0)
         {
@@ -62,8 +62,12 @@ public class ExecuteplanbatchController {
                 executeplanbatch.setStatus("待执行");
                 executeplanbatch.setSource("平台");
                 executeplanbatchService.save(executeplanbatch);
+                return ResultGenerator.genOkResult();
             }
-            return ResultGenerator.genOkResult();
+            else
+            {
+                return ResultGenerator.genFailedResult("无执行机可用，请检查是否SlaverService是否正常启动!");
+            }
         }
     }
 

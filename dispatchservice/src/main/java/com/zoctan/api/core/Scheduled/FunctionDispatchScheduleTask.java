@@ -125,7 +125,6 @@ public class FunctionDispatchScheduleTask {
             }
         } catch (Exception ex) {
             FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-异常: " + ex.getMessage());
-            ex.printStackTrace();
         }
     }
 

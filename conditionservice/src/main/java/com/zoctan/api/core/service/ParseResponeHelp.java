@@ -7,8 +7,7 @@ import org.w3c.dom.Document;
 import javax.xml.xpath.XPathConstants;
 
 public class ParseResponeHelp {
-    public String ParseRespone(String ResponeResultType,String Respone,String Path)
-    {
+    public String ParseRespone(String ResponeResultType,String Respone,String Path) throws Exception {
         String Result="";
         if (ResponeResultType.equals("json")) {
             Result = ParseJsonRespone(Path, Respone);
@@ -20,8 +19,7 @@ public class ParseResponeHelp {
         return Result;
     }
 
-    public String ParseJsonRespone(String JSPath,String JsonRespone)
-    {
+    public String ParseJsonRespone(String JSPath,String JsonRespone) throws Exception {
         String Result="";
         try {
              Result= JsonPath.read(JsonRespone,JSPath).toString();
@@ -29,13 +27,13 @@ public class ParseResponeHelp {
         catch (Exception ex)
         {
             Result=ex.getMessage();
+            throw new Exception("响应结果中未匹配到JsonPath对应的值："+Result.replace("'", ""));
         }
         return Result;
     }
 
 
-    public String ParseXmlRespone(String  XPath,String ActualXml)
-    {
+    public String ParseXmlRespone(String  XPath,String ActualXml) throws Exception {
         String Result="";
         try {
             Document docResult= XmlUtil.readXML(ActualXml);
@@ -44,6 +42,7 @@ public class ParseResponeHelp {
         catch (Exception ex)
         {
             Result=ex.getMessage();
+            throw new Exception("响应结果中未匹配到XPath对应的值："+Result.replace("'", ""));
         }
         return Result;
     }
