@@ -1,3 +1,4 @@
+import com.jayway.jsonpath.JsonPath;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONCompareResult;
@@ -7,18 +8,32 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class testfun {
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
 
-
-        Calendar cal = Calendar.getInstance();
-
-        String CurrentTime = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":00";
-
-        //String CurrentTime = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" + String.valueOf(cal.get(Calendar.DATE)) + " " + String.valueOf(cal.get(Calendar.HOUR)) + ":" + String.valueOf(cal.get(Calendar.MINUTE)) + ":00";
-        if(CurrentTime.equals("2021-11-26 7:51:00"))
+        try
         {
-            System.out.println(100000000);
+            String Result= JsonPath.read("{}","$.data");
         }
+        catch (Exception ex)
+        {
+            System.out.println(ex.getMessage());
+            throw new Exception("exceptuon");
+        }
+        finally {
+            System.out.println("finally");
+
+        }
+
+
+//        Calendar cal = Calendar.getInstance();
+//
+//        String CurrentTime = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + " " + cal.get(Calendar.HOUR) + ":" + cal.get(Calendar.MINUTE) + ":00";
+//
+//        //String CurrentTime = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" + String.valueOf(cal.get(Calendar.DATE)) + " " + String.valueOf(cal.get(Calendar.HOUR)) + ":" + String.valueOf(cal.get(Calendar.MINUTE)) + ":00";
+//        if(CurrentTime.equals("2021-11-26 7:51:00"))
+//        {
+//            System.out.println(100000000);
+//        }
 
 
 //        final String json1 = "{\n" +

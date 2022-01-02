@@ -9,10 +9,15 @@ package com.zoctan.api.core.service;
  @create 2020/10/17
 */
 
+import com.zoctan.api.dto.TestResponeData;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
@@ -20,23 +25,27 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public class Httphelp {
     //public static //logger //logger=null;
 
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final String JSON_CONTENT_FORM = "application/json;charset=UTF-8";
+    public static final String XML_CONTENT_FORM = "application/xml;charset=UTF-8";
     public static final String CONTENT_FORM = "application/x-www-form-urlencoded;charset=UTF-8";
 
-    public static String doService(String protocal,String url, String method,String apistyle, HttpParamers paramers, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static TestResponeData doService(String protocal, String url, String method, String apistyle, HttpParamers paramers, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         switch (method) {
             case "get":
-                String getrequesturl= getrequesturl(url, apistyle,paramers);
-                return doGet(protocal,getrequesturl, paramers, requestcontenttype, header, connectTimeout, readTimeout);
+                String getrequesturl= getrequesturl(url, apistyle, paramers);
+                return doGet(protocal, getrequesturl,  header, connectTimeout, readTimeout);
             case "post":
-                return doPost(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
+                return doPost(protocal,url, postdata, requestcontenttype, header, connectTimeout, readTimeout);
             case "put":
                 return doPut(protocal,url, paramers, requestcontenttype, header, connectTimeout, readTimeout);
             case "delete":
@@ -49,61 +58,62 @@ public class Httphelp {
      * post方法
      *
      * @param url
-     * @param paramers
+     * @postdata postdata
      * @param header
      * @param connectTimeout
      * @param readTimeout
      * @return
      * @throws IOException
      */
-    public static String doPost(String protocal,String url, HttpParamers paramers, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    //HttpParamers paramers
+    public static TestResponeData doPost(String protocal,String url, String postdata, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
+        TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
             RequestConfig requestConfig = RequestConfig.custom()
                     .setConnectTimeout(connectTimeout).setConnectionRequestTimeout(connectTimeout)
                     .setSocketTimeout(connectTimeout).build();
-            String query = null;
+            String query = postdata;
             HttpPost httpPost = new HttpPost(url);
             httpPost.setConfig(requestConfig);
+
+            CookieStore cookieStore = new BasicCookieStore();
+            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+
             if (header.getParams().size() > 0) {
                 setHeader(httpPost, header);
             }
             if (requestcontenttype.equals(new String("json"))) {
                 //json数据
                 httpPost.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
-                paramers.setJsonParamer();
-                query = paramers.getJsonParamer();
-                ////logger.info("Post json datas is :  " + query);
-
-            } else {
-                //表单数据
-                httpPost.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
-                query = paramers.getQueryString(DEFAULT_CHARSET);
-                ////logger.info("Post form datas is :  " + query);
+            }
+            if (requestcontenttype.equals(new String("xml"))) {
+                //xml数据
+                httpPost.setHeader(HTTP.CONTENT_TYPE, XML_CONTENT_FORM);
+                Httphelp.log.info("Post xml datas is :  " + query);
             }
             if (query != null) {
-                HttpEntity reqEntity = new StringEntity(query);
-                ////logger.info("Post last datas is :  " + query);
+                HttpEntity reqEntity = new StringEntity(query,"utf-8");
+                Httphelp.log.info("Post last datas is :  " + query);
                 httpPost.setEntity(reqEntity);
             }
-            if(protocal.equals(new String("http")))
+            if(protocal.equals("http"))
             {
                 httpClient = HttpClients.createDefault();
             }
-            if(protocal.equals(new String("https")))
+            if(protocal.equals("https"))
             {
                 httpClient = new SSLClient();
             }
-
             httpResponse = httpClient.execute(httpPost);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+            List<Cookie> cookies = cookieStore.getCookies();
+            testResponeData.setCookies(cookies);
+            testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
-            ////logger.info("Post Exception is :" + e.getMessage());
-            responseData = e.getMessage();
-            throw new Exception("请求url:"+url+"发生异常，原因："+responseData);
+            Httphelp.log.info("Post Exception is :" + e.getMessage());
+            throw new Exception("请求"+url+"发生异常，异常原因："+e.getMessage());
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -112,8 +122,8 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        ////logger.info("Post responseData is :" + responseData);
-        return responseData;
+        Httphelp.log.info("Post responseData is :" + responseData);
+        return testResponeData;
     }
 
 
@@ -127,8 +137,9 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doGet(String protocal, String url, HttpParamers paramsob, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static TestResponeData doGet(String protocal, String url,  HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
+        TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -137,7 +148,10 @@ public class Httphelp {
                     .setSocketTimeout(connectTimeout).build();
             HttpGet httpGet = new HttpGet(url);
             httpGet.setConfig(requestConfig);
-            ////logger.info("Get datas is :  " + url);
+            CookieStore cookieStore = new BasicCookieStore();
+            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+
+            Httphelp.log.info("Get datas is :  " + url);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
@@ -150,12 +164,15 @@ public class Httphelp {
                 httpClient = new SSLClient();
             }
             httpResponse = httpClient.execute(httpGet);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+
+            List<Cookie> cookies = cookieStore.getCookies();
+            testResponeData.setCookies(cookies);
+
+            testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
             responseData = e.getMessage();
-            //logger.info("Exception is :" + e.getMessage());
-            throw new Exception("请求url:"+url+"发生异常，原因："+responseData);
+            Httphelp.log.info("Exception is :" + e.getMessage());
+            throw new Exception("请求"+url+"发生异常，异常原因："+responseData);
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -164,8 +181,8 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        //logger.info("Get responseData is :" + responseData);
-        return responseData;
+        Httphelp.log.info("Get responseData is :" + responseData);
+        return testResponeData;
     }
 
 
@@ -180,8 +197,9 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static TestResponeData doPut(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
+        TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -192,6 +210,10 @@ public class Httphelp {
             url = buildGetUrl(url, query);
             HttpPut httpGet = new HttpPut(url);
             httpGet.setConfig(requestConfig);
+
+            CookieStore cookieStore = new BasicCookieStore();
+            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
@@ -199,28 +221,29 @@ public class Httphelp {
                 //json数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
                 query = params.getJsonParamer();
-                //logger.info("Put json datas is :  " + query);
+                Httphelp.log.info("Put json datas is :  " + query);
             } else {
                 //表单数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
                 query = params.getQueryString(DEFAULT_CHARSET);
-                //logger.info("Put json datas is :  " + query);
+                Httphelp.log.info("Put json datas is :  " + query);
             }
-            if(protocal.equals(new String("http")))
+            if(protocal.equals("http"))
             {
                 httpClient = HttpClients.createDefault();
             }
-            if(protocal.equals(new String("https")))
+            if(protocal.equals("https"))
             {
                 httpClient = new SSLClient();
             }
             httpResponse = httpClient.execute(httpGet);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+
+            List<Cookie> cookies = cookieStore.getCookies();
+            testResponeData.setCookies(cookies);
+            testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
-            //logger.info("Put Exception is :" + e.getMessage());
-            responseData = e.getMessage();
-            throw new Exception("请求url:"+url+"发生异常，原因："+responseData);
+            Httphelp.log.info("Put Exception is :" + e.getMessage());
+            throw new Exception("请求"+url+"发生异常，异常原因："+responseData);
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -229,8 +252,8 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        //logger.info("Put responseData is :" + responseData);
-        return responseData;
+        Httphelp.log.info("Put responseData is :" + responseData);
+        return testResponeData;
     }
 
     /**
@@ -244,8 +267,9 @@ public class Httphelp {
      * @return
      * @throws IOException
      */
-    public static String doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
+    public static TestResponeData doDelete(String protocal,String url, HttpParamers params, String requestcontenttype, HttpHeader header, int connectTimeout, int readTimeout) throws Exception {
         String responseData = "";
+        TestResponeData testResponeData=new TestResponeData();
         CloseableHttpClient httpClient = null;
         CloseableHttpResponse httpResponse = null;
         try {
@@ -256,6 +280,10 @@ public class Httphelp {
             url = buildGetUrl(url, query);
             HttpDelete httpGet = new HttpDelete(url);
             httpGet.setConfig(requestConfig);
+
+            CookieStore cookieStore = new BasicCookieStore();
+            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
@@ -263,29 +291,30 @@ public class Httphelp {
                 //json数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, JSON_CONTENT_FORM);
                 query = params.getJsonParamer();
-                //logger.info("Delete json datas is :  " + query);
+                Httphelp.log.info("Delete json datas is :  " + query);
             } else {
                 //表单数据
                 httpGet.setHeader(HTTP.CONTENT_TYPE, CONTENT_FORM);
                 query = params.getQueryString(DEFAULT_CHARSET);
-                //logger.info("Delete json datas is :  " + query);
+                Httphelp.log.info("Delete json datas is :  " + query);
             }
 
-            if(protocal.equals(new String("http")))
+            if(protocal.equals("http"))
             {
                 httpClient = HttpClients.createDefault();
             }
-            if(protocal.equals(new String("https")))
+            if(protocal.equals("https"))
             {
                 httpClient = new SSLClient();
             }
             httpResponse = httpClient.execute(httpGet);
-            HttpEntity resEntity = httpResponse.getEntity();
-            responseData = EntityUtils.toString(resEntity);
+
+            List<Cookie> cookies = cookieStore.getCookies();
+            testResponeData.setCookies(cookies);
+            testResponeData=GetResponeData(httpResponse);
         } catch (Exception e) {
-            //logger.info(" Delete Exception is :" + e.getMessage());
-            responseData = e.getMessage();
-            throw new Exception("请求url:"+url+"发生异常，原因："+responseData);
+            Httphelp.log.info(" Delete Exception is :" + e.getMessage());
+            throw new Exception("请求"+url+"发生异常，异常原因："+responseData);
         } finally {
             if (httpResponse != null) {
                 httpResponse.close();
@@ -294,8 +323,8 @@ public class Httphelp {
                 httpClient.close();
             }
         }
-        //logger.info("Delete responseData is :" + responseData);
-        return responseData;
+        Httphelp.log.info("Delete responseData is :" + responseData);
+        return testResponeData;
     }
 
     private static void setHeader(HttpRequestBase httpRequestBase, HttpHeader header) {
@@ -306,7 +335,7 @@ public class Httphelp {
                 for (Map.Entry<String, String> entry : entries) {
                     String name = entry.getKey();
                     String value = entry.getValue();
-                    //logger.info("header name is :  " + name+" value is :  "+value);
+                    Httphelp.log.info("header name is :  " + name+" value is :  "+value);
                     httpRequestBase.setHeader(name, value);
                 }
             }
@@ -330,7 +359,7 @@ public class Httphelp {
         }
         newUrl.append(query);
         hasPrepend = false;
-        //logger.info("buildGetUrl url is :  " + newUrl.toString());
+        Httphelp.log.info("buildGetUrl url is :  " + newUrl.toString());
         return newUrl.toString();
     }
 
@@ -398,5 +427,25 @@ public class Httphelp {
             }
         }
         return requestUrl;
+    }
+
+    private static TestResponeData GetResponeData(CloseableHttpResponse closeableHttpResponse) throws IOException {
+        String ActualResult="";
+        TestResponeData responeData=new TestResponeData();
+        int Code=0;
+        if(closeableHttpResponse!=null)
+        {
+            Code =closeableHttpResponse.getStatusLine().getStatusCode();
+            HttpEntity resEntity = closeableHttpResponse.getEntity();
+            if(resEntity!=null)
+            {
+                ActualResult = EntityUtils.toString(resEntity);
+                responeData.setSize(resEntity.getContentLength());
+            }
+        }
+        responeData.setResponeContent(ActualResult);
+        responeData.setResponeCode(Code);
+        responeData.setHeaderList(Arrays.asList(closeableHttpResponse.getAllHeaders()));
+        return  responeData;
     }
 }

@@ -97,7 +97,14 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
                         ExecuteplanServiceImpl.log.info("计划发送调度请求响应。。。。。。。。。。。。。。。。。。。。。。。。：" + respon);
                     } catch (Exception e) {
                         ExecuteplanServiceImpl.log.info("计划发送调度请求异常：" + e.getMessage());
-                        throw new ServiceException(e.getMessage());
+                        if(e.getMessage().contains("Connection refused"))
+                        {
+                            throw new ServiceException("调度服务DispatchService未正常启动，请检查！");
+                        }
+                        else
+                        {
+                            throw new ServiceException(e.getMessage());
+                        }
                     }
                 }
             }
