@@ -451,18 +451,44 @@ public class TestCore {
         ArrayList<HashMap<String, String>> testconditionList = GetConditionByPlanIDAndConditionType(ObjectID, "前置条件", "测试用例");
         if (testconditionList.size() > 0) {
             long ConditionID = Long.parseLong(testconditionList.get(0).get("id"));
-//            SubCondition sub=new APISubCondition();
-//            sub.DoSubCondition(ConditionID,requestObject);
-            //处理接口条件
-            logger.info("开始处理用例前置条件-API子条件-============：");
-            APICondition(ConditionID, requestObject);
-            logger.info("完成处理用例前置条件-API子条件-============：");
-            //处理数据库条件
-            DBCondition(ConditionID, requestObject);
-            //处理脚本条件
-            logger.info("开始处理用例前置条件-脚本子条件-============：");
-            ScriptCondition(ConditionID, requestObject);
-            logger.info("完成处理用例前置条件-脚本子条件-============：");
+
+            ArrayList<HashMap<String, String>> conditionorderList =GetConditionOrderByID(ConditionID);
+            if(conditionorderList.size()>0)
+            {
+                for (HashMap<String, String> conditionorder:conditionorderList) {
+                    if(conditionorder.get("subconditiontype").equals("接口"))
+                    {
+                        logger.info("开始处理用例前置条件顺序-API子条件-============：");
+                        APICondition(ConditionID, requestObject);
+                        logger.info("完成处理用例前置条件顺序-API子条件-============：");
+                    }
+                    if(conditionorder.get("subconditiontype").equals("数据库"))
+                    {
+                        logger.info("开始处理用例前置条件顺序-数据库子条件-============：");
+                        DBCondition(ConditionID, requestObject);
+                        logger.info("完成处理用例前置条件顺序-数据库子条件-============：");
+                    }
+                    if(conditionorder.get("subconditiontype").equals("脚本"))
+                    {
+                        logger.info("开始处理用例前置条件顺序-脚本子条件-============：");
+                        ScriptCondition(ConditionID, requestObject);
+                        logger.info("完成处理用例前置条件顺序-脚本子条件-============：");
+                    }
+                }
+            }
+            else
+            {
+                //处理接口条件
+                logger.info("开始处理用例前置条件-API子条件-============：");
+                APICondition(ConditionID, requestObject);
+                logger.info("完成处理用例前置条件-API子条件-============：");
+                //处理数据库条件
+                DBCondition(ConditionID, requestObject);
+                //处理脚本条件
+                logger.info("开始处理用例前置条件-脚本子条件-============：");
+                ScriptCondition(ConditionID, requestObject);
+                logger.info("完成处理用例前置条件-脚本子条件-============：");
+            }
         }
     }
 
@@ -488,21 +514,21 @@ public class TestCore {
                 ResponeData responeData = request(re);
                 Respone = responeData.getRespone();
                 CostTime = End - Start;
-                SaveApiSubCondition(re, PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 End = new Date().getTime();
                 Respone = ex.getMessage();
                 CostTime = End - Start;
-                SaveApiSubCondition(re, PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(re,requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             }
         }
     }
 
-    private void SaveApiSubCondition(RequestObject requestObject, Long PlanID, String PlanName, String BatchName, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
+    private void SaveApiSubCondition(RequestObject requestObject, String CaseName, Long PlanID, String PlanName, String BatchName, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
         TestconditionReport testconditionReport = new TestconditionReport();
         testconditionReport.setTestplanid(PlanID);
-        testconditionReport.setPlanname(PlanName);
+        testconditionReport.setPlanname(CaseName);
         testconditionReport.setBatchname(BatchName);
         testconditionReport.setConditionid(new Long(ConditionID));
         testconditionReport.setConditiontype("前置条件");
@@ -541,7 +567,6 @@ public class TestCore {
             }
         }
     }
-
     //处理脚本条件
     public void ScriptCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
@@ -588,7 +613,7 @@ public class TestCore {
         testconditionReport.setSubconditiontype(SubconditionType);
         logger.info(SubconditionType + "条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
 
-        testconditionReport.setConditionresult(Respone);
+        testconditionReport.setConditionresult(Respone.replace("'","''"));
         testconditionReport.setConditionstatus(ConditionResultStatus);
         testconditionReport.setRuntime(CostTime);
         testconditionReport.setStatus("已完成");
@@ -788,6 +813,19 @@ public class TestCore {
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
             logger.info(logplannameandcasename + "获取条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //获取条件顺序
+    private ArrayList<HashMap<String, String>> GetConditionOrderByID(Long ConditionID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        try {
+            String sql = "select * from condition_order where conditionid=" + ConditionID +" order by conditionorder  asc" ;
+            logger.info(logplannameandcasename + "获取条件顺序 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取条件顺序异常...........: " + e.getMessage());
         }
         return result;
     }

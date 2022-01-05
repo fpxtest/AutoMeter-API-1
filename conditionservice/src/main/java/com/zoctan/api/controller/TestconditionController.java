@@ -82,6 +82,9 @@ public class TestconditionController {
     @Resource
     private EnviromentAssembleService enviromentAssembleService;
 
+    @Resource
+    private ConditionOrderService conditionOrderService;
+
 
     @PostMapping
     public Result add(@RequestBody Testcondition testcondition) {
@@ -104,15 +107,46 @@ public class TestconditionController {
         List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Planid, "前置条件", "测试集合");
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
-            TestconditionController.log.info("开始处理计划前置条件-数据库子条件-============：");
-            DBCondition(ConditionID, dispatch);
-            TestconditionController.log.info("完成处理计划前置条件-数据库子条件-============：");
-            TestconditionController.log.info("开始处理计划前置条件-接口子条件-============：");
-            APICondition(ConditionID, dispatch, executeplan, Planid);
-            TestconditionController.log.info("完成处理计划前置条件-接口子条件-============：");
-            TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：");
-            ScriptCondition(Caseid, dispatch, ConditionID);
-            TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：");
+
+            Map<String,Object> conditionmap=new HashMap<>();
+            conditionmap.put("conditionid",ConditionID);
+            List<ConditionOrder> conditionOrderList= conditionOrderService.findconditionorderWithid(conditionmap);
+            //条件排序的按照顺序执行
+            if(conditionOrderList.size()>0)
+            {
+                for (ConditionOrder conditionOrder :conditionOrderList) {
+                    if(conditionOrder.getSubconditiontype().equals("接口"))
+                    {
+                        TestconditionController.log.info("开始顺序处理计划前置条件-接口子条件-============：");
+                        APICondition(ConditionID, dispatch, executeplan, Planid);
+                        TestconditionController.log.info("完成顺序处理计划前置条件-接口子条件-============：");
+                    }
+                    if(conditionOrder.getSubconditiontype().equals("数据库"))
+                    {
+                        TestconditionController.log.info("开始顺序处理计划前置条件-数据库子条件-============：");
+                        DBCondition(ConditionID, dispatch);
+                        TestconditionController.log.info("完成顺序处理计划前置条件-数据库子条件-============：");
+                    }
+                    if(conditionOrder.getSubconditiontype().equals("脚本"))
+                    {
+                        TestconditionController.log.info("开始顺序处理用例前置条件-脚本子条件-============：");
+                        ScriptCondition(Caseid, dispatch, ConditionID);
+                        TestconditionController.log.info("完成顺序处理用例前置条件-脚本子条件-============：");
+                    }
+                }
+            }
+            else
+            {
+                TestconditionController.log.info("开始处理计划前置条件-数据库子条件-============：");
+                DBCondition(ConditionID, dispatch);
+                TestconditionController.log.info("完成处理计划前置条件-数据库子条件-============：");
+                TestconditionController.log.info("开始处理计划前置条件-接口子条件-============：");
+                APICondition(ConditionID, dispatch, executeplan, Planid);
+                TestconditionController.log.info("完成处理计划前置条件-接口子条件-============：");
+                TestconditionController.log.info("开始处理用例前置条件-脚本子条件-============：");
+                ScriptCondition(Caseid, dispatch, ConditionID);
+                TestconditionController.log.info("完成处理用例前置条件-脚本子条件-============：");
+            }
         }
         return ResultGenerator.genOkResult();
     }

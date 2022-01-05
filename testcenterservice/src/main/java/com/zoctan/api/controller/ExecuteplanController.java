@@ -83,7 +83,7 @@ public class ExecuteplanController {
                 List<ExecuteplanTestcase> deployidlist = execplantestcaseService.finddeployunitbyplanid(planid);
                 if(deployidlist.size()==0)
                 {
-                    return ResultGenerator.genFailedResult("该执行计划下用例所在的所有发布单元未完成部署！");
+                    return ResultGenerator.genFailedResult("该执行计划下用例所在的所有发布单元不存在，请检查是否被删除！");
                 }
                 else
                 {
