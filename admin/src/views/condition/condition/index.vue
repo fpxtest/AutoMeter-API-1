@@ -73,6 +73,12 @@
             v-if="hasPermission('condition:delete') && scope.row.id !== id"
             @click.native.prevent="removecondition(scope.$index)"
           >删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('condition:update') && scope.row.id !== id"
+            @click.native.prevent="showconditionorderDialog(scope.$index)"
+          >子条件排序</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -188,10 +194,59 @@
         >修改</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="子条件顺序" :visible.sync="ConditionOrderdialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 600px; margin-left:30px;"
+      >
+        <el-table
+          :data="conditionorderList"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%" >
+          <el-table-column label="编号" align="center" width="50">
+            <template slot-scope="scope">
+              <span v-text="getIndex(scope.$index)"></span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="conditionname" align="center" label="父条件" width="150px"></el-table-column>
+          <el-table-column prop="subconditionname" align="center" label="子条件"  width="80px"></el-table-column>
+          <el-table-column prop="subconditiontype" align="center" label="条件类型"  width="70px"></el-table-column>
+          <el-table-column prop="orderstatus" align="center" label="状态"  width="60px"></el-table-column>
+          <el-table-column prop="conditionorder" align="center" label="顺序"  width="50px"></el-table-column>
+
+          <el-table-column label="操作排序" align="center" width="140px" >
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                :disabled="scope.$index===0"
+                @click="moveUp(scope.$index,scope.row)"><i class="el-icon-arrow-up"></i></el-button>
+              <el-button
+                size="mini"
+                :disabled="scope.$index===(conditionorderList.length-1)"
+                @click="moveDown(scope.$index,scope.row)"><i class="el-icon-arrow-down"></i></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="ConditionOrderdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          @click.native.prevent="saveconditionorder"
+        >保存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
   import { search, addcondition, updatecondition, removecondition } from '@/api/condition/condition'
+  import { searchconditionorder, addconditionorder } from '@/api/condition/conditionorder'
   import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
@@ -216,6 +271,8 @@
         tmpconditionname: '',
         execplanList: [], // 计划列表
         conditionList: [], // 条件服务器列表
+        conditionorderList: [], // 条件顺序显示列表
+        saveconditionorderList: [], // 条件顺序保存列表
         apiList: [], // api列表
         caseList: [], // 用例列表
         deployunitList: [], // 发布单元列表
@@ -223,6 +280,7 @@
         machinenameList: [], // 服务器列表
         testcasevisible: false,
         executeplanVisible: false,
+        ConditionOrderdialogFormVisible: false,
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         deployunitquery: {
@@ -257,6 +315,17 @@
           deployunitname: '',
           apiname: ''
         },
+        tmpconditionorder: {
+          id: '',
+          conditionid: '',
+          subconditionid: '',
+          conditionname: '',
+          subconditionname: '',
+          subconditiontype: '',
+          conditionorder: '',
+          orderstatus: '',
+          creator: ''
+        },
         search: {
           page: 1,
           size: 10,
@@ -277,6 +346,32 @@
     methods: {
       unix2CurrentTime,
 
+      // 上移
+      moveUp(index, row) {
+        var that = this
+        if (index > 0) {
+          const upDate = that.conditionorderList[index - 1]
+          that.conditionorderList.splice(index - 1, 1)
+          that.conditionorderList.splice(index, 0, upDate)
+        } else {
+          alert('已经是第一条，不可上移')
+        }
+        console.log(that.conditionorderList)
+      },
+
+      // 下移
+      moveDown(index, row) {
+        var that = this
+        console.log('下移', index, row)
+        if ((index + 1) === that.conditionorderList.length) {
+          alert('已经是最后一条，不可下移')
+        } else {
+          console.log(index)
+          const downDate = that.conditionorderList[index + 1]
+          that.conditionorderList.splice(index + 1, 1)
+          that.conditionorderList.splice(index, 0, downDate)
+        }
+      },
       /**
        * 条件目标下拉选择  e的值为options的选值
        */
@@ -471,6 +566,32 @@
         })
       },
       /**
+       * 添加条件顺序
+       */
+      saveconditionorder() {
+        this.saveconditionorderList = []
+        for (let i = 0; i < this.conditionorderList.length; i++) {
+          this.saveconditionorderList.push({
+            'conditionid': this.conditionorderList[i].conditionid,
+            'subconditionid': this.conditionorderList[i].subconditionid,
+            'subconditiontype': this.conditionorderList[i].subconditiontype,
+            'orderstatus': '已排序',
+            'subconditionname': this.conditionorderList[i].subconditionname,
+            'conditionname': this.conditionorderList[i].conditionname,
+            'conditionorder': i + 1,
+            'creator': this.name
+          })
+        }
+        console.log(this.saveconditionorderList)
+        addconditionorder(this.saveconditionorderList).then(() => {
+          this.$message.success('条件顺序保存成功')
+        }).catch(res => {
+          this.$message.error('条件顺序保存失败')
+        })
+        this.ConditionOrderdialogFormVisible = false
+      },
+
+      /**
        * 显示修改条件对话框
        * @param index 条件下标
        */
@@ -495,6 +616,21 @@
         this.tmpcondition.memo = this.conditionList[index].memo
         this.tmpcondition.creator = this.name
       },
+
+      showconditionorderDialog(index) {
+        this.ConditionOrderdialogFormVisible = true
+        this.tmpconditionorder.conditionid = this.conditionList[index].id
+        this.searchConditionorder()
+      },
+
+      searchConditionorder() {
+        searchconditionorder(this.tmpconditionorder).then(response => {
+          this.conditionorderList = response.data
+        }).catch(res => {
+          this.$message.error('查询条件顺序失败')
+        })
+      },
+
       /**
        * 更新条件
        */
