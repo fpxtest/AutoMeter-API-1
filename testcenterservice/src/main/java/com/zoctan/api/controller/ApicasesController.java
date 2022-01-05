@@ -19,6 +19,7 @@ import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
+import org.apache.http.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,8 @@ public class ApicasesController {
     private ApiParamsService apiParamsService;
     @Autowired(required = false)
     private TestconditionService testconditionService;
+    @Resource
+    private ConditionOrderService conditionOrderService;
     @Value("${spring.conditionserver.serverurl}")
     private String conditionserver;
 
@@ -62,7 +65,7 @@ public class ApicasesController {
 
         Condition con = new Condition(Apicases.class);
         con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
-                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename().replace("'","''") + "'")
+                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename().replace("'", "''") + "'")
         ;
         //.orCondition("casejmxname = '" + apicases.getCasejmxname() + "'")
         if (apicasesService.ifexist(con) > 0) {
@@ -235,6 +238,17 @@ public class ApicasesController {
         return ResultGenerator.genOkResult(list);
     }
 
+
+    private String getSubConditionRespone(String Url, String params, HttpHeader header) throws Exception {
+        //请求API条件
+        String Respone = Httphelp.doPost(Url, params, header, 30000, 30000);
+        if (Respone.contains("条件执行异常")) {
+            JSONObject object = JSON.parseObject(Respone);
+            throw new Exception(object.getString("message"));
+        }
+        return Respone;
+    }
+
     /**
      * 运行测试
      */
@@ -245,8 +259,7 @@ public class ApicasesController {
         boolean prixflag = Boolean.parseBoolean(param.get("prixflag").toString());
 
         HashMap<String, String> ParamsValuesMap = new HashMap<>();
-        if(prixflag)
-        {
+        if (prixflag) {
             //请求条件服务处理前置条件
             List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Caseid, "前置条件", "测试用例");
             String APIRespone = "";
@@ -256,38 +269,34 @@ public class ApicasesController {
                 String APIConditionServerurl = conditionserver + "/testcondition/execcasecondition/api";
 
                 Long ConditionID = testconditionList.get(0).getId();
+                Map<String, Object> conditionmap = new HashMap<>();
+                conditionmap.put("conditionid", ConditionID);
+                List<ConditionOrder> conditionOrderList = conditionOrderService.findconditionorderWithid(conditionmap);
                 param.put("ConditionID", ConditionID);
                 HttpHeader header = new HttpHeader();
                 String params = JSON.toJSONString(param);
                 try {
-                    //请求API条件
-                    APIRespone = Httphelp.doPost(APIConditionServerurl, params, header, 30000, 30000);
-                    if(APIRespone.contains("接口子条件执行异常"))
-                    {
-                        JSONObject object= JSON.parseObject(APIRespone);
-                        throw new Exception(object.getString("message"));
-                    }
-                    //请求脚本条件
-                    String ScriptRespone =Httphelp.doPost(ScriptConditionServerurl, params, header, 30000, 30000);
-                    if(ScriptRespone.contains("脚本条件执行异常"))
-                    {
-                        JSONObject object= JSON.parseObject(ScriptRespone);
-                        throw new Exception(object.getString("message"));
-                    }
-                    //请求DB条件
-                    String DBRespone =Httphelp.doPost(DBConditionServerurl, params, header, 30000, 30000);
-                    if(DBRespone.contains("数据库子条件执行异常"))
-                    {
-                        JSONObject object= JSON.parseObject(DBRespone);
-                        throw new Exception(object.getString("message"));
+                    if (conditionOrderList.size() > 0) {
+                        for (ConditionOrder conditionOrder : conditionOrderList) {
+                            if (conditionOrder.getSubconditiontype().equals("接口")) {
+                                APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
+                            }
+                            if (conditionOrder.getSubconditiontype().equals("数据库")) {
+                                getSubConditionRespone(DBConditionServerurl, params, header);
+                            }
+                            if (conditionOrder.getSubconditiontype().equals("脚本")) {
+                                getSubConditionRespone(ScriptConditionServerurl, params, header);
+                            }
+                        }
+                    } else {
+                        APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
+                        getSubConditionRespone(ScriptConditionServerurl, params, header);
+                        getSubConditionRespone(DBConditionServerurl, params, header);
                     }
                 } catch (Exception ex) {
-                    if(ex.getMessage().contains("Connection refused"))
-                    {
+                    if (ex.getMessage().contains("Connection refused")) {
                         return ResultGenerator.genFailedResult("无法连接条件服务器，请检查ConditionService是否正常启动！");
-                    }
-                    else
-                    {
+                    } else {
                         return ResultGenerator.genFailedResult("执行前置条件异常：" + ex.getMessage());
                     }
                 }
@@ -348,10 +357,10 @@ public class ApicasesController {
                     return ResultGenerator.genFailedResult("当前用例API的Header参数还未设计用例数据，请先完善后运行测试！");
                 } else {
                     for (ApiCasedata Headdata : HeaderApiCasedataList) {
-                        String HeaderName=Headdata.getApiparam();
-                        String HeaderValue=Headdata.getApiparamvalue();
+                        String HeaderName = Headdata.getApiparam();
+                        String HeaderValue = Headdata.getApiparamvalue();
                         if (ParamsValuesMap.size() > 0) {
-                            HeaderValue=GetVariablesValues(HeaderValue,ParamsValuesMap);
+                            HeaderValue = GetVariablesValues(HeaderValue, ParamsValuesMap);
                         }
                         header.addParam(HeaderName, HeaderValue);
                     }
@@ -364,10 +373,10 @@ public class ApicasesController {
                     return ResultGenerator.genFailedResult("当前用例API的Params参数还未设计用例数据，请先完善后运行测试！");
                 } else {
                     for (ApiCasedata Paramdata : ParamsApiCasedataList) {
-                        String ParamName=Paramdata.getApiparam();
-                        String ParamValue=Paramdata.getApiparamvalue();
+                        String ParamName = Paramdata.getApiparam();
+                        String ParamValue = Paramdata.getApiparamvalue();
                         if (ParamsValuesMap.size() > 0) {
-                            ParamValue=GetVariablesValues(ParamValue,ParamsValuesMap);
+                            ParamValue = GetVariablesValues(ParamValue, ParamsValuesMap);
                         }
                         paramers.addParam(ParamName, ParamValue);
                     }
@@ -410,9 +419,9 @@ public class ApicasesController {
                 responeGeneral.setMethod(Method);
                 responeGeneral.setProtocal(Protocal);
                 responeGeneral.setUrl(resource);
-                List<RequestHead>requestHeadList=new ArrayList<>();
-                for (String Key:header.getParams().keySet()) {
-                    RequestHead requestHead=new RequestHead();
+                List<RequestHead> requestHeadList = new ArrayList<>();
+                for (String Key : header.getParams().keySet()) {
+                    RequestHead requestHead = new RequestHead();
                     requestHead.setKeyName(Key);
                     requestHead.setKeyValue(header.getParams().get(Key));
                     requestHeadList.add(requestHead);
@@ -430,7 +439,7 @@ public class ApicasesController {
     }
 
     //获取参数值的具体内容，支持$变量，以及$变量和字符串拼接
-    private String GetVariablesValues(String Value, HashMap<String,String> NameValueMap) {
+    private String GetVariablesValues(String Value, HashMap<String, String> NameValueMap) {
         String Result = "";
         if (Value.contains("+")) {
             String[] Array = Value.split("\\+");
@@ -438,10 +447,9 @@ public class ApicasesController {
                 if (str.contains("$")) {
                     String VariablesName = str.substring(1);
                     //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                    String VariablesNameValue="";
-                    if(NameValueMap.containsKey(VariablesName))
-                    {
-                         VariablesNameValue = NameValueMap.get(VariablesName);
+                    String VariablesNameValue = "";
+                    if (NameValueMap.containsKey(VariablesName)) {
+                        VariablesNameValue = NameValueMap.get(VariablesName);
                     }
                     Result = Result + VariablesNameValue;
                 } else {
@@ -452,9 +460,8 @@ public class ApicasesController {
             if (Value.contains("$")) {
                 String VariablesName = Value.substring(1);
                 //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                String VariablesNameValue="";
-                if(NameValueMap.containsKey(VariablesName))
-                {
+                String VariablesNameValue = "";
+                if (NameValueMap.containsKey(VariablesName)) {
                     VariablesNameValue = NameValueMap.get(VariablesName);
                 }
                 Result = VariablesNameValue;
