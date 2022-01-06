@@ -33,6 +33,11 @@ private ConditionApiMapper conditionApiMapper;
         conditionApiMapper.updateTestconditionapi(params);
     }
 
+    @Override
+    public void deletesubconditionbyconid(Long conditionid) {
+        conditionApiMapper.deletesubconditionbyconid(conditionid);
+    }
+
 
     @Override
     public int ifexist(Condition con) {

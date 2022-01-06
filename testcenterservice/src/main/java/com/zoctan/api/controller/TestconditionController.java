@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Testcondition;
-import com.zoctan.api.service.TestconditionService;
+import com.zoctan.api.service.*;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -22,6 +22,15 @@ import java.util.Map;
 public class TestconditionController {
     @Resource
     private TestconditionService testconditionService;
+    @Resource
+    private ConditionDbService conditionDbService;
+    @Resource
+    private ConditionScriptService conditionScriptService;
+    @Resource
+    private ConditionApiService conditionApiService;
+    @Resource
+    private ConditionOrderService conditionOrderService;
+
 
     @PostMapping
     public Result add(@RequestBody Testcondition testcondition) {
@@ -42,6 +51,10 @@ public class TestconditionController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         testconditionService.deleteById(id);
+        conditionApiService.deletesubconditionbyconid(id);
+        conditionDbService.deletesubconditionbyconid(id);
+        conditionScriptService.deletesubconditionbyconid(id);
+        conditionOrderService.deleteconditionorderbyconid(id);
         return ResultGenerator.genOkResult();
     }
 

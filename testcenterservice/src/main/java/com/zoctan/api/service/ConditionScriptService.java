@@ -16,6 +16,7 @@ public interface ConditionScriptService extends Service<ConditionScript> {
     List<ConditionScript> findtestconditionapiWithName(final Map<String, Object> params);
 
     void updateTestconditionapi(ConditionScript params);
+    void deletesubconditionbyconid(Long conditionid);
 
     int ifexist(Condition condition);
 }

@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.ConditionApi;
 import com.zoctan.api.entity.ConditionDb;
 import com.zoctan.api.service.ConditionDbService;
+import com.zoctan.api.service.ConditionOrderService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -23,6 +24,8 @@ import java.util.Map;
 public class ConditionDbController {
     @Resource
     private ConditionDbService conditionDbService;
+    @Resource
+    private ConditionOrderService conditionOrderService;
 
     @PostMapping
     public Result add(@RequestBody ConditionDb conditionDb) {
@@ -42,6 +45,8 @@ public class ConditionDbController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        ConditionDb conditionDb=conditionDbService.getBy("id",id);
+        conditionOrderService.deleteconditionorderbysubconid(conditionDb.getConditionid(),id,"数据库");
         conditionDbService.deleteById(id);
         return ResultGenerator.genOkResult();
     }

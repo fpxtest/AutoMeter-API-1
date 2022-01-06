@@ -47,7 +47,7 @@ private ConditionOrderMapper conditionOrderMapper;
     }
 
     @Override
-    public void deleteconditionorderbysubconid(Long conditionid,Long subconditionid) {
-        conditionOrderMapper.deleteconditionorderbysubconid(conditionid,subconditionid);
+    public void deleteconditionorderbysubconid(Long conditionid,Long subconditionid,String subconditiontype) {
+        conditionOrderMapper.deleteconditionorderbysubconid(conditionid,subconditionid,subconditiontype);
     }
 }

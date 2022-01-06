@@ -17,6 +17,8 @@ public interface ConditionApiService extends Service<ConditionApi> {
 
     void updateTestconditionapi(ConditionApi params);
 
+    void deletesubconditionbyconid(Long conditionid);
+
     int ifexist(Condition condition);
 
 
