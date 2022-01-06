@@ -16,7 +16,7 @@ public interface ConditionDbService extends Service<ConditionDb> {
 
     List<ConditionDb> finddbconditionWithName(final Map<String, Object> params);
     void updateTestconditiondb(ConditionDb params);
-
+    void deletesubconditionbyconid(Long conditionid);
     int ifexist(Condition condition);
 
 }

@@ -7,6 +7,7 @@ import com.zoctan.api.entity.Testcondition;
 import com.zoctan.api.service.ConditionApiService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zoctan.api.service.ConditionOrderService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -23,6 +24,9 @@ import java.util.Map;
 public class ConditionApiController {
     @Resource
     private ConditionApiService conditionApiService;
+    @Resource
+    private ConditionOrderService conditionOrderService;
+
 
     @PostMapping
     public Result add(@RequestBody ConditionApi conditionApi) {
@@ -44,7 +48,9 @@ public class ConditionApiController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        conditionApiService.deleteById(id);
+        ConditionApi conditionApi=conditionApiService.getBy("id",id);
+        conditionOrderService.deleteconditionorderbysubconid(conditionApi.getConditionid(),id,"接口");
+        conditionApiService.deleteBy("id",id);
         return ResultGenerator.genOkResult();
     }
 

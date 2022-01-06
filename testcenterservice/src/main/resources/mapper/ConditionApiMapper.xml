@@ -35,4 +35,8 @@
     memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
+
+  <delete id="deletesubconditionbyconid">
+    DELETE from condition_api where conditionid = #{conditionid}
+  </delete>
 </mapper>
