@@ -458,6 +458,9 @@
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         this.tmpapicondition.id = this.apiconditionList[index].id
+        this.tmpapicondition.conditionid = this.apiconditionList[index].conditionid
+        this.tmpapicondition.deployunitid = this.apiconditionList[index].deployunitid
+        this.tmpapicondition.caseid = this.apiconditionList[index].caseid
         this.tmpapicondition.conditionname = this.apiconditionList[index].conditionname
         this.tmpapicondition.deployunitname = this.apiconditionList[index].deployunitname
         this.tmpapicondition.subconditionname = this.apiconditionList[index].subconditionname

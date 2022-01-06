@@ -1,8 +1,10 @@
 package com.zoctan.api.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
 import cn.hutool.db.ds.simple.SimpleDataSource;
+import cn.hutool.extra.mail.MailAccount;
+import cn.hutool.extra.mail.MailUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
@@ -12,10 +14,10 @@ import com.zoctan.api.core.service.TestCaseHelp;
 import com.zoctan.api.dto.RequestObject;
 import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.entity.*;
+import com.zoctan.api.entity.Dictionary;
 import com.zoctan.api.service.*;
 import com.zoctan.api.util.DnamicCompilerHelp;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,6 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -84,6 +85,11 @@ public class TestconditionController {
 
     @Resource
     private ConditionOrderService conditionOrderService;
+    @Resource
+    private DictionaryService dictionaryService;
+
+    @Resource
+    private AccountService accountService;
 
 
     @PostMapping
@@ -100,14 +106,13 @@ public class TestconditionController {
 
     @PostMapping("/execplancondition")
     @Async
-    public Result exec(@RequestBody Dispatch dispatch) throws Exception {
+    public Result exec(@RequestBody Dispatch dispatch)  {
         Long Planid = dispatch.getExecplanid();
         Long Caseid = dispatch.getTestcaseid();
         Executeplan executeplan = executeplanService.getBy("id", Planid);
         List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Planid, "前置条件", "测试集合");
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
-
             Map<String,Object> conditionmap=new HashMap<>();
             conditionmap.put("conditionid",ConditionID);
             List<ConditionOrder> conditionOrderList= conditionOrderService.findconditionorderWithid(conditionmap);
@@ -207,7 +212,7 @@ public class TestconditionController {
             if (apicases == null) {
                 Respone = "未找到条件运行的接口，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;
             }
             Long ApiID = apicases.getApiid();
@@ -215,7 +220,7 @@ public class TestconditionController {
             if (api == null) {
                 Respone = "未找到条件运行的接口的API，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;
             }
             Long Deployunitid = api.getDeployunitid();
@@ -223,7 +228,7 @@ public class TestconditionController {
             if (deployunit == null) {
                 Respone = "未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;
             }
             List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
@@ -232,20 +237,28 @@ public class TestconditionController {
             if (macdepunit == null) {
                 Respone = "未找到环境组件部署，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
                 Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
-            RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+            RequestObject requestObject=new RequestObject();
+            try {
+                 requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+            }
+            catch (Exception ex)
+            {
+                TestconditionController.log.info("接口子条件条件获取请求数据GetCaseRequestData异常-============：" + ex.getMessage());
+            }
             try {
                 Start = new Date().getTime();
+                TestconditionController.log.info("接口子条件条件请求数据-============：" + requestObject.getPostData());
                 TestResponeData testResponeData = testCaseHelp.request(requestObject);
                 Respone = testResponeData.getResponeContent();
             } catch (Exception ex) {
@@ -266,7 +279,7 @@ public class TestconditionController {
             VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
             CostTime = End - Start;
             //更新条件结果表
-            UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
+            UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime,conditionApi.getCreator());
         }
         return VariableNameValueMap;
     }
@@ -492,7 +505,7 @@ public class TestconditionController {
             if (enviromentAssemble == null) {
                 Respone = "未找到环境组件，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionDb.getCreator());
                 break;
             }
             String AssembleType = enviromentAssemble.getAssembletype();
@@ -504,14 +517,14 @@ public class TestconditionController {
             if (macdepunit == null) {
                 Respone = "未找到环境组件部署，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionDb.getCreator());
                 break;
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
                 Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionDb.getCreator());
                 break;
             }
             String deployunitvisittype = macdepunit.getVisittype();
@@ -519,7 +532,7 @@ public class TestconditionController {
             if (ConnetcArray.length < 4) {
                 Respone = "数据库连接字填写不规范，请按规则填写";
                 ConditionResultStatus = "失败";
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0));
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionDb.getCreator());
                 break;
             }
             try {
@@ -532,7 +545,7 @@ public class TestconditionController {
                 End = new Date().getTime();
                 CostTime = End - Start;
                 //更新条件结果表
-                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime);
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime,conditionDb.getCreator());
                 TestconditionController.log.info("数据库子条件条件报告子条件完成-============：");
             }
         }
@@ -596,13 +609,59 @@ public class TestconditionController {
     }
 
 
-    private void UpdatetestconditionReport(TestconditionReport testconditionReport, String Respone, String ConditionResultStatus, Long CostTime) {
+    private void UpdatetestconditionReport(TestconditionReport testconditionReport, String Respone, String ConditionResultStatus, Long CostTime,String user) {
         //更新条件结果表
         testconditionReport.setConditionresult(Respone);
         testconditionReport.setConditionstatus(ConditionResultStatus);
         testconditionReport.setRuntime(CostTime);
         testconditionReport.setStatus("已完成");
         testconditionReportService.update(testconditionReport);
+
+        //当结果为失败的情况发邮件通知用户
+        if(ConditionResultStatus.equals("失败"))
+        {
+            try
+            {
+                List<Dictionary>dictionaryList= dictionaryService.findDicNameValueWithCode("Mail");
+                if(dictionaryList.size()>0)
+                {
+                    Dictionary dictionary=dictionaryList.get(0);
+                    String MailInfo=dictionary.getDicitmevalue();
+                    String[] MailArray=MailInfo.split(",");
+                    if(MailArray.length>4)
+                    {
+                        String Smtp=MailArray[0];
+                        int port=Integer.parseInt(MailArray[1]);
+                        String from=MailArray[2];
+                        String mailuser=MailArray[3];
+                        String pass=MailArray[4];
+
+                        MailAccount account = new MailAccount();
+                        account.setHost(Smtp);
+                        account.setPort(port);
+                        account.setAuth(true);
+                        account.setFrom(from);
+                        account.setUser(mailuser);
+                        account.setPass(pass);
+
+                        List<Account>accountList= accountService.findWithUsername(user);
+                        String mailto="";
+                        if(accountList.size()>0)
+                        {
+                            mailto=accountList.get(0).getEmail();
+                        }
+                        String Subject=testconditionReport.getPlanname()+"|"+testconditionReport.getBatchname()+"前置子条件执行失败："+testconditionReport.getSubconditionname();
+                        String Content="失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时前后AutoMeter处理！";
+                        MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
+                        TestconditionController.log.info("发送邮件成功-============："+mailto);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TestconditionController.log.info("发送邮件异常-============："+ex.getMessage());
+            }
+        }
     }
 
     public void ScriptCondition(Long Caseid, Dispatch dispatch, Long ConditionID) {
