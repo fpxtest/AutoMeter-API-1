@@ -3,7 +3,9 @@ package com.zoctan.api.controller;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.ConditionApi;
+import com.zoctan.api.entity.ConditionDb;
 import com.zoctan.api.entity.ConditionScript;
+import com.zoctan.api.service.ConditionOrderService;
 import com.zoctan.api.service.ConditionScriptService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,6 +25,8 @@ import java.util.Map;
 public class ConditionScriptController {
     @Resource
     private ConditionScriptService conditionScriptService;
+    @Resource
+    private ConditionOrderService conditionOrderService;
 
     @PostMapping
     public Result add(@RequestBody ConditionScript conditionScript) {
@@ -42,6 +46,8 @@ public class ConditionScriptController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        ConditionScript conditionScript=conditionScriptService.getBy("id",id);
+        conditionOrderService.deleteconditionorderbysubconid(conditionScript.getConditionid(),id,"脚本");
         conditionScriptService.deleteById(id);
         return ResultGenerator.genOkResult();
     }

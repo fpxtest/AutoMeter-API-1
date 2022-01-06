@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.ConditionApi;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
@@ -13,4 +14,7 @@ public interface ConditionApiMapper extends MyMapper<ConditionApi> {
     void updateTestconditionapi(ConditionApi params);
 
     List<ConditionApi> getallTestconditionapi();
+
+    void deletesubconditionbyconid(@Param("conditionid") Long conditionid);
+
 }

@@ -33,6 +33,11 @@ private ConditionScriptMapper conditionScriptMapper;
     }
 
     @Override
+    public void deletesubconditionbyconid(Long conditionid) {
+        conditionScriptMapper.deletesubconditionbyconid(conditionid);
+    }
+
+    @Override
     public int ifexist(Condition condition) {
         return countByCondition(condition);
     }

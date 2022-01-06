@@ -34,6 +34,11 @@ private ConditionDbMapper conditionDbMapper;
     }
 
     @Override
+    public void deletesubconditionbyconid(Long conditionid) {
+        conditionDbMapper.deletesubconditionbyconid(conditionid);
+    }
+
+    @Override
     public int ifexist(Condition condition) {
         return countByCondition(condition);
     }
