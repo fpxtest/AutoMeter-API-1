@@ -126,7 +126,7 @@
       </el-table-column>
 
       <el-table-column label="运行时间(ms)" align="center" prop="runtime" width="100"/>
-      <el-table-column label="运行信息" align="center" prop="errorinfo" width="100">
+      <el-table-column label="异常信息" align="center" prop="errorinfo" width="100">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.errorinfo }}</p>
