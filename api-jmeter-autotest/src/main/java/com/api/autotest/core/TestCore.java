@@ -184,6 +184,7 @@ public class TestCore {
             String BatchName = getcaseValue("batchname", DispatchList);
             String ExecPlanName = getcaseValue("execplanname", DispatchList);
             RequestObject ro = GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName);
+            ro=GetRequestParamsData(ro);
             FunctionROList.add(ro);
         }
         return FunctionROList;
@@ -496,7 +497,7 @@ public class TestCore {
     }
 
     //处理接口条件
-    public void APICondition(long ConditionID, RequestObject requestObject) {
+    public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
         ArrayList<HashMap<String, String>> conditionApiList = GetApiConditionByConditionID(ConditionID);
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         logger.info("条件报告API子条件数量-============：" + conditionApiList.size());
@@ -524,6 +525,7 @@ public class TestCore {
                 Respone = ex.getMessage();
                 CostTime = End - Start;
                 SaveApiSubCondition(re,requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                throw new Exception("接口子条件执行异常：" + ex.getMessage());
             }
         }
     }
@@ -625,7 +627,7 @@ public class TestCore {
 
     }
 
-    public void DBCondition(long ConditionID, RequestObject requestObject) {
+    public void DBCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         ArrayList<HashMap<String, String>> conditionDbListList = GetDBConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionDb : conditionDbListList) {
@@ -646,6 +648,7 @@ public class TestCore {
                 String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
                 Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
                 String Sql = conditionDb.get("dbcontent");
+                logger.info(logplannameandcasename + "数据库子条件完整的sql ....." + Sql);
                 String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
                 ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
                 if (macdepunitlist.size() == 0) {
@@ -703,12 +706,17 @@ public class TestCore {
 
                 String[] SqlArr = Sql.split(";");
                 for (String ExecSql : SqlArr) {
-                    int nums = Db.use(ds).execute(ExecSql);
-                    Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+                    logger.info(logplannameandcasename + "数据库子条件执行sql ....." + ExecSql);
+                    if((!ExecSql.isEmpty())||(ExecSql.equals("")))
+                    {
+                        int nums = Db.use(ds).execute(ExecSql);
+                        Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+                    }
                 }
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
+                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
             } finally {
                 End = new Date().getTime();
                 CostTime = End - Start;
@@ -794,7 +802,7 @@ public class TestCore {
                                 tpc=Long.parseLong(liststatics.get(0).get("tpc"));
                                 tfc=Long.parseLong(liststatics.get(0).get("tfc"));
                             }
-                            String Content="测试集合运行完成结果总计用例数："+tc+" 成功数："+tpc+"失败数："+tfc;
+                            String Content="测试集合运行完成结果总计用例数："+tc+"， 成功数："+tpc+"， 失败数："+tfc;
                             MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
                             logger.info("发送邮件成功-============："+mailto);
                         }
