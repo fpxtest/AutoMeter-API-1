@@ -1463,5 +1463,8 @@ CREATE TABLE `condition_order`
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8mb4 COMMENT ='条件顺序表';
 
+  ALTER TABLE testcenter.dictionary MODIFY COLUMN dicitmevalue varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '字典项值';
+
+
 
 

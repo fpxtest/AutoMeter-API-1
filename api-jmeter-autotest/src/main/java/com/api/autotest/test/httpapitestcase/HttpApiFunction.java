@@ -1,5 +1,8 @@
 package com.api.autotest.test.httpapitestcase;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.extra.mail.MailAccount;
+import cn.hutool.extra.mail.MailUtil;
 import com.api.autotest.core.TestAssert;
 import com.api.autotest.core.TestCore;
 import com.api.autotest.dto.ApicasesAssert;
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class HttpApiFunction extends AbstractJavaSamplerClient {
+    TestCore Core=null;
     // 初始化方法，实际运行时每个线程仅执行一次，在测试方法运行前执行，类似于LoadRunner中的init方法
     public void setupTest(JavaSamplerContext context) {
         super.setupTest(context);
@@ -38,40 +42,38 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
 
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
-        String SlaverId=ctx.getParameter("SlaverId");
-        String DispatchIds=ctx.getParameter("DispatchIds");
-        String mysqlurl=ctx.getParameter("mysqlurl");
-        getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
-        getLogger().info("DispatchIds 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+DispatchIds);
-        getLogger().info("mysqlurl 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+mysqlurl);
+        String SlaverId = ctx.getParameter("SlaverId");
+        String DispatchIds = ctx.getParameter("DispatchIds");
+        String mysqlurl = ctx.getParameter("mysqlurl");
+        getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + SlaverId);
+        getLogger().info("DispatchIds 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + DispatchIds);
+        getLogger().info("mysqlurl 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + mysqlurl);
         SampleResult results = new SampleResult();
         //Jmeter java实例开始执行
         results.sampleStart();
-        TestCore Core = new TestCore(ctx, getLogger());
+        Core = new TestCore(ctx, getLogger());
         // 初始化用例数据
-        Map<String,List<RequestObject>> BatchRequestObjectMap = InitalTestData(Core, ctx);
-        for(String BatchName:BatchRequestObjectMap.keySet())
-        {
-            getLogger().info("BatchName 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+BatchName+" size is"+BatchRequestObjectMap.get(BatchName).size());
-            if(BatchRequestObjectMap.get(BatchName).size()>0)
-            {
-                String TestPlanID=BatchRequestObjectMap.get(BatchName).get(0).getTestplanid();
-                getLogger().info("TestPlanID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+TestPlanID);
-                Core.UpdateReportStatics(TestPlanID,BatchName,"运行中");
+        Map<String, List<RequestObject>> BatchRequestObjectMap = InitalTestData(Core, ctx);
+        for (String BatchName : BatchRequestObjectMap.keySet()) {
+            getLogger().info("BatchName 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + BatchName + " size is" + BatchRequestObjectMap.get(BatchName).size());
+            String TestPlanID="";
+            if (BatchRequestObjectMap.get(BatchName).size() > 0) {
+                TestPlanID = BatchRequestObjectMap.get(BatchName).get(0).getTestplanid();
+                getLogger().info("TestPlanID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + TestPlanID);
+                Core.UpdateReportStatics(TestPlanID, BatchName, "运行中");
             }
-            Map<String,List<RequestObject>> DeployUnitrequestObjectMap=GetGroupMap(BatchRequestObjectMap.get(BatchName),"DeployID");
-            for(String DeployUnitID:DeployUnitrequestObjectMap.keySet())
-            {
-                ApicasesReportstatics apicasesReportstatics=new ApicasesReportstatics();
-                getLogger().info("DeployUnitID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+DeployUnitID+" size is:"+DeployUnitrequestObjectMap.get(DeployUnitID).size());
+            Map<String, List<RequestObject>> DeployUnitrequestObjectMap = GetGroupMap(BatchRequestObjectMap.get(BatchName), "DeployID");
+            for (String DeployUnitID : DeployUnitrequestObjectMap.keySet()) {
+                ApicasesReportstatics apicasesReportstatics = new ApicasesReportstatics();
+                getLogger().info("DeployUnitID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + DeployUnitID + " size is:" + DeployUnitrequestObjectMap.get(DeployUnitID).size());
                 apicasesReportstatics.setDeployunitid(DeployUnitID);
-                int BatchDeployTotalCaseNums=DeployUnitrequestObjectMap.get(DeployUnitID).size();
-                int BatchDeployTotalPassNums=0;
-                int BatchDeployTotalFailNUms=0;
-                long AllCostTime=0;
+                int BatchDeployTotalCaseNums = DeployUnitrequestObjectMap.get(DeployUnitID).size();
+                int BatchDeployTotalPassNums = 0;
+                int BatchDeployTotalFailNUms = 0;
+                long AllCostTime = 0;
                 // 发送用例请求，并返回结果
                 for (RequestObject requestObject : DeployUnitrequestObjectMap.get(DeployUnitID)) {
-                    getLogger().info("Deployid:"+DeployUnitID+" requestObject case id is 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+requestObject.getCaseid());
+                    getLogger().info("Deployid:" + DeployUnitID + " requestObject case id is 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + requestObject.getCaseid());
                     apicasesReportstatics.setTestplanid(requestObject.getTestplanid());
                     apicasesReportstatics.setTestplanname(requestObject.getTestplanname());
                     apicasesReportstatics.setSlaverid(requestObject.getSlaverid());
@@ -84,33 +86,30 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     try {
                         //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
                         Core.FixCondition(requestObject);
-                        requestObject=Core.GetRequestParamsData(requestObject);
                         ResponeData responeData = SendCaseRequest(requestObject, Core);
-                        ActualResult=responeData.getRespone();
+                        ActualResult = responeData.getRespone();
                         //断言
-                        AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
+                        AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
                     } catch (Exception ex) {
                         getLogger().error(TestCore.logplannameandcasename + "CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
                         ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
                     } finally {
                         // 保存用例运行结果，Jmeter的sample运行结果
                         long End = new Date().getTime();
-                        long CostTime=End-Start;
-                        AllCostTime= AllCostTime+CostTime;
-                        if(TestAssert.isCaseresult())
-                        {
-                            BatchDeployTotalPassNums=BatchDeployTotalPassNums+1;
+                        long CostTime = End - Start;
+                        AllCostTime = AllCostTime + CostTime;
+                        if (TestAssert.isCaseresult()) {
+                            BatchDeployTotalPassNums = BatchDeployTotalPassNums + 1;
+                        } else {
+                            BatchDeployTotalFailNUms = BatchDeployTotalFailNUms + 1;
                         }
-                        else
-                        {
-                            BatchDeployTotalFailNUms=BatchDeployTotalFailNUms+1;
-                        }
-                        CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult,ctx,requestObject);
+                        CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult, ctx, requestObject);
                     }
                 }
                 //收集本次运行的功能用例统计结果
-                CollectionReportStatics(Core,apicasesReportstatics,BatchName, BatchDeployTotalCaseNums,BatchDeployTotalPassNums,BatchDeployTotalFailNUms,AllCostTime,SlaverId);
+                CollectionBatchDeployReportStatics(Core, apicasesReportstatics, BatchName, BatchDeployTotalCaseNums, BatchDeployTotalPassNums, BatchDeployTotalFailNUms, AllCostTime, SlaverId);
             }
+            FinisBatchCase(Core,TestPlanID,BatchName,SlaverId);
         }
         //Jmeter事务，表示这是事务的结束点
         results.sampleEnd();
@@ -118,34 +117,28 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //初始化用例的基础数据
-    private Map<String,List<RequestObject>> InitalTestData(TestCore core, JavaSamplerContext ctx) {
+    private Map<String, List<RequestObject>> InitalTestData(TestCore core, JavaSamplerContext ctx) {
         getLogger().info("根据调度ids获取请求数据列表 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
         List<RequestObject> objectList = core.GetDispatchOBList(ctx);
-        Map<String,List<RequestObject>> BatchObject=GetGroupMap(objectList,"BatchName");
+        Map<String, List<RequestObject>> BatchObject = GetGroupMap(objectList, "BatchName");
         return BatchObject;
     }
 
-    private Map<String,List<RequestObject>> GetGroupMap(List<RequestObject> objectList,String ObjectName)
-    {
-        Map<String,List<RequestObject>> GroupObject=new HashMap<>();
-        String KeyName="";
-        for (RequestObject ob:objectList) {
-            if(ObjectName.equals(new String("BatchName")))
-            {
-                KeyName= ob.getBatchname();
+    private Map<String, List<RequestObject>> GetGroupMap(List<RequestObject> objectList, String ObjectName) {
+        Map<String, List<RequestObject>> GroupObject = new HashMap<>();
+        String KeyName = "";
+        for (RequestObject ob : objectList) {
+            if (ObjectName.equals(new String("BatchName"))) {
+                KeyName = ob.getBatchname();
             }
-            if(ObjectName.equals(new String("DeployID")))
-            {
-                KeyName=ob.getDeployunitid();
+            if (ObjectName.equals(new String("DeployID"))) {
+                KeyName = ob.getDeployunitid();
             }
-            if(!GroupObject.containsKey(KeyName))
-            {
-                List<RequestObject> tmp=new ArrayList<>();
+            if (!GroupObject.containsKey(KeyName)) {
+                List<RequestObject> tmp = new ArrayList<>();
                 tmp.add(ob);
-                GroupObject.put(KeyName,tmp);
-            }
-            else
-            {
+                GroupObject.put(KeyName, tmp);
+            } else {
                 GroupObject.get(KeyName).add(ob);
             }
         }
@@ -171,96 +164,56 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     //用例运行结束保存记录，并且更新dispatch状态为完成
     private void CaseFinish(TestCore core, SampleResult results, TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult, JavaSamplerContext ctx, RequestObject requestObject) {
         //jmeter java实例执行完成，记录结果
-        try
-        {
+        try {
             results.setSuccessful(testAssert.isCaseresult());
             ActualResult = ActualResult.replace("'", "");
             assertInfo = assertInfo.replace("'", "");
             ErrorInfo = ErrorInfo.replace("'", "");
-            core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject,ctx);
-            core.updatedispatchcasestatus(requestObject.getTestplanid(),requestObject.getCaseid(),requestObject.getSlaverid(),requestObject.getBatchid());
-        }
-        catch (Exception ex)
-        {
+            core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo, requestObject, ctx);
+            core.updatedispatchcasestatus(requestObject.getTestplanid(), requestObject.getCaseid(), requestObject.getSlaverid(), requestObject.getBatchid());
+        } catch (Exception ex) {
             getLogger().error(TestCore.logplannameandcasename + "CaseFinish发生异常，请检查!" + ex.getMessage());
         }
     }
 
-    //功能用例统计收集信息
-    private void CollectionReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId) {
+    //功能用例统计批次发布单元用例执行信息
+    private void CollectionBatchDeployReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId) {
         apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));
         apicasesReportstatics.setTotalpasscases(String.valueOf(TotalPassNums));
         apicasesReportstatics.setTotalfailcases(String.valueOf(TotalFailNUms));
         apicasesReportstatics.setRuntime(String.valueOf(AllCostTime));
         core.SaveReportStatics(apicasesReportstatics);
-        getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+SlaverId);
-        core.UpdateSlaverStatus(SlaverId,"空闲");
+    }
+
+    private void  FinisBatchCase(TestCore core,String planid, String BatchName, String SlaverId)
+    {
+        getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + SlaverId);
         getLogger().info("功能用例统计收集信息 完成。。。。。。。。。。。。。。。。");
         //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
-        core.PlanBatchAllDipatchFinish(apicasesReportstatics);
+        long DispatchNotFinishNums= core.PlanBatchAllDipatchFinish(planid,BatchName);
 
-    }
-
-    //获取用例期望值
-//    private String getCaseExpectValue(TestCore core, String expectKey, HashMap<String,String> ExpectMap) throws Exception {
-//        String expectValue = core.GetExpectValue(expectKey,ExpectMap);
-//        getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
-//        return expectValue;
-//    }
-
-    //通过jsonpath获取实际值和期望值比较，返回断言信息
-    private String ParseJsonResult(TestCore core, String ActualJson, TestAssert Ass, RequestObject ob) throws Exception {
-        String AssertInfo = "";
-        List<ApicasesAssert> apicasesAssertList = ob.getApicasesAssertList();
-        for (ApicasesAssert apicasesAssert : apicasesAssertList) {
-            if(apicasesAssert.getAsserttype().equals(new String("Json")))
-            {
-                //获取期望值的status结果
-                String ExpectValue = apicasesAssert.getAssertvalues();
-                //获取实际值使用jsonpath解析
-                String ActualResult="";
-                try {
-                    ActualResult=JsonPath.read(ActualJson,apicasesAssert.getExpression()).toString();
-                }
-                catch (Exception ex)
-                {
-                    ActualResult=ex.getMessage();
-                }
-
-                getLogger().info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
-                AssertInfo = Ass.AssertEqual(ExpectValue, ActualResult);
-            }
+        if (DispatchNotFinishNums > 0) {
+            getLogger().info("查询计划下的批次调度未完成数量：" + DispatchNotFinishNums);
+        } else {
+            core.UpdateReportStatics(planid, BatchName, "已完成");
+            core.SendMailByFinishPlanCase(planid,BatchName);
         }
-//        HashMap<String,String> ExpectMap=core.GetExpectMap(ob.getExpect());
-//        for (String JPath: ExpectMap.keySet()) {
-//            //获取期望值的status结果
-//            String ExpectValue = getCaseExpectValue(core,JPath,ExpectMap);
-//            //获取实际值使用jsonpath解析
-//            String ActualResult="";
-//            try {
-//                 ActualResult=JsonPath.read(ActualJson,JPath).toString();
-//            }
-//            catch (Exception ex)
-//            {
-//                ActualResult=ex.getMessage();
-//            }
-//
-//            getLogger().info(TestCore.logplannameandcasename + "ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
-//            AssertInfo = Ass.AssertEqual(ExpectValue, ActualResult);
-//        }
-        return AssertInfo;
+        //增加邮件通知
     }
+
 
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
+        String SlaverId = ctx.getParameter("SlaverId");
+        Core.UpdateSlaverStatus(SlaverId, "空闲");
         super.teardownTest(ctx);
     }
 
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "26");
+        params.addArgument("DispatchIds", "37");
         params.addArgument("SlaverId", "19");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");

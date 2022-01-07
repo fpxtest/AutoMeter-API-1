@@ -1,7 +1,10 @@
 package com.api.autotest.core;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.ds.simple.SimpleDataSource;
+import cn.hutool.extra.mail.MailAccount;
+import cn.hutool.extra.mail.MailUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.api.autotest.common.utils.*;
@@ -181,6 +184,7 @@ public class TestCore {
             String BatchName = getcaseValue("batchname", DispatchList);
             String ExecPlanName = getcaseValue("execplanname", DispatchList);
             RequestObject ro = GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName);
+            ro=GetRequestParamsData(ro);
             FunctionROList.add(ro);
         }
         return FunctionROList;
@@ -493,7 +497,7 @@ public class TestCore {
     }
 
     //处理接口条件
-    public void APICondition(long ConditionID, RequestObject requestObject) {
+    public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
         ArrayList<HashMap<String, String>> conditionApiList = GetApiConditionByConditionID(ConditionID);
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         logger.info("条件报告API子条件数量-============：" + conditionApiList.size());
@@ -521,6 +525,7 @@ public class TestCore {
                 Respone = ex.getMessage();
                 CostTime = End - Start;
                 SaveApiSubCondition(re,requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                throw new Exception("接口子条件执行异常：" + ex.getMessage());
             }
         }
     }
@@ -622,7 +627,7 @@ public class TestCore {
 
     }
 
-    public void DBCondition(long ConditionID, RequestObject requestObject) {
+    public void DBCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         ArrayList<HashMap<String, String>> conditionDbListList = GetDBConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionDb : conditionDbListList) {
@@ -643,6 +648,7 @@ public class TestCore {
                 String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
                 Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
                 String Sql = conditionDb.get("dbcontent");
+                logger.info(logplannameandcasename + "数据库子条件完整的sql ....." + Sql);
                 String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
                 ArrayList<HashMap<String, String>> macdepunitlist = getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
                 if (macdepunitlist.size() == 0) {
@@ -700,12 +706,17 @@ public class TestCore {
 
                 String[] SqlArr = Sql.split(";");
                 for (String ExecSql : SqlArr) {
-                    int nums = Db.use(ds).execute(ExecSql);
-                    Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+                    logger.info(logplannameandcasename + "数据库子条件执行sql ....." + ExecSql);
+                    if((!ExecSql.isEmpty())||(ExecSql.equals("")))
+                    {
+                        int nums = Db.use(ds).execute(ExecSql);
+                        Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+                    }
                 }
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
+                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
             } finally {
                 End = new Date().getTime();
                 CostTime = End - Start;
@@ -746,10 +757,124 @@ public class TestCore {
         return AssertInfo;
     }
 
+    public void SendMailByFinishPlanCase(String PlanID,String BatchName)
+    {
+        try
+        {
+            ArrayList<HashMap<String, String>> dicNameValueWithCode= findDicNameValueWithCode("Mail");
+            if(dicNameValueWithCode.size()>0)
+            {
+                String MailInfo=dicNameValueWithCode.get(0).get("dicitmevalue");
+                String[] MailArray=MailInfo.split(",");
+                if(MailArray.length>4)
+                {
+                    String Smtp=MailArray[0];
+                    int port=Integer.parseInt(MailArray[1]);
+                    String from=MailArray[2];
+                    String mailuser=MailArray[3];
+                    String pass=MailArray[4];
+
+                    MailAccount account = new MailAccount();
+                    account.setHost(Smtp);
+                    account.setPort(port);
+                    account.setAuth(true);
+                    account.setFrom(from);
+                    account.setUser(mailuser);
+                    account.setPass(pass);
+
+                    ArrayList<HashMap<String, String>> list=GetplanBatchCreator(PlanID,BatchName);
+                    if(list.size()>0)
+                    {
+                        String PlanName=list.get(0).get("executeplanname");
+                        String Creator=list.get(0).get("creator");
+                        ArrayList<HashMap<String, String>> listaccount= findWithUsername(Creator);
+                        if(listaccount.size()>0)
+                        {
+                            String  mailto=listaccount.get(0).get("email");
+                            String Subject=PlanName+"|"+BatchName+" 执行完成！";
+                            ArrayList<HashMap<String, String>> liststatics= GetStatic(PlanID,BatchName);
+                            long tc=0;
+                            long tpc=0;
+                            long tfc=0;
+                            if(liststatics.size()>0)
+                            {
+                                tc=Long.parseLong(liststatics.get(0).get("tc"));
+                                tpc=Long.parseLong(liststatics.get(0).get("tpc"));
+                                tfc=Long.parseLong(liststatics.get(0).get("tfc"));
+                            }
+                            String Content="测试集合运行完成结果总计用例数："+tc+"， 成功数："+tpc+"， 失败数："+tfc;
+                            MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
+                            logger.info("发送邮件成功-============："+mailto);
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.info("发送邮件异常-============："+ex.getMessage());
+        }
+    }
+
 
     //初始化数据库连接
     public void GetDBConnection(String mysqluel, String mysqlusername, String mysqlpass) {
         MysqlConnectionUtils.initDbResource(mysqluel, mysqlusername, mysqlpass);
+    }
+
+
+    //获取计划批次的数据统计
+    public ArrayList<HashMap<String, String>> GetStatic(String planid,String Batchname) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "select sum(totalcases) as tc,sum(totalpasscases) as tpc ,sum(totalfailcases) as tfc from apicases_reportstatics where testplanid="+planid +" and batchname='" + Batchname + "'";
+            logger.info(logplannameandcasename + "获取统计 result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取统计异常...........: " + e.getMessage());
+        }
+        return list;
+    }
+
+
+    //获取账号数据
+    public ArrayList<HashMap<String, String>> findWithUsername(String username) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "SELECT a.* FROM account a where a.name = '" + username + "'";
+            logger.info(logplannameandcasename + "获取账号 result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取账号异常...........: " + e.getMessage());
+        }
+        return list;
+    }
+
+
+    //获取数据库用例相关数据
+    public ArrayList<HashMap<String, String>> findDicNameValueWithCode(String DicCode) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "SELECT a.dicitemname,a.dicitmevalue FROM dictionary a where a.diccode = '" + DicCode + "'";
+            logger.info(logplannameandcasename + "获取字典值caseid result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取字典值异常...........: " + e.getMessage());
+        }
+        return list;
+    }
+
+    //获取计划批次
+    public ArrayList<HashMap<String, String>> GetplanBatchCreator(String planid,String BatchName) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "SELECT a.* FROM executeplanbatch a where a.executeplanid = " + planid + " and a.batchname='"+BatchName+"'";
+            logger.info(logplannameandcasename + "获取计划批次 result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取计划批次异常...........: " + e.getMessage());
+        }
+        return list;
     }
 
     //获取数据库用例相关数据
@@ -1039,7 +1164,7 @@ public class TestCore {
     }
 
     //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
-    public void PlanBatchAllDipatchFinish(String Testplanid, String batchname) {
+    public long PlanBatchAllDipatchFinish(String Testplanid, String batchname) {
         long DispatchNotFinishNums = 0;
         try {
             String sql = "select count(*) as nums from dispatch where execplanid=" + Testplanid + " and batchname= '" + batchname + "' and status in('待分配','已分配')";
@@ -1049,11 +1174,7 @@ public class TestCore {
         } catch (Exception e) {
             logger.info(logplannameandcasename + "查询计划下的批次调度是否已经全部完成异常...........: " + e.getMessage());
         }
-        if (DispatchNotFinishNums > 0) {
-            logger.info(logplannameandcasename + "查询计划下的批次调度未完成数量：" + DispatchNotFinishNums);
-        } else {
-            UpdateReportStatics(Testplanid, batchname, "已完成");
-        }
+        return  DispatchNotFinishNums;
     }
 
     // 更新计划批次状态

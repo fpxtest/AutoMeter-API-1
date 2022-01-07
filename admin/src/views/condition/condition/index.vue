@@ -381,11 +381,12 @@
           this.testcasevisible = false
           this.tmpcondition.objectid = ''
           this.tmpcondition.objectname = ''
-          getallexplan().then(response => {
-            this.execplanList = response.data
-          }).catch(res => {
-            this.$message.error('加载测试集合列表失败')
-          })
+          this.getallexplan()
+          // getallexplan().then(response => {
+          //   this.execplanList = response.data
+          // }).catch(res => {
+          //   this.$message.error('加载测试集合列表失败')
+          // })
         }
         if (e === '测试用例') {
           this.executeplanVisible = false
@@ -463,6 +464,13 @@
         })
       },
 
+      getallexplan() {
+        getallexplan().then(response => {
+          this.execplanList = response.data
+        }).catch(res => {
+          this.$message.error('加载测试集合列表失败')
+        })
+      },
       /**
        * 获取条件列表
        */
@@ -596,6 +604,7 @@
        * @param index 条件下标
        */
       showUpdateconditionDialog(index) {
+        this.getallexplan()
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         if (this.conditionList[index].objecttype === '测试集合') {
