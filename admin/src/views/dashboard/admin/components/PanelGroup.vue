@@ -46,7 +46,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            api
+            API
           </div>
           <count-to :start-val="apinum.start" :end-val="apinum.end" :duration="2600" class="card-panel-num" />
         </div>

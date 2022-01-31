@@ -45,6 +45,7 @@ public interface ApicasesService extends Service<Apicases> {
     List<Apicases> getstaticsdeployunitcases();
 
     List<Apicases> getcasebydeployunitid(Long deployunitid);
+    List<Apicases> getcasebyapiid(Long apiid);
 
 
 }

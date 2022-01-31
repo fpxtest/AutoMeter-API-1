@@ -16,14 +16,14 @@ import java.util.Map;
  * 请求头
  */
 public class HttpHeader {
-    private Map<String, String> params = new HashMap<String, String>();
+    private Map<String, Object> params = new HashMap<String, Object>();
 
-    public HttpHeader addParam(String name, String value) {
+    public HttpHeader addParam(String name, Object value) {
         this.params.put(name, value);
         return this;
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return this.params;
     }
 }

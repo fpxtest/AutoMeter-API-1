@@ -39,5 +39,6 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
     List<Apicases> getstaticsdeployunitcases();
     List<Apicases> getcasebydeployunitid(Long deployunitid);
 
+    List<Apicases> getcasebyapiid(@Param("apiid") Long apiid);
 
 }

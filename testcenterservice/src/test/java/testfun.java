@@ -1,28 +1,80 @@
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.commons.lang3.StringUtils;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONCompareResult;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class testfun {
     public static void main(final String[] args) throws Exception {
 
-        try
-        {
-            String Result= JsonPath.read("{}","$.data");
-        }
-        catch (Exception ex)
-        {
-            System.out.println(ex.getMessage());
-            throw new Exception("exceptuon");
-        }
-        finally {
-            System.out.println("finally");
+        System.out.println(new Date());
 
-        }
+        HashMap<String,Object>map=new HashMap<>();
+        map.put("name","$season");
+        map.put("age",123);
+
+        String result="123";
+        String[] test=result.split(",");
+
+        Object[] strarr=test;
+        map.put("agexx",strarr);
+        String str= JSON.toJSON(map).toString();
+        System.out.println(str);
+
+        //int num= str.indexOf("$season");
+
+        str=str.replace("$season","123");
+        System.out.println(str);
+
+        String Json="{\n" +
+                " \"bukrs\":[12,3,4,5],\n" +
+                " \"lines\":[\n" +
+                "  {\n" +
+                "   \"zamount\":\"10.0000\",\n" +
+                "   \"ebelp\":\"10\",\n" +
+                "   \"zspd\":\"WGAWS0077202101070016\"\n" +
+                "  },\n" +
+                "   {\n" +
+                "   \"zamount\":\"10.0000\",\n" +
+                "   \"ebelp\":\"10\",\n" +
+                "   \"zspd\":\"WGAWS0077202101070016\"\n" +
+                "  }\n" +
+                " ],\n" +
+                " \"lifnr\":\"GAWS0077\",\n" +
+                " \"ekgrp\":\"901\"\n" +
+                "}        ";
+        JSON.isValid("");
+        JSONObject jsonObject = JSON.parseObject(Json);
+        JSONObject jsonObject1= jsonLoop(jsonObject);//        JSONObject jsonObject= JSONObject.parseObject(Json);
+//
+//        Iterator iter = jsonObject.entrySet().iterator();
+//        while (iter.hasNext()) {
+//            Map.Entry entry = (Map.Entry) iter.next();
+//            String Value=entry.getValue().toString();
+//            System.out.println(Value);
+//
+//        }
+        System.out.println("1111111111s");
+
+//        try
+//        {
+//            String Result= JsonPath.read("{}","$.data");
+//        }
+//        catch (Exception ex)
+//        {
+//            System.out.println(ex.getMessage());
+//            throw new Exception("exceptuon");
+//        }
+//        finally {
+//            System.out.println("finally");
+//
+//        }
 
 
 //        Calendar cal = Calendar.getInstance();
@@ -88,4 +140,74 @@ public class testfun {
 
 
     }
+
+
+    public static JSONObject jsonLoop(Object object) {
+        JSONObject jsonObject=null;
+        if (object instanceof JSONObject) {
+             jsonObject = (JSONObject) object;
+            for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+                Object o = entry.getValue();
+                if (o instanceof String) {
+                    System.out.println("key:" + entry.getKey() + "，value:" + entry.getValue());
+                    if(entry.getKey().equals("ekgrp"))
+                    {
+                        jsonObject.put(entry.getKey(),"00000000");
+                    }
+                }
+
+                if (o instanceof JSONArray) {
+                    if(!o.toString().contains("{"))
+                    {
+                        System.out.println("key:" + entry.getKey() + "，value:" + entry.getValue());
+                    }
+                    else
+                    {
+                        jsonLoop(o);
+                    }
+                }
+            }
+        }
+        if (object instanceof JSONArray) {
+            JSONArray jsonArray = (JSONArray) object;
+            for (int i = 0; i < jsonArray.size(); i++) {
+                jsonLoop(jsonArray.get(i));
+            }
+        }
+        return jsonObject;
+    }
+
+
+
+    public static void digui(String jsonO)
+    {
+        if(getJSONType(jsonO))
+        {
+            Map jsonObject= JSONObject.parseObject(jsonO);
+            Iterator iter = jsonObject.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
+                String Value=entry.getValue().toString();
+                System.out.println(Value);
+                digui(Value);
+
+            }
+        }
+
+    }
+
+    public static boolean getJSONType(String str) {
+        boolean result = false;
+        if (StringUtils.isNotBlank(str)) {
+            str = str.trim();
+            if (str.startsWith("{") && str.endsWith("}")) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+
+
+
 }

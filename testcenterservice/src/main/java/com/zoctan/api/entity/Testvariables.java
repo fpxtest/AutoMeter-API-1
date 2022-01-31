@@ -21,6 +21,18 @@ public class Testvariables {
      */
     private String testvariablestype;
 
+    public String getValuetype() {
+        return valuetype;
+    }
+
+    public void setValuetype(String valuetype) {
+        this.valuetype = valuetype;
+    }
+
+    private String valuetype;
+
+
+
     /**
      * 变量表达
      */

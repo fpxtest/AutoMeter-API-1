@@ -32,6 +32,11 @@
     FROM api_params a where a.apiid=#{apiid} and a.propertytype = #{propertytype}
   </select>
 
+  <select id="getDistinctApiParamsbyid" resultMap="BaseResultMap">
+    SELECT DISTINCT propertytype
+    FROM api_params a where a.apiid=#{apiid}
+  </select>
+
   <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">
     update api_params set apiname = #{apiname},deployunitid =#{deployunitid}, deployunitname = #{deployunitname}, propertytype = #{propertytype},
     keyname = #{keyname},creator = #{creator},

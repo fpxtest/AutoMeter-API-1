@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.core.service.ParseResponeHelp;
+import com.zoctan.api.core.service.ResponeData;
 import com.zoctan.api.core.service.TestCaseHelp;
 import com.zoctan.api.dto.RequestObject;
 import com.zoctan.api.dto.TestResponeData;
@@ -259,8 +260,8 @@ public class TestconditionController {
             try {
                 Start = new Date().getTime();
                 TestconditionController.log.info("接口子条件条件请求数据-============：" + requestObject.getPostData());
-                TestResponeData testResponeData = testCaseHelp.request(requestObject);
-                Respone = testResponeData.getResponeContent();
+                ResponeData testResponeData = testCaseHelp.request(requestObject);
+                Respone = testResponeData.getContent();
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
@@ -323,7 +324,7 @@ public class TestconditionController {
     }
 
     @PostMapping("/execcasecondition/script")
-    public Result DBConditionForScript(@RequestBody final Map<String, Object> param) throws Exception {
+    public Result ConditionForScript(@RequestBody final Map<String, Object> param) throws Exception {
         Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
         Long Caseid = Long.parseLong(param.get("caseid").toString());
         ConditionScript conditionScript = conditionScriptService.findtestconditionscriptwithid(ConditionID);
@@ -346,7 +347,7 @@ public class TestconditionController {
     }
 
     @PostMapping("/execcasecondition/api")
-    public Result DBConditionForAPI(@RequestBody final Map<String, Object> param) throws Exception {
+    public Result ConditionForAPI(@RequestBody final Map<String, Object> param) throws Exception {
         Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
         Long EnviromentID = Long.parseLong(param.get("enviromentid").toString());
         HashMap<String, String> VariableNameValueMap = new HashMap<>();
@@ -382,8 +383,8 @@ public class TestconditionController {
             String Respone = "";
             RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             try {
-                TestResponeData testResponeData = testCaseHelp.request(requestObject);
-                Respone= testResponeData.getResponeContent();
+                ResponeData testResponeData = testCaseHelp.request(requestObject);
+                Respone= testResponeData.getContent();
             } catch (Exception ex) {
                 Respone = ex.getMessage();
             }
@@ -402,7 +403,7 @@ public class TestconditionController {
     }
 
     @PostMapping("/execcasecondition/db")
-    public Result DBConditionForDebug(@RequestBody final Map<String, Object> param) throws Exception {
+    public Result ConditionForDB(@RequestBody final Map<String, Object> param) throws Exception {
         Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
         List<ConditionDb> conditionDbListList = conditionDbService.GetDBConditionByConditionID(ConditionID);
         for (ConditionDb conditionDb : conditionDbListList) {
@@ -607,7 +608,6 @@ public class TestconditionController {
 //        }
         return Respone;
     }
-
 
     private void UpdatetestconditionReport(TestconditionReport testconditionReport, String Respone, String ConditionResultStatus, Long CostTime,String user) {
         //更新条件结果表

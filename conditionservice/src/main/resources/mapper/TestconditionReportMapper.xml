@@ -14,7 +14,7 @@
     <result column="subconditionid" jdbcType="BIGINT" property="subconditionid" />
     <result column="subconditionname" jdbcType="VARCHAR" property="subconditionname" />
     <result column="subconditiontype" jdbcType="VARCHAR" property="subconditiontype" />
-    <result column="conditionresult" jdbcType="VARCHAR" property="conditionresult" />
+    <result column="conditionresult" jdbcType="LONGVARCHAR" property="conditionresult" />
     <result column="conditionstatus" jdbcType="VARCHAR" property="conditionstatus" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="runtime" jdbcType="BIGINT" property="runtime" />

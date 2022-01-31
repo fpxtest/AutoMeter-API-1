@@ -66,65 +66,64 @@ public class PerformanceDispatchScheduleTask {
     //或直接指定时间间隔，例如：5秒
     //@Scheduled(fixedRate=5000)
     private void configureTasks() {
-        String ip = null;
-        InetAddress address = null;
         try {
-            address = InetAddress.getLocalHost();
-            ip = address.getHostAddress();
             // 全局性能任务的redis的key相同，保证全局性能任务同一时刻只有一个线程进入工作
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
             // redis_default_expire_time 不能设置为永久，避免死锁
-            boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
+            boolean lock = redisUtils.tryLock(redisKey, "PerformanceDispatchScheduleTask", redis_default_expire_time);
             if (lock) {
-                Dispatch dispatch = dispatchMapper.getrecentdispatchbyusetype("待分配", "性能");
-                if (dispatch != null) {
-                    Long PlanID = dispatch.getExecplanid();
-                    String BatchName = dispatch.getBatchname();
-                    Long caseid = dispatch.getTestcaseid();
-                    //判断计划的所有前置条件是否已经完成，并且全部成功，否则更新Dispatch状态为前置条件失败
-                    boolean flag = ConditionRequest(PlanID, BatchName, dispatch);   //IsConditionFinish(PlanID,BatchName);
-                    if (flag) {
-                        List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaveridandcaaseid("待分配", "性能", PlanID, BatchName, caseid);
-                        int SleepSlaverNums = slaverMapper.findbusyslavernums(SlaverIDList, "空闲", "性能");
-                        //判断SlaverIDList中的所有slaver都是空闲状态才请求slaver执行
-                        if (SlaverIDList.size() == SleepSlaverNums) {
-                            try {
-                                for (Dispatch dispatch1 : SlaverIDList) {
-                                    Long Slaverid = dispatch1.getSlaverid();
-                                    PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
-                                    Slaver slaver = slaverMapper.findslaverbyid(Slaverid);
-                                    if (slaver != null) {
-                                        if (slaver.getStatus().equals("空闲")) {
-                                            List<Dispatch> SlaverDispathcList = dispatchMapper.getfunctiondispatchsbyslaverid(Slaverid, "待分配", "性能", PlanID, BatchName);
-                                            PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器 slaverid:" + slaver + " 获取dispatch数-：" + SlaverDispathcList.size());
-                                            if (SlaverDispathcList.size() > 0) {
-                                                String params = JSON.toJSONString(SlaverDispathcList.get(0));
-                                                PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器-============执行机id：" + slaver.getId() + "  执行机名：" + slaver.getSlavername() + " 执行的dispatch：" + params);
-                                                HttpHeader header = new HttpHeader();
-                                                String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execperformancetest";
-                                                String respon = Httphelp.doPost(ServerUrl, params, header, 30000);
-                                                PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器-============请求slaver响应结果：" + respon);
+                try {
+                    Dispatch dispatch = dispatchMapper.getrecentdispatchbyusetype("待分配", "性能");
+                    if (dispatch != null) {
+                        Long PlanID = dispatch.getExecplanid();
+                        String BatchName = dispatch.getBatchname();
+                        Long caseid = dispatch.getTestcaseid();
+                        //判断计划的所有前置条件是否已经完成，并且全部成功，否则更新Dispatch状态为前置条件失败
+                        boolean flag = ConditionRequest(PlanID, BatchName, dispatch);   //IsConditionFinish(PlanID,BatchName);
+                        if (flag) {
+                            List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaveridandcaaseid("待分配", "性能", PlanID, BatchName, caseid);
+                            int SleepSlaverNums = slaverMapper.findbusyslavernums(SlaverIDList, "空闲", "性能");
+                            //判断SlaverIDList中的所有slaver都是空闲状态才请求slaver执行
+                            if (SlaverIDList.size() == SleepSlaverNums) {
+                                try {
+                                    for (Dispatch dispatch1 : SlaverIDList) {
+                                        Long Slaverid = dispatch1.getSlaverid();
+                                        PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
+                                        Slaver slaver = slaverMapper.findslaverbyid(Slaverid);
+                                        if (slaver != null) {
+                                            if (slaver.getStatus().equals("空闲")) {
+                                                List<Dispatch> SlaverDispathcList = dispatchMapper.getfunctiondispatchsbyslaverid(Slaverid, "待分配", "性能", PlanID, BatchName);
+                                                PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器 slaverid:" + slaver + " 获取dispatch数-：" + SlaverDispathcList.size());
+                                                if (SlaverDispathcList.size() > 0) {
+                                                    String params = JSON.toJSONString(SlaverDispathcList.get(0));
+                                                    PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器-============执行机id：" + slaver.getId() + "  执行机名：" + slaver.getSlavername() + " 执行的dispatch：" + params);
+                                                    HttpHeader header = new HttpHeader();
+                                                    String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execperformancetest";
+                                                    String respon = Httphelp.doPost(ServerUrl, params, header, 30000);
+                                                    PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器-============请求slaver响应结果：" + respon);
+                                                }
                                             }
                                         }
                                     }
+                                } catch (Exception ex) {
+                                    dispatchMapper.updatedispatchstatusandmemo("调度异常", ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+                                    PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器请求执行服务异常：" + ex.getMessage());
                                 }
-                            } catch (Exception ex) {
-                                dispatchMapper.updatedispatchstatusandmemo("调度异常", ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
-                                PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器请求执行服务异常：" + ex.getMessage());
                             }
                         }
                     }
+                } catch (Exception ex) {
+                    PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器请求执行服务异常：" + ex.getMessage());
+                } finally {
+                    //TODO 执行任务结束后需要释放锁
+                    //释放锁
+                    redisUtils.deletekey(redisKey);
+                    PerformanceDispatchScheduleTask.log.info("性能任务-============释放分布式锁成功=======================");
                 }
-                //TODO 执行任务结束后需要释放锁
-                //释放锁
-                redisUtils.deletekey(redisKey);
-                PerformanceDispatchScheduleTask.log.info("性能任务-============释放分布式锁成功=======================");
             } else {
-                PerformanceDispatchScheduleTask.log.info("性能任务-============获得分布式锁失败=======================");
-                ip = (String) redisUtils.getkey(redisKey);
-                PerformanceDispatchScheduleTask.log.info("性能任务-============{}机器上占用分布式锁，正在执行中=======================" + ip);
+                PerformanceDispatchScheduleTask.log.info("性能任务-============{}机器上占用分布式锁，正在执行中=======================" + redisKey);
                 return;
             }
         } catch (Exception ex) {

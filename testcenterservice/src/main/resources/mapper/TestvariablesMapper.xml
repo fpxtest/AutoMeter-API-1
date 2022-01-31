@@ -10,6 +10,7 @@
     <result column="variablesdes" jdbcType="VARCHAR" property="variablesdes" />
     <result column="testvariablestype" jdbcType="VARCHAR" property="testvariablestype" />
     <result column="variablesexpress" jdbcType="VARCHAR" property="variablesexpress" />
+    <result column="valuetype" jdbcType="VARCHAR" property="valuetype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -29,7 +30,7 @@
 
   <update id="updatetestvariables" parameterType="com.zoctan.api.entity.Testvariables">
     update testvariables set testvariablesname = #{testvariablesname},testvariablestype=#{testvariablestype},variablesexpress=#{variablesexpress},
-    variablesdes=#{variablesdes}, memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    variablesdes=#{variablesdes}, memo = #{memo},valuetype=#{valuetype},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 </mapper>

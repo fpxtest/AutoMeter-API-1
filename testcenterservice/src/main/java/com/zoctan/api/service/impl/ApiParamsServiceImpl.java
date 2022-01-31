@@ -65,6 +65,11 @@ private ApiParamsMapper apiParamsMapper;
     }
 
     @Override
+    public ApiParams getBodyNoFormbyapiid(Long apiid, String propertytype, String keydefaultvalue,String keytype) {
+        return apiParamsMapper.getBodyNoFormbyapiid(apiid, propertytype, keydefaultvalue,keytype);
+    }
+
+    @Override
     public void updateApiParams(ApiParams params) {
 //        String JsonKey=params.getKeyname();
 //        if(JSON.isValidObject(JsonKey))

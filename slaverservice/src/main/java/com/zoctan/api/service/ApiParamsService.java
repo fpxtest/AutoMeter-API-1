@@ -24,6 +24,8 @@ public interface ApiParamsService extends Service<ApiParams> {
 
 
     List<ApiParams> getApiParamsbypropertytype(Long apiid,String propertytype);
+    List<ApiParams> getDistinctApiParamsbyid(Long apiid);
+
 
 
     /**

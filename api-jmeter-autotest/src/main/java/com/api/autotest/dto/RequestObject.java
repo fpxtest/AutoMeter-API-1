@@ -222,4 +222,33 @@ public class RequestObject {
     }
 
     private HttpHeader header;
+
+    public String getHeadjson() {
+        return headjson;
+    }
+
+    public void setHeadjson(String headjson) {
+        this.headjson = headjson;
+    }
+
+    public String getParamjson() {
+        return paramjson;
+    }
+
+    public void setParamjson(String paramjson) {
+        this.paramjson = paramjson;
+    }
+
+    public String getBodyjson() {
+        return bodyjson;
+    }
+
+    public void setBodyjson(String bodyjson) {
+        this.bodyjson = bodyjson;
+    }
+
+    private String headjson;
+    private String paramjson;
+    private String bodyjson;
+
 }

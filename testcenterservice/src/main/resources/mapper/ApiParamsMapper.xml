@@ -12,7 +12,8 @@
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
     <result column="keyname" jdbcType="LONGVARCHAR" property="keyname" />
-    <result column="keynamebak" jdbcType="LONGVARCHAR" property="keynamebak" />
+    <result column="keydefaultvalue" jdbcType="LONGVARCHAR" property="keydefaultvalue" />
+    <result column="keytype" jdbcType="VARCHAR" property="keytype" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -38,21 +39,26 @@
     FROM api_params a where a.apiid=#{apiid}
   </select>
 
+  <select id="getBodyNoFormbyapiid" resultMap="BaseResultMap">
+    SELECT *
+    FROM api_params a where a.apiid=#{apiid} and propertytype = #{propertytype} and keydefaultvalue = #{keydefaultvalue} and keytype = #{keytype}
+  </select>
+
   <update id="updateApiParams" parameterType="com.zoctan.api.entity.ApiParams">
     update api_params set apiname = #{apiname},deployunitid =#{deployunitid}, deployunitname = #{deployunitname}, propertytype = #{propertytype},
-    keyname = #{keyname},keynamebak = #{keynamebak},creator = #{creator},
+    keyname = #{keyname},keytype = #{keytype},keydefaultvalue = #{keydefaultvalue},creator = #{creator},
     lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 
   <insert id="SaveApiParams">
-    insert into api_params(apiid,apiname,deployunitid,deployunitname,propertytype,keyname,keynamebak,creator,create_time,lastmodify_time)
-    values(#{apiid},#{apiname},#{deployunitid},#{deployunitname},#{propertytype},#{keyname},#{keynamebak},#{creator}, DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+    insert into api_params(apiid,apiname,deployunitid,deployunitname,propertytype,keyname,keydefaultvalue,keytype,creator,create_time,lastmodify_time)
+    values(#{apiid},#{apiname},#{deployunitid},#{deployunitname},#{propertytype},#{keyname},#{keydefaultvalue},#{keytype},#{creator}, DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
   </insert>
 
   <select id="getApiParamsbypropertytype" resultMap="BaseResultMap">
     SELECT *
-    FROM api_params a where a.apiid=#{apiid} and a.propertytype = #{propertytype}
+    FROM api_params a where a.apiid=#{apiid} and a.propertytype = #{propertytype} and keydefaultvalue!='NoForm'
   </select>
 
   <delete id="deletebyApiid" >

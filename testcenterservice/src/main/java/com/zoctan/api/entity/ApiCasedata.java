@@ -37,6 +37,18 @@ public class ApiCasedata {
      */
     private String propertytype;
 
+    public String getParamstype() {
+        return paramstype;
+    }
+
+    public void setParamstype(String paramstype) {
+        this.paramstype = paramstype;
+    }
+
+    private String paramstype;
+
+
+
     /**
      * 备注
      */

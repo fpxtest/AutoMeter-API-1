@@ -44,6 +44,16 @@ public class Api {
      */
     private String visittype;
 
+    public String getRequesttype() {
+        return requesttype;
+    }
+
+    public void setRequesttype(String requesttype) {
+        this.requesttype = requesttype;
+    }
+
+    private String requesttype;
+
     public String getApistyle() {
         return apistyle;
     }

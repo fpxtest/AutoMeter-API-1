@@ -31,6 +31,11 @@ public class ApiCasedataServiceImpl extends AbstractService<ApiCasedata> impleme
     }
 
     @Override
+    public void saveCasedata(List<ApiCasedata> casedataMap) {
+        apiCasedataMapper.saveCasedata(casedataMap);
+    }
+
+    @Override
     public List<ApiCasedata> getparamvaluebycaseidandtype(final Map<String, Object> params) {
         return this.apiCasedataMapper.getparamvaluebycaseidandtype(params);
     }
@@ -41,7 +46,27 @@ public class ApiCasedataServiceImpl extends AbstractService<ApiCasedata> impleme
     }
 
     @Override
+    public List<ApiCasedata> getdataidbyapiidandtypeandparatype(Long caseid, String PrppertyType, String paramstype) {
+        return apiCasedataMapper.getdataidbyapiidandtypeandparatype(caseid, PrppertyType, paramstype);
+    }
+
+    @Override
+    public List<ApiCasedata> getdataidbyapiidandtypeandapiparam(Long apiid, String PrppertyType,String apiparam) {
+        return apiCasedataMapper.getdataidbyapiidandtypeandapiparam(apiid, PrppertyType,apiparam);
+    }
+
+    @Override
+    public List<ApiCasedata> getdataidbyapiidandtype(Long apiid, String PrppertyType) {
+        return apiCasedataMapper.getdataidbyapiidandtype(apiid,PrppertyType);
+    }
+
+    @Override
     public void deletcasedatabyid(Long caseid) {
         this.apiCasedataMapper.deletcasedatabyid(caseid);
+    }
+
+    @Override
+    public void updateparambycaseidandprotypeandapiparam(Long caseid, String propertytype, String apiparam,String oldapiparam, String paramstype) {
+        apiCasedataMapper.updateparambycaseidandprotypeandapiparam(caseid, propertytype, apiparam,oldapiparam,paramstype);
     }
 }

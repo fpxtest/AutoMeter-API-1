@@ -62,18 +62,92 @@ public class ApicasesController {
 
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
-
         Condition con = new Condition(Apicases.class);
         con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
-                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename().replace("'", "''") + "'")
-        ;
-        //.orCondition("casejmxname = '" + apicases.getCasejmxname() + "'")
+                .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename().replace("'", "''") + "'");
         if (apicasesService.ifexist(con) > 0) {
-            return ResultGenerator.genFailedResult("用例名或者jmx名已存在");
+            return ResultGenerator.genFailedResult("用例名已存在");
         } else {
             apicasesService.save(apicases);
+            //增加初始化参数值
+            Long apiid=apicases.getApiid();
+            Api api=apiService.getById(apiid);
+            String RequestContentType=api.getRequestcontenttype();
+            Map<String, Object> params=new HashMap<>();
+            params.put("apiid",apiid);
+            List<ApiParams> apiParamsList= apiParamsService.getApiParamsbyapiid(params);
+            List<ApiCasedata>apiCasedataList=new ArrayList<>();
+            for (ApiParams apiParams :apiParamsList) {
+                if(apiParams.getPropertytype().equalsIgnoreCase("Header")||apiParams.getPropertytype().equalsIgnoreCase("Params"))
+                {
+                    ApiCasedata apiCasedata=GetApiCaseData(apicases,apiParams);
+                    apiCasedataList.add(apiCasedata);
+                }
+                else
+                {
+                    if(RequestContentType.equalsIgnoreCase("Form表单"))
+                    {
+                        ApiCasedata apiCasedata=GetApiCaseData(apicases,apiParams);
+                        apiCasedataList.add(apiCasedata);
+                    }
+                    else
+                    {
+                        if(apiParams.getKeytype().equalsIgnoreCase(RequestContentType))
+                        {
+                            ApiCasedata apiCasedata=GetApiCaseData(apicases,apiParams);
+                            apiCasedataList.add(apiCasedata);
+                        }
+                    }
+                }
+//                ApiCasedata apiCasedata=new ApiCasedata();
+//                apiCasedata.setCaseid(apicases.getId());
+//                apiCasedata.setCasename(apicases.getCasename());
+//                apiCasedata.setPropertytype(apiParams.getPropertytype());
+//                if(apiParams.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
+//                {
+//                    apiCasedata.setApiparam("Body");
+//                    apiCasedata.setApiparamvalue(apiParams.getKeyname());
+//                }
+//                else
+//                {
+//                    apiCasedata.setApiparam(apiParams.getKeyname());
+//                    apiCasedata.setApiparamvalue(apiParams.getKeydefaultvalue());
+//                }
+//                apiCasedata.setParamstype(apiParams.getKeytype());
+//                apiCasedata.setMemo("");
+//                apiCasedataList.add(apiCasedata);
+            }
+            if(apiCasedataList.size()>0)
+            {
+                apiCasedataService.save(apiCasedataList);
+            }
             return ResultGenerator.genOkResult();
         }
+    }
+
+
+
+    private ApiCasedata GetApiCaseData(Apicases apicases,ApiParams apiParams)
+    {
+        ApiCasedata apiCasedata=new ApiCasedata();
+        apiCasedata.setCaseid(apicases.getId());
+        apiCasedata.setCasename(apicases.getCasename());
+        apiCasedata.setPropertytype(apiParams.getPropertytype());
+        if(apiParams.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
+        {
+            apiCasedata.setApiparam("Body");
+            apiCasedata.setApiparamvalue(apiParams.getKeyname());
+        }
+        else
+        {
+            apiCasedata.setApiparam(apiParams.getKeyname());
+            apiCasedata.setApiparamvalue(apiParams.getKeydefaultvalue());
+        }
+        apiCasedata.setParamstype(apiParams.getKeytype());
+        apiCasedata.setMemo("");
+        apiCasedata.setCreateTime(new Date());
+        apiCasedata.setLastmodifyTime(new Date());
+        return apiCasedata;
     }
 
 
@@ -99,6 +173,8 @@ public class ApicasesController {
                 Sourcecase.setDeployunitid(Long.parseLong(sourcedeployunitid));
                 Sourcecase.setDeployunitname(sourcedeployunitname);
                 Sourcecase.setCasename(newcasename);
+                Sourcecase.setCreateTime(new Date());
+                Sourcecase.setLastmodifyTime(new Date());
                 Sourcecase.setId(null);
                 apicasesService.save(Sourcecase);
                 Long NewCaseId = Sourcecase.getId();
@@ -106,6 +182,9 @@ public class ApicasesController {
                 for (ApiCasedata apiCasedata : SourceApicasedataList) {
                     apiCasedata.setCaseid(NewCaseId);
                     apiCasedata.setId(null);
+                    apiCasedata.setCasename(newcasename);
+                    apiCasedata.setCreateTime(new Date());
+                    apiCasedata.setLastmodifyTime(new Date());
                     apiCasedataService.save(apiCasedata);
                 }
                 //复制断言

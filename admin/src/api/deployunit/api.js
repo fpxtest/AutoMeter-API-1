@@ -84,3 +84,10 @@ export function removeapi(apiId) {
     method: 'delete'
   })
 }
+
+export function getapi(apiId) {
+  return request({
+    url: '/api/' + apiId,
+    method: 'get'
+  })
+}

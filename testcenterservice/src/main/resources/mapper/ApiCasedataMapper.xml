@@ -11,6 +11,7 @@
     <result column="apiparam" jdbcType="VARCHAR" property="apiparam" />
     <result column="apiparamvalue" jdbcType="LONGVARCHAR" property="apiparamvalue" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
+    <result column="paramstype" jdbcType="VARCHAR" property="paramstype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -18,17 +19,33 @@
 
 
   <insert id="saveCasedata">
-    INSERT INTO api_casedata (caseid, casename,apiparam,apiparamvalue,propertytype,memo,create_time,lastmodify_time)
+    INSERT INTO api_casedata (caseid, casename,apiparam,apiparamvalue,propertytype,memo,create_time,lastmodify_time,paramstype)
     VALUES
     <foreach collection="casedataMap" item="item" index="index" separator=",">
-      (#{item.caseid}, #{item.casename}, #{item.apiparam}, #{item.apiparamvalue}, #{item.propertytype}, #{item.memo}, DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+      (#{item.caseid}, #{item.casename}, #{item.apiparam}, #{item.apiparamvalue},#{item.propertytype}, #{item.memo}, DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'),#{item.paramstype})
     </foreach>
   </insert>
 
   <select id="getparamvaluebycaseidandtype" resultMap="BaseResultMap">
-    SELECT a.apiparam,a.apiparamvalue
+    SELECT a.*
     FROM api_casedata a where a.caseid = #{caseid} and a.propertytype=#{propertytype}
   </select>
+
+  <select id="getdataidbyapiidandtypeandapiparam" resultMap="BaseResultMap">
+    select b.* from apicases a inner join api_casedata b on a.id=b.caseid
+    where a.apiid=#{apiid} and b.propertytype=#{propertytype} and b.apiparam=#{apiparam}
+  </select>
+
+  <select id="getdataidbyapiidandtype" resultMap="BaseResultMap">
+    select b.* from apicases a inner join api_casedata b on a.id=b.caseid
+    where a.apiid=#{apiid} and b.propertytype=#{propertytype}
+  </select>
+
+  <select id="getdataidbyapiidandtypeandparatype" resultMap="BaseResultMap">
+    select b.* from apicases a inner join api_casedata b on a.id=b.caseid
+    where a.apiid=#{apiid} and b.propertytype=#{propertytype} and b.paramstype=#{paramstype}
+  </select>
+
 
   <insert id="deleteparamvaluebycaseidandtype">
     DELETE from api_casedata where caseid = #{caseid} and propertytype=#{propertytype}
@@ -37,4 +54,8 @@
   <insert id="deletcasedatabyid">
     DELETE from api_casedata where caseid = #{caseid}
   </insert>
+
+  <update id="updateparambycaseidandprotypeandapiparam">
+    update api_casedata set apiparam=#{param3},paramstype=#{param5} where caseid = #{caseid} and propertytype=#{propertytype} and apiparam=#{param4}
+  </update>
 </mapper>
