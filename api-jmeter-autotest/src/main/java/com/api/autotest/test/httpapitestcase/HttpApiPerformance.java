@@ -74,15 +74,6 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             ActualResult=responeData.getRespone();
             //断言
             AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
-//            String ResponeContentType=requestObject.getResponecontenttype();
-//            if(ResponeContentType.equals(new String("json")))
-//            {
-//                AssertInfo= TestAssert.ParseJsonResult(ActualResult,requestObject);//ParseJsonResult(Core,ActualResult,TestAssert,requestObject);
-//            }
-//            if(ResponeContentType.equals(new String("xml")))
-//            {
-//                //处理xml
-//            }
         } catch (Exception ex) {
             ErrorInfo=CaseException(results, TestAssert, ex.getMessage());
         } finally {
@@ -108,7 +99,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
 
     //用例发送请求
     private ResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
-        getLogger().error(TestCore.logplannameandcasename + "开始请求。。。。。。。。。。。。。。。。"+ob.getResource() );
+        getLogger().error("开始请求。。。。。。。。。。。。。。。。"+ob.getResource() );
         ResponeData responeData = core.request(ob);
         return responeData;
     }
@@ -120,7 +111,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         testAssert.setCaseresult(false);
         String ErrorInfo = exceptionMessage.replace("'", "");
         //end = new Date().getTime();
-        getLogger().error(TestCore.logplannameandcasename + "用例执行发生异常，请检查!" + exceptionMessage);
+        getLogger().error("用例执行发生异常，请检查!" + exceptionMessage);
         return ErrorInfo;
     }
 

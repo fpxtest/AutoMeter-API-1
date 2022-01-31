@@ -108,4 +108,9 @@ private ApicasesMapper apicasesMapper;
     public List<Apicases> getcasebydeployunitid(Long deployunitid) {
         return apicasesMapper.getcasebydeployunitid(deployunitid);
     }
+
+    @Override
+    public List<Apicases> getcasebyapiid(Long apiid) {
+        return apicasesMapper.getcasebyapiid(apiid);
+    }
 }

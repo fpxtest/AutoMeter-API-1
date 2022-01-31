@@ -87,7 +87,7 @@
 
       <el-table-column label="请求数据" align="center" prop="requestdatas" width="80">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
+          <el-popover trigger="hover" placement="top-start">
             <p>{{ scope.row.requestdatas }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">...</el-tag>

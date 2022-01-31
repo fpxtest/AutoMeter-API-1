@@ -1,24 +1,15 @@
 package com.api.autotest.test.httpapitestcase;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.extra.mail.MailAccount;
-import cn.hutool.extra.mail.MailUtil;
 import com.api.autotest.core.TestAssert;
 import com.api.autotest.core.TestCore;
-import com.api.autotest.dto.ApicasesAssert;
 import com.api.autotest.dto.ApicasesReportstatics;
 import com.api.autotest.dto.RequestObject;
 import com.api.autotest.dto.ResponeData;
-import com.jayway.jsonpath.JsonPath;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-import java.io.IOException;
 import java.util.*;
 
 public class HttpApiFunction extends AbstractJavaSamplerClient {
@@ -91,7 +82,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         //断言
                         AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
                     } catch (Exception ex) {
-                        getLogger().error(TestCore.logplannameandcasename + "CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
+                        getLogger().error("CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
                         ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
                     } finally {
                         // 保存用例运行结果，Jmeter的sample运行结果
@@ -128,10 +119,10 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         Map<String, List<RequestObject>> GroupObject = new HashMap<>();
         String KeyName = "";
         for (RequestObject ob : objectList) {
-            if (ObjectName.equals(new String("BatchName"))) {
+            if (ObjectName.equals("BatchName")) {
                 KeyName = ob.getBatchname();
             }
-            if (ObjectName.equals(new String("DeployID"))) {
+            if (ObjectName.equals("DeployID")) {
                 KeyName = ob.getDeployunitid();
             }
             if (!GroupObject.containsKey(KeyName)) {
@@ -156,8 +147,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         // 断言用例运行结果为失败
         testAssert.setCaseresult(false);
         String ErrorInfo = exceptionMessage.replace("'", "");
-        //end = new Date().getTime();
-        getLogger().error(TestCore.logplannameandcasename + "用例执行发生异常，请检查!" + exceptionMessage);
+        getLogger().error("用例执行发生异常，请检查!" + exceptionMessage);
         return ErrorInfo;
     }
 
@@ -172,7 +162,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
             core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo, requestObject, ctx);
             core.updatedispatchcasestatus(requestObject.getTestplanid(), requestObject.getCaseid(), requestObject.getSlaverid(), requestObject.getBatchid());
         } catch (Exception ex) {
-            getLogger().error(TestCore.logplannameandcasename + "CaseFinish发生异常，请检查!" + ex.getMessage());
+            getLogger().error( "用例运行结束保存记录CaseFinish发生异常，请检查!" + ex.getMessage());
         }
     }
 
@@ -211,10 +201,10 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     // 本地调试
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "37");
-        params.addArgument("SlaverId", "19");
+        params.addArgument("DispatchIds", "58");
+        params.addArgument("SlaverId", "23");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
         params.addArgument("mysqlpassword", "test");

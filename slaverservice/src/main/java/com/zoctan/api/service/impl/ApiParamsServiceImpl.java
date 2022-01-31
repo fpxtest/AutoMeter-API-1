@@ -34,6 +34,11 @@ private ApiParamsMapper apiParamsMapper;
     }
 
     @Override
+    public List<ApiParams> getDistinctApiParamsbyid(Long apiid) {
+        return apiParamsMapper.getDistinctApiParamsbyid(apiid);
+    }
+
+    @Override
     public int ifexist(Condition con) {
         return countByCondition(con);
     }

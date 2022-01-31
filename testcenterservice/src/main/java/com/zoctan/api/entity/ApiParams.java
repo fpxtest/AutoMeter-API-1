@@ -48,20 +48,34 @@ public class ApiParams {
      */
     private String propertytype;
 
+
+    public String getKeytype() {
+        return keytype;
+    }
+
+    public void setKeytype(String keytype) {
+        this.keytype = keytype;
+    }
+
+    private String keytype;
+
+
+
     /**
      * key名
      */
     private String keyname;
 
-    public String getKeynamebak() {
-        return keynamebak;
+
+    public String getKeydefaultvalue() {
+        return keydefaultvalue;
     }
 
-    public void setKeynamebak(String keynamebak) {
-        this.keynamebak = keynamebak;
+    public void setKeydefaultvalue(String keydefaultvalue) {
+        this.keydefaultvalue = keydefaultvalue;
     }
 
-    private String keynamebak;
+    private String keydefaultvalue;
 
 
 

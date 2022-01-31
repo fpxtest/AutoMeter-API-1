@@ -158,6 +158,17 @@ public class RequestObject {
     private HttpParamers paramers;
 
 
+    public HttpParamers getBodyparamers() {
+        return Bodyparamers;
+    }
+
+    public void setBodyparamers(HttpParamers bodyparamers) {
+        Bodyparamers = bodyparamers;
+    }
+
+    private HttpParamers Bodyparamers;
+
+
     public String getRequestcontenttype() {
         return requestcontenttype;
     }

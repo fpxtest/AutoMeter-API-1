@@ -17,6 +17,8 @@ public interface SlaverMapper extends MyMapper<Slaver> {
     List<Slaver> findslaverWithName(final Map<String, Object> params);
 
     List<Slaver> findslaverbyip(@Param("ip") final String ip);
+
+    List<Slaver> findslaverbymac(@Param("macaddress") final String macaddress);
     /**
      * 更新字典内容
      *

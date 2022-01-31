@@ -24,6 +24,22 @@ export function searchparamsbyapiid(params) {
   })
 }
 
+export function searchbyidandproperty(params) {
+  return request({
+    url: '/api/params/searchbyidandproperty',
+    method: 'post',
+    data: params
+  })
+}
+
+export function getBodyNoFormbyapiid(params) {
+  return request({
+    url: '/api/params/getBodyNoFormbyapiid',
+    method: 'post',
+    data: params
+  })
+}
+
 export function search(apiparamsForm) {
   return request({
     url: '/api/params/search',
@@ -35,6 +51,14 @@ export function search(apiparamsForm) {
 export function addapiparams(apiparamsForm) {
   return request({
     url: '/api/params',
+    method: 'post',
+    data: apiparamsForm
+  })
+}
+
+export function addapiallparams(apiparamsForm) {
+  return request({
+    url: '/api/params/addapiallparams',
     method: 'post',
     data: apiparamsForm
   })

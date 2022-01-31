@@ -15,20 +15,17 @@ import com.zoctan.api.entity.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * 请求头
+ * 用例数据
  */
 @Slf4j
 public class TestCaseHelp {
     // 拼装请求需要的用例数据
     public RequestObject GetCaseRequestData(List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
         RequestObject ro=new RequestObject();
-
         try
        {
            // url请求资源路径
@@ -68,36 +65,48 @@ public class TestCaseHelp {
            HashMap<String, String> headmap=fixhttprequestdatas("Header",apiCasedataList);
            HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
            HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
-           // 设置header
+
+           //Header
            HttpHeader header = new HttpHeader();
+           header = AddHeaderByRequestContentType(header, requestcontenttype);
            if(headmap.size()>0)
            {
                for (String key : headmap.keySet()) {
                    header.addParam(key, headmap.get(key));
                }
            }
-           // 设置参数
-           String PostData = "";
+           //url参数
            HttpParamers paramers = new  HttpParamers();
+           // 设置参数
            if(paramsmap.size()>0)
            {
                for (String key : paramsmap.keySet()) {
                    paramers.addParam(key, paramsmap.get(key));
                }
-               try {
-                   PostData=GetParasPostData(requestcontenttype,paramers);
-               } catch (IOException e) {
-                   TestCaseHelp.log.info("处理paramers数据异常："+e.getMessage());
-                   throw new Exception("处理paramers数据异常："+e.getMessage());
-               }
            }
-           TestCaseHelp.log.info("处理paramers完后，PostData："+PostData);
-           // 如果参数为空，设置body
+           //Body参数
+           HttpParamers Bodyparamers = new HttpParamers();
+           //Body内容
+           String PostData = "";
+           // 设置Body
            if(bodymap.size()>0)
            {
-               for (String key : bodymap.keySet()) {
-                   TestCaseHelp.log.info("获取表中的Body数据："+bodymap.get(key));
-                   PostData = bodymap.get(key);
+               if (requestcontenttype.equalsIgnoreCase("Form表单")) {
+                   for (String key : paramsmap.keySet()) {
+                       Bodyparamers.addParam(key, paramsmap.get(key));
+                   }
+                   try {
+                       PostData=GetParasPostData(requestcontenttype,Bodyparamers);
+                   } catch (IOException e) {
+                       TestCaseHelp.log.info("处理Body参数数据异常："+e.getMessage());
+                       throw new Exception("处理Body参数数据异常："+e.getMessage());
+                   }
+               }
+               else
+               {
+                   for (String Key : bodymap.keySet()) {
+                       PostData = bodymap.get(Key);
+                   }
                }
            }
            TestCaseHelp.log.info("处理Body完后，PostData："+PostData);
@@ -108,6 +117,7 @@ public class TestCaseHelp {
            ro.setProtocal(protocal);
            ro.setApistyle(apistyle);
            ro.setParamers(paramers);
+           ro.setBodyparamers(Bodyparamers);
            ro.setRequestcontenttype(requestcontenttype);
            ro.setRequestmMthod(method);
            ro.setResource(resource);
@@ -149,11 +159,23 @@ public class TestCaseHelp {
         return Result;
     }
 
+    //根据请求数据类型增加header
+    private HttpHeader AddHeaderByRequestContentType(HttpHeader httpHeader, String RequestContentType) {
+        if (RequestContentType.equalsIgnoreCase("json")) {
+            httpHeader.addParam("Content-Type", "application/json;charset=utf-8");
+        }
+        if (RequestContentType.equalsIgnoreCase("xml")) {
+            httpHeader.addParam("Content-Type", "application/xml;charset=utf-8");
+        }
+        return httpHeader;
+    }
+
     // 发送http请求
-    public TestResponeData request(RequestObject requestObject) throws Exception {
-        TestResponeData result=new TestResponeData();
+    public ResponeData request(RequestObject requestObject) throws Exception {
+        ResponeData result=new ResponeData();
+        TestHttp testHttp=new TestHttp();
         if (requestObject.getProtocal().equals("http")||requestObject.getProtocal().equals("https")) {
-            result = Httphelp.doService(requestObject.getProtocal(),requestObject.getResource(), requestObject.getRequestmMthod(),requestObject.getApistyle(), requestObject.getParamers(),requestObject.getPostData(),requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
+            result = testHttp.doService(requestObject);
         }
         return result;
     }

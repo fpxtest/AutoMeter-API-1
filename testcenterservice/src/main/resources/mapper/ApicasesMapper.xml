@@ -81,5 +81,12 @@
     FROM apicases WHERE deployunitid = #{deployunitid}
   </select>
 
+  <select id="getcasebyapiid" resultMap="BaseResultMap">
+    SELECT *
+    FROM apicases WHERE apiid = #{apiid}
+  </select>
+
+
+
 
 </mapper>

@@ -73,13 +73,13 @@ public class postcondition extends AbstractJavaSamplerClient {
         try {
             core.updatedispatchcasestatus(testplanid,caseid,slaverid,batchid);
             core.PlanBatchAllDipatchFinish(testplanid,batchname);
-            getLogger().info(TestCore.logplannameandcasename + "更新调度表状态完成");
+            getLogger().info(TestCaseData.logplannameandcasename + "更新调度表状态完成");
             getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+slaverid);
             core.UpdateSlaverStatus(slaverid,"空闲");
         }
         catch (Exception ex)
         {
-            getLogger().info(TestCore.logplannameandcasename + "更新调度表状态异常："+ex.getMessage());
+            getLogger().info(TestCaseData.logplannameandcasename + "更新调度表状态异常："+ex.getMessage());
         }
         //slaver性能测试解析报告，生成数据入库
         try {
@@ -87,17 +87,17 @@ public class postcondition extends AbstractJavaSamplerClient {
             {
                 File file1 = new File(casereportfolder+"/index.html");
                 if(!file1.exists()) {
-                    getLogger().info(TestCore.logplannameandcasename + "性能报告文件未生成。。。。。。。。。。。。。。。");
+                    getLogger().info(TestCaseData.logplannameandcasename + "性能报告文件未生成。。。。。。。。。。。。。。。");
                 }
-                getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
+                getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
                 long end = new Date().getTime();
                 long starttime=Long.parseLong(start);
                 double costtime=(double)(end-starttime)/1000;
                 core.genealperformacestaticsreport(testclass,batchname,testplanid,batchid,slaverid,caseid,casereportfolder,costtime);
-                getLogger().info(TestCore.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
+                getLogger().info(TestCaseData.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
             }
         } catch (Exception e) {
-            getLogger().info(TestCore.logplannameandcasename + "处理性能报告出错：" + e.getMessage());
+            getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告出错：" + e.getMessage());
         }
     }
 

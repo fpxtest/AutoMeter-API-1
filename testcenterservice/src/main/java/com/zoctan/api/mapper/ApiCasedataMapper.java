@@ -25,9 +25,15 @@ public interface ApiCasedataMapper extends MyMapper<ApiCasedata> {
 
     List<ApiCasedata> getparamvaluebycaseidandtype(@Param("caseid") Long caseid,@Param("propertytype") String PrppertyType);
 
+    List<ApiCasedata> getdataidbyapiidandtypeandparatype(@Param("apiid") Long apiid,@Param("propertytype") String PrppertyType,@Param("paramstype") String paramstype);
+
+    List<ApiCasedata> getdataidbyapiidandtypeandapiparam(Long apiid,@Param("propertytype") String PrppertyType,@Param("apiparam") String apiparam);
+
+    List<ApiCasedata> getdataidbyapiidandtype(Long apiid,@Param("propertytype") String PrppertyType);
 
     void deleteparamvaluebycaseidandtype(@Param("caseid") Long caseid,@Param("propertytype") String propertytype);
 
     void deletcasedatabyid(@Param("caseid") Long caseid);
+    void updateparambycaseidandprotypeandapiparam(@Param("caseid")Long caseid,@Param("propertytype") String propertytype,@Param("apiparam") String param3,  @Param("apiparam") String param4, @Param("paramstype") String param5);
 
 }

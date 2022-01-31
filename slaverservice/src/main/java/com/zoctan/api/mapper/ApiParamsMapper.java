@@ -17,11 +17,11 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
      */
     List<ApiParams> findApiParamsWithName(final Map<String, Object> params);
 
+    List<ApiParams> getDistinctApiParamsbyid(Long apiid);
 
     /**
      * 按条件查询Api内容
      *
-     * @param params 参数
      * @return 用户列表
      */
 
