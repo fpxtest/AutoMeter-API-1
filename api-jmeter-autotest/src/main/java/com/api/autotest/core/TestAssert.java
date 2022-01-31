@@ -44,12 +44,12 @@ public class TestAssert {
         }
         //获取实际值使用JsonPath解析
         String ExpectValue = apicasesAssert.getAssertvalues();
-        if (apicasesAssert.getAsserttype().equals("Json")) {
+        if (apicasesAssert.getAsserttype().equalsIgnoreCase("Json")) {
             String ActualResult=ParseJson(apicasesAssert.getExpression(),ActualJson);
-            logger.info(TestCore.logplannameandcasename + "ParseJson  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+            logger.info(TestCaseData.logplannameandcasename + "ParseJson  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
             AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
         }
-        logger.info(TestCore.logplannameandcasename + "ParseJson AssertInfo is:" + AssertInfo );
+        logger.info(TestCaseData.logplannameandcasename + "ParseJson AssertInfo is:" + AssertInfo );
         return AssertInfo;
     }
 
@@ -57,10 +57,10 @@ public class TestAssert {
     public String ParseRespone(String ResponeResultType,String Respone,String Path)
     {
         String Result="";
-        if (ResponeResultType.equals("json")) {
+        if (ResponeResultType.equalsIgnoreCase("json")) {
             Result = ParseJson(Path, Respone);
         }
-        if (ResponeResultType.equals("xml")) {
+        if (ResponeResultType.equalsIgnoreCase("xml")) {
             Result = ParseXml(Path, Respone);
             //处理xml
         }
@@ -103,9 +103,9 @@ public class TestAssert {
         }
         //获取实际值使用XPath解析
         String ExpectValue = apicasesAssert.getAssertvalues();
-        if (apicasesAssert.getAsserttype().equals("Xml")) {
+        if (apicasesAssert.getAsserttype().equalsIgnoreCase("Xml")) {
             String ActualResult=ParseXml(apicasesAssert.getExpression(),ActualXml);
-            logger.info(TestCore.logplannameandcasename + "ParseXml  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+            logger.info(TestCaseData.logplannameandcasename + "ParseXml  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
             AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
         }
         return AssertInfo;
@@ -122,13 +122,13 @@ public class TestAssert {
                 {
                     int Code=responeData.getCode();
                     ActualResult=String.valueOf(Code);
-                    logger.info(TestCore.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+                    logger.info(TestCaseData.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
                     AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
                 }
                 if (apicasesAssert.getAssertsubtype().equals("文本"))
                 {
                     ActualResult=responeData.getContent();
-                    logger.info(TestCore.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
+                    logger.info(TestCaseData.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
                     AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
                 }
             }

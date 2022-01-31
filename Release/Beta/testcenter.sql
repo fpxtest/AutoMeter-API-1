@@ -1465,6 +1465,38 @@ CREATE TABLE `condition_order`
 
   ALTER TABLE testcenter.dictionary MODIFY COLUMN dicitmevalue varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '字典项值';
 
+ALTER TABLE testcenter.testcondition_report MODIFY COLUMN conditionresult TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '接口返回，数据库返回结果等等';
+ALTER TABLE testcenter.apicases_report MODIFY COLUMN respone TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '返回结果';
+ALTER TABLE testcenter.apicases_report MODIFY COLUMN assertvalue TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '断言详细经过';
+ALTER TABLE testcenter.apicases_report MODIFY COLUMN requestheader TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '请求头数据';
+ALTER TABLE testcenter.apicases_report MODIFY COLUMN requestdatas TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '请求数据';
+ALTER TABLE testcenter.apicases_report MODIFY COLUMN errorinfo TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '错误信息';
+ALTER TABLE testcenter.apicases_report MODIFY COLUMN expect TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '期望值';
+
+ALTER TABLE testcenter.apicases_report_performance MODIFY COLUMN respone TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '返回结果';
+ALTER TABLE testcenter.apicases_report_performance MODIFY COLUMN assertvalue TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '断言详细经过';
+ALTER TABLE testcenter.apicases_report_performance MODIFY COLUMN requestheader TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '请求头数据';
+ALTER TABLE testcenter.apicases_report_performance MODIFY COLUMN requestdatas TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '请求数据';
+ALTER TABLE testcenter.apicases_report_performance MODIFY COLUMN errorinfo TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '错误信息';
+ALTER TABLE testcenter.apicases_report_performance MODIFY COLUMN expect TEXT CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '期望值';
+
+ALTER  table `api_params` add column keytype varchar(20) Comment '参数类型';
+ALTER TABLE testcenter.api_params CHANGE keynamebak keydefaultvalue text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'Key默认值';
+ALTER TABLE testcenter.api_params MODIFY COLUMN keydefaultvalue text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'Key默认值';
+
+
+ALTER  table `testvariables` add column valuetype varchar(20) DEFAULT 'String' Comment 'String，Number，Array,Bool,其他';
+ALTER  table `api` add column requesttype varchar(20) DEFAULT 'Body传值' Comment '请求传值方式';
+ALTER  table `api_casedata` add column paramstype varchar(20) Comment '参数类型';
+ALTER  table `slaver` add column macaddress varchar(100) Comment 'mac地址';
+
+
+
+
+
+
+
+
 
 
 

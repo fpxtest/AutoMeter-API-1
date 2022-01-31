@@ -7,6 +7,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.Casedata;
 import com.zoctan.api.entity.ApiCasedata;
 import com.zoctan.api.entity.ApiParams;
+import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.service.ApiCasedataService;
 import com.zoctan.api.service.ApiParamsService;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,26 @@ public class ApiCasedataController {
         return ResultGenerator.genOkResult();
     }
 
+    /**
+     * 更新BodyData
+     */
+    @PutMapping("/detail")
+    public Result updateDeploy(@RequestBody final ApiCasedata apiCasedata) {
+        if(apiCasedata.getId()==null)
+        {
+            apiCasedataService.save(apiCasedata);
+        }
+        else
+        {
+            if(!apiCasedata.getApiparamvalue().isEmpty())
+            {
+                this.apiCasedataService.update(apiCasedata);
+            }
+        }
+
+        return ResultGenerator.genOkResult();
+    }
+
     @GetMapping("/{id}")
     public Result detail(@PathVariable Long id) {
         ApiCasedata apiCasedata = apiCasedataService.getById(id);
@@ -67,7 +88,19 @@ public class ApiCasedataController {
     public Result casevalue(@RequestBody final Map<String, Object> param) {
         final List<ApiCasedata> list = this.apiCasedataService.getparamvaluebycaseidandtype(param);
         final PageInfo<ApiCasedata> pageInfo = new PageInfo<>(list);
-        return ResultGenerator.genOkResult(pageInfo);    }
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 根据用例值的保存实际是更新参数值操作
+     */
+    @PostMapping("/updatepropertydata")
+    public Result updatepropertydata(@RequestBody List<ApiCasedata> apiCasedataList) {
+        for (ApiCasedata apiCasedata :apiCasedataList) {
+            apiCasedataService.update(apiCasedata);
+        }
+        return ResultGenerator.genOkResult();
+    }
 
 
     /**

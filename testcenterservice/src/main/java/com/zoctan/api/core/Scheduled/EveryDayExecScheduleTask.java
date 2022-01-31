@@ -50,61 +50,61 @@ public class EveryDayExecScheduleTask {
     @Scheduled(cron = "0/5 * * * * ?")
     //或直接指定时间间隔，例如：5秒
     private void configureTasks() {
-        String ip = null;
-        InetAddress address = null;
         try {
-            address = InetAddress.getLocalHost();
-            ip = address.getHostAddress();
             long redis_default_expire_time = 2000;
-            boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
+            boolean lock = redisUtils.tryLock(redisKey, "EveryDayExecScheduleTask", redis_default_expire_time);
             if (lock) {
-                //TODO 执行任务结束后需要释放锁
-                //TODO 执行任务结束后需要释放锁
-                Calendar cal = Calendar.getInstance();
-                int Hour = cal.get(Calendar.HOUR_OF_DAY);
-                int Minitues = cal.get(Calendar.MINUTE) ;
+                try
+                {
+                    Calendar cal = Calendar.getInstance();
+                    int Hour = cal.get(Calendar.HOUR_OF_DAY);
+                    int Minitues = cal.get(Calendar.MINUTE) ;
 
-                String HourData=FinishZERO(Hour);
-                String MinitesData=FinishZERO(Minitues);
-                String CurrentTime =  HourData+ ":" + MinitesData + ":00";
-                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============CurrentTime=======================" + CurrentTime);
-                Condition con=new Condition(Executeplanbatch.class);
-                con.createCriteria().andCondition("exectype = '每天定时'" );
-                List<Executeplanbatch> executeplanbatchList = executeplanbatchService.listByCondition(con);
-                for (Executeplanbatch ex : executeplanbatchList) {
-                    String ExecDate = ex.getExecdate();
-                    EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============ExecDate=======================" + ExecDate);
-                    if (CurrentTime.equals(ExecDate)) {
-                        EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============ExecDate=CurrentTime======================" + ExecDate);
-                        List<Planbantchexeclog> planbantchexeclogList = planbantchexeclogMapper.GetPlanExecLogToday(ex.getId(), ExecDate);
-                        if (planbantchexeclogList.size() == 0)//日志表当天不存在,表示还没执行
-                        {
-                            List<Testplanandbatch> testplanandbatchList = new ArrayList<>();
-                            Testplanandbatch testplanandbatch = new Testplanandbatch();
-                            testplanandbatch.setBatchname(ex.getBatchname());
-                            testplanandbatch.setPlanid(ex.getExecuteplanid());
-                            testplanandbatchList.add(testplanandbatch);
-                            String memo = "";
-                            try {
-                                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============开始执行当天的用例======================"+ CurrentTime);
-                                ExecPlanCase(testplanandbatchList);
-                                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============完成执行当天的用例======================"+ CurrentTime);
-                            } catch (Exception exp) {
-                                memo = exp.getMessage();
+                    String HourData=FinishZERO(Hour);
+                    String MinitesData=FinishZERO(Minitues);
+                    String CurrentTime =  HourData+ ":" + MinitesData + ":00";
+                    EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============CurrentTime=======================" + CurrentTime);
+                    Condition con=new Condition(Executeplanbatch.class);
+                    con.createCriteria().andCondition("exectype = '每天定时'" );
+                    List<Executeplanbatch> executeplanbatchList = executeplanbatchService.listByCondition(con);
+                    for (Executeplanbatch ex : executeplanbatchList) {
+                        String ExecDate = ex.getExecdate();
+                        EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============ExecDate=======================" + ExecDate);
+                        if (CurrentTime.equals(ExecDate)) {
+                            EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============ExecDate=CurrentTime======================" + ExecDate);
+                            List<Planbantchexeclog> planbantchexeclogList = planbantchexeclogMapper.GetPlanExecLogToday(ex.getId(), ExecDate);
+                            if (planbantchexeclogList.size() == 0)//日志表当天不存在,表示还没执行
+                            {
+                                List<Testplanandbatch> testplanandbatchList = new ArrayList<>();
+                                Testplanandbatch testplanandbatch = new Testplanandbatch();
+                                testplanandbatch.setBatchname(ex.getBatchname());
+                                testplanandbatch.setPlanid(ex.getExecuteplanid());
+                                testplanandbatchList.add(testplanandbatch);
+                                String memo = "";
+                                try {
+                                    EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============开始执行当天的用例======================"+ CurrentTime);
+                                    ExecPlanCase(testplanandbatchList);
+                                    EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============完成执行当天的用例======================"+ CurrentTime);
+                                } catch (Exception exp) {
+                                    memo = exp.getMessage();
+                                }
+                                planbantchexeclogMapper.SaveExecLog(ex.getId(), ExecDate, memo);
+                                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============完成执行用例保存log记录表======================"+ CurrentTime);
                             }
-                            planbantchexeclogMapper.SaveExecLog(ex.getId(), ExecDate, memo);
-                            EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============完成执行用例保存log记录表======================"+ CurrentTime);
                         }
                     }
                 }
-                //释放锁
-                redisUtils.deletekey(redisKey);
-                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============释放分布式锁成功=======================");
-
+                catch (Exception ex)
+                {
+                    EveryDayExecScheduleTask.log.info("【每天定时执行任务】异常======================="+ex.getMessage());
+                }
+                finally {
+                    //释放锁
+                    redisUtils.deletekey(redisKey);
+                    EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============释放分布式锁成功=======================");
+                }
             } else {
-                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============获得分布式锁失败=======================");
-                ip = redisUtils.getkey(redisKey);
-                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============{}机器上占用分布式锁，正在执行中=======================" + ip);
+                EveryDayExecScheduleTask.log.info("【每天定时执行任务】-============{}机器上占用分布式锁，正在执行中=======================" + redisKey);
                 return;
             }
         } catch (Exception ex) {

@@ -77,13 +77,10 @@ public class TestPlanCaseController {
     private MacdepunitService macdepunitService;
     @Autowired(required = false)
     private MachineService machineService;
-
     @Autowired(required = false)
     private ApicasesAssertService apicasesAssertService;
-
     @Autowired(required = false)
     private ExecuteplanParamsService executeplanParamsService;
-
     @Autowired(required = false)
     private ApicasesReportPerformanceMapper apicasesReportPerformanceMapper;
 
@@ -336,7 +333,7 @@ public class TestPlanCaseController {
     }
 
 
-    public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch) {
+    public JmeterPerformanceObject GetJmeterPerformanceCaseData(Dispatch dispatch) {
         JmeterPerformanceObject jmeterPerformanceObject = new JmeterPerformanceObject();
         jmeterPerformanceObject.setTestplanid(dispatch.getExecplanid());
         jmeterPerformanceObject.setCaseid(dispatch.getTestcaseid());
@@ -362,7 +359,7 @@ public class TestPlanCaseController {
         if (macdepunit != null) {
             String testserver = "";
             String resource = "";
-            if (macdepunit.getVisittype().equals(new String("ip"))) {
+            if (macdepunit.getVisittype().equalsIgnoreCase("ip")) {
                 Long MachineID = macdepunit.getMachineid();
                 Machine machine = machineService.getBy("id", MachineID);
                 testserver = machine.getIp();
@@ -373,43 +370,44 @@ public class TestPlanCaseController {
             }
             jmeterPerformanceObject.setResource(resource);
         }
+        return jmeterPerformanceObject;
+    }
 
+    public JmeterPerformanceObject GetJmeterPerformanceCaseRequestData(JmeterPerformanceObject jmeterPerformanceObject, Dispatch dispatch, Api api) {
+        List<ApiParams> apiParamsList = apiParamsService.getDistinctApiParamsbyid(api.getId());
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
-
         HashMap<String, String> HeaderMap = new HashMap<>();
         HashMap<String, String> ParamsMap = new HashMap<>();
         HashMap<String, String> BodyMap = new HashMap<>();
-        for (ApiCasedata apiCasedata : apiCasedataList) {
-            if (apiCasedata.getPropertytype().equals("Params")) {
-                ParamsMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
-            }
-            if (apiCasedata.getPropertytype().equals("Header")) {
-                HeaderMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
-            }
-            if (apiCasedata.getPropertytype().equals("Body")) {
-                BodyMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
+        for (ApiParams apiParams : apiParamsList) {
+            for (ApiCasedata apiCasedata : apiCasedataList) {
+                if (apiParams.getPropertytype().equalsIgnoreCase("Params") && apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
+                    ParamsMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
+                }
+                if (apiParams.getPropertytype().equalsIgnoreCase("Header") && apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
+                    HeaderMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
+                }
+                if (apiParams.getPropertytype().equalsIgnoreCase("Body") && apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
+                    BodyMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
+                }
             }
         }
-
         //全局参数Header，Body
-        List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(),"Header");
+        List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
 
         //全局Header如果有参数，则替换原参数，并且加上全局Header参数
-        for (ExecuteplanParams  executeplanParams :executeplanHeaderParamList) {
-            String ParamName=executeplanParams.getKeyname();
-            String ParamValue=executeplanParams.getKeyvalue();
-            HeaderMap.put(ParamName,ParamValue);
+        for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
+            String ParamName = executeplanParams.getKeyname();
+            String ParamValue = executeplanParams.getKeyvalue();
+            HeaderMap.put(ParamName, ParamValue);
         }
 
-        List<ExecuteplanParams> executeplanBodyParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(),"Body");
+        List<ExecuteplanParams> executeplanBodyParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Body");
         //全局Body如果有参数，则替换原参数
-        for (ExecuteplanParams executeplanParams :executeplanBodyParamList) {
-            String PostData=executeplanParams.getKeyvalue();
-            for (String KEY: BodyMap.keySet()) {
-                BodyMap.put(KEY,PostData);
-            }
+        for (ExecuteplanParams executeplanParams : executeplanBodyParamList) {
+            String PostData = executeplanParams.getKeyvalue();
+            BodyMap.put("Body", PostData);
         }
-
 
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
@@ -418,9 +416,7 @@ public class TestPlanCaseController {
             //有参数无用例数据表示用例数据不完整
             if (HeaderParamsList.size() > 0) {
                 jmeterPerformanceObject.setHeadjson("NoCaseData");
-            }
-            else
-            {
+            } else {
                 jmeterPerformanceObject.setHeadjson("NN");
             }
         }
@@ -430,13 +426,12 @@ public class TestPlanCaseController {
             List<ApiParams> ParamsparamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
             if (ParamsparamsList.size() > 0) {
                 jmeterPerformanceObject.setParamsjson("NoCaseData");
-            }else
-            {
+            } else {
                 jmeterPerformanceObject.setParamsjson("NN");
             }
         }
         if (BodyMap.size() > 0) {
-            for (String Key:BodyMap.keySet()) {
+            for (String Key : BodyMap.keySet()) {
                 jmeterPerformanceObject.setBodyjson(BodyMap.get(Key));
             }
             //根据api请求数据类型处理，json，xml
@@ -461,8 +456,7 @@ public class TestPlanCaseController {
             List<ApiParams> BodyparamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
             if (BodyparamsList.size() > 0) {
                 jmeterPerformanceObject.setBodyjson("NoCaseData");
-            }else
-            {
+            } else {
                 jmeterPerformanceObject.setBodyjson("NN");
             }
         }
@@ -470,17 +464,57 @@ public class TestPlanCaseController {
         jmeterPerformanceObject.setMysqlusername(username);
         jmeterPerformanceObject.setMysqlpassword(password);
 
-        List<ApicasesAssert> apicasesAssertList= apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());
-        if(apicasesAssertList.size()>0)
-        {
-            String ExpectJson=JSON.toJSONString(apicasesAssertList);
+        List<ApicasesAssert> apicasesAssertList = apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());
+        if (apicasesAssertList.size() > 0) {
+            String ExpectJson = JSON.toJSONString(apicasesAssertList);
             jmeterPerformanceObject.setExpect(ExpectJson);
-        }
-        else
-        {
+        } else {
             jmeterPerformanceObject.setExpect("");
         }
         return jmeterPerformanceObject;
+    }
+
+    public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch) {
+        Apicases apicases = apicasesService.getBy("id", dispatch.getTestcaseid());
+        Api api = apiService.getBy("id", apicases.getApiid());
+        JmeterPerformanceObject jmeterPerformanceObject = GetJmeterPerformanceCaseData(dispatch);
+        jmeterPerformanceObject = GetJmeterPerformanceCaseRequestData(jmeterPerformanceObject, dispatch, api);
+        return jmeterPerformanceObject;
+//        jmeterPerformanceObject.setTestplanid(dispatch.getExecplanid());
+//        jmeterPerformanceObject.setCaseid(dispatch.getTestcaseid());
+//        jmeterPerformanceObject.setSlaverid(dispatch.getSlaverid());
+//        jmeterPerformanceObject.setBatchid(dispatch.getBatchid());
+//        jmeterPerformanceObject.setCasename(dispatch.getTestcasename());
+//        jmeterPerformanceObject.setBatchname(dispatch.getBatchname());
+//        jmeterPerformanceObject.setExecuteplanname(dispatch.getExecplanname());
+//        Apicases apicases = apicasesService.getBy("id", dispatch.getTestcaseid());
+//        jmeterPerformanceObject.setCasetype(apicases.getCasetype());
+//        Api api = apiService.getBy("id", apicases.getApiid());
+//        jmeterPerformanceObject.setApistyle(api.getApistyle());
+//        jmeterPerformanceObject.setRequestmMthod(api.getVisittype());
+//
+//        jmeterPerformanceObject.setRequestcontenttype(api.getRequestcontenttype());
+//        jmeterPerformanceObject.setResponecontenttype(api.getResponecontenttype());
+//        Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
+//        jmeterPerformanceObject.setProtocal(deployunit.getProtocal());
+//
+//        Executeplan executeplan = epservice.getBy("id", dispatch.getExecplanid());
+//        Long EnvID = executeplan.getEnvid();
+//        Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnvID, deployunit.getId());
+//        if (macdepunit != null) {
+//            String testserver = "";
+//            String resource = "";
+//            if (macdepunit.getVisittype().equalsIgnoreCase("ip")) {
+//                Long MachineID = macdepunit.getMachineid();
+//                Machine machine = machineService.getBy("id", MachineID);
+//                testserver = machine.getIp();
+//                resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
+//            } else {
+//                testserver = macdepunit.getDomain();
+//                resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
+//            }
+//            jmeterPerformanceObject.setResource(resource);
+//        }
     }
 
     public void JmeterClassNotExist(Dispatch dis, String jmeterclassname, String casename) {
@@ -539,7 +573,6 @@ public class TestPlanCaseController {
         return flag;
     }
 
-
     public void FunJmeterClassNotExist(Dispatch dis, String jmeterclassname, String casename) {
         // 未找到用例对应的jmeter-class文件，当前用例失败，并且记录计划状态
         ApicasesReport ar = new ApicasesReport();
@@ -586,7 +619,6 @@ public class TestPlanCaseController {
         }
         return LastDispatchList;
     }
-
 
     public int GetJmeterProcess(String DictionaryCode, String DicType) {
         List<Dictionary> slavermaxfunthreaddic = dictionaryMapper.findDicNameValueWithCode(DictionaryCode);

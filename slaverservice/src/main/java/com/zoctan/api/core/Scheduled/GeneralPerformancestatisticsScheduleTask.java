@@ -12,6 +12,7 @@ import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ApicasesPerformancestatisticsService;
 import com.zoctan.api.service.ExecuteplanService;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.client.Origin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -61,58 +62,41 @@ public class GeneralPerformancestatisticsScheduleTask {
     //@Scheduled(fixedRate=5000)
     private void configureTasks() {
         try {
-//            address = InetAddress.getLocalHost();
-//            ip = address.getHostAddress();
-            //String redisKey = "Performancestatistics"+ UUID.randomUUID().toString()+ip+"GeneralPerformancestatistics";
             long redis_default_expire_time = 2000;
             //默认上锁时间为五小时
             //此key存放的值为任务执行的ip，
             // redis_default_expire_time 不能设置为永久，避免死锁
             boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
             if (lock) {
-                List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
-                if (slaverlist.size() == 0) {
-                    GeneralPerformancestatisticsScheduleTask.log.error("性能报告解析任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
-                    return;
-                }
-                Long SlaverId = slaverlist.get(0).getId();
-                List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(SlaverId);
-                for (Performancereportsource per:performancereportsourcelist)
+                try
                 {
-                    fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
-                    GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务-ID："+per.getId()+" 解析完成");
-
+                    List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
+                    if (slaverlist.size() == 0) {
+                        GeneralPerformancestatisticsScheduleTask.log.error("性能报告解析任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
+                        throw new Exception("性能报告解析任务-没有找到slaver。。。。。。。。未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
+                    }
+                    Long SlaverId = slaverlist.get(0).getId();
+                    List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(SlaverId);
+                    for (Performancereportsource per:performancereportsourcelist)
+                    {
+                        fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
+                        GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务-ID："+per.getId()+" 解析完成");
+                    }
                 }
-//                List<Dictionary> dic = dictionaryMapper.findDicNameValueWithCode("dispatchservice");
-//                if(dic.size()==0) //表示没有调度服务，直接本地处理
-//                {
-//                    List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
-//
-//                    if (slaverlist.size() > 0)
-//                    {
-//                        List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(slaverlist.get(0).getId());
-//                        for (Performancereportsource per:performancereportsourcelist)
-//                        {
-//                            fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
-//                        }
-//                    }
-//                    else
-//                    {
-//                        GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============当前机器的ip未能获得的对应的slaverid："+ip);
-//                    }
-//                }
-//                else  //表示集群，通知dispatchservice
-//                {
-//
-//                }
+                catch (Exception ex)
+                {
+                    GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask性能报告解析异常======================="+ex.getMessage());
+                }
+                finally {
+                    redisUtils.deletekey(redisKey);
+                }
                 //TODO 执行任务结束后需要释放锁
                 //释放锁
-                redisUtils.deletekey(redisKey);
                 GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============释放分布式锁成功=======================");
             } else {
                 GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============获得分布式锁失败=======================");
-                ip = (String) redisUtils.getkey(redisKey);
-                GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============{}机器上占用分布式锁，正在执行中======================="+ip);
+                ip =  redisUtils.getkey(redisKey);
+                GeneralPerformancestatisticsScheduleTask.log.info("GeneralPerformancestatisticsScheduleTask============{}机器上占用分布式锁，正在执行中======================="+redisKey+" ip:"+ip);
                 return;
             }
         } catch (Exception ex) {
@@ -236,10 +220,10 @@ public class GeneralPerformancestatisticsScheduleTask {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
+            ip = address.getHostAddress();
         } catch (UnknownHostException e) {
             GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-UnknownHostException is:" + e.getMessage());
         }
-        ip = address.getHostAddress();
         redisKey = "Performancestatistics"+ip+"GeneralPerformancestatistics"+ new Date();
         GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-redisKey is:" + redisKey);
     }

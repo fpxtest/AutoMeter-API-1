@@ -170,12 +170,11 @@ public class ApiController {
         }
         else
         {
+            //复制api
             Api api =apiService.getBy("id",Long.parseLong(sourceapiid));
-
             Condition apiparamscon=new Condition(ApiParams.class);
             apiparamscon.createCriteria().andCondition("apiid = " + Long.parseLong(sourceapiid));
             List<ApiParams> apiParamsList= apiParamsService.listByCondition(apiparamscon);
-
             api.setDeployunitid(Long.parseLong(objectdeployunitid));
             api.setDeployunitname(objectdeployunitname);
             api.setApiname(newapiname);
@@ -185,7 +184,7 @@ public class ApiController {
             api.setLastmodifyTime(date);
             apiService.save(api);
             Long ApiId= api.getId();
-
+            //复制api参数
             for (ApiParams apiParams:apiParamsList)
             {
                 apiParams.setApiid(ApiId);

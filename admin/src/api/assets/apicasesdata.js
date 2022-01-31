@@ -16,6 +16,14 @@ export function search(apicasesdataForm) {
   })
 }
 
+export function updatepropertydata(apicasesdataForm) {
+  return request({
+    url: '/api/casedata/updatepropertydata',
+    method: 'post',
+    data: apicasesdataForm
+  })
+}
+
 export function getparamvaluebycaseidandtype(params) {
   return request({
     url: '/api/casedata/casevalue',

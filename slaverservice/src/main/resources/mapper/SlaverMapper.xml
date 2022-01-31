@@ -8,6 +8,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="slavername" jdbcType="VARCHAR" property="slavername" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="macaddress" jdbcType="VARCHAR" property="macaddress" />
     <result column="port" jdbcType="VARCHAR" property="port" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="stype" jdbcType="VARCHAR" property="stype" />
@@ -31,9 +32,15 @@
     where ip=#{ip}
   </select>
 
+  <select id="findslaverbymac" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where macaddress=#{macaddress}
+  </select>
+
   <insert id="addslaver">
-    INSERT INTO slaver (slavername, ip,port,status,stype,memo,create_time,lastmodify_time)
-    VALUES (#{slavername},#{ip},#{port},#{status},#{stype},#{memo},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'))
+    INSERT INTO slaver (slavername, ip,port,status,stype,macaddress,memo,create_time,lastmodify_time)
+    VALUES (#{slavername},#{ip},#{port},#{status},#{stype},#{macaddress}, #{memo},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'))
   </insert>
 
   <update id="updateSlaver" parameterType="com.zoctan.api.entity.Slaver">

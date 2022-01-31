@@ -16,7 +16,7 @@
 
   <select id="getParamsbyepid" resultMap="BaseResultMap">
     SELECT *
-    FROM executeplan_params a where a.executeplanid=#{executeplanid}
+    FROM executeplan_params a where a.executeplanid=#{executeplanid} and paramstype=#{paramstype}
   </select>
 
   <update id="updateParams" parameterType="com.zoctan.api.entity.ExecuteplanParams">

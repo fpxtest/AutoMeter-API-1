@@ -4,6 +4,7 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,17 +31,18 @@ public class DnamicCompilerHelp {
 
     public void CallDynamicScript(String javaSrc) throws Exception {
         Map<String, byte[]> results = new HashMap<>();
+        StringWriter stringWriter=new StringWriter();
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         StandardJavaFileManager stdManager = compiler.getStandardFileManager(null, null, null);
         MemoryJavaFileManager manager = new MemoryJavaFileManager(stdManager);
         JavaFileObject javaFileObject = manager.makeStringSource("TestCasePreClass.java", javaSrc);
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, null, null, Arrays.asList(javaFileObject));
+        JavaCompiler.CompilationTask task = compiler.getTask(stringWriter, manager, null, null, null, Arrays.asList(javaFileObject));
         if (task.call()) {
             results = manager.getClassBytes();
         }
         else
         {
-            throw new Exception("脚本编译出错，请检查语法错误："+javaSrc);
+            throw new Exception("脚本编译出错，请检查语法错误："+stringWriter);
         }
         MemoryClassLoader classLoader = new MemoryClassLoader(results);
         Class clazz = classLoader.loadClass("TestCasePreClass");

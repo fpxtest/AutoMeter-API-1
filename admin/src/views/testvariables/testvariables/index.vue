@@ -46,6 +46,7 @@
       <el-table-column label="变量名" align="center" prop="testvariablesname" width="100"/>
       <el-table-column label="变量描述" align="center" prop="variablesdes" width="100"/>
       <el-table-column label="变量类型" align="center" prop="testvariablestype" width="80"/>
+      <el-table-column label="变量值类型" align="center" prop="valuetype" width="100"/>
       <el-table-column label="变量值表示" align="center" prop="variablesexpress" width="100"/>
       <el-table-column label="备注" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
@@ -120,6 +121,17 @@
             <el-option label="用例变量" value="用例变量"></el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="变量值类型" prop="valuetype" required >
+          <el-select v-model="tmptestvariables.valuetype" placeholder="变量值类型" style="width:100%">
+            <el-option label="Number" value="Number"></el-option>
+            <el-option label="String" value="String"></el-option>
+            <el-option label="Array" value="Array"></el-option>
+            <el-option label="Bool" value="Bool"></el-option>
+          </el-select>
+        </el-form-item>
+
+
 
         <el-form-item label="变量值表示" prop="variablesexpress" required>
           <el-input
@@ -207,6 +219,7 @@
           id: '',
           testvariablesname: '',
           variablesdes: '',
+          valuetype: '',
           testvariablestype: '',
           variablesexpress: '',
           memo: '',
@@ -301,7 +314,8 @@
         this.tmptestvariables.testvariablestype = ''
         this.tmptestvariables.variablesexpress = ''
         this.tmptestvariables.memo = ''
-        this.tmptestvariables.envtype = ''
+        this.tmptestvariables.valuetype = ''
+        this.tmptestvariables.tmptestvariables = ''
         this.tmptestvariables.creator = this.name
       },
       /**
@@ -335,6 +349,8 @@
         this.tmptestvariables.variablesdes = this.testvariablesList[index].variablesdes
         this.tmptestvariables.testvariablestype = this.testvariablesList[index].testvariablestype
         this.tmptestvariables.variablesexpress = this.testvariablesList[index].variablesexpress
+        this.tmptestvariables.tmptestvariables = this.testvariablesList[index].tmptestvariables
+        this.tmptestvariables.valuetype = this.testvariablesList[index].valuetype
         this.tmptestvariables.memo = this.testvariablesList[index].memo
         this.tmptestvariables.creator = this.name
       },

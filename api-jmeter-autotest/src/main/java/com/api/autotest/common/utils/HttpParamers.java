@@ -27,7 +27,7 @@ public class HttpParamers {
 //    public enum HttpMethod {
 //        GET, POST;
 //    }
-    private Map<String, String> params = new HashMap<String, String>();
+    private Map<String, Object> params = new HashMap<String, Object>();
     //private HttpMethod httpMethod;
     private String jsonParamer = "";
 
@@ -43,7 +43,7 @@ public class HttpParamers {
 //        return new HttpParamers(HttpMethod.GET);
 //    }
 
-    public HttpParamers addParam(String name, String value) {
+    public HttpParamers addParam(String name, Object value) {
         this.params.put(name, value);
         return this;
     }
@@ -52,18 +52,17 @@ public class HttpParamers {
 //        return this.httpMethod;
 //    }
 
-    public String getQueryString() {
+    public String getQueryString() throws UnsupportedEncodingException {
         if ((this.params == null) || (this.params.isEmpty())) {
             return null;
         }
         StringBuilder query = new StringBuilder();
-        Set<Map.Entry<String, String>> entries = this.params.entrySet();
+        Set<Map.Entry<String, Object>> entries = this.params.entrySet();
 
-        for (Map.Entry<String, String> entry : entries) {
+        for (Map.Entry<String, Object> entry : entries) {
             String name = entry.getKey();
-            String value = entry.getValue();
-            query.append("&").append(name).append("=").append(value);
-            //query.append("&").append(name).append("=").append(URLEncoder.encode(value, charset));
+            Object value = entry.getValue();
+            query.append("&").append(name).append("=").append(value);//.append(URLEncoder.encode(value, "UTF-8"));
         }
         return query.substring(1);
     }
@@ -72,7 +71,7 @@ public class HttpParamers {
         return !isEmpty(this.jsonParamer);
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, Object> getParams() {
         return this.params;
     }
 

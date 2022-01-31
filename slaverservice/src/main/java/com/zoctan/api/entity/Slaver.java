@@ -24,6 +24,17 @@ public class Slaver {
      */
     private String ip;
 
+    public String getMacaddredss() {
+        return macaddress;
+    }
+
+    public void setMacaddredss(String macaddredss) {
+        this.macaddress = macaddredss;
+    }
+
+    private String macaddress;
+
+
     public String getPort() {
         return port;
     }
