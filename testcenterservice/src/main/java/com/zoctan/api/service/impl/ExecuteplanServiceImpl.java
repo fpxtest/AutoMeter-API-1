@@ -2,16 +2,13 @@ package com.zoctan.api.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.zoctan.api.core.exception.ServiceException;
-import com.zoctan.api.core.service.AbstractService;
-import com.zoctan.api.core.service.HttpHeader;
-import com.zoctan.api.core.service.Httphelp;
+import com.zoctan.api.core.service.*;
+import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.*;
 import com.zoctan.api.service.ExecuteplanService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,8 +90,10 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
                     ExecuteplanServiceImpl.log.info("计划请求调度参数：" + params);
                     try {
                         ExecuteplanServiceImpl.log.info("计划开始请求调度。。。。。。。。。。。。。。。。。。。。。。。。");
-                        String respon = Httphelp.doPost(DispatchServerurl, params, header, 30000, 30000);
-                        ExecuteplanServiceImpl.log.info("计划发送调度请求响应。。。。。。。。。。。。。。。。。。。。。。。。：" + respon);
+                        TestHttp testHttp=new TestHttp();
+                        TestResponeData testResponeData =testHttp.doService("http","",DispatchServerurl,header,new HttpParamers(),params,"POST");
+                        //String respon = HttphelpB1.doPost(DispatchServerurl, params, header, 30000, 30000);
+                        ExecuteplanServiceImpl.log.info("计划发送调度请求响应。。。。。。。。。。。。。。。。。。。。。。。。：" + testResponeData.getResponeContent());
                     } catch (Exception e) {
                         ExecuteplanServiceImpl.log.info("计划发送调度请求异常：" + e.getMessage());
                         if(e.getMessage().contains("Connection refused"))
@@ -123,7 +122,7 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
             HttpHeader header = new HttpHeader();
             String respon = "";
             try {
-                respon = Httphelp.doPost(ServerUrl, params, header, 5000, 5000);
+                respon = HttphelpB1.doPost(ServerUrl, params, header, 5000, 5000);
             } catch (Exception e) {
                 ExecuteplanServiceImpl.log.info("检测：" + ServerUrl + "请求响应结果。。。。。。。。。。。。。。。。。。。。。。。。：" + e.getMessage());
                 slaverMapper.updateSlaverStatus(slaver.getId(), "已下线");

@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.core.service.HttpHeader;
-import com.zoctan.api.core.service.Httphelp;
+import com.zoctan.api.core.service.HttphelpB1;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.ExecuteplanTestcase;
@@ -16,7 +16,6 @@ import com.zoctan.api.mapper.ExecuteplanMapper;
 import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanbatchService;
-import com.zoctan.api.service.impl.ExecuteplanServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
@@ -83,7 +82,7 @@ public class ExecuteplanbatchController {
             HttpHeader header = new HttpHeader();
             String respon="";
             try {
-                respon = Httphelp.doPost(ServerUrl, params, header, 5000,5000);
+                respon = HttphelpB1.doPost(ServerUrl, params, header, 5000,5000);
             } catch (Exception e) {
                 respon=e.getMessage();
             }

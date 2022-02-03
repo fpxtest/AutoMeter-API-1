@@ -66,6 +66,7 @@ public class TestCaseHelp {
            HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
            HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
 
+
            //Header
            HttpHeader header = new HttpHeader();
            header = AddHeaderByRequestContentType(header, requestcontenttype);
@@ -166,6 +167,9 @@ public class TestCaseHelp {
         }
         if (RequestContentType.equalsIgnoreCase("xml")) {
             httpHeader.addParam("Content-Type", "application/xml;charset=utf-8");
+        }
+        if (RequestContentType.equalsIgnoreCase("Form表单")) {
+            httpHeader.addParam("Content-Type", "application/x-www-form-urlencoded");
         }
         return httpHeader;
     }
