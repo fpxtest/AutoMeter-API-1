@@ -314,7 +314,10 @@ public class ApicasesController {
 
     private String getSubConditionRespone(String Url, String params, HttpHeader header) throws Exception {
         //请求API条件
-        String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
+        TestHttp testHttp=new TestHttp();
+        TestResponeData testResponeData=testHttp.doService("http","",Url,header,new HttpParamers(),params,"POST");
+        String Respone=testResponeData.getResponeContent();
+        //String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
         if (Respone.contains("条件执行异常")) {
             JSONObject object = JSON.parseObject(Respone);
             throw new Exception(object.getString("message"));
