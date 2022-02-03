@@ -6,7 +6,9 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.core.service.HttpHeader;
-import com.zoctan.api.core.service.HttphelpB1;
+import com.zoctan.api.core.service.HttpParamers;
+import com.zoctan.api.core.service.TestHttp;
+import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.ExecuteplanTestcase;
@@ -82,7 +84,10 @@ public class ExecuteplanbatchController {
             HttpHeader header = new HttpHeader();
             String respon="";
             try {
-                respon = HttphelpB1.doPost(ServerUrl, params, header, 5000,5000);
+                TestHttp testHttp=new TestHttp();
+                TestResponeData testResponeData=testHttp.doService("http","",ServerUrl,header,new HttpParamers(),params,"POST");
+                respon=testResponeData.getResponeContent();
+                //respon = HttphelpB1.doPost(ServerUrl, params, header, 5000,5000);
             } catch (Exception e) {
                 respon=e.getMessage();
             }

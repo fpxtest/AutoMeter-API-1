@@ -122,7 +122,10 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
             HttpHeader header = new HttpHeader();
             String respon = "";
             try {
-                respon = HttphelpB1.doPost(ServerUrl, params, header, 5000, 5000);
+                TestHttp testHttp=new TestHttp();
+                TestResponeData testResponeData=testHttp.doService("http","",ServerUrl,header,new HttpParamers(),params,"POST");
+                respon=testResponeData.getResponeContent() ;
+                //respon = HttphelpB1.doPost(ServerUrl, params, header, 5000, 5000);
             } catch (Exception e) {
                 ExecuteplanServiceImpl.log.info("检测：" + ServerUrl + "请求响应结果。。。。。。。。。。。。。。。。。。。。。。。。：" + e.getMessage());
                 slaverMapper.updateSlaverStatus(slaver.getId(), "已下线");
