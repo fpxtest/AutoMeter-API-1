@@ -251,6 +251,7 @@ public class TestconditionController {
             TestCaseHelp testCaseHelp = new TestCaseHelp();
             RequestObject requestObject=new RequestObject();
             try {
+                //前置接口条件没支持接口变量的情况
                  requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             }
             catch (Exception ex)
