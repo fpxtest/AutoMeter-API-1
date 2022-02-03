@@ -313,13 +313,16 @@ public class TestHttpRequestData {
         if (RequestContentType.equalsIgnoreCase("xml")) {
             httpHeader.addParam("Content-Type", "application/xml;charset=utf-8");
         }
+        if (RequestContentType.equalsIgnoreCase("Form表单")) {
+            httpHeader.addParam("Content-Type", "application/x-www-form-urlencoded");
+        }
         return httpHeader;
     }
 
     //根据数据类型转换
     private Object GetDataByType(String Data,String ValueType)
     {
-        Object Result=new RequestObject();
+        Object Result=new Object();
         if (ValueType.equalsIgnoreCase("Number")) {
             try {
                 Result = Long.parseLong(Data);

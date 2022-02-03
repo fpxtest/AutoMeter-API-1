@@ -1,25 +1,18 @@
 package com.zoctan.api.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
-import com.zoctan.api.core.service.HttpHeader;
-import com.zoctan.api.core.service.HttpParamers;
-import com.zoctan.api.core.service.Httphelp;
-import com.zoctan.api.core.service.TestRunHttphelp;
+import com.zoctan.api.core.service.*;
 import com.zoctan.api.dto.RequestHead;
 import com.zoctan.api.dto.ResponeGeneral;
 import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
-import org.apache.http.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +20,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -320,7 +314,7 @@ public class ApicasesController {
 
     private String getSubConditionRespone(String Url, String params, HttpHeader header) throws Exception {
         //请求API条件
-        String Respone = Httphelp.doPost(Url, params, header, 30000, 30000);
+        String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
         if (Respone.contains("条件执行异常")) {
             JSONObject object = JSON.parseObject(Respone);
             throw new Exception(object.getString("message"));
@@ -337,7 +331,7 @@ public class ApicasesController {
         Long Caseid = Long.parseLong(param.get("caseid").toString());
         boolean prixflag = Boolean.parseBoolean(param.get("prixflag").toString());
 
-        HashMap<String, String> ParamsValuesMap = new HashMap<>();
+        HashMap<String, Object> ParamsValuesMap = new HashMap<>();
         if (prixflag) {
             //请求条件服务处理前置条件
             List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Caseid, "前置条件", "测试用例");
@@ -382,13 +376,14 @@ public class ApicasesController {
             }
             if (APIRespone != "") {
                 JSONObject jsonObject = JSON.parseObject(APIRespone);
-                for (Map.Entry<String, Object> stringObjectEntry : jsonObject.getJSONObject("data").entrySet()) {
-                    String key = stringObjectEntry.getKey();
-                    String value = stringObjectEntry.getValue().toString();
+                for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
+                    String key = objectEntry.getKey();
+                    Object value = objectEntry.getValue().toString();
                     ParamsValuesMap.put(key, value);
                 }
             }
         }
+
 
         Apicases apicases = apicasesService.getBy("id", Caseid);
         Long Apiid = apicases.getApiid();
@@ -422,73 +417,82 @@ public class ApicasesController {
             }
 
             //获取api参数类型，根据类型获取用例数据，并且检查类型对应是否完善了用例数据
-            List<ApiParams> HeaderApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Header");
-            List<ApiParams> ParamsApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
-            List<ApiParams> BodyApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
+//            List<ApiParams> HeaderApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Header");
+//            List<ApiParams> ParamsApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
+//            List<ApiParams> BodyApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
 
             List<ApiCasedata> HeaderApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Header");
             List<ApiCasedata> ParamsApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Params");
             List<ApiCasedata> BodyApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Body");
-
+            String requestcontenttype = api.getRequestcontenttype();
+            //Header用例值
             HttpHeader header = new HttpHeader();
-            if (HeaderApiParams.size() > 0) {
-                if (HeaderApiCasedataList.size() == 0) {
-                    return ResultGenerator.genFailedResult("当前用例API的Header参数还未设计用例数据，请先完善后运行测试！");
-                } else {
-                    for (ApiCasedata Headdata : HeaderApiCasedataList) {
-                        String HeaderName = Headdata.getApiparam();
-                        String HeaderValue = Headdata.getApiparamvalue();
-                        if (ParamsValuesMap.size() > 0) {
-                            HeaderValue = GetVariablesValues(HeaderValue, ParamsValuesMap);
-                        }
-                        header.addParam(HeaderName, HeaderValue);
-                    }
+            header = AddHeaderByRequestContentType(header, requestcontenttype);
+            for (ApiCasedata Headdata : HeaderApiCasedataList) {
+                String HeaderName = Headdata.getApiparam();
+                String HeaderValue = Headdata.getApiparamvalue();
+                if (ParamsValuesMap.size() > 0) {
+                    Object Value = GetVariablesObjectValues(HeaderValue, ParamsValuesMap);
+                    header.addParam(HeaderName, Value);
+                }
+                header.addParam(HeaderName, HeaderValue);
+            }
+
+            //参数用例值
+            HttpParamers paramers = new HttpParamers();
+            for (ApiCasedata Paramdata : ParamsApiCasedataList) {
+                String ParamName = Paramdata.getApiparam();
+                String ParamValue = Paramdata.getApiparamvalue();
+                String DataType=Paramdata.getParamstype();
+                if(ParamValue.contains("$"))
+                {
+                    Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
+                    paramers.addParam(ParamName, Value);
+                }
+                else
+                {
+                    Object ParseData=GetDataByType(ParamValue,DataType);
+                    paramers.addParam(ParamName, ParseData);
                 }
             }
+
+            //Body用例值
             String PostData = "";
-            HttpParamers paramers = HttpParamers.httpPostParamers();
-            if (ParamsApiParams.size() > 0) {
-                if (ParamsApiCasedataList.size() == 0) {
-                    return ResultGenerator.genFailedResult("当前用例API的Params参数还未设计用例数据，请先完善后运行测试！");
-                } else {
-                    for (ApiCasedata Paramdata : ParamsApiCasedataList) {
-                        String ParamName = Paramdata.getApiparam();
-                        String ParamValue = Paramdata.getApiparamvalue();
-                        if (ParamsValuesMap.size() > 0) {
-                            ParamValue = GetVariablesValues(ParamValue, ParamsValuesMap);
-                        }
-                        paramers.addParam(ParamName, ParamValue);
+            HttpParamers Bodyparamers = new HttpParamers();
+            if (requestcontenttype.equalsIgnoreCase("Form表单")) {
+                //值支持变量
+                for (ApiCasedata Paramdata : BodyApiCasedataList) {
+                    String ParamName = Paramdata.getApiparam();
+                    String ParamValue = Paramdata.getApiparamvalue();
+                    String DataType = Paramdata.getParamstype();
+                    if(ParamValue.contains("$"))
+                    {
+                        Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
+                        Bodyparamers.addParam(ParamName, Value);
                     }
-                    if (RequestContentType.equals("json")) {
-                        paramers.setJsonParamer();
-                        PostData = paramers.getJsonParamer();
-                    }
-                    if (RequestContentType.equals("form表单")) {
-                        try {
-                            PostData = paramers.getQueryString("UTF-8");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    else
+                    {
+                        Object ParseData=GetDataByType(ParamValue,DataType);
+                        Bodyparamers.addParam(ParamName, ParseData);
                     }
                 }
-            }
-            if (BodyApiParams.size() > 0) {
-                if (BodyApiCasedataList.size() > 0) {
-                    //根据api请求数据类型处理，json，xml
-                    String RequestDataType = api.getRequestcontenttype();
-                    //获取冗余完整json,xml字段值
-                    List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
-                    if (paramsList.size() == 0) {
-                        return ResultGenerator.genFailedResult("当前用例API无Body参数，请检查是否被删除！");
+                if (Bodyparamers.getParams().size() > 0) {
+                    try {
+                        PostData = Bodyparamers.getQueryString();
+                    } catch (UnsupportedEncodingException e) {
                     }
-                    PostData = BodyApiCasedataList.get(0).getApiparamvalue();
-                } else {
-                    return ResultGenerator.genFailedResult("当前用例API的Body参数还未设计用例数据，请先完善后运行测试！");
+                }
+            } else {
+                for (ApiCasedata Paramdata : BodyApiCasedataList) {
+                    PostData=Paramdata.getApiparamvalue();
                 }
             }
+
             try {
                 long Start = new Date().getTime();
-                TestResponeData respon = TestRunHttphelp.doService(Protocal, resource, Method, ApiStyle, paramers, PostData, RequestContentType, header, 5000, 5000);
+                TestHttp testHttp=new TestHttp();
+                String VisitType = api.getVisittype();
+                TestResponeData respon = testHttp.doService(Protocal,ApiStyle, resource,header, paramers, PostData, VisitType);
                 long End = new Date().getTime();
                 long CostTime = End - Start;
                 respon.setResponeTime(CostTime);
@@ -502,7 +506,7 @@ public class ApicasesController {
                 for (String Key : header.getParams().keySet()) {
                     RequestHead requestHead = new RequestHead();
                     requestHead.setKeyName(Key);
-                    requestHead.setKeyValue(header.getParams().get(Key));
+                    requestHead.setKeyValue(header.getParams().get(Key).toString());
                     requestHeadList.add(requestHead);
                 }
                 respon.setRequestHeadList(requestHeadList);
@@ -515,6 +519,25 @@ public class ApicasesController {
         } else {
             return ResultGenerator.genFailedResult("当前环境未部署此用例API所在的发布单元，请先完成环境下的部署！");
         }
+    }
+
+
+    //获取参数值的具体内容，支持$变量
+    private Object GetVariablesObjectValues(String Variables, HashMap<String, Object> NameValueMap) {
+        Object Result = "";
+        if (Variables.trim().contains("$")) {
+            if (Variables.trim().length() == 1) {
+                Result = Variables;
+            } else {
+                Variables = Variables.substring(1);
+                if (NameValueMap.containsKey(Variables)) {
+                    Result = NameValueMap.get(Variables);
+                }
+            }
+        } else {
+            Result = Variables;
+        }
+        return Result;
     }
 
     //获取参数值的具体内容，支持$变量，以及$变量和字符串拼接
@@ -551,4 +574,52 @@ public class ApicasesController {
         return Result;
     }
 
+    //根据数据类型转换
+    private Object GetDataByType(String Data,String ValueType)
+    {
+        Object Result=new Object();
+        if (ValueType.equalsIgnoreCase("Number")) {
+            try {
+                Result = Long.parseLong(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+            }
+        }
+        if (ValueType.equalsIgnoreCase("Json")) {
+            try {
+                Result = JSON.parse(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+            }
+        }
+        if (ValueType.equalsIgnoreCase("String")||ValueType.isEmpty()) {
+            Result = Data;
+        }
+        if (ValueType.equalsIgnoreCase("Array")) {
+            String[] Array = Data.split(",");
+            Result = Array;
+        }
+        if (ValueType.equalsIgnoreCase("Bool")) {
+            try {
+                Result = Boolean.parseBoolean(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是布尔类型，请检查！";
+            }
+        }
+        return Result;
+    }
+
+    //根据请求数据类型增加header
+    private HttpHeader AddHeaderByRequestContentType(HttpHeader httpHeader, String RequestContentType) {
+        if (RequestContentType.equalsIgnoreCase("json")) {
+            httpHeader.addParam("Content-Type", "application/json;charset=utf-8");
+        }
+        if (RequestContentType.equalsIgnoreCase("xml")) {
+            httpHeader.addParam("Content-Type", "application/xml;charset=utf-8");
+        }
+        if (RequestContentType.equalsIgnoreCase("Form表单")) {
+            httpHeader.addParam("Content-Type", "application/x-www-form-urlencoded");
+        }
+        return httpHeader;
+    }
 }
