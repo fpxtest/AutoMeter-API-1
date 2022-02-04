@@ -91,8 +91,8 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
                     try {
                         ExecuteplanServiceImpl.log.info("计划开始请求调度。。。。。。。。。。。。。。。。。。。。。。。。");
                         TestHttp testHttp=new TestHttp();
-                        TestResponeData testResponeData =testHttp.doService("http","",DispatchServerurl,header,new HttpParamers(),params,"POST");
-                        //String respon = HttphelpB1.doPost(DispatchServerurl, params, header, 30000, 30000);
+                        header.addParam("Content-Type", "application/json;charset=utf-8");
+                        TestResponeData testResponeData =testHttp.doService("http","",DispatchServerurl,header,new HttpParamers(),params,"POST",30000);
                         ExecuteplanServiceImpl.log.info("计划发送调度请求响应。。。。。。。。。。。。。。。。。。。。。。。。：" + testResponeData.getResponeContent());
                     } catch (Exception e) {
                         ExecuteplanServiceImpl.log.info("计划发送调度请求异常：" + e.getMessage());
@@ -123,7 +123,8 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
             String respon = "";
             try {
                 TestHttp testHttp=new TestHttp();
-                TestResponeData testResponeData=testHttp.doService("http","",ServerUrl,header,new HttpParamers(),params,"POST");
+                header.addParam("Content-Type", "application/json;charset=utf-8");
+                TestResponeData testResponeData=testHttp.doService("http","",ServerUrl,header,new HttpParamers(),params,"POST",30000);
                 respon=testResponeData.getResponeContent() ;
                 //respon = HttphelpB1.doPost(ServerUrl, params, header, 5000, 5000);
             } catch (Exception e) {

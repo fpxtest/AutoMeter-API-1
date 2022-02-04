@@ -251,4 +251,25 @@ public class RequestObject {
     private String paramjson;
     private String bodyjson;
 
+    public String getDeployunitvisittype() {
+        return deployunitvisittype;
+    }
+
+    public void setDeployunitvisittype(String deployunitvisittype) {
+        this.deployunitvisittype = deployunitvisittype;
+    }
+
+    private String deployunitvisittype;
+
+    public String getMachineip() {
+        return machineip;
+    }
+
+    public void setMachineip(String machineip) {
+        this.machineip = machineip;
+    }
+
+    private String machineip;
+
+
 }

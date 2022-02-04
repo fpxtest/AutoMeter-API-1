@@ -19,4 +19,6 @@ public interface ExecuteplanParamsService extends Service<ExecuteplanParams> {
 
     int ifexist(Condition condition);
 
+    void removeplanparams(final long executeplanid);
+
 }

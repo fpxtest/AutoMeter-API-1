@@ -35,6 +35,8 @@ public class ApicasesController {
     @Autowired
     private ApiCasedataService apiCasedataService;
     @Autowired
+    private EnviromentService enviromentService;
+    @Autowired
     private ApicasesAssertService apicasesAssertService;
     @Autowired(required = false)
     private ApiService apiService;
@@ -48,6 +50,15 @@ public class ApicasesController {
     private ApiParamsService apiParamsService;
     @Autowired(required = false)
     private TestconditionService testconditionService;
+
+    @Autowired(required = false)
+    private ConditionApiService conditionApiService;
+    @Autowired(required = false)
+    private ConditionDbService conditionDbService;
+    @Autowired(required = false)
+    private ConditionScriptService conditionScriptService;
+    @Autowired(required = false)
+    private ExecuteplanTestcaseService executeplanTestcaseService;
     @Resource
     private ConditionOrderService conditionOrderService;
     @Value("${spring.conditionserver.serverurl}")
@@ -119,8 +130,6 @@ public class ApicasesController {
         }
     }
 
-
-
     private ApiCasedata GetApiCaseData(Apicases apicases,ApiParams apiParams)
     {
         ApiCasedata apiCasedata=new ApiCasedata();
@@ -143,7 +152,6 @@ public class ApicasesController {
         apiCasedata.setLastmodifyTime(new Date());
         return apiCasedata;
     }
-
 
     @PostMapping("/copycases")
     public Result Copycases(@RequestBody final Map<String, Object> param) {
@@ -200,7 +208,25 @@ public class ApicasesController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         apicasesService.deleteById(id);
+        //删除用例值数据
         apiCasedataService.deletcasedatabyid(id);
+        //删除用例断言
+        Condition caseassertcon = new Condition(ApicasesAssert.class);
+        caseassertcon.createCriteria().andCondition("caseid = " + id);
+        apicasesAssertService.deleteByCondition(caseassertcon);
+        //删除用例条件，子条件
+        Condition con = new Condition(Testcondition.class);
+        con.createCriteria().andCondition("objecttype = '测试用例'").andCondition("objectid = " + id).andCondition("conditiontype = '"  + "前置条件'");
+        List<Testcondition> testconditionList= testconditionService.listByCondition(con);
+        if (testconditionList.size() > 0) {
+            Long ConditionID=testconditionList.get(0).getId();
+            conditionApiService.deleteBy("conditionid",ConditionID);
+            conditionDbService.deleteBy("conditionid",ConditionID);
+            conditionScriptService.deleteBy("conditionid",ConditionID);
+            testconditionService.deleteByCondition(con);
+        }
+        //删除测试集合中的用例
+        executeplanTestcaseService.removetestcase(id);
         return ResultGenerator.genOkResult();
     }
 
@@ -288,8 +314,6 @@ public class ApicasesController {
         final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
-
-
     /**
      * 根据发布单元id获取用例
      */
@@ -311,11 +335,10 @@ public class ApicasesController {
         return ResultGenerator.genOkResult(list);
     }
 
-
     private String getSubConditionRespone(String Url, String params, HttpHeader header) throws Exception {
         //请求API条件
         TestHttp testHttp=new TestHttp();
-        TestResponeData testResponeData=testHttp.doService("http","",Url,header,new HttpParamers(),params,"POST");
+        TestResponeData testResponeData=testHttp.doService("http","",Url,header,new HttpParamers(),params,"POST",30000);
         String Respone=testResponeData.getResponeContent();
         //String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
         if (Respone.contains("条件执行异常")) {
@@ -324,7 +347,6 @@ public class ApicasesController {
         }
         return Respone;
     }
-
     /**
      * 运行测试
      */
@@ -387,8 +409,10 @@ public class ApicasesController {
             }
         }
 
-
         Apicases apicases = apicasesService.getBy("id", Caseid);
+        if (apicases == null) {
+            return ResultGenerator.genFailedResult("当前用例不存在，请检查是否被删除！");
+        }
         Long Apiid = apicases.getApiid();
         Api api = apiService.getBy("id", Apiid);
         if (api == null) {
@@ -396,7 +420,6 @@ public class ApicasesController {
         }
         String Method = api.getVisittype();
         String ApiStyle = api.getApistyle();
-        String RequestContentType = api.getRequestcontenttype();
         Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
         if (deployunit == null) {
             return ResultGenerator.genFailedResult("当前用例的API所在的发布单元不存在，请检查是否被删除！");
@@ -412,17 +435,16 @@ public class ApicasesController {
                 if (machine == null) {
                     return ResultGenerator.genFailedResult("当前环境中的服务器不存在，请检查是否被删除！");
                 }
+                Enviroment enviroment = enviromentService.getBy("id", enviromentid);
+                if (enviroment == null) {
+                    return ResultGenerator.genFailedResult("当前用例调试的环境不存在，请检查是否被删除！");
+                }
                 testserver = machine.getIp();
                 resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
             } else {
                 testserver = macdepunit.getDomain();
                 resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
             }
-
-            //获取api参数类型，根据类型获取用例数据，并且检查类型对应是否完善了用例数据
-//            List<ApiParams> HeaderApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Header");
-//            List<ApiParams> ParamsApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
-//            List<ApiParams> BodyApiParams = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
 
             List<ApiCasedata> HeaderApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Header");
             List<ApiCasedata> ParamsApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Params");
@@ -495,7 +517,7 @@ public class ApicasesController {
                 long Start = new Date().getTime();
                 TestHttp testHttp=new TestHttp();
                 String VisitType = api.getVisittype();
-                TestResponeData respon = testHttp.doService(Protocal,ApiStyle, resource,header, paramers, PostData, VisitType);
+                TestResponeData respon = testHttp.doService(Protocal,ApiStyle, resource,header, paramers, PostData, VisitType,300);
                 long End = new Date().getTime();
                 long CostTime = End - Start;
                 respon.setResponeTime(CostTime);
@@ -539,40 +561,6 @@ public class ApicasesController {
             }
         } else {
             Result = Variables;
-        }
-        return Result;
-    }
-
-    //获取参数值的具体内容，支持$变量，以及$变量和字符串拼接
-    private String GetVariablesValues(String Value, HashMap<String, String> NameValueMap) {
-        String Result = "";
-        if (Value.contains("+")) {
-            String[] Array = Value.split("\\+");
-            for (String str : Array) {
-                if (str.contains("$")) {
-                    String VariablesName = str.substring(1);
-                    //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                    String VariablesNameValue = "";
-                    if (NameValueMap.containsKey(VariablesName)) {
-                        VariablesNameValue = NameValueMap.get(VariablesName);
-                    }
-                    Result = Result + VariablesNameValue;
-                } else {
-                    Result = Result + str;
-                }
-            }
-        } else {
-            if (Value.contains("$")) {
-                String VariablesName = Value.substring(1);
-                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                String VariablesNameValue = "";
-                if (NameValueMap.containsKey(VariablesName)) {
-                    VariablesNameValue = NameValueMap.get(VariablesName);
-                }
-                Result = VariablesNameValue;
-            } else {
-                Result = Value;
-            }
         }
         return Result;
     }
