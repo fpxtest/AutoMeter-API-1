@@ -27,7 +27,7 @@
 
         <span v-if="hasPermission('executeplan:search')">
           <el-form-item>
-            <el-input v-model="search.executeplanname" @keyup.enter.native="searchBy" placeholder="执行计划名"></el-input>
+            <el-input v-model="search.executeplanname" @keyup.enter.native="searchBy" placeholder="测试集合"></el-input>
           </el-form-item>
 
           <el-form-item>

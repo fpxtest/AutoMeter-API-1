@@ -23,6 +23,10 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
 
     void removeexecuteplantestcase(final List<ExecuteplanTestcase> testcase);
 
+    void removetestcase(final long testcaseid);
+
+    void removeplancase(final long executeplanid);
+
     Integer findcasenumbyplanid(long executeplanid);
 
     List<ExecuteplanTestcase> getstaticsplancases();

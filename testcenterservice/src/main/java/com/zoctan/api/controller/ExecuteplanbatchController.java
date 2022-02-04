@@ -85,7 +85,8 @@ public class ExecuteplanbatchController {
             String respon="";
             try {
                 TestHttp testHttp=new TestHttp();
-                TestResponeData testResponeData=testHttp.doService("http","",ServerUrl,header,new HttpParamers(),params,"POST");
+                header.addParam("Content-Type", "application/json;charset=utf-8");
+                TestResponeData testResponeData=testHttp.doService("http","",ServerUrl,header,new HttpParamers(),params,"POST",30000);
                 respon=testResponeData.getResponeContent();
                 //respon = HttphelpB1.doPost(ServerUrl, params, header, 5000,5000);
             } catch (Exception e) {

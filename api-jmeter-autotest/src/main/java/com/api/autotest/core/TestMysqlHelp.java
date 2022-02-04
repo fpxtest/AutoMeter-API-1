@@ -106,8 +106,15 @@ public class TestMysqlHelp {
 
     // 获取用例期望值
     public String getcaseValue(String key, ArrayList<HashMap<String, String>> list) {
-        HashMap<String, String> hs = list.get(0);
-        return hs.get(key).trim();
+        if(list.size()>0)
+        {
+            HashMap<String, String> hs = list.get(0);
+            return hs.get(key).trim();
+        }
+        else
+        {
+            return "";
+        }
     }
 
 
@@ -328,7 +335,7 @@ public class TestMysqlHelp {
                 expect = requestObject.getExpect();// context.getParameter("expect");
                 batchname = requestObject.getBatchname().replace("'","''");// context.getParameter("batchname");
                 Url = requestObject.getResource().replace("'","''");
-                Method = requestObject.getRequestmMthod();
+                Method = requestObject.getRequestmMthod().toUpperCase();
                 Map<String, Object> headermap = requestObject.getHeader().getParams();
                 for (String key : headermap.keySet()) {
                     header = header + key + " ：" + headermap.get(key);

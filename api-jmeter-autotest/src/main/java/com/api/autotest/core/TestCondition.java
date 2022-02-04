@@ -49,6 +49,7 @@ public class TestCondition {
             try {
                 CondionCaseID = conditionApi.get("caseid");
                 Start = new Date().getTime();
+
                 re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
                 re = testHttpRequestData.GetFuntionHttpRequestData(re);
                 End = new Date().getTime();

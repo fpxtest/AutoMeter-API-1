@@ -61,6 +61,16 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
     }
 
     @Override
+    public void removetestcase(long testcaseid) {
+        executeplanTestcaseMapper.removetestcase(testcaseid);
+    }
+
+    @Override
+    public void removeplancase(long executeplanid) {
+        executeplanTestcaseMapper.removeplancase(executeplanid);
+    }
+
+    @Override
     public Integer findcasenumbyplanid(long executeplanid) {
         return executeplanTestcaseMapper.findcasenumbyplanid(executeplanid);
     }

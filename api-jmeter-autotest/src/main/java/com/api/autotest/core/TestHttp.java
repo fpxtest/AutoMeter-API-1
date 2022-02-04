@@ -27,6 +27,22 @@ public class TestHttp {
 //    }
 
     public  ResponeData doService(RequestObject requestObject) throws Exception {
+        if(requestObject.getProtocal().isEmpty())
+        {
+            throw new Exception("当前用例所属的API所在的发布单元不存在，请检查是否已经被删除");
+        }
+        if(requestObject.getApistyle().isEmpty()&&requestObject.getRequestmMthod().isEmpty())
+        {
+            throw new Exception("当前用例所属的API不存在，请检查是否已经被删除");
+        }
+        if(requestObject.getDeployunitvisittype().isEmpty())
+        {
+            throw new Exception("当前用例所属的API所在的发布单元在环境部署中不存在，请检查是否已经被删除");
+        }
+        if(requestObject.getMachineip().isEmpty())
+        {
+            throw new Exception("当前用例所在的发布单元部署环境的服务器不存在，请检查是否已经被删除");
+        }
         ResponeData responeData=new ResponeData();
         String Protocal=requestObject.getProtocal();
         String ApiStyle=requestObject.getApistyle();
