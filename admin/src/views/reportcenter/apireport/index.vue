@@ -123,7 +123,7 @@
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.assertvalue }}</p>
           <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">...</el-tag>
+            <el-tag size="medium" >...</el-tag>
           </div>
         </el-popover>
       </template>
@@ -134,8 +134,11 @@
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>{{ scope.row.errorinfo }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">...</el-tag>
+          <div v-if="scope.row.errorinfo !== ''" slot="reference" class="name-wrapper">
+            <el-tag size="medium" style="color:red">异常...</el-tag>
+          </div>
+          <div v-if="scope.row.errorinfo === ''" slot="reference" class="name-wrapper">
+            <el-tag size="medium" style="color:green">...</el-tag>
           </div>
         </el-popover>
       </template>

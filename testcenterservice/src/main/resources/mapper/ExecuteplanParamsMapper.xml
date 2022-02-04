@@ -24,4 +24,8 @@
                           lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
+
+  <delete id="removeplanparams">
+    DELETE from executeplan_params where  executeplanid = #{executeplanid}
+  </delete>
 </mapper>

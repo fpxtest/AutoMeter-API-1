@@ -37,5 +37,10 @@ private ExecuteplanParamsMapper executeplanParamsMapper;
         return countByCondition(condition);
     }
 
+    @Override
+    public void removeplanparams(long executeplanid) {
+        executeplanParamsMapper.removeplanparams(executeplanid);
+    }
+
 
 }

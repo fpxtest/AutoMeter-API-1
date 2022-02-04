@@ -31,6 +31,10 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     void removeexecuteplantestcase(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
 
+    void removetestcase(@Param("testcaseid") long testcaseid);
+
+    void removeplancase(@Param("executeplanid") long executeplanid);
+
     List<ExecuteplanTestcase> finddeployunitbyplanid(final @Param("executeplanid") long executeplanid);
 
     List<ExecuteplanTestcase> getstaticsplancases();

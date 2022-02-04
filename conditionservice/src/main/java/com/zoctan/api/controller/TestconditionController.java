@@ -58,6 +58,9 @@ public class TestconditionController {
     private MacdepunitService macdepunitService;
 
     @Resource
+    private EnviromentService enviromentService;
+
+    @Resource
     private MachineService machineService;
 
     @Resource
@@ -232,11 +235,20 @@ public class TestconditionController {
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;
             }
+
+            Enviroment enviroment = enviromentService.getBy("id", executeplan.getEnvid());
+            if (enviroment == null) {
+                Respone = "未找到条件接口发布单元部署的环境，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
+                break;
+            }
+
             List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
             //区分环境类型
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(), deployunit.getId());
             if (macdepunit == null) {
-                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                Respone = "接口所在的发布单元未在环境中部署，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0),conditionApi.getCreator());
                 break;

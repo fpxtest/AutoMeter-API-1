@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.ExecuteplanParams;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface ExecuteplanParamsMapper extends MyMapper<ExecuteplanParams> {
     List<ExecuteplanParams> getParamsbyepid(final Map<String, Object> params);
 
     int ifexist(Condition condition);
+
+    void removeplanparams(@Param("executeplanid") long executeplanid);
 
 }

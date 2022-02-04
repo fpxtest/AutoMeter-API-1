@@ -111,29 +111,17 @@ public class TestCaseData {
     public RequestObject GetCaseRequestData(String PlanId, String TestCaseId, String SlaverId, String BatchId, String BatchName, String ExecPlanName) {
         RequestObject ro = new RequestObject();
         //ArrayList<HashMap<String, String>> planlist = getcaseData("select * from executeplan where id=" + PlanId);
+        ArrayList<HashMap<String, String>> deployunitlist = testMysqlHelp.getcaseData("select b.protocal,b.port,b.id from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=" + TestCaseId);
+        ArrayList<HashMap<String, String>> apilist = testMysqlHelp.getcaseData("select b.visittype,b.apistyle,b.path,b.requestcontenttype,b.responecontenttype from apicases a inner join api b on a.apiid=b.id where a.id=" + TestCaseId);
         ArrayList<HashMap<String, String>> deployunitmachineiplist = testMysqlHelp.getcaseData("select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id=" + TestCaseId + " and c.id=" + PlanId);
         ArrayList<HashMap<String, String>> caselist = testMysqlHelp.getcaseData("select * from apicases where id=" + TestCaseId);
         ArrayList<HashMap<String, String>> caseassertlist = testMysqlHelp.getcaseData("select * from apicases_assert where caseid=" + TestCaseId);
-        ArrayList<HashMap<String, String>> apilist = testMysqlHelp.getcaseData("select b.visittype,b.apistyle,b.path,b.requestcontenttype,b.responecontenttype from apicases a inner join api b on a.apiid=b.id where a.id=" + TestCaseId);
-        ArrayList<HashMap<String, String>> deployunitlist = testMysqlHelp.getcaseData("select b.protocal,b.port,b.id from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=" + TestCaseId);
 
-        //获取断言记录
-        TestAssert testAssert = new TestAssert(logger);
-        List<ApicasesAssert> apicasesAssertList = testAssert.GetApicasesAssertList(caseassertlist);
-        ro.setApicasesAssertList(apicasesAssertList);
         // url请求资源路径
         String path = testMysqlHelp.getcaseValue("path", apilist);
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
-        String casetype = testMysqlHelp.getcaseValue("casetype", caselist);
-
-        String CaseName = testMysqlHelp.getcaseValue("casename", caselist);
-
-        String expect = GetAssertInfo(apicasesAssertList); //getcaseValue("expect", caselist);
-
-        String Apiid = testMysqlHelp.getcaseValue("apiid", caselist);
-
         //获取请求响应的数据格式
         String requestcontenttype = testMysqlHelp.getcaseValue("requestcontenttype", apilist);
         String responecontenttype = testMysqlHelp.getcaseValue("responecontenttype", apilist);
@@ -149,16 +137,27 @@ public class TestCaseData {
 
         // 获取发布单元访问方式，ip或者域名
         String deployunitvisittype = testMysqlHelp.getcaseValue("visittype", deployunitmachineiplist);
+
+        String IP=testMysqlHelp.getcaseValue("ip", deployunitmachineiplist);
         // 根据访问方式来确定ip还是域名
         String testserver = "";
         String resource = "";
-        if (deployunitvisittype.equals(new String("ip"))) {
-            testserver = testMysqlHelp.getcaseValue("ip", deployunitmachineiplist);
+        if (deployunitvisittype.equalsIgnoreCase("ip")) {
+            testserver = IP;
             resource = protocal + "://" + testserver + ":" + port + path;
         } else {
             testserver = testMysqlHelp.getcaseValue("domain", deployunitmachineiplist);
             resource = protocal + "://" + testserver + path;
         }
+
+        //获取断言记录
+        TestAssert testAssert = new TestAssert(logger);
+        List<ApicasesAssert> apicasesAssertList = testAssert.GetApicasesAssertList(caseassertlist);
+        ro.setApicasesAssertList(apicasesAssertList);
+
+        String casetype = testMysqlHelp.getcaseValue("casetype", caselist);
+        String CaseName = testMysqlHelp.getcaseValue("casename", caselist);
+        String expect = GetAssertInfo(apicasesAssertList);
         logger.info(logplannameandcasename + "用例数据 resource is :  " + resource + "   protocal  is:   " + protocal + "  expect is :      " + expect + "  visittype is: " + method + "   path is: " + path + " casetype is: " + casetype);
 
         ro.setCaseid(TestCaseId);
@@ -177,6 +176,8 @@ public class TestCaseData {
         ro.setRequestmMthod(method);
         ro.setResource(resource);
         ro.setResponecontenttype(responecontenttype);
+        ro.setDeployunitvisittype(deployunitvisittype);
+        ro.setMachineip(IP);
         return ro;
     }
 

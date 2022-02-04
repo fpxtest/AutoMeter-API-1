@@ -70,6 +70,14 @@
     DELETE from executeplan_testcase where executeplanid = #{executeplanid} and testcaseid=#{testcaseid}
   </delete>
 
+  <delete id="removetestcase">
+    DELETE from executeplan_testcase where  testcaseid=#{testcaseid}
+  </delete>
+
+  <delete id="removeplancase">
+    DELETE from executeplan_testcase where  executeplanid = #{executeplanid}
+  </delete>
+
   <delete id="removebatchexecuteplantestcase">
     DELETE from executeplan_testcase
     <foreach collection="casedataList" item="item" index="index" separator=",">

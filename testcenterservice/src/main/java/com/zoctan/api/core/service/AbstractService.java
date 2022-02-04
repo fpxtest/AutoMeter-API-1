@@ -105,7 +105,7 @@ public abstract class AbstractService<T> implements Service<T> {
       this.assertBy(entity);
       this.assertDelete(this.mapper.delete(entity) == 1);
     } catch (final Exception e) {
-      throw new ServiceException(e.getMessage(), e);
+      //throw new ServiceException(e.getMessage(), e);
     }
   }
 

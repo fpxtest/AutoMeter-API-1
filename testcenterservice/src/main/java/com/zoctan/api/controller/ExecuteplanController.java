@@ -8,6 +8,8 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.ExecuteplanTestcase;
+import com.zoctan.api.mapper.ExecuteplanParamsMapper;
+import com.zoctan.api.service.ExecuteplanParamsService;
 import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanTestcaseService;
 import com.zoctan.api.service.MacdepunitService;
@@ -34,6 +36,8 @@ public class ExecuteplanController {
     private ExecuteplanService executeplanService;
     @Autowired
     private ExecuteplanTestcaseService execplantestcaseService;
+    @Autowired
+    private ExecuteplanParamsService executeplanParamsService;
     @Autowired
     private MacdepunitService macdepunitService;
 
@@ -109,6 +113,10 @@ public class ExecuteplanController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         executeplanService.deleteById(id);
+        //删除集合用例
+        execplantestcaseService.removeplancase(id);
+        //删除集合全局参数
+        executeplanParamsService.removeplanparams(id);
         return ResultGenerator.genOkResult();
     }
 
