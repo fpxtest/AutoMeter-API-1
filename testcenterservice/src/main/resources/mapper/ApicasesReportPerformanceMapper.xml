@@ -11,16 +11,16 @@
     <result column="batchname" jdbcType="VARCHAR" property="batchname" />
     <result column="slaverid" jdbcType="BIGINT" property="slaverid" />
     <result column="status" jdbcType="VARCHAR" property="status" />
-    <result column="respone" jdbcType="VARCHAR" property="respone" />
-    <result column="assertvalue" jdbcType="VARCHAR" property="assertvalue" />
+    <result column="respone" jdbcType="LONGVARCHAR" property="respone" />
+    <result column="assertvalue" jdbcType="LONGVARCHAR" property="assertvalue" />
     <result column="runtime" jdbcType="BIGINT" property="runtime" />
-    <result column="expect" jdbcType="VARCHAR" property="expect" />
-    <result column="errorinfo" jdbcType="VARCHAR" property="errorinfo" />
+    <result column="expect" jdbcType="LONGVARCHAR" property="expect" />
+    <result column="errorinfo" jdbcType="LONGVARCHAR" property="errorinfo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
-    <result column="requestheader" jdbcType="VARCHAR" property="requestheader" />
-    <result column="requestdatas" jdbcType="VARCHAR" property="requestdatas" />
+    <result column="requestheader" jdbcType="LONGVARCHAR" property="requestheader" />
+    <result column="requestdatas" jdbcType="LONGVARCHAR" property="requestdatas" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="requestmethod" jdbcType="VARCHAR" property="requestmethod" />
   </resultMap>

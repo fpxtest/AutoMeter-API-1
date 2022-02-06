@@ -103,6 +103,14 @@ public class PerformanceDispatchScheduleTask {
                                                     String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execperformancetest";
                                                     String respon = Httphelp.doPost(ServerUrl, params, header, 30000);
                                                     PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器-============请求slaver响应结果：" + respon);
+                                                    if(respon.contains("未找到IP为"))
+                                                    {
+                                                        throw new Exception(respon);
+                                                    }
+                                                    if(respon.contains("未找到发布单元为"))
+                                                    {
+                                                        throw new Exception(respon);
+                                                    }
                                                 }
                                             }
                                         }

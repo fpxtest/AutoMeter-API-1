@@ -116,7 +116,7 @@
             maxlength="40"
             prefix-icon="el-icon-edit"
             auto-complete="off"
-            v-model="tmpmachine.ip"
+            v-model.trim="tmpmachine.ip"
           />
         </el-form-item>
         <el-form-item label="cpu" prop="cpu" required>

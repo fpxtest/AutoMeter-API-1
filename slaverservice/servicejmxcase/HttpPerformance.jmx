@@ -124,22 +124,32 @@
           </elementProp>
           <elementProp name="headjson" elementType="Argument">
             <stringProp name="Argument.name">headjson</stringProp>
-            <stringProp name="Argument.value">${__P(headjson,headjson)}</stringProp>
+            <stringProp name="Argument.value">${__P(headjson,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="paramsjson" elementType="Argument">
             <stringProp name="Argument.name">paramsjson</stringProp>
-            <stringProp name="Argument.value">${__P(paramsjson,paramsjson)}</stringProp>
+            <stringProp name="Argument.value">${__P(paramsjson,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="bodyjson" elementType="Argument">
             <stringProp name="Argument.name">bodyjson</stringProp>
-            <stringProp name="Argument.value">${__P(bodyjson,bodyjson)}</stringProp>
+            <stringProp name="Argument.value">${__P(bodyjson,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="dubbojson" elementType="Argument">
             <stringProp name="Argument.name">dubbojson</stringProp>
-            <stringProp name="Argument.value">${__P(dubbojson,dubbojson)}</stringProp>
+            <stringProp name="Argument.value">${__P(dubbojson,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="machineip" elementType="Argument">
+            <stringProp name="Argument.name">machineip</stringProp>
+            <stringProp name="Argument.value">${__P(machineip,1)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="deployvisitytype" elementType="Argument">
+            <stringProp name="Argument.name">deployvisitytype</stringProp>
+            <stringProp name="Argument.value">${__P(deployvisitytype,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -333,6 +343,16 @@ log.error(&quot;===starttime-------------------------------------&quot;+starttim
               <elementProp name="mysqlpassword" elementType="Argument">
                 <stringProp name="Argument.name">mysqlpassword</stringProp>
                 <stringProp name="Argument.value">${mysqlpassword}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="machineip" elementType="Argument">
+                <stringProp name="Argument.name">machineip</stringProp>
+                <stringProp name="Argument.value">${machineip}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="deployvisitytype" elementType="Argument">
+                <stringProp name="Argument.name">deployvisitytype</stringProp>
+                <stringProp name="Argument.value">${deployvisitytype}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>

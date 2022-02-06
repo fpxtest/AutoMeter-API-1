@@ -43,7 +43,6 @@ public class ExecuteplanController {
 
     @PostMapping
     public Result add(@RequestBody Executeplan executeplan) {
-
         Condition con=new Condition(Executeplan.class);
         con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
                 .andCondition("enviromentname = '" + executeplan.getEnviromentname() + "'");

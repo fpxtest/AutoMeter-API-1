@@ -59,22 +59,25 @@ public class TestHttp {
                 responeData=Httphelp.GetWithNoParams(Protocal,Url,header,30000);
                 logger.info(logplannameandcasename + "TestHttp GET请求url无参数完成....." );
             }
-            if(requestObject.getRequestcontenttype().equalsIgnoreCase("Form表单"))
-            {
-                //url-Form表单传值,值根据类型转换，可以实现url参数值是json和xml的形式
-                String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
-                logger.info(logplannameandcasename + "TestHttp GET请求url....." +GetParamUrl);
-                responeData=Httphelp.GetWithNoParams(Protocal,GetParamUrl,header,30000);
-                logger.info(logplannameandcasename + "TestHttp GET请求url完成....." +GetParamUrl);
-            }
             else
             {
-                //取body，json,xml,text
-                String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
-                logger.info(logplannameandcasename + "TestHttp GET请求url取body，json,xml,text....." +GetParamUrl);
-                responeData=Httphelp.GetWithBody(Protocal,GetParamUrl,PostData,header,30000);
-                logger.info(logplannameandcasename + "TestHttp GET请求url取body，json,xml,text完成....." +GetParamUrl);
+                if(requestObject.getRequestcontenttype().equalsIgnoreCase("Form表单"))
+                {
+                    //url-Form表单传值,值根据类型转换，可以实现url参数值是json和xml的形式
+                    String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+                    logger.info(logplannameandcasename + "TestHttp GET请求url....." +GetParamUrl);
+                    responeData=Httphelp.GetWithNoParams(Protocal,GetParamUrl,header,30000);
+                    logger.info(logplannameandcasename + "TestHttp GET请求url完成....." +GetParamUrl);
+                }
+                else
+                {
+                    //取body，json,xml,text
+                    String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+                    logger.info(logplannameandcasename + "TestHttp GET请求url取body，json,xml,text....." +GetParamUrl);
+                    responeData=Httphelp.GetWithBody(Protocal,GetParamUrl,PostData,header,30000);
+                    logger.info(logplannameandcasename + "TestHttp GET请求url取body，json,xml,text完成....." +GetParamUrl);
 
+                }
             }
         }
         if(requestObject.getRequestmMthod().equalsIgnoreCase("POST"))
