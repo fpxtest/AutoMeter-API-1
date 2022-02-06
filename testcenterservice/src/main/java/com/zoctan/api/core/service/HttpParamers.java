@@ -52,7 +52,7 @@ public class HttpParamers {
 //        return this.httpMethod;
 //    }
 
-    public String getQueryString() throws UnsupportedEncodingException {
+    public String getQueryString(){
         if ((this.params == null) || (this.params.isEmpty())) {
             return null;
         }

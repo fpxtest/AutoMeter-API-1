@@ -12,6 +12,7 @@ import com.zoctan.api.service.*;
 import com.zoctan.api.service.TestPlanCaseService;
 import com.zoctan.api.service.impl.TestPlanCaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.io.ResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -66,7 +67,13 @@ public class TestPlanCaseController {
     @Autowired(required = false)
     private ApicasesService apicasesService;
     @Autowired(required = false)
+    private ApicasesVariablesService apicasesVariablesService;
+    @Autowired(required = false)
+    private TestvariablesValueService testvariablesValueService;
+    @Autowired(required = false)
     private ApiCasedataService apiCasedataService;
+    @Autowired(required = false)
+    private TestvariablesService testvariablesService;
     @Autowired(required = false)
     private ApiParamsService apiParamsService;
     @Autowired(required = false)
@@ -187,7 +194,7 @@ public class TestPlanCaseController {
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.error("性能任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
-            return ResultGenerator.genFailedResult("execperformancetest 未找到ip为：" + ip + "的slaver");
+            return ResultGenerator.genFailedResult("未找到ip为：" + ip + "的slaver");
         }
         Long SlaverId = slaverlist.get(0).getId();
         String ProjectPath = System.getProperty("user.dir");
@@ -203,7 +210,6 @@ public class TestPlanCaseController {
             JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
             JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
         }
-
         File dir = new File(JmeterPerformanceReportPath);
         if (!dir.exists()) {// 判断目录是否存在
             dir.mkdir();
@@ -214,6 +220,10 @@ public class TestPlanCaseController {
         String CaseName = dispatch.getTestcasename();
         TestPlanCaseController.log.info("性能任务-执行多机并行性能用例名 is......." + CaseName);
         Deployunit Deployunit = deployunitService.findDeployNameValueWithCode(DeployUnitName);
+        if(Deployunit==null)
+        {
+            return ResultGenerator.genFailedResult("未找到发布单元为：" + DeployUnitName);
+        }
         String Protocal = Deployunit.getProtocal();
         //如果是http,https，直接使用httpapitestcase下的functionhttpapi或者performancehttpapi来执行测试
         String JmeterClassName = "";
@@ -229,9 +239,7 @@ public class TestPlanCaseController {
             JmeterClassName = DeployUnitName;
             ClassName = "com.api.autotest.test." + DeployUnitName + "." + JmxCaseName;
         }
-        Apicases apicases = apicasesMapper.getjmetername(dispatch.getTestcaseid());
         TestPlanCaseController.log.info("性能任务-DeployUnitNameForJmeter is......." + DeployUnitNameForJmeter + " JmeterClassName is........" + JmeterClassName);
-
         if (!JmeterClassExist(ClassName, JmeterPath)) {
             JmeterClassNotExist(dispatch, ClassName, CaseName);
             String memo = CaseName + "未开发对应的JmeterClass：" + ClassName;
@@ -241,12 +249,11 @@ public class TestPlanCaseController {
             try {
                 jmeterPerformanceObject = GetJmeterPerformance(dispatch);
                 if (jmeterPerformanceObject != null) {
+                    // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
+                    tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath, dispatch.getThreadnum(), dispatch.getLoops());
                     // 更新调度表对应用例状态为已分配
                     dispatchMapper.updatedispatchstatus("已分配", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
-                    // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
-                    //增加条件处理，调用条件服务
-                    tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath, apicases.getThreadnum(), apicases.getLoops());
                     slaverMapper.updateSlaverStaus(SlaverId, "运行中");
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
                 }
@@ -268,7 +275,7 @@ public class TestPlanCaseController {
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.error("功能任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
-            return ResultGenerator.genFailedResult("execfunctiontest 未找到ip为：" + ip + "的slaver");
+            return ResultGenerator.genFailedResult("未找到IP为：" + ip + "的slaver");
         }
         Long SlaverId = slaverlist.get(0).getId();
         try {
@@ -306,7 +313,6 @@ public class TestPlanCaseController {
                             DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
                             TestPlanCaseController.log.info("功能任务-DispatchIDs:=======================" + DispatchIDs);
                             try {
-                                //增加条件处理，调用条件服务
                                 tpcservice.ExecuteHttpPlanFunctionCase(SlaverId, JmeterPath, JmxPath, DispatchIDs, url, username, password, i);
                                 for (Dispatch dis : JmeterList) {
                                     dispatchMapper.updatedispatchstatus("已分配", dis.getSlaverid(), dis.getExecplanid(), dis.getBatchid(), dis.getTestcaseid());
@@ -333,7 +339,7 @@ public class TestPlanCaseController {
     }
 
 
-    public JmeterPerformanceObject GetJmeterPerformanceCaseData(Dispatch dispatch) {
+    public JmeterPerformanceObject GetJmeterPerformanceCaseData(Dispatch dispatch) throws Exception {
         JmeterPerformanceObject jmeterPerformanceObject = new JmeterPerformanceObject();
         jmeterPerformanceObject.setTestplanid(dispatch.getExecplanid());
         jmeterPerformanceObject.setCaseid(dispatch.getTestcaseid());
@@ -343,17 +349,28 @@ public class TestPlanCaseController {
         jmeterPerformanceObject.setBatchname(dispatch.getBatchname());
         jmeterPerformanceObject.setExecuteplanname(dispatch.getExecplanname());
         Apicases apicases = apicasesService.getBy("id", dispatch.getTestcaseid());
+        if (apicases == null) {
+            throw new Exception("未找到用例，请检查是否被删除！");
+        }
         jmeterPerformanceObject.setCasetype(apicases.getCasetype());
         Api api = apiService.getBy("id", apicases.getApiid());
+        if (api == null) {
+            throw new Exception("未找到用例的API，请检查是否被删除！");
+        }
         jmeterPerformanceObject.setApistyle(api.getApistyle());
         jmeterPerformanceObject.setRequestmMthod(api.getVisittype());
-
         jmeterPerformanceObject.setRequestcontenttype(api.getRequestcontenttype());
         jmeterPerformanceObject.setResponecontenttype(api.getResponecontenttype());
         Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
+        if (deployunit == null) {
+            throw new Exception("未找到用例的API所在的发布单元，请检查是否被删除！");
+        }
         jmeterPerformanceObject.setProtocal(deployunit.getProtocal());
 
         Executeplan executeplan = epservice.getBy("id", dispatch.getExecplanid());
+        if (executeplan == null) {
+            throw new Exception("未找到用例的测试集合，请检查是否被删除！");
+        }
         Long EnvID = executeplan.getEnvid();
         Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnvID, deployunit.getId());
         if (macdepunit != null) {
@@ -362,108 +379,89 @@ public class TestPlanCaseController {
             if (macdepunit.getVisittype().equalsIgnoreCase("ip")) {
                 Long MachineID = macdepunit.getMachineid();
                 Machine machine = machineService.getBy("id", MachineID);
+                if (machine == null) {
+                    throw new Exception("未在环境中部署找到服务器，请检查是否被删除！");
+                }
+                jmeterPerformanceObject.setMachineip(machine.getIp());
                 testserver = machine.getIp();
                 resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
             } else {
                 testserver = macdepunit.getDomain();
                 resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
             }
-            jmeterPerformanceObject.setResource(resource);
+            jmeterPerformanceObject.setDeployunitvisittype(macdepunit.getVisittype());
+            jmeterPerformanceObject.setResource(resource.trim());
+        } else {
+            throw new Exception("未在环境中部署用例API所在的发布单元，请检查是否被删除！");
         }
+
+        List<ApicasesAssert> apicasesAssertList = apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());
+        if (apicasesAssertList.size() > 0) {
+            String ExpectJson = JSON.toJSONString(apicasesAssertList);
+            jmeterPerformanceObject.setExpect(ExpectJson);
+        } else {
+            jmeterPerformanceObject.setExpect("");
+        }
+
+        jmeterPerformanceObject.setMysqlurl(url.trim());
+        jmeterPerformanceObject.setMysqlusername(username.trim());
+        jmeterPerformanceObject.setMysqlpassword(password.trim());
         return jmeterPerformanceObject;
     }
 
-    public JmeterPerformanceObject GetJmeterPerformanceCaseRequestData(JmeterPerformanceObject jmeterPerformanceObject, Dispatch dispatch, Api api) {
-        List<ApiParams> apiParamsList = apiParamsService.getDistinctApiParamsbyid(api.getId());
+    public JmeterPerformanceObject GetJmeterPerformanceCaseRequestData(JmeterPerformanceObject jmeterPerformanceObject, Dispatch dispatch, Api api) throws Exception {
+        String PlanID = String.valueOf(jmeterPerformanceObject.getTestplanid());
+        String BatchName = jmeterPerformanceObject.getBatchname();
+        String RequestContentType = jmeterPerformanceObject.getRequestcontenttype();
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
-        HashMap<String, String> HeaderMap = new HashMap<>();
-        HashMap<String, String> ParamsMap = new HashMap<>();
-        HashMap<String, String> BodyMap = new HashMap<>();
-        for (ApiParams apiParams : apiParamsList) {
-            for (ApiCasedata apiCasedata : apiCasedataList) {
-                if (apiParams.getPropertytype().equalsIgnoreCase("Params") && apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
-                    ParamsMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
-                }
-                if (apiParams.getPropertytype().equalsIgnoreCase("Header") && apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
-                    HeaderMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
-                }
-                if (apiParams.getPropertytype().equalsIgnoreCase("Body") && apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
-                    BodyMap.put(apiCasedata.getApiparam(), apiCasedata.getApiparamvalue());
+        HashMap<String, Object> HeaderMap = new HashMap<>();
+        HashMap<String, Object> ParamsMap = new HashMap<>();
+        HashMap<String, Object> BodyMap = new HashMap<>();
+        for (ApiCasedata apiCasedata : apiCasedataList) {
+            String ParamName = apiCasedata.getApiparam();
+            String Paramvalue = apiCasedata.getApiparamvalue();
+            String DataType = apiCasedata.getParamstype();
+            if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
+                ParamsMap = GetParamsMap(ParamsMap, ParamName, Paramvalue, PlanID, BatchName, DataType);
+            }
+            if (apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
+                HeaderMap = GetHeaderMap(ParamName, Paramvalue, PlanID, BatchName);
+            }
+            if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
+                if (RequestContentType.equalsIgnoreCase("Form表单")) {
+                    BodyMap = GetParamsMap(BodyMap, ParamName, Paramvalue, PlanID, BatchName, DataType);
+                } else {
+                    BodyMap.put(ParamName, Paramvalue);
                 }
             }
         }
-        //全局参数Header，Body
-        List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
-
-        //全局Header如果有参数，则替换原参数，并且加上全局Header参数
-        for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
-            String ParamName = executeplanParams.getKeyname();
-            String ParamValue = executeplanParams.getKeyvalue();
-            HeaderMap.put(ParamName, ParamValue);
-        }
-
-        List<ExecuteplanParams> executeplanBodyParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Body");
-        //全局Body如果有参数，则替换原参数
-        for (ExecuteplanParams executeplanParams : executeplanBodyParamList) {
-            String PostData = executeplanParams.getKeyvalue();
-            BodyMap.put("Body", PostData);
-        }
+        //全局参数Header
+        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, PlanID, BatchName);
 
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
         } else {
-            List<ApiParams> HeaderParamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Header");
-            //有参数无用例数据表示用例数据不完整
-            if (HeaderParamsList.size() > 0) {
-                jmeterPerformanceObject.setHeadjson("NoCaseData");
-            } else {
-                jmeterPerformanceObject.setHeadjson("NN");
-            }
+            jmeterPerformanceObject.setHeadjson("");
         }
         if (ParamsMap.size() > 0) {
             jmeterPerformanceObject.setParamsjson(JSON.toJSONString(ParamsMap));
         } else {
-            List<ApiParams> ParamsparamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Params");
-            if (ParamsparamsList.size() > 0) {
-                jmeterPerformanceObject.setParamsjson("NoCaseData");
-            } else {
-                jmeterPerformanceObject.setParamsjson("NN");
-            }
+            jmeterPerformanceObject.setParamsjson("");
         }
-        if (BodyMap.size() > 0) {
-            for (String Key : BodyMap.keySet()) {
-                jmeterPerformanceObject.setBodyjson(BodyMap.get(Key));
-            }
-            //根据api请求数据类型处理，json，xml
-//            String RequestDataType = api.getRequestcontenttype();
-//            //获取冗余完整json,xml字段值
-//            List<ApiParams> paramsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
-//            if (RequestDataType.equals(new String("json"))) {
-//                String JsonCompelete = paramsList.get(0).getKeynamebak();
-//                DocumentContext documentContext = JsonPath.parse(JsonCompelete);
-//                //获取参数的数据值
-//                for (String Key : BodyMap.keySet()) {
-//                    String JsonPathStr = "$." + Key;
-//                    documentContext.set(JsonPathStr, BodyMap.get(Key));
-//                }
-//                String ResultJson = documentContext.jsonString();
-//                jmeterPerformanceObject.setBodyjson(ResultJson);
-//            }
-//            if (RequestDataType.equals(new String("xml"))) {
-//                jmeterPerformanceObject.setBodyjson(JSON.toJSONString(BodyMap));
-//            }
-        } else {
-            List<ApiParams> BodyparamsList = apiParamsService.getApiParamsbypropertytype(api.getId(), "Body");
-            if (BodyparamsList.size() > 0) {
-                jmeterPerformanceObject.setBodyjson("NoCaseData");
-            } else {
-                jmeterPerformanceObject.setBodyjson("NN");
-            }
-        }
-        jmeterPerformanceObject.setMysqlurl(url);
-        jmeterPerformanceObject.setMysqlusername(username);
-        jmeterPerformanceObject.setMysqlpassword(password);
 
+        String PostData="";
+        if (BodyMap.size() > 0) {
+            if (RequestContentType.equalsIgnoreCase("Form表单")) {
+                PostData=JSON.toJSONString(BodyMap);
+            } else {
+                for (String Key : BodyMap.keySet()) {
+                    PostData=BodyMap.get(Key).toString();
+                }
+            }
+        }
+        jmeterPerformanceObject.setBodyjson(PostData);
+
+        //断言
         List<ApicasesAssert> apicasesAssertList = apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());
         if (apicasesAssertList.size() > 0) {
             String ExpectJson = JSON.toJSONString(apicasesAssertList);
@@ -474,47 +472,47 @@ public class TestPlanCaseController {
         return jmeterPerformanceObject;
     }
 
-    public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch) {
+
+    public HashMap<String, Object> GetHeaderMap(String ParamName, String Paramvalue, String PlanID, String BatchName) throws Exception {
+        HashMap<String, Object> HeaderMap = new HashMap<>();
+        if (Paramvalue.trim().contains("$")) {
+            Object VariabalesValue = GetVariablesObjectValues(Paramvalue, PlanID, BatchName);
+            HeaderMap.put(ParamName, VariabalesValue);
+        } else {
+            HeaderMap.put(ParamName, Paramvalue);
+        }
+        return HeaderMap;
+    }
+
+    public HashMap<String, Object> GetParamsMap(HashMap<String, Object> ParamsMap, String ParamName, String Paramvalue, String PlanID, String BatchName, String DataType) throws Exception {
+        if (Paramvalue.trim().contains("$")) {
+            Object VariabalesValue = GetVariablesObjectValues(Paramvalue, PlanID, BatchName);
+            ParamsMap.put(ParamName, VariabalesValue);
+        } else {
+            Object Value = GetDataByType(Paramvalue, DataType);
+            ParamsMap.put(ParamName, Value);
+        }
+        return ParamsMap;
+    }
+
+    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch, String PlanID, String BatchName) throws Exception {
+        List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
+        //全局Header如果有参数，则替换原参数，没有则加上全局Header参数
+        for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
+            String ParamName = executeplanParams.getKeyname();
+            String ParamValue = executeplanParams.getKeyvalue();
+            Object ObjectValue = GetVariablesObjectValues(ParamValue, PlanID, BatchName);
+            HeaderMap.put(ParamName, ObjectValue);
+        }
+        return HeaderMap;
+    }
+
+    public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch) throws Exception {
+        JmeterPerformanceObject jmeterPerformanceObject = GetJmeterPerformanceCaseData(dispatch);
         Apicases apicases = apicasesService.getBy("id", dispatch.getTestcaseid());
         Api api = apiService.getBy("id", apicases.getApiid());
-        JmeterPerformanceObject jmeterPerformanceObject = GetJmeterPerformanceCaseData(dispatch);
         jmeterPerformanceObject = GetJmeterPerformanceCaseRequestData(jmeterPerformanceObject, dispatch, api);
         return jmeterPerformanceObject;
-//        jmeterPerformanceObject.setTestplanid(dispatch.getExecplanid());
-//        jmeterPerformanceObject.setCaseid(dispatch.getTestcaseid());
-//        jmeterPerformanceObject.setSlaverid(dispatch.getSlaverid());
-//        jmeterPerformanceObject.setBatchid(dispatch.getBatchid());
-//        jmeterPerformanceObject.setCasename(dispatch.getTestcasename());
-//        jmeterPerformanceObject.setBatchname(dispatch.getBatchname());
-//        jmeterPerformanceObject.setExecuteplanname(dispatch.getExecplanname());
-//        Apicases apicases = apicasesService.getBy("id", dispatch.getTestcaseid());
-//        jmeterPerformanceObject.setCasetype(apicases.getCasetype());
-//        Api api = apiService.getBy("id", apicases.getApiid());
-//        jmeterPerformanceObject.setApistyle(api.getApistyle());
-//        jmeterPerformanceObject.setRequestmMthod(api.getVisittype());
-//
-//        jmeterPerformanceObject.setRequestcontenttype(api.getRequestcontenttype());
-//        jmeterPerformanceObject.setResponecontenttype(api.getResponecontenttype());
-//        Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
-//        jmeterPerformanceObject.setProtocal(deployunit.getProtocal());
-//
-//        Executeplan executeplan = epservice.getBy("id", dispatch.getExecplanid());
-//        Long EnvID = executeplan.getEnvid();
-//        Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnvID, deployunit.getId());
-//        if (macdepunit != null) {
-//            String testserver = "";
-//            String resource = "";
-//            if (macdepunit.getVisittype().equalsIgnoreCase("ip")) {
-//                Long MachineID = macdepunit.getMachineid();
-//                Machine machine = machineService.getBy("id", MachineID);
-//                testserver = machine.getIp();
-//                resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
-//            } else {
-//                testserver = macdepunit.getDomain();
-//                resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
-//            }
-//            jmeterPerformanceObject.setResource(resource);
-//        }
     }
 
     public void JmeterClassNotExist(Dispatch dis, String jmeterclassname, String casename) {
@@ -589,6 +587,78 @@ public class TestPlanCaseController {
         apicasereportservice.addcasereport(ar);
         epservice.updatetestplanstatus(planid, "fail");
         TestPlanCaseController.log.info("功能任务-未找到用例对应的jmeter-class类......." + jmeterclassname);
+    }
+
+    //根据数据类型转换
+    private Object GetDataByType(String Data, String ValueType) {
+        Object Result = new Object();
+        if (ValueType.equalsIgnoreCase("Number")) {
+            try {
+                Result = Long.parseLong(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+            }
+        }
+        if (ValueType.equalsIgnoreCase("Json")) {
+            try {
+                Result = JSON.parse(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+            }
+        }
+        if (ValueType.equalsIgnoreCase("String") || ValueType.isEmpty()) {
+            Result = Data;
+        }
+        if (ValueType.equalsIgnoreCase("Array")) {
+            String[] Array = Data.split(",");
+            Result = Array;
+        }
+        if (ValueType.equalsIgnoreCase("Bool")) {
+            try {
+                Result = Boolean.parseBoolean(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是布尔类型，请检查！";
+            }
+        }
+        return Result;
+    }
+
+    //获取参数值的具体内容，支持$变量
+    private Object GetVariablesObjectValues(String Value, String PlanId, String BatchName) throws Exception {
+        Object Result = "";
+        if (Value.trim().contains("$")) {
+            if (Value.trim().length() == 1) {
+                Result = Value;
+            } else {
+                Value = Value.substring(1);
+                Testvariables testvariables = testvariablesService.getBy("testvariablesname", Value);
+                if(testvariables==null)
+                {
+                    throw new Exception("未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量");
+                }
+                ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("variablesname", Value);
+                if(apicasesVariables==null)
+                {
+                    throw new Exception("未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例");
+                }
+                Long Caseid = apicasesVariables.getCaseid();
+                String ValueType = testvariables.getValuetype();
+                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+                TestvariablesValue testvariablesValue= testvariablesValueService.gettestvariablesvalue(Long.parseLong(PlanId),Caseid,Value,BatchName);
+                if(testvariablesValue!=null)
+                {
+                    String VariablesNameValue = testvariablesValue.getVariablesvalue();
+                    Result = GetDataByType(VariablesNameValue, ValueType);
+                }
+                else
+                {
+                    throw new Exception("未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值");
+                }
+            }
+        } else {
+            Result = Value;
+        }
+        return Result;
     }
 
     //功能用例平均分配

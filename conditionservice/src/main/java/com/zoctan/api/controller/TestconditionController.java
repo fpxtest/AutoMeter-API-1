@@ -352,9 +352,13 @@ public class TestconditionController {
                 dnamicCompilerHelp.CallDynamicScript(Source);
             } catch (Exception ex) {
                 Respone = ex.getMessage();
-                ResultGenerator.genFailedResult("脚本条件执行异常:" + Respone);
+                throw new Exception("脚本条件执行异常:" + Respone);
             }
             TestconditionController.log.info("调试脚本报告更新子条件结果-============：");
+        }
+        else
+        {
+            throw new Exception("未找到脚本子条件，请检查条件管理-脚本子条件中是否被删除");
         }
         return ResultGenerator.genOkResult("数据库条件执行完成");
     }
@@ -370,37 +374,32 @@ public class TestconditionController {
             Long CaseID = conditionApi.getCaseid();
             Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
             if (apicases == null) {
-                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行的接口，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到条件运行的接口，请检查是否存在或已被删除！");
             }
             Long ApiID = apicases.getApiid();
             Api api = apiService.getBy("id", ApiID);
             if (api == null) {
-                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行的接口的API，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到条件运行的接口的API，请检查是否存在或已被删除！");
             }
             Long Deployunitid = api.getDeployunitid();
             Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
             if (deployunit == null) {
-                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除！");
             }
             List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
             //区分环境类型
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnviromentID, deployunit.getId());
             if (macdepunit == null) {
-                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到环境组件部署，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署，请检查是否存在或已被删除！");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到环境组件部署的服务器，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署的服务器，请检查是否存在或已被删除！");
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
-            String Respone = "";
             RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
-            try {
-                ResponeData testResponeData = testCaseHelp.request(requestObject);
-                Respone= testResponeData.getContent();
-            } catch (Exception ex) {
-                Respone = ex.getMessage();
-            }
+            ResponeData testResponeData = testCaseHelp.request(requestObject);
+            String Respone= testResponeData.getContent();
             //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
             ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
             if (apicasesVariables != null) {
@@ -410,6 +409,14 @@ public class TestconditionController {
                     String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
                     VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
                 }
+                else
+                {
+                    throw new Exception("接口子条件执行异常:接口子条件未找到变量:"+apicasesVariables.getVariablesname()+"，请检查变量管理-变量管理中是否存在！");
+                }
+            }
+            else
+            {
+                throw new Exception("接口子条件执行异常:接口子条件未找到接口:"+apicases.getCasename()+",和变量关系，请检查变量管理-用例变量中是否存在！");
             }
         }
         return ResultGenerator.genOkResult(VariableNameValueMap);
@@ -423,7 +430,7 @@ public class TestconditionController {
             Long Assembleid = conditionDb.getAssembleid();
             EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
             if (enviromentAssemble == null) {
-                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件未找到环境组件，请检查是否存在或已被删除！");
+                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件，请检查是否存在或已被删除！");
             }
             String Respone = "";
             String AssembleType = enviromentAssemble.getAssembletype();
@@ -432,16 +439,16 @@ public class TestconditionController {
             String ConnnectStr = enviromentAssemble.getConnectstr();
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidandassmbleid(Envid, Assembleid);
             if (macdepunit == null) {
-                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件未找到环境组件部署，请检查是否存在或已被删除");
+                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件部署，请检查是否存在或已被删除");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件未找到环境组件部署的服务器，请检查是否存在或已被删除");
+                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件部署的服务器，请检查是否存在或已被删除");
             }
             String deployunitvisittype = macdepunit.getVisittype();
             String[] ConnetcArray = ConnnectStr.split(",");
             if (ConnetcArray.length < 4) {
-                ResultGenerator.genFailedResult("数据库子条件执行异常:数据库子条件数据库连接字填写不规范，请按规则填写," + ConnnectStr);
+                throw new Exception("数据库子条件执行异常:数据库子条件数据库连接字填写不规范，请按规则填写," + ConnnectStr);
             }
             try {
                 Respone = Rundb(ConnetcArray, AssembleType, deployunitvisittype, machine, macdepunit, Sql);
@@ -482,7 +489,8 @@ public class TestconditionController {
 //                }
                 return ResultGenerator.genOkResult(Respone);
             } catch (Exception ex) {
-                return ResultGenerator.genFailedResult("数据库子条件执行异常：" + ex.getMessage());
+                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
+                //return ResultGenerator.genFailedResult("数据库子条件执行异常：" + ex.getMessage());
             }
         }
         TestconditionController.log.info("调试数据库子条件条件报告子条件完成-============：");

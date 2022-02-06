@@ -3,8 +3,8 @@ package com.zoctan.api.entity;
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "api_casedata")
-public class ApiCasedata {
+@Table(name = "apicases_variables")
+public class ApicasesVariables {
     /**
      * Id
      */
@@ -22,35 +22,50 @@ public class ApiCasedata {
      */
     private String casename;
 
-    /**
-     * api参数
-     */
-    private String apiparam;
+    public String getDeployunitname() {
+        return deployunitname;
+    }
+
+    public void setDeployunitname(String deployunitname) {
+        this.deployunitname = deployunitname;
+    }
+
+    public String getApiname() {
+        return apiname;
+    }
+
+    public void setApiname(String apiname) {
+        this.apiname = apiname;
+    }
+
+    private String deployunitname;
+    private String apiname;
+
 
     /**
-     * 用例参数值
+     * 变量Id
      */
-    private String apiparamvalue;
+    private Long variablesid;
 
     /**
-     * api属性类型，header，body
+     * 变量名
      */
-    private String propertytype;
+    private String variablesname;
 
     /**
      * 备注
      */
     private String memo;
 
-    public String getParamstype() {
-        return paramstype;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setParamstype(String paramstype) {
-        this.paramstype = paramstype;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    private String paramstype;
+    private String creator;
 
     /**
      * 创建时间
@@ -119,57 +134,39 @@ public class ApiCasedata {
     }
 
     /**
-     * 获取api参数
+     * 获取变量Id
      *
-     * @return apiparam - api参数
+     * @return variablesid - 变量Id
      */
-    public String getApiparam() {
-        return apiparam;
+    public Long getVariablesid() {
+        return variablesid;
     }
 
     /**
-     * 设置api参数
+     * 设置变量Id
      *
-     * @param apiparam api参数
+     * @param variablesid 变量Id
      */
-    public void setApiparam(String apiparam) {
-        this.apiparam = apiparam;
+    public void setVariablesid(Long variablesid) {
+        this.variablesid = variablesid;
     }
 
     /**
-     * 获取用例参数值
+     * 获取变量名
      *
-     * @return apiparamvalue - 用例参数值
+     * @return variablesname - 变量名
      */
-    public String getApiparamvalue() {
-        return apiparamvalue;
+    public String getVariablesname() {
+        return variablesname;
     }
 
     /**
-     * 设置用例参数值
+     * 设置变量名
      *
-     * @param apiparamvalue 用例参数值
+     * @param variablesname 变量名
      */
-    public void setApiparamvalue(String apiparamvalue) {
-        this.apiparamvalue = apiparamvalue;
-    }
-
-    /**
-     * 获取api属性类型，header，body
-     *
-     * @return propertytype - api属性类型，header，body
-     */
-    public String getPropertytype() {
-        return propertytype;
-    }
-
-    /**
-     * 设置api属性类型，header，body
-     *
-     * @param propertytype api属性类型，header，body
-     */
-    public void setPropertytype(String propertytype) {
-        this.propertytype = propertytype;
+    public void setVariablesname(String variablesname) {
+        this.variablesname = variablesname;
     }
 
     /**

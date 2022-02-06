@@ -132,7 +132,7 @@
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"
-            v-model="tmpexecuteplan.executeplanname"
+            v-model.trim="tmpexecuteplan.executeplanname"
           />
         </el-form-item>
         <el-form-item label="类型" prop="usetype" required>
@@ -279,7 +279,7 @@
               placeholder="例如2020-10-21-tag-101"
               prefix-icon="el-icon-edit"
               auto-complete="off"
-              v-model="tmpplanbatch.batchname"
+              v-model.trim="tmpplanbatch.batchname"
             />
           </el-form-item>
           <el-form-item label="执行类型：" prop="exectype" required >
@@ -400,7 +400,6 @@
           <el-select v-model="tmpparam.paramstype" placeholder="参数类型" style="width:100%" @change="paramstypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <el-option label="全局Header" value="Header" />
-            <el-option label="全局Body" value="Body" />
           </el-select>
         </el-form-item>
         <el-form-item label="参数名：" prop="keyname" required>

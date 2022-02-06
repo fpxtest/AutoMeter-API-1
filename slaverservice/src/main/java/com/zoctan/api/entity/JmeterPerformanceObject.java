@@ -184,6 +184,26 @@ public class JmeterPerformanceObject {
         this.mysqlpassword = mysqlpassword;
     }
 
+    public String getMachineip() {
+        return machineip;
+    }
+
+    public void setMachineip(String machineip) {
+        this.machineip = machineip;
+    }
+
+    private String machineip;
+
+    public String getDeployunitvisittype() {
+        return deployunitvisittype;
+    }
+
+    public void setDeployunitvisittype(String deployunitvisittype) {
+        this.deployunitvisittype = deployunitvisittype;
+    }
+
+    private String deployunitvisittype;
+
     private long testplanid;
     private long caseid;
     private long batchid;

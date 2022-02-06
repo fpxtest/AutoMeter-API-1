@@ -63,7 +63,7 @@ public class postcondition extends AbstractJavaSamplerClient {
         String batchname = ctx.getParameter("batchname");
         String slaverid = ctx.getParameter("slaverid");
         String casetype = ctx.getParameter("casetype");
-        String casereportfolder = ctx.getParameter("casereportfolder");
+        String casereportfolder = ctx.getParameter("casereportfolder").replace("AM"," ");
         String testclass = ctx.getParameter("testclass");
         String start = ctx.getParameter("start");
 
