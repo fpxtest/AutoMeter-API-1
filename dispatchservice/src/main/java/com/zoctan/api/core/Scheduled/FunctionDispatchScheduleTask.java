@@ -97,6 +97,10 @@ public class FunctionDispatchScheduleTask {
                                                     HttpHeader header = new HttpHeader();
                                                     String ServerUrl = "http://" + slaver.getIp() + ":" + slaver.getPort() + "/exectestplancase/execfunctiontest";
                                                     String respon = Httphelp.doPost(ServerUrl, params, header, 30000);
+                                                    if(respon.contains("未找到IP为"))
+                                                    {
+                                                        throw new Exception(respon);
+                                                    }
                                                     FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============请求slaver响应结果：" + respon);
                                                 }
                                             }

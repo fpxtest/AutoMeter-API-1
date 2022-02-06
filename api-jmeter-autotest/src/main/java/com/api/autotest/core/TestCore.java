@@ -43,7 +43,11 @@ public class TestCore {
     //性能初始化数据根据jmeter传递下来的数据拼装用例请求的数据
     public RequestObject InitHttpDatabyJmeter(JavaSamplerContext context) throws Exception {
         RequestObject requestObject=testCaseData.InitHttpDatabyJmeter(context);
+        logger.info("InitHttpDatabyJmeter 完成-============：");
+
         RequestObject newob=testHttpRequestData.GetPerformanceHttpRequestData(requestObject);
+        logger.info("GetPerformanceHttpRequestData 完成-============：");
+
 //        RequestObject newob = new RequestObject();
 //
 //        String casename = context.getParameter("casename");

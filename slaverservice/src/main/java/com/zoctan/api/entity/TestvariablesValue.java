@@ -3,8 +3,8 @@ package com.zoctan.api.entity;
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "api_casedata")
-public class ApiCasedata {
+@Table(name = "testvariables_value")
+public class TestvariablesValue {
     /**
      * Id
      */
@@ -12,6 +12,25 @@ public class ApiCasedata {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 计划Id
+     */
+    private Long planid;
+
+    /**
+     * 计划名
+     */
+    private String planname;
+
+    public String getBatchname() {
+        return batchname;
+    }
+
+    public void setBatchname(String batchname) {
+        this.batchname = batchname;
+    }
+
+    private String batchname;
     /**
      * 用例Id
      */
@@ -23,34 +42,24 @@ public class ApiCasedata {
     private String casename;
 
     /**
-     * api参数
+     * 变量Id
      */
-    private String apiparam;
+    private Long variablesid;
 
     /**
-     * 用例参数值
+     * 变量名
      */
-    private String apiparamvalue;
+    private String variablesname;
 
     /**
-     * api属性类型，header，body
+     * 变量值
      */
-    private String propertytype;
+    private String variablesvalue;
 
     /**
      * 备注
      */
     private String memo;
-
-    public String getParamstype() {
-        return paramstype;
-    }
-
-    public void setParamstype(String paramstype) {
-        this.paramstype = paramstype;
-    }
-
-    private String paramstype;
 
     /**
      * 创建时间
@@ -80,6 +89,42 @@ public class ApiCasedata {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * 获取计划Id
+     *
+     * @return planid - 计划Id
+     */
+    public Long getPlanid() {
+        return planid;
+    }
+
+    /**
+     * 设置计划Id
+     *
+     * @param planid 计划Id
+     */
+    public void setPlanid(Long planid) {
+        this.planid = planid;
+    }
+
+    /**
+     * 获取计划名
+     *
+     * @return planname - 计划名
+     */
+    public String getPlanname() {
+        return planname;
+    }
+
+    /**
+     * 设置计划名
+     *
+     * @param planname 计划名
+     */
+    public void setPlanname(String planname) {
+        this.planname = planname;
     }
 
     /**
@@ -119,57 +164,57 @@ public class ApiCasedata {
     }
 
     /**
-     * 获取api参数
+     * 获取变量Id
      *
-     * @return apiparam - api参数
+     * @return variablesid - 变量Id
      */
-    public String getApiparam() {
-        return apiparam;
+    public Long getVariablesid() {
+        return variablesid;
     }
 
     /**
-     * 设置api参数
+     * 设置变量Id
      *
-     * @param apiparam api参数
+     * @param variablesid 变量Id
      */
-    public void setApiparam(String apiparam) {
-        this.apiparam = apiparam;
+    public void setVariablesid(Long variablesid) {
+        this.variablesid = variablesid;
     }
 
     /**
-     * 获取用例参数值
+     * 获取变量名
      *
-     * @return apiparamvalue - 用例参数值
+     * @return variablesname - 变量名
      */
-    public String getApiparamvalue() {
-        return apiparamvalue;
+    public String getVariablesname() {
+        return variablesname;
     }
 
     /**
-     * 设置用例参数值
+     * 设置变量名
      *
-     * @param apiparamvalue 用例参数值
+     * @param variablesname 变量名
      */
-    public void setApiparamvalue(String apiparamvalue) {
-        this.apiparamvalue = apiparamvalue;
+    public void setVariablesname(String variablesname) {
+        this.variablesname = variablesname;
     }
 
     /**
-     * 获取api属性类型，header，body
+     * 获取变量值
      *
-     * @return propertytype - api属性类型，header，body
+     * @return variablesvalue - 变量值
      */
-    public String getPropertytype() {
-        return propertytype;
+    public String getVariablesvalue() {
+        return variablesvalue;
     }
 
     /**
-     * 设置api属性类型，header，body
+     * 设置变量值
      *
-     * @param propertytype api属性类型，header，body
+     * @param variablesvalue 变量值
      */
-    public void setPropertytype(String propertytype) {
-        this.propertytype = propertytype;
+    public void setVariablesvalue(String variablesvalue) {
+        this.variablesvalue = variablesvalue;
     }
 
     /**

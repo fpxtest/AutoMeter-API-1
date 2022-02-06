@@ -124,17 +124,17 @@
           </elementProp>
           <elementProp name="headjson" elementType="Argument">
             <stringProp name="Argument.name">headjson</stringProp>
-            <stringProp name="Argument.value">${__P(headjson,headjson)}</stringProp>
+            <stringProp name="Argument.value">${__P(headjson,&quot;&quot;)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="paramsjson" elementType="Argument">
             <stringProp name="Argument.name">paramsjson</stringProp>
-            <stringProp name="Argument.value">${__P(paramsjson,paramsjson)}</stringProp>
+            <stringProp name="Argument.value">${__P(paramsjson,&quot;&quot;)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="bodyjson" elementType="Argument">
             <stringProp name="Argument.name">bodyjson</stringProp>
-            <stringProp name="Argument.value">${__P(bodyjson,bodyjson)}</stringProp>
+            <stringProp name="Argument.value">${__P(bodyjson,&quot;&quot;)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="dubbojson" elementType="Argument">

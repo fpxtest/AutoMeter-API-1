@@ -7,10 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.core.service.*;
-import com.zoctan.api.dto.RequestHead;
-import com.zoctan.api.dto.ResponeGeneral;
-import com.zoctan.api.dto.StaticsDataForPie;
-import com.zoctan.api.dto.TestResponeData;
+import com.zoctan.api.dto.*;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -338,7 +335,8 @@ public class ApicasesController {
     private String getSubConditionRespone(String Url, String params, HttpHeader header) throws Exception {
         //请求API条件
         TestHttp testHttp=new TestHttp();
-        TestResponeData testResponeData=testHttp.doService("http","",Url,header,new HttpParamers(),params,"POST",30000);
+        header.addParam("Content-Type", "application/json;charset=utf-8");
+        TestResponeData testResponeData=testHttp.doService("http","",Url,header,new HttpParamers(),params,"POST","",30000);
         String Respone=testResponeData.getResponeContent();
         //String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
         if (Respone.contains("条件执行异常")) {
@@ -435,7 +433,7 @@ public class ApicasesController {
                 if (machine == null) {
                     return ResultGenerator.genFailedResult("当前环境中的服务器不存在，请检查是否被删除！");
                 }
-                Enviroment enviroment = enviromentService.getBy("id", enviromentid);
+                Enviroment enviroment = enviromentService.getBy("id", Long.parseLong(enviromentid));
                 if (enviroment == null) {
                     return ResultGenerator.genFailedResult("当前用例调试的环境不存在，请检查是否被删除！");
                 }
@@ -460,7 +458,10 @@ public class ApicasesController {
                     Object Value = GetVariablesObjectValues(HeaderValue, ParamsValuesMap);
                     header.addParam(HeaderName, Value);
                 }
-                header.addParam(HeaderName, HeaderValue);
+                else
+                {
+                    header.addParam(HeaderName, HeaderValue);
+                }
             }
 
             //参数用例值
@@ -476,7 +477,12 @@ public class ApicasesController {
                 }
                 else
                 {
-                    Object ParseData=GetDataByType(ParamValue,DataType);
+                    Object ParseData= null;
+                    try {
+                        ParseData = GetDataByType(ParamValue,DataType);
+                    } catch (Exception exception) {
+                        return ResultGenerator.genFailedResult("用例Params参数值异常："+exception.getMessage());
+                    }
                     paramers.addParam(ParamName, ParseData);
                 }
             }
@@ -497,27 +503,28 @@ public class ApicasesController {
                     }
                     else
                     {
-                        Object ParseData=GetDataByType(ParamValue,DataType);
+                        Object ParseData= null;
+                        try {
+                            ParseData = GetDataByType(ParamValue,DataType);
+                        } catch (Exception exception) {
+                            return ResultGenerator.genFailedResult("用例Body参数值异常："+exception.getMessage());
+                        }
                         Bodyparamers.addParam(ParamName, ParseData);
                     }
                 }
                 if (Bodyparamers.getParams().size() > 0) {
-                    try {
-                        PostData = Bodyparamers.getQueryString();
-                    } catch (UnsupportedEncodingException e) {
-                    }
+                    PostData = Bodyparamers.getQueryString();
                 }
             } else {
                 for (ApiCasedata Paramdata : BodyApiCasedataList) {
                     PostData=Paramdata.getApiparamvalue();
                 }
             }
-
             try {
                 long Start = new Date().getTime();
                 TestHttp testHttp=new TestHttp();
                 String VisitType = api.getVisittype();
-                TestResponeData respon = testHttp.doService(Protocal,ApiStyle, resource,header, paramers, PostData, VisitType,300);
+                TestResponeData respon = testHttp.doService(Protocal, ApiStyle, resource, header, paramers, PostData, VisitType, requestcontenttype, 300);
                 long End = new Date().getTime();
                 long CostTime = End - Start;
                 respon.setResponeTime(CostTime);
@@ -526,7 +533,7 @@ public class ApicasesController {
                 responeGeneral.setPostData(PostData);
                 responeGeneral.setMethod(Method);
                 responeGeneral.setProtocal(Protocal);
-                responeGeneral.setUrl(resource);
+                responeGeneral.setUrl(respon.getRequestUrl());
                 List<RequestHead> requestHeadList = new ArrayList<>();
                 for (String Key : header.getParams().keySet()) {
                     RequestHead requestHead = new RequestHead();
@@ -534,7 +541,15 @@ public class ApicasesController {
                     requestHead.setKeyValue(header.getParams().get(Key).toString());
                     requestHeadList.add(requestHead);
                 }
+                List<RequestParams> requestParamsList = new ArrayList<>();
+                for (String Key : paramers.getParams().keySet()) {
+                    RequestParams requestParams = new RequestParams();
+                    requestParams.setKeyName(Key);
+                    requestParams.setKeyValue(paramers.getParams().get(Key).toString());
+                    requestParamsList.add(requestParams);
+                }
                 respon.setRequestHeadList(requestHeadList);
+                respon.setRequestParamsList(requestParamsList);
                 respon.setResponeGeneral(responeGeneral);
                 return ResultGenerator.genOkResult(respon);
 
@@ -566,21 +581,22 @@ public class ApicasesController {
     }
 
     //根据数据类型转换
-    private Object GetDataByType(String Data,String ValueType)
-    {
+    private Object GetDataByType(String Data,String ValueType) throws Exception {
         Object Result=new Object();
         if (ValueType.equalsIgnoreCase("Number")) {
             try {
                 Result = Long.parseLong(Data);
             } catch (Exception ex) {
-                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+                Result = "参数值  " + Data + " 不是数字Number类型，请检查修改！";
+                throw new Exception(Result.toString());
             }
         }
         if (ValueType.equalsIgnoreCase("Json")) {
             try {
                 Result = JSON.parse(Data);
             } catch (Exception ex) {
-                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+                Result = "参数值  " + Data + " 不是Json类型，请检查修改！";
+                throw new Exception(Result.toString());
             }
         }
         if (ValueType.equalsIgnoreCase("String")||ValueType.isEmpty()) {
@@ -594,7 +610,8 @@ public class ApicasesController {
             try {
                 Result = Boolean.parseBoolean(Data);
             } catch (Exception ex) {
-                Result = "变量值：" + Data + " 不是布尔类型，请检查！";
+                Result = "参数值  " + Data + " 不是布尔Bool类型，请检查修改！";
+                throw new Exception(Result.toString());
             }
         }
         return Result;

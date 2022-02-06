@@ -345,16 +345,6 @@ log.error(&quot;===starttime-------------------------------------&quot;+starttim
                 <stringProp name="Argument.value">${mysqlpassword}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
-              <elementProp name="machineip" elementType="Argument">
-                <stringProp name="Argument.name">machineip</stringProp>
-                <stringProp name="Argument.value">${machineip}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="deployvisitytype" elementType="Argument">
-                <stringProp name="Argument.name">deployvisitytype</stringProp>
-                <stringProp name="Argument.value">${deployvisitytype}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
             </collectionProp>
           </elementProp>
           <stringProp name="classname">com.api.autotest.test.${testdeployunit}.${testclass}</stringProp>

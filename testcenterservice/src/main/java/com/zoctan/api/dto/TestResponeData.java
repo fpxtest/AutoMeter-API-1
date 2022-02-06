@@ -28,6 +28,8 @@ public class TestResponeData {
 
     private List<Header> headerList;
 
+
+
     public List<RequestHead> getRequestHeadList() {
         return requestHeadList;
     }
@@ -37,6 +39,16 @@ public class TestResponeData {
     }
 
     private List<RequestHead> requestHeadList;
+
+    public List<RequestParams> getRequestParamsList() {
+        return requestParamsList;
+    }
+
+    public void setRequestParamsList(List<RequestParams> requestParamsList) {
+        this.requestParamsList = requestParamsList;
+    }
+
+    private List<RequestParams> requestParamsList;
 
 
     private String ResponeContent;
@@ -91,6 +103,17 @@ public class TestResponeData {
     }
 
     private ResponeGeneral responeGeneral;
+
+
+    public String getRequestUrl() {
+        return RequestUrl;
+    }
+
+    public void setRequestUrl(String requestUrl) {
+        RequestUrl = requestUrl;
+    }
+
+    private String RequestUrl;
 
 }
 

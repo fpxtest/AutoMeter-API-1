@@ -49,6 +49,9 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         params.addArgument("mysqlurl", "/opt/");
         params.addArgument("mysqlusername", "/opt/");
         params.addArgument("mysqlpassword", "/opt/");
+        params.addArgument("machineip", "11");
+        params.addArgument("deployvisitytype", "11");
+
         return params;
     }
 
@@ -69,8 +72,12 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         try {
             // 初始化用例数据
             requestObject=InitalTestData(Core,ctx);
+            getLogger().info("Finish InitalTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
+
             // 发送用例请求，并返回结果
             ResponeData responeData = SendCaseRequest(requestObject, Core);
+            getLogger().info("Finish SendCaseRequest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
+
             ActualResult=responeData.getRespone();
             //断言
             AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
@@ -154,46 +161,46 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
 
-        String json="{\n" +
-                "\t\"code\":200,\n" +
-                "\t\"data\":\"Bearer\"\n" +
-                "}";
-        DocumentContext documentContext=JsonPath.parse(json);
-        documentContext.set("$.code","100");
-        System.out.println(documentContext.jsonString());
+        String json="{\"Authorization\":\"BearerAutometereyJhbGciOiJSUzI1NiIsInppcCI6IkRFRiJ9.eNp0lz2OFDEQhe8y8SaMlkWajEuQrtxuo7HUf7Ldza4QIcSQkRKRERJwHzQcA-OqsssuE43fK837Xrs90-r3J78Pp8tJjbNdTncntYdrlK83q5U3_o1yVg2T8Rc1jnfSHc1kgukOgrJTZzBZHzq2N8rpa2ewb6OKBKX1ui8h1aA1wotMSJIJRALjSVLoZiEwflJYWkJQXEJIXFBAXJYvp6qUAKLEkKYs0BQIalNOzb7oQgHdoB71uow22HWpoMxu8NWkKsImVSXmN2XYhNUShXpVeiUkvgfuIGHPiIeqwLJBJDQIg7Iw0GAA496ublaLNs5sqwuZJQYM25nlBmKWy4gJ6yVm3Yo-qBDTrPadmmzYrVrNO3XZvFOZTbu12bxUr7dU7KPYvGbHxDaJvQEjsVnt2sWv16dXHF1xbptDK06sOK7ZWN1oXE0Bq00Gt44Hb14PM67vlp6_b62Ljcahvkau8SprK7XhVqrCjU4yXu1otn2xcG9pTZAsAYASwlFQMEoKtfofQ7lnyC2SoosDcUVTYnFyqN9U0FeMRJEDs4aypDEeVQ5HjdFmOaxbZ4PPKiYxvnISgDkJwTRCmCMwj8p7M8dnZcMrvgDzUdOgjJoqZSA6lVEpNyt9tUvuRLJUKQ41IIfApAuPHMI8Gb0Hs00KDjfXBKosIDELUMwgFrMkbMhHR5gSO_CjJPy2wMCPlvCxStwG_lNjEvGVk8DMSUimEcacgsm3sLl_zc2r7lxz25p75lY8qGmBcbhOWWmdgtIKU9IaI7x2dgv1_1rrYbC0E6O1E641kdzaVGJSB_6j45KQpIAECgCwplxQGBdU_smF-NzMOPa07PnI7I9Sgd7ovxis1htRzzjCy8Ylq1AuG1UGlctGxeKO6hWjdlj40b5a1GZGHe0rRW32wIeadiPpYPcq0ET2gIksA36vEUyw1p-fH2-_vt9-fLt9_vT7y9f4PmaettPlxcP9_fn88Or88sNfAAAA__8.RDgcm6V5dMuHNLCpUe8nzN_2IRqqoNOFJoG6Yk9JDTfYLZ4NaqP2sSsLJaFtUzQ8cu7njnvRwbAYJf2Xv--3Pw\",\"bb\":\"aaaaaaaaa\"}";
+//        DocumentContext documentContext=JsonPath.parse(json);
+//        documentContext.set("$.code","100");
+//        System.out.println(documentContext.jsonString());
 
-//        Arguments params = new Arguments();
-//        params.addArgument("testplanid", "12");
-//        params.addArgument("caseid", "1");
-//        params.addArgument("batchid", "41");
-//        params.addArgument("slaverid", "5");
-//        params.addArgument("batchname", "xxxxxxxxxxxxxxxxxxxxx");
-//
-//        params.addArgument("executeplanname", "兑换服务回归测试");
-//        params.addArgument("casename", "获取用户信息正确");
-//        params.addArgument("expect", "zxzxz");
-//        params.addArgument("protocal", "https");
-//        params.addArgument("RequestmMthod", "get");
-//        params.addArgument("casetype", "功能");
-//        params.addArgument("resource", "https://marketing-ui.confucius.mobi/redeem/ui/retrySendSmsOrFindShortUrl");
-//        params.addArgument("apistyle", "普通方式");
-//        params.addArgument("requestcontenttype", "");
-//        params.addArgument("responecontenttype", "json");
-//        params.addArgument("headjson", "headjson");
-//        params.addArgument("paramsjson", "{\"goodsThirdPartyType\":\"ALIPAY\"}");
-//        params.addArgument("bodyjson", "");
-//        params.addArgument("dubbojson", "");
-//
-//        params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
-//        params.addArgument("mysqlusername", "root");
-//        params.addArgument("mysqlpassword", "root");
-//
-//        JavaSamplerContext ctx = new JavaSamplerContext(params);
-//        HttpApiPerformance test = new HttpApiPerformance();
-//        test.setupTest(ctx);
-//        test.runTest(ctx);
-//        test.teardownTest(ctx);
-//        System.exit(0);
+        Arguments params = new Arguments();
+        params.addArgument("testplanid", "24");
+        params.addArgument("caseid", "47");
+        params.addArgument("batchid", "29");
+        params.addArgument("slaverid", "19");
+        params.addArgument("batchname", "撒啊大大所大所");
+
+        params.addArgument("executeplanname", "测试中心性能测试");
+        params.addArgument("casename", "获取执行计划统计数据性能用例");
+        params.addArgument("expect", "[{\"assertcondition\":\"=\",\"assertsubtype\":\"\",\"asserttype\":\"Json\",\"assertvalues\":\"200\",\"assertvaluetype\":\"int\",\"caseid\":47,\"createTime\":1636306168000,\"creator\":\"admin\",\"expression\":\"$.code\",\"id\":20,\"lastmodifyTime\":1636306168000}]");
+        params.addArgument("protocal", "http");
+        params.addArgument("RequestmMthod", "GET");
+        params.addArgument("casetype", "性能");
+        params.addArgument("resource", "http://127.0.0.1:8080/executeplan/getstaticsplan");
+        params.addArgument("apistyle", "普通方式");
+        params.addArgument("requestcontenttype", "Json");
+        params.addArgument("responecontenttype", "json");
+        params.addArgument("headjson", json);
+        params.addArgument("paramsjson", "");
+        params.addArgument("bodyjson", "");
+        params.addArgument("dubbojson", "");
+
+        params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        params.addArgument("mysqlusername", "root");
+        params.addArgument("mysqlpassword", "root");
+
+        params.addArgument("machineip", "127.0.0.1");
+        params.addArgument("deployvisitytype", "ip");
+
+        JavaSamplerContext ctx = new JavaSamplerContext(params);
+        HttpApiPerformance test = new HttpApiPerformance();
+        test.setupTest(ctx);
+        test.runTest(ctx);
+        test.teardownTest(ctx);
+        System.exit(0);
 
     }
 }

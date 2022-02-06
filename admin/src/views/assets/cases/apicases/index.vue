@@ -193,7 +193,7 @@
             maxlength="40"
             prefix-icon="el-icon-edit"
             auto-complete="off"
-            v-model="tmpapicases.casename"
+            v-model.trim="tmpapicases.casename"
           />
         </el-form-item>
 
@@ -723,7 +723,20 @@
                   </el-table>
                 </el-tab-pane>
 
-                <el-tab-pane label="请求数据" name="eight">
+                <el-tab-pane label="请求Params" name="nine">
+                  <el-table
+                    :data="requestParamsList"
+                    element-loading-text="loading"
+                    border
+                    fit
+                    highlight-current-row
+                  >
+                    <el-table-column label="Name" align="center" prop="keyName" width="250"/>
+                    <el-table-column label="Value" align="center" prop="keyValue" width="350"/>
+                  </el-table>
+                </el-tab-pane>
+
+                <el-tab-pane label="请求Body" name="eight">
                   <el-input
                     type="textarea"
                     style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
@@ -852,6 +865,7 @@
         assertList: [],
         headerList: [], // Header列表
         requestHeadList: [], // Header列表
+        requestParamsList: [], // Params列表
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
         JmeterClassVisible: false, // JmeterClassVisible显示
@@ -1530,6 +1544,7 @@
               this.tmptest.requestdata = response.data.responeGeneral.postData
               this.headerList = response.data.headerList
               this.requestHeadList = response.data.requestHeadList
+              this.requestParamsList = response.data.requestParamsList
               this.tmptest.respone = response.data.responeContent
               this.tmptest.code = response.data.responeCode
               this.tmptest.responeTime = response.data.responeTime
