@@ -46,4 +46,5 @@ public class JsonUtils {
     final String jsonString = JSON.toJSONString(target, filter);
     return JSON.parseObject(jsonString, clz);
   }
+
 }

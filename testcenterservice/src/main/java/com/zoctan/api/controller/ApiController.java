@@ -1,14 +1,17 @@
 package com.zoctan.api.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.dto.PostmanApiInfoDto;
 import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.entity.Api;
 import com.zoctan.api.entity.ApiParams;
 import com.zoctan.api.service.ApiParamsService;
 import com.zoctan.api.service.ApiService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,23 +40,38 @@ public class ApiController {
 
 
     @PostMapping("/exportpostman")
-    public Result exportpostman(@RequestParam("file") MultipartFile file) {
+    public Result exportpostman(@RequestParam("file") MultipartFile multipartFile) {
         try {
             if (file.isEmpty()) {
             }
-            // 获取文件名
-            String fileName = file.getOriginalFilename();
-            // 获取文件的后缀名
+//            // 获取文件名
+//            String fileName = file.getOriginalFilename();
+//            // 获取文件的后缀名
+//            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//            // 设置文件存储路径         *************************************************
+//            String filePath = "./FILE/KING/";
+//            String path = filePath + fileName;
+//            File dest = new File(new File(path).getAbsolutePath());// dist为文件，有多级目录的文件
+// 获取原始名字
+            String fileName = multipartFile.getOriginalFilename();
+// 获取后缀名
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            // 设置文件存储路径         *************************************************
-            String filePath = "./FILE/KING/";
-            String path = filePath + fileName;
-            File dest = new File(new File(path).getAbsolutePath());// dist为文件，有多级目录的文件
-        } catch (IllegalStateException e) {
+//先将.json文件转为字符串类型
+            File file = new File("/"+ fileName);
+//将MultipartFile类型转换为File类型
+            FileUtils.copyInputStreamToFile(multipartFile.getInputStream(),file);
+            String jsonString = FileUtils.readFileToString(file, "UTF-8");
+//如果是json或者txt文件
+            if (".json".equals(suffixName) || ".txt".equals(suffixName)) {
+//再将json字符串转为实体类
+                PostmanApiInfoDto jsonObject = JSONObject.parseObject(jsonString, PostmanApiInfoDto.class);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResultGenerator.genOkResult();
     }
+
 
     @PostMapping
     public Result add(@RequestBody Api api) {
