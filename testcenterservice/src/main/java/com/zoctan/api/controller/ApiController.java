@@ -42,7 +42,7 @@ public class ApiController {
     @PostMapping("/exportpostman")
     public Result exportpostman(@RequestParam("file") MultipartFile multipartFile) {
         try {
-            if (file.isEmpty()) {
+            if (multipartFile.isEmpty()) {
             }
 //            // 获取文件名
 //            String fileName = file.getOriginalFilename();
