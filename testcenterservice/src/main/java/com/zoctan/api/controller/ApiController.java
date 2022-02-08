@@ -11,9 +11,12 @@ import com.zoctan.api.service.ApiParamsService;
 import com.zoctan.api.service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +34,26 @@ public class ApiController {
     private ApiService apiService;
     @Resource
     private ApiParamsService apiParamsService;
+
+
+    @PostMapping("/exportpostman")
+    public Result exportpostman(@RequestParam("file") MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+            }
+            // 获取文件名
+            String fileName = file.getOriginalFilename();
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            // 设置文件存储路径         *************************************************
+            String filePath = "./FILE/KING/";
+            String path = filePath + fileName;
+            File dest = new File(new File(path).getAbsolutePath());// dist为文件，有多级目录的文件
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return ResultGenerator.genOkResult();
+    }
 
     @PostMapping
     public Result add(@RequestBody Api api) {
