@@ -27,6 +27,14 @@
             @click.native.prevent="showCopyapiDialog"
           >复制API
           </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            v-if="hasPermission('api:add')"
+            @click.native.prevent="showPostManDialog"
+          >导入PostMan
+          </el-button>
 
           <!--          <el-upload ref="upload" action="" :http-request="uploadSectionFile">-->
           <!--            <el-button size="small" type="primary" @click="uploadSectionFile">点击上传</el-button>-->
@@ -558,9 +566,32 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title='导入PostMan' :visible.sync="dialogAddFile">
+      <el-form>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="name"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-upload ref="upfile"
+                     style="display: inline"
+                     :auto-upload="false"
+                     :on-change="handleChange"
+                     :file-list="fileList"
+                     action="#">
+            <el-button  type="success">选择文件</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <el-button  type="success" @click="upload">点击上传</el-button>
+        </el-form-item>
+      </el-form>>
+    </el-dialog>
   </div>
 </template>
 <script>
+import axios from 'axios'
 import { search, addapi, updateapi, removeapi, getapisbydeployunitid, copyapi } from '@/api/deployunit/api'
 import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
 import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
@@ -589,12 +620,15 @@ export default {
   },
   data() {
     return {
+      name: '',
+      fileList: [],
+      dialogAddFile: false, // 导入Postman对话框显示
       Headertabledatas: [],
       Paramstabledatas: [],
       Bodytabledatas: [],
       multipleSelection: [],
       activeName: 'zero',
-      fileurl: window.g.SERVER_URL + '/',
+      fileurl: window.g.SERVER_URL + '/api/exportpostman',
       paramsplaceholder: '',
       itemKey: null,
       tmpapiname: '',
@@ -668,14 +702,6 @@ export default {
         memo: '',
         creator: ''
       },
-      // tmpapiforparam: {
-      //   apiid: '',
-      //   deployunitid: '',
-      //   deployunitname: '',
-      //   apiname: '',
-      //   visittype: '',
-      //   requestcontenttype: ''
-      // },
       tmpcopyapi: {
         sourceapiid: '',
         sourceapiname: '',
@@ -697,16 +723,6 @@ export default {
         keydefaultvalue: '',
         creator: ''
       },
-      // tmpparamsapi: {
-      //   apiid: ''
-      // },
-      // tmpHeader: {
-      //   headername: ''
-      // },
-      // tmpParams: {
-      //   paramname: '',
-      //   paratype: ''
-      // },
       tmpqueryparams: {
         apiid: '',
         propertytype: ''
@@ -1005,6 +1021,29 @@ export default {
     //   })
     // },
 
+    //
+    handleChange(file, fileList) {
+      this.fileList = fileList
+      console.log(fileList)
+    },
+    upload() {
+      const fd = new FormData()
+      fd.append('name', this.name)
+      this.fileList.forEach(item => {
+        fd.append('files', item.raw)
+      })
+      axios.post(this.fileurl, fd, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.$message('上传成功')
+        } else {
+          this.$message('失败')
+        }
+      })
+    },
     /**
      * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
      */
@@ -1381,6 +1420,14 @@ export default {
       this.tmpapi.responecontenttype = ''
       this.tmpapi.memo = ''
       this.tmpapi.creator = this.name
+    },
+
+    /**
+     * 显示添加复制api对话框
+     */
+    showPostManDialog() {
+      // 显示新增对话框
+      this.dialogAddFile = true
     },
 
     /**
