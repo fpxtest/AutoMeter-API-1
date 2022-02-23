@@ -3,6 +3,7 @@ package com.zoctan.api.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.PostmanApiInfoDto;
@@ -64,6 +65,11 @@ public class ApiController {
 //如果是json或者txt文件
             if (".json".equals(suffixName) || ".txt".equals(suffixName)) {
 //再将json字符串转为实体类
+                //范老板看下那种转json的可以正确转换
+                //方案1
+                Gson gson = new Gson();
+                PostmanApiInfoDto postmanApiInfoDto = gson.fromJson(jsonString, PostmanApiInfoDto.class);
+                //方案2
                 PostmanApiInfoDto jsonObject = JSONObject.parseObject(jsonString, PostmanApiInfoDto.class);
             }
         } catch (Exception e) {
