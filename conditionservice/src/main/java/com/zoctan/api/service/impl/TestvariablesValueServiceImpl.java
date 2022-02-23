@@ -33,6 +33,11 @@ private TestvariablesValueMapper testvariablesValueMapper;
     }
 
     @Override
+    public TestvariablesValue findtestvariablesvalue(Long planid, Long caseid, String batchname, String variablesname) {
+        return testvariablesValueMapper.findtestvariablesvalue(planid, caseid, batchname, variablesname);
+    }
+
+    @Override
     public int ifexist(Condition con) {
         return countByCondition(con);
     }

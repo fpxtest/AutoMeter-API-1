@@ -40,7 +40,7 @@ public class SomeDayExecScheduleTask {
 
 
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0/60 * * * * ?")
     //或直接指定时间间隔，例如：5秒
     private void configureTasks() {
         try {

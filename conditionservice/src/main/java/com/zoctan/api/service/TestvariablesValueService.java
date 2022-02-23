@@ -22,6 +22,7 @@ public interface TestvariablesValueService extends Service<TestvariablesValue> {
      */
     void updatetestvariablesvalue(TestvariablesValue params);
 
+    TestvariablesValue findtestvariablesvalue(Long planid,Long caseid,String batchname,String variablesname);
 
     int ifexist(Condition condition);
 }

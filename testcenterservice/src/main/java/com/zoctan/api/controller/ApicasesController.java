@@ -10,6 +10,7 @@ import com.zoctan.api.core.service.*;
 import com.zoctan.api.dto.*;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
+import com.zoctan.api.util.RadomVariables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,6 @@ public class ApicasesController {
     private ApiParamsService apiParamsService;
     @Autowired(required = false)
     private TestconditionService testconditionService;
-
     @Autowired(required = false)
     private ConditionApiService conditionApiService;
     @Autowired(required = false)
@@ -60,6 +60,10 @@ public class ApicasesController {
     private ConditionOrderService conditionOrderService;
     @Value("${spring.conditionserver.serverurl}")
     private String conditionserver;
+    @Autowired(required = false)
+    private VariablesService variablesService;
+    @Autowired(required = false)
+    private TestvariablesService testvariablesService;
 
 
     @PostMapping
@@ -72,31 +76,24 @@ public class ApicasesController {
         } else {
             apicasesService.save(apicases);
             //增加初始化参数值
-            Long apiid=apicases.getApiid();
-            Api api=apiService.getById(apiid);
-            String RequestContentType=api.getRequestcontenttype();
-            Map<String, Object> params=new HashMap<>();
-            params.put("apiid",apiid);
-            List<ApiParams> apiParamsList= apiParamsService.getApiParamsbyapiid(params);
-            List<ApiCasedata>apiCasedataList=new ArrayList<>();
-            for (ApiParams apiParams :apiParamsList) {
-                if(apiParams.getPropertytype().equalsIgnoreCase("Header")||apiParams.getPropertytype().equalsIgnoreCase("Params"))
-                {
-                    ApiCasedata apiCasedata=GetApiCaseData(apicases,apiParams);
+            Long apiid = apicases.getApiid();
+            Api api = apiService.getById(apiid);
+            String RequestContentType = api.getRequestcontenttype();
+            Map<String, Object> params = new HashMap<>();
+            params.put("apiid", apiid);
+            List<ApiParams> apiParamsList = apiParamsService.getApiParamsbyapiid(params);
+            List<ApiCasedata> apiCasedataList = new ArrayList<>();
+            for (ApiParams apiParams : apiParamsList) {
+                if (apiParams.getPropertytype().equalsIgnoreCase("Header") || apiParams.getPropertytype().equalsIgnoreCase("Params")) {
+                    ApiCasedata apiCasedata = GetApiCaseData(apicases, apiParams);
                     apiCasedataList.add(apiCasedata);
-                }
-                else
-                {
-                    if(RequestContentType.equalsIgnoreCase("Form表单"))
-                    {
-                        ApiCasedata apiCasedata=GetApiCaseData(apicases,apiParams);
+                } else {
+                    if (RequestContentType.equalsIgnoreCase("Form表单")) {
+                        ApiCasedata apiCasedata = GetApiCaseData(apicases, apiParams);
                         apiCasedataList.add(apiCasedata);
-                    }
-                    else
-                    {
-                        if(apiParams.getKeytype().equalsIgnoreCase(RequestContentType))
-                        {
-                            ApiCasedata apiCasedata=GetApiCaseData(apicases,apiParams);
+                    } else {
+                        if (apiParams.getKeytype().equalsIgnoreCase(RequestContentType)) {
+                            ApiCasedata apiCasedata = GetApiCaseData(apicases, apiParams);
                             apiCasedataList.add(apiCasedata);
                         }
                     }
@@ -119,27 +116,22 @@ public class ApicasesController {
 //                apiCasedata.setMemo("");
 //                apiCasedataList.add(apiCasedata);
             }
-            if(apiCasedataList.size()>0)
-            {
+            if (apiCasedataList.size() > 0) {
                 apiCasedataService.save(apiCasedataList);
             }
             return ResultGenerator.genOkResult();
         }
     }
 
-    private ApiCasedata GetApiCaseData(Apicases apicases,ApiParams apiParams)
-    {
-        ApiCasedata apiCasedata=new ApiCasedata();
+    private ApiCasedata GetApiCaseData(Apicases apicases, ApiParams apiParams) {
+        ApiCasedata apiCasedata = new ApiCasedata();
         apiCasedata.setCaseid(apicases.getId());
         apiCasedata.setCasename(apicases.getCasename());
         apiCasedata.setPropertytype(apiParams.getPropertytype());
-        if(apiParams.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
-        {
+        if (apiParams.getKeydefaultvalue().equalsIgnoreCase("NoForm")) {
             apiCasedata.setApiparam("Body");
             apiCasedata.setApiparamvalue(apiParams.getKeyname());
-        }
-        else
-        {
+        } else {
             apiCasedata.setApiparam(apiParams.getKeyname());
             apiCasedata.setApiparamvalue(apiParams.getKeydefaultvalue());
         }
@@ -213,13 +205,13 @@ public class ApicasesController {
         apicasesAssertService.deleteByCondition(caseassertcon);
         //删除用例条件，子条件
         Condition con = new Condition(Testcondition.class);
-        con.createCriteria().andCondition("objecttype = '测试用例'").andCondition("objectid = " + id).andCondition("conditiontype = '"  + "前置条件'");
-        List<Testcondition> testconditionList= testconditionService.listByCondition(con);
+        con.createCriteria().andCondition("objecttype = '测试用例'").andCondition("objectid = " + id).andCondition("conditiontype = '" + "前置条件'");
+        List<Testcondition> testconditionList = testconditionService.listByCondition(con);
         if (testconditionList.size() > 0) {
-            Long ConditionID=testconditionList.get(0).getId();
-            conditionApiService.deleteBy("conditionid",ConditionID);
-            conditionDbService.deleteBy("conditionid",ConditionID);
-            conditionScriptService.deleteBy("conditionid",ConditionID);
+            Long ConditionID = testconditionList.get(0).getId();
+            conditionApiService.deleteBy("conditionid", ConditionID);
+            conditionDbService.deleteBy("conditionid", ConditionID);
+            conditionScriptService.deleteBy("conditionid", ConditionID);
             testconditionService.deleteByCondition(con);
         }
         //删除测试集合中的用例
@@ -311,6 +303,7 @@ public class ApicasesController {
         final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
+
     /**
      * 根据发布单元id获取用例
      */
@@ -334,10 +327,10 @@ public class ApicasesController {
 
     private String getSubConditionRespone(String Url, String params, HttpHeader header) throws Exception {
         //请求API条件
-        TestHttp testHttp=new TestHttp();
+        TestHttp testHttp = new TestHttp();
         header.addParam("Content-Type", "application/json;charset=utf-8");
-        TestResponeData testResponeData=testHttp.doService("http","",Url,header,new HttpParamers(),params,"POST","",30000);
-        String Respone=testResponeData.getResponeContent();
+        TestResponeData testResponeData = testHttp.doService("http", "", Url, header, new HttpParamers(), params, "POST", "", 30000);
+        String Respone = testResponeData.getResponeContent();
         //String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
         if (Respone.contains("条件执行异常")) {
             JSONObject object = JSON.parseObject(Respone);
@@ -345,6 +338,7 @@ public class ApicasesController {
         }
         return Respone;
     }
+
     /**
      * 运行测试
      */
@@ -398,11 +392,18 @@ public class ApicasesController {
                 }
             }
             if (APIRespone != "") {
-                JSONObject jsonObject = JSON.parseObject(APIRespone);
-                for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
-                    String key = objectEntry.getKey();
-                    Object value = objectEntry.getValue().toString();
-                    ParamsValuesMap.put(key, value);
+                try
+                {
+                    JSONObject jsonObject = JSON.parseObject(APIRespone);
+                    for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
+                        String key = objectEntry.getKey();
+                        Object value = objectEntry.getValue().toString();
+                        ParamsValuesMap.put(key, value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ResultGenerator.genFailedResult("执行前置接口条件结果异常："+APIRespone);
                 }
             }
         }
@@ -449,80 +450,122 @@ public class ApicasesController {
             List<ApiCasedata> BodyApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Body");
             String requestcontenttype = api.getRequestcontenttype();
             //Header用例值
-            HttpHeader header = new HttpHeader();
+            HttpHeader header=GetHttpHeader(HeaderApiCasedataList,ParamsValuesMap);
             header = AddHeaderByRequestContentType(header, requestcontenttype);
-            for (ApiCasedata Headdata : HeaderApiCasedataList) {
-                String HeaderName = Headdata.getApiparam();
-                String HeaderValue = Headdata.getApiparamvalue();
-                if (ParamsValuesMap.size() > 0) {
-                    Object Value = GetVariablesObjectValues(HeaderValue, ParamsValuesMap);
-                    header.addParam(HeaderName, Value);
-                }
-                else
-                {
-                    header.addParam(HeaderName, HeaderValue);
-                }
-            }
+
+//            for (ApiCasedata Headdata : HeaderApiCasedataList) {
+//                String HeaderName = Headdata.getApiparam();
+//                String HeaderValue = Headdata.getApiparamvalue();
+//                if (ParamsValuesMap.size() > 0) {
+//                    Object Value = GetVariablesObjectValues(HeaderValue, ParamsValuesMap);
+//                    header.addParam(HeaderName, Value);
+//                } else {
+//                    if (HeaderValue.contains("#")) {
+//                        Object Value = GetRadomVariables(HeaderValue);
+//                        header.addParam(HeaderName, Value);
+//                    } else {
+//                        header.addParam(HeaderName, HeaderValue);
+//                    }
+//                }
+//            }
 
             //参数用例值
-            HttpParamers paramers = new HttpParamers();
-            for (ApiCasedata Paramdata : ParamsApiCasedataList) {
-                String ParamName = Paramdata.getApiparam();
-                String ParamValue = Paramdata.getApiparamvalue();
-                String DataType=Paramdata.getParamstype();
-                if(ParamValue.contains("$"))
-                {
-                    Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
-                    paramers.addParam(ParamName, Value);
-                }
-                else
-                {
-                    Object ParseData= null;
-                    try {
-                        ParseData = GetDataByType(ParamValue,DataType);
-                    } catch (Exception exception) {
-                        return ResultGenerator.genFailedResult("用例Params参数值异常："+exception.getMessage());
-                    }
-                    paramers.addParam(ParamName, ParseData);
-                }
+            HttpParamers paramers=new HttpParamers();
+            try {
+                 paramers=GetHttpParamers(ParamsApiCasedataList,ParamsValuesMap);
+            } catch (Exception exception) {
+                return ResultGenerator.genFailedResult(exception.getMessage());
             }
+//            for (ApiCasedata Paramdata : ParamsApiCasedataList) {
+//                String ParamName = Paramdata.getApiparam();
+//                String ParamValue = Paramdata.getApiparamvalue();
+//                String DataType = Paramdata.getParamstype();
+//                if (ParamValue.contains("$")) {
+//                    Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
+//                    paramers.addParam(ParamName, Value);
+//                } else {
+//                    if (ParamValue.contains("#"))
+//                    {
+//                        Object Value = GetRadomVariables(ParamValue);
+//                        header.addParam(ParamName, Value);
+//                    }
+//                    else
+//                    {
+//                        Object ParseData = new Object();
+//                        try {
+//                            ParseData = GetDataByType(ParamValue, DataType);
+//                        } catch (Exception exception) {
+//                            return ResultGenerator.genFailedResult("用例Params参数值异常：" + exception.getMessage());
+//                        }
+//                        paramers.addParam(ParamName, ParseData);
+//                    }
+//                }
+//            }
 
             //Body用例值
             String PostData = "";
             HttpParamers Bodyparamers = new HttpParamers();
             if (requestcontenttype.equalsIgnoreCase("Form表单")) {
-                //值支持变量
-                for (ApiCasedata Paramdata : BodyApiCasedataList) {
-                    String ParamName = Paramdata.getApiparam();
-                    String ParamValue = Paramdata.getApiparamvalue();
-                    String DataType = Paramdata.getParamstype();
-                    if(ParamValue.contains("$"))
-                    {
-                        Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
-                        Bodyparamers.addParam(ParamName, Value);
-                    }
-                    else
-                    {
-                        Object ParseData= null;
-                        try {
-                            ParseData = GetDataByType(ParamValue,DataType);
-                        } catch (Exception exception) {
-                            return ResultGenerator.genFailedResult("用例Body参数值异常："+exception.getMessage());
-                        }
-                        Bodyparamers.addParam(ParamName, ParseData);
-                    }
+                try {
+                    Bodyparamers=GetHttpParamers(BodyApiCasedataList,ParamsValuesMap);
+                } catch (Exception exception) {
+                    return ResultGenerator.genFailedResult(exception.getMessage());
                 }
+//                for (ApiCasedata Paramdata : BodyApiCasedataList) {
+//                    String ParamName = Paramdata.getApiparam();
+//                    String ParamValue = Paramdata.getApiparamvalue();
+//                    String DataType = Paramdata.getParamstype();
+//                    if (ParamValue.contains("$")) {
+//                        Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
+//                        Bodyparamers.addParam(ParamName, Value);
+//                    } else {
+//                        if (ParamValue.contains("#"))
+//                        {
+//                            Object Value = GetRadomVariables(ParamValue);
+//                            header.addParam(ParamName, Value);
+//                        }
+//                        else
+//                        {
+//                            Object ParseData = new Object();
+//                            try {
+//                                ParseData = GetDataByType(ParamValue, DataType);
+//                            } catch (Exception exception) {
+//                                return ResultGenerator.genFailedResult("用例Body参数值异常：" + exception.getMessage());
+//                            }
+//                            Bodyparamers.addParam(ParamName, ParseData);
+//                        }
+//                    }
+//
                 if (Bodyparamers.getParams().size() > 0) {
                     PostData = Bodyparamers.getQueryString();
                 }
             } else {
                 for (ApiCasedata Paramdata : BodyApiCasedataList) {
-                    PostData=Paramdata.getApiparamvalue();
+                    PostData = Paramdata.getApiparamvalue();
+                    //增加json，xml文本类型中的变量替换
+                    //获取随机变量列表
+                    List<Variables> radomVariablesList= variablesService.listAll();
+                    for (Variables variables:radomVariablesList) {
+                        String VariableName = "#" + variables.getVariablesname();
+                        if (PostData.contains(VariableName)) {
+                            Object VariableValue = GetRadomVariables(VariableName);
+                            PostData = PostData.replace(VariableName, VariableValue.toString());
+                        }
+                    }
+                    //获取接口变量列表
+                    List<Testvariables> interfaceVariablesList= testvariablesService.listAll();
+                    for (Testvariables testvariables : interfaceVariablesList) {
+                        String VariableName = "$" + testvariables.getTestvariablesname();
+                        if (PostData.contains(VariableName)) {
+                            Object VariableValue = GetVariablesObjectValues(VariableName, ParamsValuesMap);
+                            PostData = PostData.replace(VariableName, VariableValue.toString());
+                        }
+                    }
                 }
             }
             try {
                 long Start = new Date().getTime();
-                TestHttp testHttp=new TestHttp();
+                TestHttp testHttp = new TestHttp();
                 String VisitType = api.getVisittype();
                 TestResponeData respon = testHttp.doService(Protocal, ApiStyle, resource, header, paramers, PostData, VisitType, requestcontenttype, 300);
                 long End = new Date().getTime();
@@ -562,6 +605,58 @@ public class ApicasesController {
     }
 
 
+    //获取HttpHeader
+    private HttpHeader  GetHttpHeader(List<ApiCasedata> HeaderApiCasedataList,HashMap<String, Object> ParamsValuesMap )
+    {
+        HttpHeader header = new HttpHeader();
+        for (ApiCasedata Headdata : HeaderApiCasedataList) {
+            String HeaderName = Headdata.getApiparam();
+            String HeaderValue = Headdata.getApiparamvalue();
+            if (ParamsValuesMap.size() > 0) {
+                Object Value = GetVariablesObjectValues(HeaderValue, ParamsValuesMap);
+                header.addParam(HeaderName, Value);
+            } else {
+                if (HeaderValue.contains("#")) {
+                    Object Value = GetRadomVariables(HeaderValue);
+                    header.addParam(HeaderName, Value);
+                } else {
+                    header.addParam(HeaderName, HeaderValue);
+                }
+            }
+        }
+        return header;
+    }
+    //获取HttpParams
+    private HttpParamers  GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList,HashMap<String, Object> ParamsValuesMap ) throws Exception {
+        HttpParamers paramers=new HttpParamers();
+        for (ApiCasedata Paramdata : ParamsApiCasedataList) {
+            String ParamName = Paramdata.getApiparam();
+            String ParamValue = Paramdata.getApiparamvalue();
+            String DataType = Paramdata.getParamstype();
+            if (ParamValue.contains("$")) {
+                Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
+                paramers.addParam(ParamName, Value);
+            } else {
+                if (ParamValue.contains("#"))
+                {
+                    Object Value = GetRadomVariables(ParamValue);
+                    paramers.addParam(ParamName, Value);
+                }
+                else
+                {
+                    Object ParseData = new Object();
+                    try {
+                        ParseData = GetDataByType(ParamValue, DataType);
+                    } catch (Exception exception) {
+                        throw new Exception("用例Params参数值异常：" + exception.getMessage());
+                    }
+                    paramers.addParam(ParamName, ParseData);
+                }
+            }
+        }
+        return  paramers;
+    }
+
     //获取参数值的具体内容，支持$变量
     private Object GetVariablesObjectValues(String Variables, HashMap<String, Object> NameValueMap) {
         Object Result = "";
@@ -569,9 +664,16 @@ public class ApicasesController {
             if (Variables.trim().length() == 1) {
                 Result = Variables;
             } else {
-                Variables = Variables.substring(1);
-                if (NameValueMap.containsKey(Variables)) {
-                    Result = NameValueMap.get(Variables);
+                String Prix[] = Variables.split("\\+");
+                for (String PrixStr : Prix) {
+                    if (PrixStr.contains("$")) {
+                        PrixStr = PrixStr.substring(1);
+                        if (NameValueMap.containsKey(PrixStr)) {
+                            Result = Result.toString() + NameValueMap.get(PrixStr);
+                        }
+                    } else {
+                        Result = Result + PrixStr;
+                    }
                 }
             }
         } else {
@@ -580,9 +682,96 @@ public class ApicasesController {
         return Result;
     }
 
+    //解析随机变量
+    private Object GetRadomVariables(String Value) {
+        Object Result = "";
+        if (Value.trim().contains("#")) {
+            if (Value.trim().length() == 1) {
+                Result = Value;
+            } else {
+                String Prix[] = Value.split("\\+");
+                for (String PrixStr : Prix) {
+                    if (PrixStr.contains("#")) {
+                        Result = Result.toString() + GetRadomValue(PrixStr);
+                    } else {
+                        Result = Result + PrixStr;
+                    }
+                }
+            }
+        }
+        return Result;
+    }
+
+    //获取随机变量值
+    private Object GetRadomValue(String Value) {
+        Object Result = "";
+        Value = Value.substring(1);
+        String FunctionName = Value;
+        List<Variables> variablesList = variablesService.listAll();
+        for (Variables variables : variablesList) {
+            if (variables.getVariablesname().equalsIgnoreCase(FunctionName)) {
+                String Params = variables.getVariablecondition();
+                String Variablestype = variables.getVariablestype();
+                RadomVariables radomVariables = new RadomVariables();
+                if (Variablestype.equalsIgnoreCase("随机字符串")) {
+                    try {
+                        Integer length = Integer.parseInt(Params);
+                        Result = radomVariables.GetRadmomStr(length);
+                    } catch (Exception ex) {
+                        Result = "随机变量GetRadmomStr输入参数不合法，请填写参数为数字类型表示字符串长度";
+                    }
+                }
+                if (Variablestype.equalsIgnoreCase("随机整数")) {
+                    String ParamsArray[] = Params.split(",");
+                    if (ParamsArray.length < 2) {
+                        Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
+                    } else {
+                        try {
+                            Long Start = Long.parseLong(ParamsArray[0]);
+                            Long End = Long.parseLong(ParamsArray[1]);
+                            Result = radomVariables.GetRadmomNum(Start, End);
+                        } catch (Exception exception) {
+                            Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                        }
+                    }
+                }
+                if (Variablestype.equalsIgnoreCase("随机小数")) {
+                    String ParamsArray[] = Params.split(",");
+                    if (ParamsArray.length < 2) {
+                        Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
+                    } else {
+                        try {
+                            Long Start = Long.parseLong(ParamsArray[0]);
+                            Long End = Long.parseLong(ParamsArray[1]);
+                            Result = radomVariables.GetRadmomDouble(Start, End);
+                        } catch (Exception exception) {
+                            Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                        }
+                    }
+                }
+                if (Variablestype.equalsIgnoreCase("Guid")) {
+                    Result = radomVariables.GetGuid();
+                }
+                if (Variablestype.equalsIgnoreCase("随机IP")) {
+                    Result = radomVariables.GetRadmonIP();
+                }
+                if (Variablestype.equalsIgnoreCase("当前时间")) {
+                    Result = radomVariables.GetCurrentTime();
+                }
+                if (Variablestype.equalsIgnoreCase("当前日期")) {
+                    Result = radomVariables.GetCurrentDate();
+                }
+                if (Variablestype.equalsIgnoreCase("当前时间戳")) {
+                    Result = radomVariables.GetCurrentTimeMillis();
+                }
+            }
+        }
+        return Result;
+    }
+
     //根据数据类型转换
-    private Object GetDataByType(String Data,String ValueType) throws Exception {
-        Object Result=new Object();
+    private Object GetDataByType(String Data, String ValueType) throws Exception {
+        Object Result = new Object();
         if (ValueType.equalsIgnoreCase("Number")) {
             try {
                 Result = Long.parseLong(Data);
@@ -599,7 +788,7 @@ public class ApicasesController {
                 throw new Exception(Result.toString());
             }
         }
-        if (ValueType.equalsIgnoreCase("String")||ValueType.isEmpty()) {
+        if (ValueType.equalsIgnoreCase("String") || ValueType.isEmpty()) {
             Result = Data;
         }
         if (ValueType.equalsIgnoreCase("Array")) {

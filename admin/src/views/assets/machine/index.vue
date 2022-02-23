@@ -68,14 +68,14 @@
           <el-button
             type="warning"
             size="mini"
-            v-if="hasPermission('machine:update') && scope.row.id !== tmpmachine.id"
+            v-if="hasPermission('machine:update') && scope.row.id !== id"
             @click.native.prevent="showUpdatemachineDialog(scope.$index)"
           >修改
           </el-button>
           <el-button
             type="danger"
             size="mini"
-            v-if="hasPermission('machine:delete') && scope.row.id !== tmpmachine.id"
+            v-if="hasPermission('machine:delete') && scope.row.id !== id"
             @click.native.prevent="removemachine(scope.$index)"
           >删除
           </el-button>

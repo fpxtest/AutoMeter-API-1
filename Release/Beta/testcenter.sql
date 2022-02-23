@@ -1491,6 +1491,42 @@ ALTER  table `api_casedata` add column paramstype varchar(20) Comment '参数类
 ALTER  table `slaver` add column macaddress varchar(100) Comment 'mac地址';
 
 
+DROP TABLE IF EXISTS `variables`;
+/*!40101 SET @saved_cs_client = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `variables` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
+  `variablesname` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '变量名',
+  `variablestype` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '变量类型',
+  `memo` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '变量描述',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `lastmodify_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上一次修改时间',
+  `variablecondition` varchar(64) DEFAULT NULL COMMENT '变量条件',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='变量表'
+
+
+  INSERT INTO testcenter.permission
+(id, resource, code, handle)
+VALUES(185, '随机变量', 'variables:list', '列表');
+INSERT INTO testcenter.permission
+(id, resource, code, handle)
+VALUES(186, '随机变量', 'variables:detail', '详情');
+INSERT INTO testcenter.permission
+(id, resource, code, handle)
+VALUES(187, '随机变量', 'variables:update', '修改');
+INSERT INTO testcenter.permission
+(id, resource, code, handle)
+VALUES(188, '随机变量', 'variables:delete', '删除');
+INSERT INTO testcenter.permission
+(id, resource, code, handle)
+VALUES(189, '随机变量', 'variables:add', '添加');
+INSERT INTO testcenter.permission
+(id, resource, code, handle)
+VALUES(190, '随机变量', 'variables:search', '搜索');
+
+
+
 
 
 

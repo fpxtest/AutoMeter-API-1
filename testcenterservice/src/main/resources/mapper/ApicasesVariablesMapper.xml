@@ -29,6 +29,11 @@
     order by lastmodify_time  DESC
   </select>
 
+  <select id="getbyvariablesid" resultMap="BaseResultMap">
+    SELECT *
+    FROM apicases_variables where variablesid=#{variablesid}
+  </select>
+
   <update id="updateApicasesVariables" parameterType="com.zoctan.api.entity.ApicasesVariables">
     update apicases_variables set casename = #{casename},variablesname=#{variablesname},caseid=#{caseid},variablesid=#{variablesid},
     deployunitname=#{deployunitname},apiname=#{apiname} , memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')

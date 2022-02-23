@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.TestvariablesValue;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public interface TestvariablesValueMapper extends MyMapper<TestvariablesValue> {
      */
     void updatetestvariablesvalue(TestvariablesValue params);
 
+    TestvariablesValue findtestvariablesvalue(@Param("planid") Long planid,@Param("caseid") Long caseid, @Param("batchname")String batchname, @Param("variablesname")String variablesname);
 
     int ifexist(Condition condition);
 }

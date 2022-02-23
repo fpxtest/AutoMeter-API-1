@@ -27,11 +27,11 @@ public class ApicasesVariablesController {
     @PostMapping
     public Result add(@RequestBody ApicasesVariables apicasesVariables) {
 
-        Condition con=new Condition(Testvariables.class);
-        con.createCriteria().andCondition("variablesname = '" + apicasesVariables.getVariablesname() + "'").orCondition("casename = '" + apicasesVariables.getCasename() + "'");
+        Condition con=new Condition(ApicasesVariables.class);
+        con.createCriteria().andCondition("variablesname = '" + apicasesVariables.getVariablesname().replace("'","''") + "'");
         if(apicasesVariablesService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该用例,变量已经存在绑定关系");
+            return ResultGenerator.genFailedResult("该变量已经绑定了接口");
         }
         else {
             apicasesVariablesService.save(apicasesVariables);
@@ -71,18 +71,8 @@ public class ApicasesVariablesController {
      */
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final ApicasesVariables dic) {
-        Condition con=new Condition(Testvariables.class);
-        con.createCriteria().andCondition("variablesname = '" + dic.getVariablesname() + "'").andCondition("casename = '" + dic.getCasename() + "'")
-                .andCondition("id <> " + dic.getId());
-        if(apicasesVariablesService.ifexist(con)>0)
-        {
-            return ResultGenerator.genFailedResult("该用例变量名已经存在");
-        }
-        else {
-
-            this.apicasesVariablesService.updateApicasesVariables(dic);
-            return ResultGenerator.genOkResult();
-        }
+        this.apicasesVariablesService.updateApicasesVariables(dic);
+        return ResultGenerator.genOkResult();
     }
 
     /**
@@ -96,5 +86,14 @@ public class ApicasesVariablesController {
         final List<ApicasesVariables> list = this.apicasesVariablesService.findApicasesVariablesWithName(param);
         final PageInfo<ApicasesVariables> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    /**
+     * 输入框查询
+     */
+    @PostMapping("/getbyvariablesid")
+    public Result getbyvariablesid(@RequestBody final Map<String, Object> param) {
+        final List<ApicasesVariables> apicasesVariablesList  = this.apicasesVariablesService.getbyvariablesid(param);
+        return ResultGenerator.genOkResult(apicasesVariablesList);
     }
 }

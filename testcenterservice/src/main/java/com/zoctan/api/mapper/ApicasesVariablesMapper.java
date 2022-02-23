@@ -17,6 +17,7 @@ public interface ApicasesVariablesMapper extends MyMapper<ApicasesVariables> {
      * @return 用户列表
      */
     void updateApicasesVariables(ApicasesVariables params);
+    List<ApicasesVariables> getbyvariablesid(final Map<String, Object> params);
 
 
     int ifexist(Condition condition);
