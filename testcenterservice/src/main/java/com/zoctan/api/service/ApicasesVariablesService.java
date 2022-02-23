@@ -23,6 +23,7 @@ public interface ApicasesVariablesService extends Service<ApicasesVariables> {
      */
     void updateApicasesVariables(ApicasesVariables params);
 
+    List<ApicasesVariables> getbyvariablesid(final Map<String, Object> params);
 
     int ifexist(Condition condition);
 }

@@ -5,6 +5,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.Deployunit;
 import com.zoctan.api.entity.Enviroment;
 import com.zoctan.api.entity.Testvariables;
+import com.zoctan.api.service.ApicasesVariablesService;
 import com.zoctan.api.service.TestvariablesService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,6 +25,8 @@ import java.util.Map;
 public class TestvariablesController {
     @Resource
     private TestvariablesService testvariablesService;
+    @Resource
+    private ApicasesVariablesService apicasesVariablesService;
 
     @PostMapping
     public Result add(@RequestBody Testvariables testvariables) {
@@ -42,6 +45,7 @@ public class TestvariablesController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        apicasesVariablesService.deleteBy("variablesid",id);
         testvariablesService.deleteById(id);
         return ResultGenerator.genOkResult();
     }

@@ -49,7 +49,6 @@ public class TestCondition {
             try {
                 CondionCaseID = conditionApi.get("caseid");
                 Start = new Date().getTime();
-
                 re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
                 re = testHttpRequestData.GetFuntionHttpRequestData(re);
                 End = new Date().getTime();
@@ -84,29 +83,37 @@ public class TestCondition {
         testconditionReport.setStatus("已完成");
         logger.info("TestCondition条件报告保存子条件已完成状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
         testMysqlHelp.SubConditionReportSave(testconditionReport);
-        //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+        //根据用例是否有中间变量(多个)，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
         ArrayList<HashMap<String, String>> apicasesVariablesList = testMysqlHelp.GetApiCaseVaribales(CaseID);
         if (apicasesVariablesList.size() > 0) {
-            logger.info("TestCondition条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
-            String Variablesid = apicasesVariablesList.get(0).get("id");
-            ArrayList<HashMap<String, String>> VariablesList = testMysqlHelp.GetVaribales(Variablesid);
-            if (VariablesList.size() > 0) {
-                String VariablesPath = VariablesList.get(0).get("variablesexpress");
-                logger.info("TestCondition条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
-                TestAssert testAssert = new TestAssert(logger);
-                String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
-                logger.info("TestCondition条件报告子条件处理变量取值-============：" + ParseValue);
-                TestvariablesValue testvariablesValue = new TestvariablesValue();
-                testvariablesValue.setPlanid(PlanID);
-                testvariablesValue.setPlanname(PlanName);
-                testvariablesValue.setBatchname(BatchName);
-                testvariablesValue.setCaseid(CaseID);
-                testvariablesValue.setCasename(requestObject.getCasename());
-                testvariablesValue.setVariablesid(Long.parseLong(VariablesList.get(0).get("id")));
-                testvariablesValue.setVariablesname(VariablesList.get(0).get("testvariablesname"));
-                testvariablesValue.setVariablesvalue(ParseValue);
-                testvariablesValue.setMemo("test");
-                testMysqlHelp.testVariablesValueSave(testvariablesValue);
+            for (HashMap<String, String> map:apicasesVariablesList) {
+                for (String Key:map.keySet()) {
+                    if(Key.equalsIgnoreCase("variablesid"))
+                    {
+                        logger.info("TestCondition条件报告子条件处理变量-============：" + map.get("variablesname"));
+                        String Variablesid = map.get(Key);
+                        ArrayList<HashMap<String, String>> VariablesList = testMysqlHelp.GetVaribales(Variablesid);
+                        if (VariablesList.size() > 0) {
+                            String VariablesPath = VariablesList.get(0).get("variablesexpress");
+                            logger.info("TestCondition条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
+                            TestAssert testAssert = new TestAssert(logger);
+                            String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
+                            logger.info("TestCondition条件报告子条件处理变量取值-============：" + ParseValue);
+                            TestvariablesValue testvariablesValue = new TestvariablesValue();
+                            testvariablesValue.setPlanid(PlanID);
+                            testvariablesValue.setPlanname(PlanName);
+                            testvariablesValue.setBatchname(BatchName);
+                            testvariablesValue.setCaseid(CaseID);
+                            testvariablesValue.setCasename(requestObject.getCasename());
+                            testvariablesValue.setVariablesid(Long.parseLong(Variablesid));
+                            testvariablesValue.setVariablesname(map.get("variablesname"));
+                            testvariablesValue.setVariablesvalue(ParseValue);
+                            testvariablesValue.setMemo("test");
+                            testMysqlHelp.testVariablesValueSave(testvariablesValue);
+                        }
+
+                    }
+                }
             }
         }
     }

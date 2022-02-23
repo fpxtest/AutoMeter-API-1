@@ -414,6 +414,7 @@ public class TestPlanCaseController {
         String BatchName = jmeterPerformanceObject.getBatchname();
         String RequestContentType = jmeterPerformanceObject.getRequestcontenttype();
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
+        String Caseid=dispatch.getTestcaseid().toString();
         HashMap<String, Object> HeaderMap = new HashMap<>();
         HashMap<String, Object> ParamsMap = new HashMap<>();
         HashMap<String, Object> BodyMap = new HashMap<>();
@@ -422,21 +423,21 @@ public class TestPlanCaseController {
             String Paramvalue = apiCasedata.getApiparamvalue();
             String DataType = apiCasedata.getParamstype();
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
-                ParamsMap = GetParamsMap(ParamsMap, ParamName, Paramvalue, PlanID, BatchName, DataType);
+                ParamsMap = GetParamsMap(ParamsMap, ParamName, Paramvalue, PlanID, BatchName, DataType,Caseid);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
-                HeaderMap = GetHeaderMap(ParamName, Paramvalue, PlanID, BatchName);
+                HeaderMap = GetHeaderMap(ParamName, Paramvalue, PlanID, BatchName,Caseid);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
-                    BodyMap = GetParamsMap(BodyMap, ParamName, Paramvalue, PlanID, BatchName, DataType);
+                    BodyMap = GetParamsMap(BodyMap, ParamName, Paramvalue, PlanID, BatchName, DataType,Caseid);
                 } else {
                     BodyMap.put(ParamName, Paramvalue);
                 }
             }
         }
         //全局参数Header
-        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, PlanID, BatchName);
+        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, PlanID, BatchName,Caseid);
 
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
@@ -456,6 +457,7 @@ public class TestPlanCaseController {
             } else {
                 for (String Key : BodyMap.keySet()) {
                     PostData=BodyMap.get(Key).toString();
+                    //增加处理json，xml等文本类型内的变量
                 }
             }
         }
@@ -473,10 +475,10 @@ public class TestPlanCaseController {
     }
 
 
-    public HashMap<String, Object> GetHeaderMap(String ParamName, String Paramvalue, String PlanID, String BatchName) throws Exception {
+    public HashMap<String, Object> GetHeaderMap(String ParamName, String Paramvalue, String PlanID, String BatchName,String Caseid) throws Exception {
         HashMap<String, Object> HeaderMap = new HashMap<>();
         if (Paramvalue.trim().contains("$")) {
-            Object VariabalesValue = GetVariablesObjectValues(Paramvalue, PlanID, BatchName);
+            Object VariabalesValue = GetVariablesObjectValues(Paramvalue, PlanID, BatchName,Caseid);
             HeaderMap.put(ParamName, VariabalesValue);
         } else {
             HeaderMap.put(ParamName, Paramvalue);
@@ -484,9 +486,9 @@ public class TestPlanCaseController {
         return HeaderMap;
     }
 
-    public HashMap<String, Object> GetParamsMap(HashMap<String, Object> ParamsMap, String ParamName, String Paramvalue, String PlanID, String BatchName, String DataType) throws Exception {
+    public HashMap<String, Object> GetParamsMap(HashMap<String, Object> ParamsMap, String ParamName, String Paramvalue, String PlanID, String BatchName, String DataType,String Caseid) throws Exception {
         if (Paramvalue.trim().contains("$")) {
-            Object VariabalesValue = GetVariablesObjectValues(Paramvalue, PlanID, BatchName);
+            Object VariabalesValue = GetVariablesObjectValues(Paramvalue, PlanID, BatchName,Caseid);
             ParamsMap.put(ParamName, VariabalesValue);
         } else {
             Object Value = GetDataByType(Paramvalue, DataType);
@@ -495,13 +497,13 @@ public class TestPlanCaseController {
         return ParamsMap;
     }
 
-    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch, String PlanID, String BatchName) throws Exception {
+    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch, String PlanID, String BatchName,String Caseid) throws Exception {
         List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
         //全局Header如果有参数，则替换原参数，没有则加上全局Header参数
         for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
             String ParamName = executeplanParams.getKeyname();
             String ParamValue = executeplanParams.getKeyvalue();
-            Object ObjectValue = GetVariablesObjectValues(ParamValue, PlanID, BatchName);
+            Object ObjectValue = GetVariablesObjectValues(ParamValue, PlanID, BatchName,Caseid);
             HeaderMap.put(ParamName, ObjectValue);
         }
         return HeaderMap;
@@ -624,39 +626,78 @@ public class TestPlanCaseController {
     }
 
     //获取参数值的具体内容，支持$变量
-    private Object GetVariablesObjectValues(String Value, String PlanId, String BatchName) throws Exception {
+    private Object GetVariablesObjectValues(String Value, String PlanId, String BatchName,String Caseid) throws Exception {
         Object Result = "";
         if (Value.trim().contains("$")) {
             if (Value.trim().length() == 1) {
                 Result = Value;
             } else {
-                Value = Value.substring(1);
-                Testvariables testvariables = testvariablesService.getBy("testvariablesname", Value);
-                if(testvariables==null)
-                {
-                    throw new Exception("未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量");
+                String Prix[]=Value.split("\\+");
+                for (String PrixStr: Prix) {
+                    if (PrixStr.contains("$")) {
+                        TestPlanCaseController.log.info("TestHttpRequestData $PrixStr :  " + PrixStr);
+                        Result = Result.toString() + GetVariablesDataType(PrixStr, PlanId, BatchName,Caseid);
+                        TestPlanCaseController.log.info("TestHttpRequestData $PrixStr Result :  " + Result);
+                    } else {
+                        TestPlanCaseController.log.info("TestHttpRequestData PrixStr :  " + PrixStr );
+                        Result=Result+PrixStr;
+                    }
                 }
-                ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("variablesname", Value);
-                if(apicasesVariables==null)
-                {
-                    throw new Exception("未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例");
-                }
-                Long Caseid = apicasesVariables.getCaseid();
-                String ValueType = testvariables.getValuetype();
-                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-                TestvariablesValue testvariablesValue= testvariablesValueService.gettestvariablesvalue(Long.parseLong(PlanId),Caseid,Value,BatchName);
-                if(testvariablesValue!=null)
-                {
-                    String VariablesNameValue = testvariablesValue.getVariablesvalue();
-                    Result = GetDataByType(VariablesNameValue, ValueType);
-                }
-                else
-                {
-                    throw new Exception("未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值");
-                }
+//                Value = Value.substring(1);
+//                Testvariables testvariables = testvariablesService.getBy("testvariablesname", Value);
+//                if(testvariables==null)
+//                {
+//                    throw new Exception("未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量");
+//                }
+//                ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("variablesname", Value);
+//                if(apicasesVariables==null)
+//                {
+//                    throw new Exception("未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例");
+//                }
+//                Long Caseid = apicasesVariables.getCaseid();
+//                String ValueType = testvariables.getValuetype();
+//                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+//                TestvariablesValue testvariablesValue= testvariablesValueService.gettestvariablesvalue(Long.parseLong(PlanId),Caseid,Value,BatchName);
+//                if(testvariablesValue!=null)
+//                {
+//                    String VariablesNameValue = testvariablesValue.getVariablesvalue();
+//                    Result = GetDataByType(VariablesNameValue, ValueType);
+//                }
+//                else
+//                {
+//                    throw new Exception("未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值");
+//                }
             }
         } else {
             Result = Value;
+        }
+        return Result;
+    }
+
+
+    private Object GetVariablesDataType(String Value, String PlanId, String BatchName,String Caseid) throws Exception {
+        Object Result = "";
+        Value = Value.substring(1);
+
+        Testvariables testvariables = testvariablesService.getBy("testvariablesname", Value);
+        if (testvariables == null) {
+            throw new Exception("未找到变量：" + Value + "绑定的接口用例，请检查变量管理-变量管理中是否存在此变量");
+        }
+        String ValueType = testvariables.getValuetype();
+
+        Condition con=new Condition(ApicasesVariables.class);
+        con.createCriteria().andCondition("variablesname = '" + Value.replace("'","''") + "'").andCondition(" caseid = " + Caseid);
+        List<ApicasesVariables> apicasesVariablesList = apicasesVariablesService.listByCondition(con);
+        if (apicasesVariablesList.size() == 0) {
+            throw new Exception("未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例");
+        }
+        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+        TestvariablesValue testvariablesValue = testvariablesValueService.gettestvariablesvalue(Long.parseLong(PlanId), Long.parseLong(Caseid), Value, BatchName);
+        if (testvariablesValue != null) {
+            String VariablesNameValue = testvariablesValue.getVariablesvalue();
+            Result = GetDataByType(VariablesNameValue, ValueType);
+        } else {
+            throw new Exception("未找到变量：" + Value + "的值，请检查变量管理-变量结果中是否存在此变量值");
         }
         return Result;
     }

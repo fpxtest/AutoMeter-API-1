@@ -1007,7 +1007,7 @@ public class TestCore {
     }
 
     //根据变量名获取caseid
-    private String GetCaseIdByVariablesName(String VariablesName) {
+    private String GetCaseIdByVariablesName(String VariablesName,String Caseid) {
         String CaseID=testMysqlHelp.GetCaseIdByVariablesName(VariablesName);
 //        String CaseID = "";
 //        try {

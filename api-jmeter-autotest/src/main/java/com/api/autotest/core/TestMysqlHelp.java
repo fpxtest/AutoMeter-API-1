@@ -134,6 +134,19 @@ public class TestMysqlHelp {
         return ValueType;
     }
 
+    //获取接口变量列表
+    public ArrayList<HashMap<String, String>> GetInterfaceVariables() {
+        ArrayList<HashMap<String, String>> result=new ArrayList<>();
+        try {
+            String sql = "select testvariablesname from testvariables";
+            logger.info(logplannameandcasename + "获取数据库 GetInterfaceVariables result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 GetInterfaceVariables...........: " + e.getMessage());
+        }
+        return result;
+    }
+
     //根据变量名获取caseid
     public String GetCaseIdByVariablesName(String VariablesName) {
         String CaseID = "";
@@ -266,6 +279,19 @@ public class TestMysqlHelp {
             logger.info(logplannameandcasename + "获取数据库 查询用例变量异常...........: " + e.getMessage());
         }
         return result;
+    }
+
+    //获取随机变量
+    public ArrayList<HashMap<String, String>> GetRadomVariables() {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "SELECT variablesname,variablestype,variablecondition FROM variables ";
+            logger.info(logplannameandcasename + "获取随机变量  result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取随机变量 异常...........: " + e.getMessage());
+        }
+        return list;
     }
 
     //查询变量

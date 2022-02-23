@@ -45,15 +45,14 @@
       </el-table-column>
       <el-table-column label="变量名" align="center" prop="testvariablesname" width="100"/>
       <el-table-column label="变量描述" align="center" prop="variablesdes" width="100"/>
-      <el-table-column label="变量类型" align="center" prop="testvariablestype" width="80"/>
       <el-table-column label="变量值类型" align="center" prop="valuetype" width="100"/>
       <el-table-column label="变量值表示" align="center" prop="variablesexpress" width="100"/>
       <el-table-column label="备注" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -73,6 +72,12 @@
             v-if="hasPermission('testvariables:delete') && scope.row.id !== id"
             @click.native.prevent="removetestvariables(scope.$index)"
           >删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('testvariables:update') && scope.row.id !== id"
+            @click.native.prevent="showApicasesVariablesDialog(scope.$index)"
+          >绑定接口</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -118,7 +123,7 @@
 
         <el-form-item label="变量类型" prop="testvariablestype" required >
           <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型" style="width:100%">
-            <el-option label="用例变量" value="用例变量"></el-option>
+            <el-option label="接口变量" value="用例变量"></el-option>
           </el-select>
         </el-form-item>
 
@@ -182,10 +187,134 @@
         >修改</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="BindtextMap[BinddialogStatus]" :visible.sync="BindFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 450px; margin-left:50px;"
+        :model="tmpApicasesVariables"
+        ref="tmpApicasesVariables"
+      >
+
+        <el-form-item label="发布单元" prop="deployunitname" required >
+          <el-select v-model="tmpApicasesVariables.deployunitname" placeholder="发布单元" style="width:100%" @change="deployunitselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(depunitname, index) in deployunitList" :key="index">
+              <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="api" prop="apiname" required >
+          <el-select v-model="tmpApicasesVariables.apiname" placeholder="api" style="width:100%" @change="apiselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(api, index) in apiList" :key="index">
+              <el-option :label="api.apiname" :value="api.apiname"/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="用例" prop="casename" required >
+          <el-select v-model="tmpApicasesVariables.casename" placeholder="用例" style="width:100%" @change="testcaseselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(testcase, index) in caseList" :key="index">
+              <el-option :label="testcase.casename" :value="testcase.casename" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="memo">
+          <el-input
+            type="text"
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model="tmpApicasesVariables.memo"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="BindFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          v-if="BinddialogStatus === 'add'"
+          :loading="btnLoading"
+          @click.native.prevent="addApicasesVariables"
+        >保存</el-button>
+        <el-button
+          type="success"
+          v-if="BinddialogStatus === 'update'"
+          :loading="btnLoading"
+          @click.native.prevent="updateApicasesVariables"
+        >修改</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title='接口绑定变量' :visible.sync="BindVariablesDialogVisible">
+      <div class="filter-container">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-plus"
+              v-if="hasPermission('ApicasesVariables:add')"
+              @click.native.prevent="showAddApicasesVariablesDialog"
+            >绑定接口变量</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table
+        :data="ApicasesVariablesList"
+        :key="itemKey"
+        v-loading.body="listLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="getIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="绑定接口名" align="center" prop="casename" width="180"/>
+        <el-table-column label="创建时间" align="center" prop="createTime" width="140">
+          <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
+        </el-table-column>
+        <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
+          <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="管理" align="center"
+                         v-if="hasPermission('ApicasesVariables:update')  || hasPermission('ApicasesVariables:delete')">
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              size="mini"
+              v-if="hasPermission('ApicasesVariables:update') && scope.row.id !== id"
+              @click.native.prevent="showUpdateApicasesVariablesDialog(scope.$index)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              v-if="hasPermission('ApicasesVariables:delete') && scope.row.id !== id"
+              @click.native.prevent="removeApicasesVariables(scope.$index)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <script>
   import { search, addtestvariables, updatetestvariables, removetestvariables } from '@/api/testvariables/testvariables'
+  import { addApicasesVariables, getbyvariablesid, updateApicasesVariables, removeApicasesVariables } from '@/api/assets/apicasesvariables'
+  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
+  import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
@@ -204,16 +333,39 @@
       return {
         itemKey: null,
         tmptestvariablesname: '',
+        apiList: [], // api列表
+        caseList: [], // 用例列表
+        deployunitList: [], // 发布单元列表
         testvariablesList: [], // 变量列表
+        ApicasesVariablesList: [], // 用例变量列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         dialogStatus: 'add',
+        BinddialogStatus: 'add',
         dialogFormVisible: false,
+        BindVariablesDialogVisible: false,
+        BindFormVisible: false,
         textMap: {
           updateRole: '修改变量',
           update: '修改变量',
           add: '添加变量'
         },
+        BindtextMap: {
+          updateRole: '修改绑定变量',
+          update: '修改绑定变量',
+          add: '添加绑定变量'
+        },
+        apiquery: {
+          casedeployunitname: '',
+          caseapiname: ''
+        },
+        deployunitQuery: {
+          deployunitname: '' // 获取字典表入参
+        },
+        VariablescaseQuery: {
+          variablesid: '' // 获取字典表入参
+        },
+
         btnLoading: false, // 按钮等待动画
         tmptestvariables: {
           id: '',
@@ -222,6 +374,19 @@
           valuetype: '',
           testvariablestype: '',
           variablesexpress: '',
+          memo: '',
+          creator: ''
+        },
+        tmpApicasesVariables: {
+          id: '',
+          apiid: '',
+          caseid: '',
+          deployunitid: '',
+          deployunitname: '',
+          apiname: '',
+          casename: '',
+          variablesid: '',
+          variablesname: '',
           memo: '',
           creator: ''
         },
@@ -235,6 +400,7 @@
 
     created() {
       this.gettestvariablesList()
+      this.getdepunitList()
     },
 
     computed: {
@@ -257,6 +423,75 @@
         }).catch(res => {
           this.$message.error('加载变量列表失败')
         })
+      },
+
+      /**
+       * 获取变量列表
+       */
+      getbyvariablesid() {
+        getbyvariablesid(this.VariablescaseQuery).then(response => {
+          this.ApicasesVariablesList = response.data
+        }).catch(res => {
+          this.$message.error('加载变量列表失败')
+        })
+      },
+      /**
+       * 获取发布单元列表
+       */
+      getdepunitList() {
+        this.listLoading = true
+        getdepunitList(this.listQuery).then(response => {
+          this.deployunitList = response.data.list
+          this.listLoading = false
+        }).catch(res => {
+          this.$message.error('加载发布单元列表失败')
+        })
+      },
+
+      /**
+       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      deployunitselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpApicasesVariables.deployunitid = this.deployunitList[i].id
+          }
+        }
+        this.tmpApicasesVariables.apiname = ''
+        this.tmpApicasesVariables.casename = ''
+        this.deployunitQuery.deployunitname = e
+        getapiListbydeploy(this.deployunitQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
+      },
+
+      /**
+       * api下拉选择事件获取发布单元id  e的值为options的选值
+       */
+      apiselectChanged(e) {
+        for (let i = 0; i < this.apiList.length; i++) {
+          if (this.apiList[i].apiname === e) {
+            this.tmpApicasesVariables.apiid = this.apiList[i].id
+          }
+        }
+        this.tmpApicasesVariables.casename = ''
+        this.apiquery.caseapiname = e
+        this.apiquery.casedeployunitname = this.tmpApicasesVariables.deployunitname
+        findcasesbyname(this.apiquery).then(response => {
+          this.caseList = response.data
+        }).catch(res => {
+          this.$message.error('加载apicase列表失败')
+        })
+      },
+
+      testcaseselectChanged(e) {
+        for (let i = 0; i < this.caseList.length; i++) {
+          if (this.caseList[i].casename === e) {
+            this.tmpApicasesVariables.caseid = this.caseList[i].id
+          }
+        }
       },
 
       searchBy() {
@@ -301,6 +536,34 @@
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
       },
+
+      /**
+       * 显示绑定变量列表对话框
+       */
+      showApicasesVariablesDialog(index) {
+        // 显示新增对话框
+        this.BindVariablesDialogVisible = true
+        this.VariablescaseQuery.variablesid = this.testvariablesList[index].id
+        this.tmpApicasesVariables.variablesid = this.testvariablesList[index].id
+        this.tmpApicasesVariables.variablesname = this.testvariablesList[index].testvariablesname
+        this.getbyvariablesid()
+      },
+      /**
+       * 显示添加绑定用例变量对话框
+       */
+      showAddApicasesVariablesDialog(index) {
+        // 显示新增对话框
+        this.BindFormVisible = true
+        this.dialogStatus = 'add'
+        this.tmpApicasesVariables.id = ''
+        this.tmpApicasesVariables.caseid = ''
+        this.tmpApicasesVariables.deployunitname = ''
+        this.tmpApicasesVariables.apiname = ''
+        this.tmpApicasesVariables.casename = ''
+        console.log(this.tmpApicasesVariables.variablesname)
+        this.tmpApicasesVariables.memo = ''
+        this.tmpApicasesVariables.creator = this.name
+      },
       /**
        * 显示添加变量对话框
        */
@@ -338,6 +601,72 @@
         })
       },
       /**
+       * 添加用例变量
+       */
+      addApicasesVariables() {
+        this.$refs.tmpApicasesVariables.validate(valid => {
+          if (valid) {
+            addApicasesVariables(this.tmpApicasesVariables).then(() => {
+              this.$message.success('添加成功')
+              this.BindFormVisible = false
+              this.getbyvariablesid()
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+
+      /**
+       * 显示修改用例变量对话框
+       * @param index 用例变量下标
+       */
+      showUpdateApicasesVariablesDialog(index) {
+        this.BindFormVisible = true
+        this.BinddialogStatus = 'update'
+        this.tmpApicasesVariables.id = this.ApicasesVariablesList[index].id
+        this.tmpApicasesVariables.caseid = this.ApicasesVariablesList[index].caseid
+        this.tmpApicasesVariables.variablesid = this.VariablescaseQuery.variablesid
+        this.tmpApicasesVariables.deployunitname = this.ApicasesVariablesList[index].deployunitname
+        this.deployunitQuery.deployunitname = this.tmpApicasesVariables.deployunitname
+        getapiListbydeploy(this.deployunitQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
+        this.tmpApicasesVariables.apiname = this.ApicasesVariablesList[index].apiname
+        this.apiquery.caseapiname = this.tmpApicasesVariables.apiname
+        this.apiquery.casedeployunitname = this.tmpApicasesVariables.deployunitname
+        findcasesbyname(this.apiquery).then(response => {
+          this.caseList = response.data
+        }).catch(res => {
+          this.$message.error('加载apicase列表失败')
+        })
+        this.tmpApicasesVariables.casename = this.ApicasesVariablesList[index].casename
+        this.tmpApicasesVariables.variablesname = this.ApicasesVariablesList[index].variablesname
+        this.tmpApicasesVariables.memo = this.ApicasesVariablesList[index].memo
+        this.tmpApicasesVariables.creator = this.name
+      },
+
+      /**
+       * 更新用例变量
+       */
+      updateApicasesVariables() {
+        this.$refs.tmpApicasesVariables.validate(valid => {
+          if (valid) {
+            updateApicasesVariables(this.tmpApicasesVariables).then(() => {
+              this.$message.success('更新成功')
+              this.getbyvariablesid()
+              this.BindFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+            })
+          }
+        })
+      },
+
+      /**
        * 显示修改变量对话框
        * @param index 变量下标
        */
@@ -371,6 +700,25 @@
         })
       },
 
+      /**
+       * 删除用例变量
+       * @param index 用例变量下标
+       */
+      removeApicasesVariables(index) {
+        this.$confirm('删除该接口绑定？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.ApicasesVariablesList[index].id
+          removeApicasesVariables(id).then(() => {
+            this.$message.success('删除成功')
+            this.getbyvariablesid()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
       /**
        * 删除变量
        * @param index 变量下标

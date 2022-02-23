@@ -282,15 +282,20 @@ public class TestconditionController {
                 End = new Date().getTime();
             }
 
-            //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，如果解析失败，置条件为失败
-            ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
-            TestvariablesValue testvariablesValue = new TestvariablesValue();
-            try {
-                testvariablesValue = FixApicasesVariables(apicasesVariables, requestObject, Respone, Planid, CaseID, dispatch, apicases);
-            } catch (Exception exception) {
-                ConditionResultStatus="失败";
+            //根据用例是否有中间变量（多个），如果有变量，解析（json，xml，html）保存变量值表，如果解析失败，置条件为失败
+            Condition con = new Condition(ApicasesVariables.class);
+            con.createCriteria().andCondition("caseid = " + apicases.getId());
+            List<ApicasesVariables> apicasesVariablesList = apicasesVariablesService.listByCondition(con);
+            for (ApicasesVariables apicasesVariables:apicasesVariablesList) {
+                //ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
+                TestvariablesValue testvariablesValue = new TestvariablesValue();
+                try {
+                    testvariablesValue = FixApicasesVariables(apicasesVariables, requestObject, Respone, Planid, CaseID, dispatch, apicases);
+                } catch (Exception exception) {
+                    ConditionResultStatus="失败";
+                }
+                VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
             }
-            VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
             CostTime = End - Start;
             //更新条件结果表
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime,conditionApi.getCreator());
@@ -401,8 +406,10 @@ public class TestconditionController {
             ResponeData testResponeData = testCaseHelp.request(requestObject);
             String Respone= testResponeData.getContent();
             //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
-            ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
-            if (apicasesVariables != null) {
+            Condition con = new Condition(ApicasesVariables.class);
+            con.createCriteria().andCondition("caseid = " + apicases.getId());
+            List<ApicasesVariables> apicasesVariablesList = apicasesVariablesService.listByCondition(con);
+            for (ApicasesVariables apicasesVariables:apicasesVariablesList) {
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
                 if (testvariables != null) {
@@ -413,10 +420,6 @@ public class TestconditionController {
                 {
                     throw new Exception("接口子条件执行异常:接口子条件未找到变量:"+apicasesVariables.getVariablesname()+"，请检查变量管理-变量管理中是否存在！");
                 }
-            }
-            else
-            {
-                throw new Exception("接口子条件执行异常:接口子条件未找到接口:"+apicases.getCasename()+",和变量关系，请检查变量管理-用例变量中是否存在！");
             }
         }
         return ResultGenerator.genOkResult(VariableNameValueMap);
@@ -672,7 +675,7 @@ public class TestconditionController {
                             mailto=accountList.get(0).getEmail();
                         }
                         String Subject=testconditionReport.getPlanname()+"|"+testconditionReport.getBatchname()+"前置子条件执行失败："+testconditionReport.getSubconditionname();
-                        String Content="失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时前后AutoMeter处理！";
+                        String Content="失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！";
                         MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
                         TestconditionController.log.info("发送邮件成功-============："+mailto);
                     }
