@@ -1503,7 +1503,7 @@ CREATE TABLE `variables` (
   `lastmodify_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上一次修改时间',
   `variablecondition` varchar(64) DEFAULT NULL COMMENT '变量条件',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='变量表'
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='变量表';
 
 
   INSERT INTO testcenter.permission
