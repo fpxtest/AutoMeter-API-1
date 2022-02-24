@@ -146,11 +146,23 @@ public class Httphelp {
             for (Header header1 : httpPost.getAllHeaders()) {
                 Httphelp.log.info("..................Post请求Header名 :  " + header1.getName() + "  Header值：" + header1.getValue());
             }
-            Httphelp.log.info("Post PostWithBody..................Post请求数据 :  " + Query);
+            Httphelp.log.info("Post PostWithBody..................Post开始请求数据 :  " + Query);
             httpResponse = httpClient.execute(httpPost);
-            List<Cookie> cookies = cookieStore.getCookies();
-            testResponeData.setCookies(cookies);
-            testResponeData=GetResponeData(httpResponse);
+            Httphelp.log.info("Post PostWithBody..................Post结束请求");
+            if(cookieStore!=null)
+            {
+                List<Cookie> cookies = cookieStore.getCookies();
+                if(cookies.size()>0)
+                {
+                    testResponeData.setCookies(cookies);
+                    Httphelp.log.info("Post PostWithBody..................Post setCookies结束");
+                }
+            }
+            if(httpResponse!=null)
+            {
+                testResponeData=GetResponeData(httpResponse);
+                Httphelp.log.info("Post PostWithBody..................Post GetResponeData结束");
+            }
         } catch (Exception e) {
             Httphelp.log.info("Post PostWithBody Exception is :" + e.getMessage());
             throw new Exception("请求地址:" + Url + " 发生异常，原因：" + e.getMessage());
