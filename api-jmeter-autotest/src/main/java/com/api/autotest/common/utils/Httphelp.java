@@ -147,6 +147,10 @@ public class Httphelp {
             HttpPost httpPost = new HttpPost(Url);
             httpPost.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpPost, header);
             }
             if (Query != null) {
@@ -205,6 +209,10 @@ public class Httphelp {
             httpGetWithEntity.setEntity(httpEntity);
             httpGetWithEntity.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpGetWithEntity, header);
             }
             if (Protocal.equalsIgnoreCase("http")) {
@@ -352,6 +360,10 @@ public class Httphelp {
             HttpPut httpPut = new HttpPut(url);
             httpPut.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpPut, header);
             }
             if (query != null) {
@@ -409,6 +421,10 @@ public class Httphelp {
             HttpDeleteWithBody httpDelete = new HttpDeleteWithBody(url);
             httpDelete.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpDelete, header);
             }
             if (query != null) {
@@ -556,7 +572,7 @@ public class Httphelp {
             Code = closeableHttpResponse.getStatusLine().getStatusCode();
             HttpEntity resEntity = closeableHttpResponse.getEntity();
             if (resEntity != null) {
-                ActualResult = EntityUtils.toString(resEntity);
+                ActualResult = EntityUtils.toString(resEntity,"UTF-8");
                 Content = ActualResult;
             }
         }

@@ -12,7 +12,7 @@
     <result column="casejmxname" jdbcType="VARCHAR" property="casejmxname" />
     <result column="casecontent" jdbcType="VARCHAR" property="casecontent" />
     <result column="expect" jdbcType="VARCHAR" property="expect" />
-    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="level" jdbcType="BIGINT" property="level" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />

@@ -51,33 +51,45 @@ public class TestPlanCaseController {
         Executeplanbatch epb = executeplanbatchMapper.getbatchidbyplanidandbatchname(execplanid, batchname);
         if(epb==null)
         {
-            return ResultGenerator.genOkResult("无此计划id下" + execplanid+" 未找到执行批次名 "+batchname);
+            return ResultGenerator.genOkResult(" 未找到执行批次名： "+batchname);
         }
         Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
         if(ep==null)
         {
-            return ResultGenerator.genOkResult("无此计划id" + execplanid+" 执行计划");
+            return ResultGenerator.genOkResult("未找到此测试集合：" + execplanid);
         }
         List<ExecuteplanTestcase> caselist = executeplanTestcaseMapper.findcasebytestplanid(execplanid,ep.getUsetype());
-        TestPlanCaseController.log.info("计划id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
+        TestPlanCaseController.log.info("测试集合id" + execplanid+" 批次为："+batchname+" 获取用例数："+caselist.size());
 
         if (caselist.size() == 0) {
-            return ResultGenerator.genOkResult("此执行计划:" + ep.getExecuteplanname()+" 还没用例，请先装载用例");
+            return ResultGenerator.genOkResult("此测试集合:" + ep.getExecuteplanname()+" 还没用例，请先装载用例");
         }
         //获取对应计划类型的所有slaver
         List<Slaver> slaverlist = slaverMapper.findslaverbytype(ep.getUsetype());
-        //考虑增加检测slaver是否正常，在salver的control做个检测的请求返回
+        //增加检测slaver是否正常，在salver的control做个检测的请求返回
         slaverlist=GetAliveSlaver(slaverlist);
         List<List<Dispatch>> dispatchList=new ArrayList<>();
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.info("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
             return ResultGenerator.genOkResult("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
         } else {
-            if(ep.getUsetype().equals(new String("功能")))
+            if(ep.getUsetype().equals("功能"))
             {
-                dispatchList=FunctionDispatch(slaverlist,caselist,ep,epb);
+                if(ep.getRunmode().equalsIgnoreCase("单机运行"))
+                {
+                    List<Slaver> singleslaverlist=new ArrayList<>();
+                    singleslaverlist.add(slaverlist.get(0));
+                    dispatchList=FunctionDispatch(singleslaverlist,caselist,ep,epb);
+                    TestPlanCaseController.log.info("单机运行slaver："+slaverlist.get(0).getSlavername());
+
+                }
+                if(ep.getRunmode().equalsIgnoreCase("多机并行")||ep.getRunmode().equalsIgnoreCase("多机执行"))
+                {
+                    TestPlanCaseController.log.info("多机并行slaver：");
+                    dispatchList=FunctionDispatch(slaverlist,caselist,ep,epb);
+                }
             }
-            if(ep.getUsetype().equals(new String("性能")))
+            if(ep.getUsetype().equals("性能"))
             {
                 dispatchList=PerformanceDispatch(slaverlist,caselist,ep,epb);
             }

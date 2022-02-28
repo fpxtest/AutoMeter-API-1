@@ -704,65 +704,69 @@ public class ApicasesController {
 
     //获取随机变量值
     private Object GetRadomValue(String Value) {
-        Object Result = "";
-        Value = Value.substring(1);
-        String FunctionName = Value;
-        List<Variables> variablesList = variablesService.listAll();
-        for (Variables variables : variablesList) {
-            if (variables.getVariablesname().equalsIgnoreCase(FunctionName)) {
-                String Params = variables.getVariablecondition();
-                String Variablestype = variables.getVariablestype();
-                RadomVariables radomVariables = new RadomVariables();
-                if (Variablestype.equalsIgnoreCase("随机字符串")) {
-                    try {
-                        Integer length = Integer.parseInt(Params);
-                        Result = radomVariables.GetRadmomStr(length);
-                    } catch (Exception ex) {
-                        Result = "随机变量GetRadmomStr输入参数不合法，请填写参数为数字类型表示字符串长度";
-                    }
-                }
-                if (Variablestype.equalsIgnoreCase("随机整数")) {
-                    String ParamsArray[] = Params.split(",");
-                    if (ParamsArray.length < 2) {
-                        Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
-                    } else {
+        Object Result = Value;
+        if (Value.trim().length() == 1) {
+            Result = Value;
+        }
+        else {
+            String FunctionName = Value.substring(1);
+            List<Variables> variablesList = variablesService.listAll();
+            for (Variables variables : variablesList) {
+                if (variables.getVariablesname().equalsIgnoreCase(FunctionName)) {
+                    String Params = variables.getVariablecondition();
+                    String Variablestype = variables.getVariablestype();
+                    RadomVariables radomVariables = new RadomVariables();
+                    if (Variablestype.equalsIgnoreCase("随机字符串")) {
                         try {
-                            Long Start = Long.parseLong(ParamsArray[0]);
-                            Long End = Long.parseLong(ParamsArray[1]);
-                            Result = radomVariables.GetRadmomNum(Start, End);
-                        } catch (Exception exception) {
-                            Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                            Integer length = Integer.parseInt(Params);
+                            Result = radomVariables.GetRadmomStr(length);
+                        } catch (Exception ex) {
+                            Result = "随机变量GetRadmomStr输入参数不合法，请填写参数为数字类型表示字符串长度";
                         }
                     }
-                }
-                if (Variablestype.equalsIgnoreCase("随机小数")) {
-                    String ParamsArray[] = Params.split(",");
-                    if (ParamsArray.length < 2) {
-                        Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
-                    } else {
-                        try {
-                            Long Start = Long.parseLong(ParamsArray[0]);
-                            Long End = Long.parseLong(ParamsArray[1]);
-                            Result = radomVariables.GetRadmomDouble(Start, End);
-                        } catch (Exception exception) {
-                            Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                    if (Variablestype.equalsIgnoreCase("随机整数")) {
+                        String ParamsArray[] = Params.split(",");
+                        if (ParamsArray.length < 2) {
+                            Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
+                        } else {
+                            try {
+                                Long Start = Long.parseLong(ParamsArray[0]);
+                                Long End = Long.parseLong(ParamsArray[1]);
+                                Result = radomVariables.GetRadmomNum(Start, End);
+                            } catch (Exception exception) {
+                                Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                            }
                         }
                     }
-                }
-                if (Variablestype.equalsIgnoreCase("Guid")) {
-                    Result = radomVariables.GetGuid();
-                }
-                if (Variablestype.equalsIgnoreCase("随机IP")) {
-                    Result = radomVariables.GetRadmonIP();
-                }
-                if (Variablestype.equalsIgnoreCase("当前时间")) {
-                    Result = radomVariables.GetCurrentTime();
-                }
-                if (Variablestype.equalsIgnoreCase("当前日期")) {
-                    Result = radomVariables.GetCurrentDate();
-                }
-                if (Variablestype.equalsIgnoreCase("当前时间戳")) {
-                    Result = radomVariables.GetCurrentTimeMillis();
+                    if (Variablestype.equalsIgnoreCase("随机小数")) {
+                        String ParamsArray[] = Params.split(",");
+                        if (ParamsArray.length < 2) {
+                            Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
+                        } else {
+                            try {
+                                Long Start = Long.parseLong(ParamsArray[0]);
+                                Long End = Long.parseLong(ParamsArray[1]);
+                                Result = radomVariables.GetRadmomDouble(Start, End);
+                            } catch (Exception exception) {
+                                Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                            }
+                        }
+                    }
+                    if (Variablestype.equalsIgnoreCase("Guid")) {
+                        Result = radomVariables.GetGuid();
+                    }
+                    if (Variablestype.equalsIgnoreCase("随机IP")) {
+                        Result = radomVariables.GetRadmonIP();
+                    }
+                    if (Variablestype.equalsIgnoreCase("当前时间")) {
+                        Result = radomVariables.GetCurrentTime();
+                    }
+                    if (Variablestype.equalsIgnoreCase("当前日期")) {
+                        Result = radomVariables.GetCurrentDate();
+                    }
+                    if (Variablestype.equalsIgnoreCase("当前时间戳")) {
+                        Result = radomVariables.GetCurrentTimeMillis();
+                    }
                 }
             }
         }

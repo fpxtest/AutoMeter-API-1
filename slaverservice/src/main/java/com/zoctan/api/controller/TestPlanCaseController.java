@@ -91,6 +91,9 @@ public class TestPlanCaseController {
     @Autowired(required = false)
     private ApicasesReportPerformanceMapper apicasesReportPerformanceMapper;
 
+    @Autowired(required = false)
+    private VariablesService variablesService;
+
 
     @PostMapping("/exec")
     //    public Result exec(@RequestBody List<TestplanCase> plancaseList) {
@@ -462,6 +465,15 @@ public class TestPlanCaseController {
             }
         }
         jmeterPerformanceObject.setBodyjson(PostData);
+
+        //增加随机变量json
+        List<Variables> variablesList= variablesService.listAll();
+        String variablesjson="";
+        if(variablesList.size()<0)
+        {
+            variablesjson=JSON.toJSONString(variablesList);
+        }
+        jmeterPerformanceObject.setRadomvariablejson(variablesjson);
 
         //断言
         List<ApicasesAssert> apicasesAssertList = apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());

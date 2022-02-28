@@ -238,7 +238,7 @@
             v-model="tmpapicases.casecontent"
           />
         </el-form-item>
-        <el-form-item label="优先级" prop="level" >
+        <el-form-item label="优先级" prop="level" required>
           <el-input
             type="text"
             maxlength="20"

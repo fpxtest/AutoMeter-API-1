@@ -14,10 +14,18 @@ public class Executeplan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * 执行计划名
-     */
     private String executeplanname;
+
+    public String getBusinesstype() {
+        return businesstype;
+    }
+
+    public void setBusinesstype(String businesstype) {
+        this.businesstype = businesstype;
+    }
+
+    private String businesstype;
+
 
     /**
      * 状态，new，waiting，running，pause，finish
@@ -42,16 +50,47 @@ public class Executeplan {
      */
     private String memo;
 
-
-    public String getIp() {
-        return ip;
+    public String getEnviromentname() {
+        return enviromentname;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setEnviromentname(String enviromentname) {
+        this.enviromentname = enviromentname;
     }
 
-    private String ip;
+    private String enviromentname;
+
+
+    public Long getEnvid() {
+        return envid;
+    }
+
+    public void setEnvid(Long envid) {
+        this.envid = envid;
+    }
+
+    private Long envid;
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
+    public String getRunmode() {
+        return runmode;
+    }
+
+    public void setRunmode(String runmode) {
+        this.runmode = runmode;
+    }
+
+    private String runmode;
+
 
     /**
      * 创建时间

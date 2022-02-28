@@ -820,7 +820,6 @@ public class TestCore {
         return result;
     }
 
-
     //断言
     public String FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList, ResponeData responeData) throws Exception {
         String AssertInfo = "";
