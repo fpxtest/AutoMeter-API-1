@@ -223,6 +223,16 @@ public class JmeterPerformanceObject {
     private String paramsjson;
     private String bodyjson;
     private String dubbojson;
+
+    public String getRadomvariablejson() {
+        return radomvariablejson;
+    }
+
+    public void setRadomvariablejson(String radomvariablejson) {
+        this.radomvariablejson = radomvariablejson;
+    }
+
+    private String radomvariablejson;
     private String mysqlurl;
     private String mysqlusername;
     private String mysqlpassword;

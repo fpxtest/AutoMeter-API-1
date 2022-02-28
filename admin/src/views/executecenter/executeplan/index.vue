@@ -136,7 +136,7 @@
           />
         </el-form-item>
         <el-form-item label="类型" prop="usetype" required>
-          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型" style="width:100%" @change="ustypeChanged($event)">
+          <el-select v-model="tmpexecuteplan.usetype" placeholder="类型" style="width:100%">
             <el-option label="功能" value="功能" />
             <el-option label="性能" value="性能" />
           </el-select>
@@ -158,14 +158,12 @@
           </el-select>
         </el-form-item>
 
-        <div v-if="PerformanceVisible">
           <el-form-item label="运行模式" prop="runmode" required>
             <el-select v-model="tmpexecuteplan.runmode" placeholder="运行模式" style="width:100%">
               <el-option label="单机运行" value="单机运行" />
               <el-option label="多机并行" value="多机并行" />
             </el-select>
           </el-form-item>
-        </div>
 
         <el-form-item label="备注" prop="memo">
           <el-input
@@ -779,19 +777,6 @@
         // console.log(this.casemultipleSelection)
       },
 
-      /**
-       * 性能选择  e的值为options的选值
-       */
-      ustypeChanged(e) {
-        if (e === '性能') {
-          this.PerformanceVisible = true
-          this.tmpexecuteplan.runmode = ''
-        } else {
-          this.PerformanceVisible = false
-          this.tmpexecuteplan.runmode = '多机执行'
-        }
-      },
-
       exectypeselectChanged(e) {
         if (e === '立即执行') {
           this.datevisible = false
@@ -1163,9 +1148,6 @@
         this.$refs.tmpexecuteplan.validate(valid => {
           if (valid) {
             this.btnLoading = true
-            if (this.tmpexecuteplan.usetype === '功能') {
-              this.tmpexecuteplan.runmode = '多机执行'
-            }
             addexecuteplan(this.tmpexecuteplan).then(() => {
               this.$message.success('添加成功')
               this.getexecuteplanList()
@@ -1250,12 +1232,6 @@
         this.tmpexecuteplan.creator = this.name
         this.tmpexecuteplan.runmode = this.executeplanList[index].runmode
         console.log(this.tmpexecuteplan.runmode)
-        if (this.tmpexecuteplan.usetype === '性能') {
-          this.PerformanceVisible = true
-        } else {
-          this.PerformanceVisible = false
-          this.tmpexecuteplan.runmode = '多机执行'
-        }
         for (let i = 0; i < this.enviromentnameList.length; i++) {
           if (this.enviromentnameList[i].enviromentname === this.tmpexecuteplan.enviromentname) {
             this.tmpexecuteplan.envid = this.enviromentnameList[i].id

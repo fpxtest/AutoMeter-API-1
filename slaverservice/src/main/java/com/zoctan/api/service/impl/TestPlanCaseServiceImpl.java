@@ -49,6 +49,8 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String Paramsjson=jmeterPerformanceObject.getParamsjson().replace(" ","Autometer");
         String Bodyjson=jmeterPerformanceObject.getBodyjson().replace(" ","Autometer");
 
+        String VariablesJson=jmeterPerformanceObject.getRadomvariablejson().replace(" ","Autometer");
+
         String MysqlUrl=jmeterPerformanceObject.getMysqlurl();
         String MysqlUserName=jmeterPerformanceObject.getMysqlusername();
         String MysqlPassword=jmeterPerformanceObject.getMysqlpassword();
@@ -67,7 +69,7 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                 + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                  " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+
-                " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson +" -Jbodyjson=" + Bodyjson +
+                " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
                 " -Jtestdeployunit=" + DeployName + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder;
         TestPlanCaseServiceImpl.log.info("性能JmeterCmd is :" + JmeterCmd);
         ExecShell(JmeterCmd);

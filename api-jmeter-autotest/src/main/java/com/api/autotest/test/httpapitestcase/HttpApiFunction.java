@@ -77,7 +77,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     try {
                         //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
                         Core.FixCondition(requestObject);
-                        ResponeData responeData = SendCaseRequest(requestObject, Core);
+                        ResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
                         ActualResult = responeData.getRespone();
                         //断言
                         AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);

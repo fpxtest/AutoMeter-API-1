@@ -554,7 +554,7 @@
       showAddApicasesVariablesDialog(index) {
         // 显示新增对话框
         this.BindFormVisible = true
-        this.dialogStatus = 'add'
+        this.BinddialogStatus = 'add'
         this.tmpApicasesVariables.id = ''
         this.tmpApicasesVariables.caseid = ''
         this.tmpApicasesVariables.deployunitname = ''

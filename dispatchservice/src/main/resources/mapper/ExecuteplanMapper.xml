@@ -6,10 +6,16 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="envid" jdbcType="BIGINT" property="envid" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="usetype" jdbcType="VARCHAR" property="usetype" />
+    <result column="businesstype" jdbcType="VARCHAR" property="businesstype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
-    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
+    <result column="runmode" jdbcType="VARCHAR" property="runmode" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>

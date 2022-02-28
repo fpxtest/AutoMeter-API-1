@@ -90,7 +90,7 @@ public class FunctionDispatchScheduleTask {
                                         if (slaver != null) {
                                             if (slaver.getStatus().equals("空闲")) {
                                                 List<Dispatch> SlaverDispathcList = dispatchMapper.getfunctiondispatchsbyslaverid(Slaverid, "待分配", "功能", PlanID, BatchName);
-                                                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器 slaverid:" + slaver + " 获取dispatch数-：" + SlaverDispathcList.size());
+                                                FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器 slaver:" + slaver.getSlavername() + " 获取dispatch数-：" + SlaverDispathcList.size());
                                                 if (SlaverDispathcList.size() > 0) {
                                                     String params = JSON.toJSONString(SlaverDispathcList);
                                                     FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器-============执行机id：" + slaver.getId() + "  执行机名：" + slaver.getSlavername() + " 执行的dispatch：" + params);

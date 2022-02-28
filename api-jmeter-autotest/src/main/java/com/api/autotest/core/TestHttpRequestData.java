@@ -1,10 +1,13 @@
 package com.api.autotest.core;
 
+import bsh.Variable;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.api.autotest.common.utils.HttpHeader;
 import com.api.autotest.common.utils.HttpParamers;
 import com.api.autotest.common.utils.RadomVariables;
 import com.api.autotest.dto.RequestObject;
+import com.api.autotest.dto.Variables;
 import org.apache.log.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -143,22 +146,41 @@ public class TestHttpRequestData {
         {
             String requestcontenttype = newob.getRequestcontenttype();
             String headjson = newob.getHeadjson();
+            logger.info(logplannameandcasename + "TestHttpRequestData headjson： " +headjson);
             String paramsjson = newob.getParamjson();
             String bodyjson = newob.getBodyjson();
-
-            logger.info(logplannameandcasename + "TestHttpRequestData headjson： " +headjson);
-
+            //获取随机变量json
+            String variablesjson = newob.getVariablesjson();
+            logger.info(logplannameandcasename + "TestHttpRequestData variablesjson： " +variablesjson);
+            //获取随机变量列表
+            List<Variables> variablesList=new ArrayList<>();
+            HashMap<String,Variables> stringVariablesHashMap=new HashMap<>();
+            if(!variablesjson.isEmpty())
+            {
+                variablesList = JSONObject.parseArray(variablesjson, Variables.class);
+                for (Variables va: variablesList) {
+                    if(!stringVariablesHashMap.containsKey(va.getVariablesname()))
+                    {
+                        stringVariablesHashMap.put(va.getVariablesname(),va);
+                    }
+                }
+            }
             //Header
             HttpHeader header = new HttpHeader();
             header = AddHeaderByRequestContentType(header, requestcontenttype);
             if(!headjson.isEmpty())
             {
-                logger.info(logplannameandcasename + "TestHttpRequestData 开始 JSON.parse(headjson) " );
                 Map headermaps = (Map) JSON.parse(headjson);
-                logger.info(logplannameandcasename + "TestHttpRequestData 结束 JSON.parse(headjson) " );
+                logger.info(logplannameandcasename + "TestHttpRequestData headjson： " +headjson);
                 for (Object key : headermaps.entrySet()) {
-                    header.addParam(((Map.Entry) key).getKey().toString(), ((Map.Entry) key).getValue());
-                    logger.info(logplannameandcasename + "TestHttpRequestData headjsonmap key is: "+ ((Map.Entry) key).getKey().toString()+" values is: "+((Map.Entry) key).getValue());
+                    Object  Value=((Map.Entry) key).getValue();
+                    logger.info(logplannameandcasename + "TestHttpRequestData Header 值：  "+Value );
+                    if(Value.toString().contains("#"))
+                    {
+                        Value = GetPerformanceRadomVariables(Value.toString(),variablesList);
+                    }
+                    header.addParam(((Map.Entry) key).getKey().toString(), Value);
+                    logger.info(logplannameandcasename + "TestHttpRequestData Header处理变量后 值：  "+Value );
                 }
             }
             newob.setHeader(header);
@@ -167,13 +189,17 @@ public class TestHttpRequestData {
             if(!paramsjson.isEmpty())
             {
                 logger.info(logplannameandcasename + "TestHttpRequestData paramsjson： " +paramsjson);
-
-                logger.info(logplannameandcasename + "TestHttpRequestData 开始 JSON.parse(paramsjson) " );
                 Map paramsmaps = (Map) JSON.parse(paramsjson);
                 logger.info(logplannameandcasename + "TestHttpRequestData 结束 JSON.parse(paramsjson) " );
                 for (Object key : paramsmaps.entrySet()) {
-                    params.addParam(((Map.Entry) key).getKey().toString(), ((Map.Entry) key).getValue());
-                    logger.info(logplannameandcasename + "TestHttpRequestData headjsonmap key is: "+ ((Map.Entry) key).getKey().toString()+" values is: "+((Map.Entry) key).getValue());
+                    Object  Value=((Map.Entry) key).getValue();
+                    logger.info(logplannameandcasename + "TestHttpRequestData Params 值：  "+Value );
+                    if(Value.toString().contains("#"))
+                    {
+                        Value = GetPerformanceRadomVariables(Value.toString(),variablesList);
+                    }
+                    params.addParam(((Map.Entry) key).getKey().toString(), Value);
+                    logger.info(logplannameandcasename + "TestHttpRequestData Params处理变量后 值：  "+Value );
                 }
             }
             newob.setParamers(params);
@@ -182,16 +208,20 @@ public class TestHttpRequestData {
             if(!bodyjson.isEmpty())
             {
                 logger.info(logplannameandcasename + "TestHttpRequestData bodyjson： " +bodyjson);
-                logger.info(logplannameandcasename + "TestHttpRequestData 开始 JSON.parse(bodyjson) " );
                 Map bodyparamsmaps = (Map) JSON.parse(bodyjson);
                 logger.info(logplannameandcasename + "TestHttpRequestData 结束 JSON.parse(bodyjson) " );
                 if(requestcontenttype.equalsIgnoreCase("Form表单"))
                 {
                     HttpParamers Bodyparams = new HttpParamers();
                     for (Object key : bodyparamsmaps.entrySet()) {
-                        params.addParam(((Map.Entry) key).getKey().toString(), ((Map.Entry) key).getValue());
-//                        Bodyparams.addParam(((Map.Entry) map).getKey().toString(),  ((Map.Entry) map).getValue());
-                        logger.info(logplannameandcasename + "TestHttpRequestData Form表单 headjsonmap key is: "+ ((Map.Entry) key).getKey().toString()+" values is: "+((Map.Entry) key).getValue());
+                        Object  Value=((Map.Entry) key).getValue();
+                        logger.info(logplannameandcasename + "TestHttpRequestData BodyParams 值：  "+Value );
+                        if(Value.toString().contains("#"))
+                        {
+                            Value = GetPerformanceRadomVariables(Value.toString(),variablesList);
+                        }
+                        Bodyparams.addParam(((Map.Entry) key).getKey().toString(), Value);
+                        logger.info(logplannameandcasename + "TestHttpRequestData BodyParams处理完变量后 值：  "+Value );
                     }
                     if (Bodyparams.getParams().size() > 0) {
                         try {
@@ -205,9 +235,17 @@ public class TestHttpRequestData {
                 else
                 {
                     for (Object map : bodyparamsmaps.entrySet()) {
-                        logger.info(logplannameandcasename + "TestHttpRequestData 非Form表单 headjsonmap key is: "+ ((Map.Entry) map).getKey().toString()+" values is: "+((Map.Entry) map).getValue());
-                        PostData=((Map.Entry) map).getValue().toString();
-                        logger.info(logplannameandcasename + "TestHttpRequestData 非Form表单 PostData is: "+bodyparamsmaps.get(map).toString());
+                        PostData = ((Map.Entry) map).getValue().toString();
+                        logger.info(logplannameandcasename + "TestHttpRequestData 非Form表单 bodyparamsmaps key is: "+ ((Map.Entry) map).getKey().toString()+" values is: "+((Map.Entry) map).getValue());
+                        for (String Variables:stringVariablesHashMap.keySet()) {
+                            String CompleteVaraiables="#"+Variables;
+                            if(PostData.contains(CompleteVaraiables))
+                            {
+                                Object Value = GetPerformanceRadomVariables(CompleteVaraiables,variablesList);
+                                PostData=PostData.replace(Variables,Value.toString());
+                            }
+                        }
+                        logger.info(logplannameandcasename + "TestHttpRequestData 非Form表单 PostData is: "+PostData);
                     }
                 }
             }
@@ -280,19 +318,6 @@ public class TestHttpRequestData {
                 logger.info(logplannameandcasename + "TestHttpRequestData -"+Property+ "-中添加Key is :  " + Key + "   Value  is:   " + ObjectValue+" 类型："+DataType);
             }
         }
-//        for (String key : paramsmap.keySet()) {
-//            String Value = paramsmap.get(key);
-//            Object ObjectValue = new Object();
-//            if (Value.trim().contains("$")) {
-//                ObjectValue=GetDataByType(Value,ValueType);
-//            }
-//            else
-//            {
-//                ObjectValue = GetVariablesObjectValues(Value, PlanId, BatchName);
-//            }
-//            paramers.addParam(key, ObjectValue);
-//            logger.info(logplannameandcasename + "TestHttpRequestData Params中添加Key is :  " + key + "   Value  is:   " + ObjectValue);
-//        }
         return paramers;
     }
 
@@ -364,7 +389,6 @@ public class TestHttpRequestData {
         }
         return Result;
     }
-
     private Object GetRadomVariables(String Value)
     {
         Object Result = "";
@@ -390,111 +414,50 @@ public class TestHttpRequestData {
         }
         return Result;
     }
-
+    private Object GetPerformanceRadomVariables(String Value,List<Variables> variablesList)
+    {
+        Object Result = Value;
+        if (Value.trim().contains("#")) {
+            if (Value.trim().length() == 1) {
+                Result = Value;
+            } else {
+                String Prix[]=Value.split("\\+");
+                for (String PrixStr: Prix) {
+                    if(PrixStr.contains("#"))
+                    {
+                        logger.info(logplannameandcasename + "TestHttpRequestData GetRadomVariables $PrixStr :  " + PrixStr );
+                        Result=Result.toString()+GetPerformanceRadomValue(PrixStr,variablesList);
+                        logger.info(logplannameandcasename + "TestHttpRequestData GetRadomVariables $PrixStr Result :  " + Result );
+                    }
+                    else
+                    {
+                        logger.info(logplannameandcasename + "TestHttpRequestData PrixStr :  " + PrixStr );
+                        Result=Result+PrixStr;
+                    }
+                }
+            }
+        }
+        return Result;
+    }
     private Object GetRadomValue(String Value)  {
-        Object Result="";
-        Value = Value.substring(1);
-//        int index=Value.indexOf('(');
-//        if(index==-1)
-//        {
-//            Result="随机变量"+Value+"输入不合法，未找到左括号";
-//        }
-//        int lastindex=Value.indexOf(')');
-//        if(lastindex==-1)
-//        {
-//            Result="随机变量"+Value+"输入不合法，未找到右括号";
-//        }
-        //String FunctionName=Value.substring(index);
-        String FunctionName=Value;
-        ArrayList<HashMap<String, String>> list = testMysqlHelp.GetRadomVariables();
-        for (HashMap<String, String> varaiablesmap:list) {
-            for (String Key: varaiablesmap.keySet()) {
-                if(varaiablesmap.get(Key).equalsIgnoreCase(FunctionName))
-                {
-                    logger.info("随机变量名为:  " + varaiablesmap.get(Key)+" 开始处理函数");
-                    String Params = varaiablesmap.get("variablecondition");
-                    logger.info("随机变量名为开始处理函数条件为："+Params);
-                    String Variablestype = varaiablesmap.get("variablestype");
-                    logger.info("随机变量名为开始处理函数变量类型为："+Variablestype);
-                    RadomVariables radomVariables=new RadomVariables();
-                    if(Variablestype.equalsIgnoreCase("随机字符串"))
+        Object Result=Value;
+        if (Value.trim().length() == 1) {
+            Result = Value;
+        }
+        else
+        {
+            String FunctionName=Value.substring(1);
+            ArrayList<HashMap<String, String>> list = testMysqlHelp.GetRadomVariables();
+            for (HashMap<String, String> varaiablesmap:list) {
+                for (String Key: varaiablesmap.keySet()) {
+                    if(varaiablesmap.get(Key).equalsIgnoreCase(FunctionName))
                     {
-                        try {
-                            Integer length = Integer.parseInt(Params);
-                            Result = radomVariables.GetRadmomStr(length);
-                            logger.info("随机变量名随机字符串为:  " + Result);
-                        } catch (Exception ex) {
-                            Result = "随机变量GetRadmomStr输入参数不合法，请填写参数为数字类型表示字符串长度";
-                        }
-                    }
-                    if(Variablestype.equalsIgnoreCase("随机整数"))
-                    {
-                        String ParamsArray[]=Params.split(",");
-                        if(ParamsArray.length<2)
-                        {
-                            Result="随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
-                        }
-                        else
-                        {
-                            try
-                            {
-                                Long Start=Long.parseLong(ParamsArray[0]);
-                                Long End=Long.parseLong(ParamsArray[1]);
-                                Result=radomVariables.GetRadmomNum(Start,End);
-                                logger.info("随机变量名随机整数为:  " + Result);
-                            }
-                            catch (Exception exception)
-                            {
-                                Result="随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
-                            }
-                        }
-                    }
-                    if(Variablestype.equalsIgnoreCase("随机小数"))
-                    {
-                        String ParamsArray[]=Params.split(",");
-                        if(ParamsArray.length<2)
-                        {
-                            Result="随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
-                        }
-                        else
-                        {
-                            try
-                            {
-                                Long Start=Long.parseLong(ParamsArray[0]);
-                                Long End=Long.parseLong(ParamsArray[1]);
-                                Result=radomVariables.GetRadmomDouble(Start,End);
-                                logger.info("随机变量名随机小数为:  " + Result);
-                            }
-                            catch (Exception exception)
-                            {
-                                Result="随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
-                            }
-                        }
-                    }
-                    if(Variablestype.equalsIgnoreCase("Guid"))
-                    {
-                        Result=radomVariables.GetGuid();
-                        logger.info("随机变量名Guid为:  " + Result);
-                    }
-                    if(Variablestype.equalsIgnoreCase("随机IP"))
-                    {
-                        Result=radomVariables.GetRadmonIP();
-                        logger.info("随机变量名随机IP为:  " + Result);
-                    }
-                    if(Variablestype.equalsIgnoreCase("当前时间"))
-                    {
-                        Result=radomVariables.GetCurrentTime();
-                        logger.info("随机变量名当前时间为:  " + Result);
-                    }
-                    if(Variablestype.equalsIgnoreCase("当前日期"))
-                    {
-                        Result=radomVariables.GetCurrentDate();
-                        logger.info("随机变量名当前日期为:  " + Result);
-                    }
-                    if(Variablestype.equalsIgnoreCase("当前时间戳"))
-                    {
-                        Result=radomVariables.GetCurrentTimeMillis();
-                        logger.info("随机变量名当前时间戳为:  " + Result);
+                        logger.info("随机变量名为:  " + varaiablesmap.get(Key)+" 开始处理函数");
+                        String Params = varaiablesmap.get("variablecondition");
+                        logger.info("随机变量名为开始处理函数条件为："+Params);
+                        String Variablestype = varaiablesmap.get("variablestype");
+                        logger.info("随机变量名为开始处理函数变量类型为："+Variablestype);
+                        Result=RadomValue(Variablestype,Params);
                     }
                 }
             }
@@ -502,33 +465,127 @@ public class TestHttpRequestData {
         return Result;
     }
 
-    private Object GetVariablesDataType(String Value,String PlanId, String BatchName)
-    {
-        Object Result="";
-        Value = Value.substring(1);
-        logger.info(logplannameandcasename + "TestHttpRequestData GetVariablesDataType Value :  " + Value );
-        String Caseid = testMysqlHelp.GetCaseIdByVariablesName(Value);
-        if(Caseid.isEmpty())
-        {
-            Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
-            return Result;
-        }
-        String ValueType = testMysqlHelp.GetVariablesDataType(Value);
-        if(ValueType.isEmpty())
-        {
-            Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
-            return Result;
-        }
-        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-        String VariablesNameValue = testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
-        if(VariablesNameValue.isEmpty())
-        {
-            Result="未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值";
-            return Result;
+    private Object GetPerformanceRadomValue(String Value, List<Variables> variablesList) {
+        Object Result = Value;
+        if (Value.trim().length() == 1) {
+            Result = Value;
         }
         else
         {
-            Result=GetDataByType(VariablesNameValue,ValueType);
+            String FunctionName = Value.substring(1);
+            for (Variables varaiables : variablesList) {
+                if (varaiables.getVariablesname().equalsIgnoreCase(FunctionName)) {
+                    logger.info("随机变量名为:  " + varaiables.getVariablesname() + " 开始处理函数");
+                    String Params = varaiables.getVariablecondition();
+                    logger.info("随机变量名为开始处理函数条件为：" + Params);
+                    String Variablestype = varaiables.getVariablestype();
+                    logger.info("随机变量名为开始处理函数变量类型为：" + Variablestype);
+                    Result=RadomValue(Variablestype,Params);
+                }
+            }
+        }
+        return Result;
+    }
+
+    private Object RadomValue(String Variablestype,String Params)
+    {
+        Object Result = "";
+        RadomVariables radomVariables = new RadomVariables();
+        if (Variablestype.equalsIgnoreCase("随机字符串")) {
+            try {
+                Integer length = Integer.parseInt(Params);
+                Result = radomVariables.GetRadmomStr(length);
+                logger.info("随机变量名随机字符串为:  " + Result);
+            } catch (Exception ex) {
+                Result = "随机变量GetRadmomStr输入参数不合法，请填写参数为数字类型表示字符串长度";
+            }
+        }
+        if (Variablestype.equalsIgnoreCase("随机整数")) {
+            String ParamsArray[] = Params.split(",");
+            if (ParamsArray.length < 2) {
+                Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
+            } else {
+                try {
+                    Long Start = Long.parseLong(ParamsArray[0]);
+                    Long End = Long.parseLong(ParamsArray[1]);
+                    Result = radomVariables.GetRadmomNum(Start, End);
+                    logger.info("随机变量名随机整数为:  " + Result);
+                } catch (Exception exception) {
+                    Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                }
+            }
+        }
+        if (Variablestype.equalsIgnoreCase("随机小数")) {
+            String ParamsArray[] = Params.split(",");
+            if (ParamsArray.length < 2) {
+                Result = "随机变量GetRadmomStr输入参数不合法，请填写需要的字符串长度";
+            } else {
+                try {
+                    Long Start = Long.parseLong(ParamsArray[0]);
+                    Long End = Long.parseLong(ParamsArray[1]);
+                    Result = radomVariables.GetRadmomDouble(Start, End);
+                    logger.info("随机变量名随机小数为:  " + Result);
+                } catch (Exception exception) {
+                    Result = "随机变量GetRadmomNum输入参数不合法，请填写最小和最大值数字范围";
+                }
+            }
+        }
+        if (Variablestype.equalsIgnoreCase("Guid")) {
+            Result = radomVariables.GetGuid();
+            logger.info("随机变量名Guid为:  " + Result);
+        }
+        if (Variablestype.equalsIgnoreCase("随机IP")) {
+            Result = radomVariables.GetRadmonIP();
+            logger.info("随机变量名随机IP为:  " + Result);
+        }
+        if (Variablestype.equalsIgnoreCase("当前时间")) {
+            Result = radomVariables.GetCurrentTime();
+            logger.info("随机变量名当前时间为:  " + Result);
+        }
+        if (Variablestype.equalsIgnoreCase("当前日期")) {
+            Result = radomVariables.GetCurrentDate();
+            logger.info("随机变量名当前日期为:  " + Result);
+        }
+        if (Variablestype.equalsIgnoreCase("当前时间戳")) {
+            Result = radomVariables.GetCurrentTimeMillis();
+            logger.info("随机变量名当前时间戳为:  " + Result);
+        }
+        return Result;
+    }
+
+    private Object GetVariablesDataType(String Value,String PlanId, String BatchName)
+    {
+        Object Result=Value;
+        if (Value.trim().length() == 1) {
+            Result = Value;
+        }
+        else
+        {
+            Value = Value.substring(1);
+            logger.info(logplannameandcasename + "TestHttpRequestData GetVariablesDataType Value :  " + Value );
+            String Caseid = testMysqlHelp.GetCaseIdByVariablesName(Value);
+            if(Caseid.isEmpty())
+            {
+                Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
+                return Result;
+            }
+            String ValueType = testMysqlHelp.GetVariablesDataType(Value);
+            if(ValueType.isEmpty())
+            {
+                Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
+                return Result;
+            }
+            //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+            String VariablesNameValue = testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
+            if(VariablesNameValue.isEmpty())
+            {
+                Result="未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值";
+                return Result;
+            }
+            else
+            {
+                Result=GetDataByType(VariablesNameValue,ValueType);
+            }
         }
         return Result;
     }

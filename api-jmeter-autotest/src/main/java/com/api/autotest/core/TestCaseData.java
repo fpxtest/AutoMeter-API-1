@@ -66,6 +66,9 @@ public class TestCaseData {
             String bodyjson = context.getParameter("bodyjson").replace("Autometer"," ");
             logger.info(logplannameandcasename + "用例数据 bodyjson is :  " + bodyjson);
 
+            String variablesjson = context.getParameter("variablesjson").replace("Autometer"," ");
+            logger.info(logplannameandcasename + "用例数据 variablesjson is :  " + variablesjson);
+
             String casetype = context.getParameter("casetype");
             logger.info(logplannameandcasename + "用例数据 casetype is :  " + casetype);
 
@@ -99,6 +102,7 @@ public class TestCaseData {
             newob.setHeadjson(headjson);
             newob.setBodyjson(bodyjson);
             newob.setParamjson(paramsjson);
+            newob.setVariablesjson(variablesjson);
             newob.setDeployunitvisittype(deployvisitytype);
             newob.setMachineip(machineip);
         }
