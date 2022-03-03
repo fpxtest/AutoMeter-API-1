@@ -293,8 +293,7 @@ public class TestPlanCaseController {
                 JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
             }
             TestPlanCaseController.log.info("功能任务-获取待执行的功能用例数：。。。。。。。。。。。。。。。。。。。。。。。。" + dispatchList.size());
-            int FunctionJmeter = GetJmeterProcess("FunctionJmeterProcess", "功能");
-
+            int FunctionJmeter =1;// GetJmeterProcess("FunctionJmeterProcess", "功能");
             HashMap<String, List<Dispatch>> ProtocolDispatchRun = GetProtocolDispatch(dispatchList);
             for (String Protocol : ProtocolDispatchRun.keySet()) {
                 int ProtocolJmeterNum = 0;
@@ -305,12 +304,12 @@ public class TestPlanCaseController {
                 }
                 TestPlanCaseController.log.info("功能任务-ProtocolJmeterNum：。。。。。。。。" + ProtocolJmeterNum);
                 List<List<Dispatch>> last = FunctionDispatch(ProtocolJmeterNum, ProtocolDispatchRun.get(Protocol));
-                if (Protocol.equals(new String("http"))) {
+                if (Protocol.equalsIgnoreCase("http")||Protocol.equalsIgnoreCase("https")) {
                     for (int i = 0; i < last.size(); i++) {
                         List<Dispatch> JmeterList = last.get(i);
                         String DispatchIDs = "";
                         for (Dispatch dis : JmeterList) {
-                            DispatchIDs = dis.getId() + "," + DispatchIDs;
+                            DispatchIDs = DispatchIDs  + dis.getId()+"," ;
                         }
                         if (!DispatchIDs.isEmpty()) {
                             DispatchIDs = DispatchIDs.substring(0, DispatchIDs.length() - 1);
@@ -883,10 +882,10 @@ public class TestPlanCaseController {
         for (String DeployUnit : DeployUnitGroupDispatch.keySet()) {
             Deployunit deployunit = deployunitService.findDeployNameValueWithCode(DeployUnit);
             String Protocal = deployunit.getProtocal();
-            if (Protocal.equals(new String("http")) || Protocal.equals(new String("https"))) {
+            if (Protocal.equalsIgnoreCase("http") || Protocal.equalsIgnoreCase("https")) {
                 ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "http");
             }
-            if (Protocal.equals(new String("rpc"))) {
+            if (Protocal.equalsIgnoreCase("rpc")) {
                 ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "rpc");
             }
         }
