@@ -261,7 +261,7 @@ public class TestPlanCaseController {
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
                 }
             } catch (Exception ex) {
-                dispatchMapper.updatedispatchstatusandmemo("调度异常", ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
+                dispatchMapper.updatedispatchstatusandmemo("调度异常", "执行Slaver机异常："+ex.getMessage(), dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                 TestPlanCaseController.log.info("性能任务-调度异常。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。获取 JmeterPerformanceObject对象异常报错..。。。。。。。。。。。。。。。。。。。。。。。。。" + ex.getMessage());
             }
         }
@@ -418,8 +418,10 @@ public class TestPlanCaseController {
         String RequestContentType = jmeterPerformanceObject.getRequestcontenttype();
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
 
-
+        TestPlanCaseController.log.info("GetJmeterPerformanceCaseRequestData :" + PlanID+" BatchName:"+BatchName);
         List<TestvariablesValue>testvariablesValueList=testvariablesValueService.gettvlist(Long.parseLong(PlanID),BatchName);
+        TestPlanCaseController.log.info("gettvlist size :" +testvariablesValueList.size());
+
         HashMap<String,String > InterFaceMap=new HashMap<>();
         for (TestvariablesValue te:testvariablesValueList) {
             InterFaceMap.put(te.getVariablesname(),te.getVariablesvalue());
