@@ -94,23 +94,15 @@ public class RadomVariables {
 
     public static void main(String[] args) {
 
-        String test="aa,bb,aa";
-        String resut=test.replace("aa","vvv");
-        System.out.println(resut);
-        Object num=10000;
-        String xxxx=num.toString();
-        System.out.println(xxxx);
+        String test="{\n" +
+                "    \"id\": \"\",\n" +
+                "    \"enviromentname\": \"[TestRadomNumber]-{{code}}[[TestRadomString][TestRadomNumber]\",\n" +
+                "    \"envtype\": \"功能\",\n" +
+                "    \"memo\": \"{code}}[TestGuid]{code}[\",\n" +
+                "    \"creator\": \"admin\"\n" +
+                "}";
+        test=test.replace("\n","").replace(" ","");
 
-        Object num1="123";
-        System.out.println(num1.toString());
-
-
-
-//        long longnum= ThreadLocalRandom.current().nextLong(100,999);
-//        double doublenum= ThreadLocalRandom.current().nextDouble(0.1,0.8);
-//        double floatnum= ThreadLocalRandom.current().nextFloat();
-//        System.out.println(longnum);
-//        System.out.println(doublenum);
-//        System.out.println(floatnum);
+        System.out.println(test);
     }
 }

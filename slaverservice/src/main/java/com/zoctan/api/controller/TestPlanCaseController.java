@@ -417,30 +417,54 @@ public class TestPlanCaseController {
         String BatchName = jmeterPerformanceObject.getBatchname();
         String RequestContentType = jmeterPerformanceObject.getRequestcontenttype();
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
+
+
+        List<TestvariablesValue>testvariablesValueList=testvariablesValueService.gettvlist(Long.parseLong(PlanID),BatchName);
+        HashMap<String,String > InterFaceMap=new HashMap<>();
+        for (TestvariablesValue te:testvariablesValueList) {
+            InterFaceMap.put(te.getVariablesname(),te.getVariablesvalue());
+        }
         String Caseid=dispatch.getTestcaseid().toString();
         HashMap<String, Object> HeaderMap = new HashMap<>();
         HashMap<String, Object> ParamsMap = new HashMap<>();
         HashMap<String, Object> BodyMap = new HashMap<>();
+        String PostData = "";
         for (ApiCasedata apiCasedata : apiCasedataList) {
             String ParamName = apiCasedata.getApiparam();
             String Paramvalue = apiCasedata.getApiparamvalue();
             String DataType = apiCasedata.getParamstype();
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
-                ParamsMap = GetParamsMap(ParamsMap, ParamName, Paramvalue, PlanID, BatchName, DataType,Caseid);
+                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap);
+                Object LastObjectValue = GetDataByType(Result.toString(), DataType);
+                ParamsMap.put(ParamName,LastObjectValue);
+                //ParamsMap = GetParamsMap(ParamsMap, ParamName, Paramvalue, PlanID, BatchName, DataType,Caseid);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
-                HeaderMap = GetHeaderMap(ParamName, Paramvalue, PlanID, BatchName,Caseid);
+                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap);
+                HeaderMap.put(ParamName,Result);
+                //HeaderMap = GetHeaderMap(ParamName, Paramvalue, PlanID, BatchName,Caseid);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
-                    BodyMap = GetParamsMap(BodyMap, ParamName, Paramvalue, PlanID, BatchName, DataType,Caseid);
+                    Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap);
+                    Object LastObjectValue = GetDataByType(Result.toString(), DataType);
+                    BodyMap.put(ParamName,LastObjectValue);
+                    //BodyMap = GetParamsMap(BodyMap, ParamName, Paramvalue, PlanID, BatchName, DataType,Caseid);
                 } else {
-                    BodyMap.put(ParamName, Paramvalue);
+                    PostData = Paramvalue;
+                    for (String VariableName :InterFaceMap.keySet()) {
+                        String UseVariableName="{"+VariableName+"}";
+                        if(PostData.contains(UseVariableName))
+                        {
+                            String VariableValue=InterFaceMap.get(VariableName);
+                            PostData = PostData.replace(UseVariableName,VariableValue);
+                        }
+                    }
                 }
             }
         }
         //全局参数Header
-        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, PlanID, BatchName,Caseid);
+        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, InterFaceMap);
 
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
@@ -452,24 +476,29 @@ public class TestPlanCaseController {
         } else {
             jmeterPerformanceObject.setParamsjson("");
         }
-
-        String PostData="";
         if (BodyMap.size() > 0) {
-            if (RequestContentType.equalsIgnoreCase("Form表单")) {
-                PostData=JSON.toJSONString(BodyMap);
-            } else {
-                for (String Key : BodyMap.keySet()) {
-                    PostData=BodyMap.get(Key).toString();
-                    //增加处理json，xml等文本类型内的变量
-                }
-            }
+            jmeterPerformanceObject.setBodyjson(JSON.toJSONString(BodyMap));
+        } else {
+            jmeterPerformanceObject.setBodyjson("");
         }
-        jmeterPerformanceObject.setBodyjson(PostData);
+
+//        String PostData="";
+//        if (BodyMap.size() > 0) {
+//            if (RequestContentType.equalsIgnoreCase("Form表单")) {
+//                PostData=JSON.toJSONString(BodyMap);
+//            } else {
+//                for (String Key : BodyMap.keySet()) {
+//                    PostData=BodyMap.get(Key).toString();
+//                    //增加处理json，xml等文本类型内的变量
+//                }
+//            }
+//        }
+        jmeterPerformanceObject.setPostdata(PostData);
 
         //增加随机变量json
         List<Variables> variablesList= variablesService.listAll();
         String variablesjson="";
-        if(variablesList.size()<0)
+        if(variablesList.size()>0)
         {
             variablesjson=JSON.toJSONString(variablesList);
         }
@@ -486,6 +515,57 @@ public class TestPlanCaseController {
         return jmeterPerformanceObject;
     }
 
+    //判断是否有拼接
+    private boolean GetSubOrNot(HashMap<String, String> VariablesMap,String Value,String prefix,String profix)
+    {
+        boolean flag = false;
+        for (String Key : VariablesMap.keySet()) {
+            String ActualValue = prefix + Key + profix;
+            if (Value.contains(ActualValue)) {
+                String LeftValue = Value.replace(ActualValue, "");
+                if (LeftValue.length() > 0) {
+                    //表示有拼接
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return flag;
+    }
+
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap)
+    {
+        Object ObjectValue=Value;
+        //参数值替换接口变量
+        for (String interfacevariablesName:InterfaceMap.keySet()) {
+            boolean flag=GetSubOrNot(InterfaceMap,Value,"{","}");
+            if(Value.contains("{"+interfacevariablesName+"}"))
+            {
+                String ActualValue = InterfaceMap.get(interfacevariablesName);
+                if(flag)
+                {
+                    //有拼接认为是字符串
+                    Value=Value.replace("{"+interfacevariablesName+"}",ActualValue);
+                    ObjectValue=Value;
+                }
+                else
+                {
+                    //无拼接则转换成具体类型,根据变量名获取变量类型
+                    Testvariables testvariables =testvariablesService.getBy("testvariablesname",interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    if(testvariables==null)
+                    {
+                        ObjectValue="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
+                    }
+                    else
+                    {
+                        ObjectValue=GetDataByType(ActualValue,testvariables.getValuetype());
+                    }
+                }
+            }
+        }
+        return ObjectValue;
+    }
 
     public HashMap<String, Object> GetHeaderMap(String ParamName, String Paramvalue, String PlanID, String BatchName,String Caseid) throws Exception {
         HashMap<String, Object> HeaderMap = new HashMap<>();
@@ -509,14 +589,14 @@ public class TestPlanCaseController {
         return ParamsMap;
     }
 
-    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch, String PlanID, String BatchName,String Caseid) throws Exception {
+    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch,  HashMap<String, String> InterfaceMap) throws Exception {
         List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
         //全局Header如果有参数，则替换原参数，没有则加上全局Header参数
         for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
             String ParamName = executeplanParams.getKeyname();
             String ParamValue = executeplanParams.getKeyvalue();
-            Object ObjectValue = GetVariablesObjectValues(ParamValue, PlanID, BatchName,Caseid);
-            HeaderMap.put(ParamName, ObjectValue);
+            Object Result= GetVaraibaleValue(ParamValue,InterfaceMap);
+            HeaderMap.put(ParamName, Result);
         }
         return HeaderMap;
     }

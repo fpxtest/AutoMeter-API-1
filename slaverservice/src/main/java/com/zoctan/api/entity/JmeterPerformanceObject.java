@@ -224,6 +224,17 @@ public class JmeterPerformanceObject {
     private String bodyjson;
     private String dubbojson;
 
+    public String getPostdata() {
+        return postdata;
+    }
+
+    public void setPostdata(String postdata) {
+        this.postdata = postdata;
+    }
+
+    private String postdata;
+
+
     public String getRadomvariablejson() {
         return radomvariablejson;
     }

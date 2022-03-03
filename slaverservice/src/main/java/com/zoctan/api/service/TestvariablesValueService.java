@@ -24,4 +24,5 @@ public interface TestvariablesValueService extends Service<TestvariablesValue> {
 
     TestvariablesValue gettestvariablesvalue(Long planid,Long caseid,String variablesname,String batchname);
     int ifexist(Condition condition);
+    List<TestvariablesValue> gettvlist(Long planid,String batchname);
 }
