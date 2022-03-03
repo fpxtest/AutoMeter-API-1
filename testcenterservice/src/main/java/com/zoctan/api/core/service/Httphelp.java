@@ -523,14 +523,14 @@ public class Httphelp {
         StringBuffer sb = new StringBuffer();// 存储参数
         requestUrl = url;
         Map<String, Object> parameters = paramsob.getParams();
-        if (apistyle.equalsIgnoreCase("restful")) {
-            if (!(url.contains("{") && url.contains("}"))) {
-                throw new Exception("restfulapi-url:" + url + " 未包含{}参数");
-            }
-        }
+//        if (apistyle.equalsIgnoreCase("restful")) {
+//            if (!(url.contains("{") && url.contains("}"))) {
+//                throw new Exception("restfulapi-url:" + url + " 未包含{}参数");
+//            }
+//        }
         if (parameters.size() < 1) {
             if (apistyle.equalsIgnoreCase("restful")) {
-                throw new Exception("restfulapi-未设置url:" + url + " 中的对应的参数和用例数据");
+                throw new Exception("Restful-未设置资源:" + url + " 中的对应的参数和用例数据");
             } else {
                 requestUrl = url;
             }
@@ -583,6 +583,43 @@ public class Httphelp {
         }
         return requestUrl;
     }
+
+    public static String GetNewRequestUrl(String url, String apistyle, HttpParamers paramsob) throws Exception {
+        String requestUrl = url;
+        String params="";// 编码之后的参数
+        StringBuffer sb = new StringBuffer();// 存储参数
+        if(paramsob.getParams().size()>0)
+        {
+            if(!requestUrl.endsWith("/"))
+            {
+                requestUrl=url+"/";
+            }
+            Map<String, Object> parameters = paramsob.getParams();
+            if (apistyle.equalsIgnoreCase("restful")) {
+                for (String name : parameters.keySet()) {
+                    sb.append(name).append("/").append(parameters.get(name));
+                }
+                requestUrl=requestUrl+sb.toString();
+            } else {
+                for (String name : parameters.keySet()) {
+                    try {
+                        sb.append(name).append("=").append(parameters.get(name)).append("&");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                String tempParams = sb.toString();
+                if(tempParams.length()>1)
+                {
+                    params = tempParams.substring(0, tempParams.length() - 1);
+                }
+                requestUrl = requestUrl + "?" + params;
+            }
+        }
+        return requestUrl;
+    }
+
+
 
     private static TestResponeData GetResponeData(CloseableHttpResponse closeableHttpResponse) throws IOException {
         String ActualResult="";
