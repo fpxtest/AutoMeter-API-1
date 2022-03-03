@@ -45,6 +45,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         params.addArgument("headjson", "/opt/");
         params.addArgument("paramsjson", "/opt/");
         params.addArgument("bodyjson", "/opt/");
+        params.addArgument("postdata", "/opt/");
         params.addArgument("dubbojson", "/opt/");
         params.addArgument("variablesjson", "/opt/");
         params.addArgument("mysqlurl", "/opt/");

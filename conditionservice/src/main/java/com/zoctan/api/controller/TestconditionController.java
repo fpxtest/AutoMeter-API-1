@@ -320,7 +320,7 @@ public class TestconditionController {
                 catch (Exception ex)
                 {
                     ParseValue=ex.getMessage();
-                    throw new Exception(ex.getMessage());
+                    throw new Exception("接口变量："+apicasesVariables.getVariablesname()+" 异常："+ex.getMessage());
                 }
                 finally {
                     TestconditionController.log.info("接口子条件条件报告子条件处理变量取值-============：" + ParseValue);
@@ -413,8 +413,15 @@ public class TestconditionController {
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
                 if (testvariables != null) {
-                    String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
-                    VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
+                    try
+                    {
+                        String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
+                        VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("接口子条件执行异常接口变量:"+apicasesVariables.getVariablesname()+" 解析异常,原因为："+ex.getMessage());
+                    }
                 }
                 else
                 {

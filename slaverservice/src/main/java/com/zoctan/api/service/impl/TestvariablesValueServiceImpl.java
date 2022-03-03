@@ -42,4 +42,9 @@ private TestvariablesValueMapper testvariablesValueMapper;
         return countByCondition(con);
     }
 
+    @Override
+    public List<TestvariablesValue> gettvlist(Long planid, String batchname) {
+        return testvariablesValueMapper.gettvlist(planid, batchname);
+    }
+
 }
