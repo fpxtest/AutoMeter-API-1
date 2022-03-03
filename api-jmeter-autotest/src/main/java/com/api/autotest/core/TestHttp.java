@@ -64,7 +64,7 @@ public class TestHttp {
                 if(requestObject.getRequestcontenttype().equalsIgnoreCase("Form表单"))
                 {
                     //url-Form表单传值,值根据类型转换，可以实现url参数值是json和xml的形式
-                    String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+                    String GetParamUrl= Httphelp.GetNewRequestUrl(Url, ApiStyle, httpParamers);
                     logger.info(logplannameandcasename + "TestHttp GET请求url....." +GetParamUrl);
                     responeData=Httphelp.GetWithNoParams(Protocal,GetParamUrl,header,30000);
                     logger.info(logplannameandcasename + "TestHttp GET请求url完成....." +GetParamUrl);
@@ -72,7 +72,7 @@ public class TestHttp {
                 else
                 {
                     //取body，json,xml,text
-                    String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+                    String GetParamUrl= Httphelp.GetNewRequestUrl(Url, ApiStyle, httpParamers);
                     logger.info(logplannameandcasename + "TestHttp GET请求url取body，json,xml,text....." +GetParamUrl);
                     responeData=Httphelp.GetWithBody(Protocal,GetParamUrl,PostData,header,30000);
                     logger.info(logplannameandcasename + "TestHttp GET请求url取body，json,xml,text完成....." +GetParamUrl);
@@ -82,21 +82,21 @@ public class TestHttp {
         }
         if(requestObject.getRequestmMthod().equalsIgnoreCase("POST"))
         {
-            String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+            String GetParamUrl= Httphelp.GetNewRequestUrl(Url, ApiStyle, httpParamers);
             logger.info(logplannameandcasename + "TestHttp POST请求url....." +GetParamUrl);
             responeData=Httphelp.PostWithBody(Protocal,GetParamUrl,PostData,header,30000);
             logger.info(logplannameandcasename + "TestHttp POST请求url完成....." );
         }
         if(requestObject.getRequestmMthod().equalsIgnoreCase("PUT"))
         {
-            String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+            String GetParamUrl= Httphelp.GetNewRequestUrl(Url, ApiStyle, httpParamers);
             logger.info(logplannameandcasename + "TestHttp PUT请求url....." +GetParamUrl);
             responeData=Httphelp.doPut(Protocal,GetParamUrl,PostData,header,30000);
             logger.info(logplannameandcasename + "TestHttp PUT请求url完成....." +GetParamUrl);
         }
         if(requestObject.getRequestmMthod().equalsIgnoreCase("DELETE"))
         {
-            String GetParamUrl= Httphelp.GetRequestUrl(Url, ApiStyle, httpParamers);
+            String GetParamUrl= Httphelp.GetNewRequestUrl(Url, ApiStyle, httpParamers);
             logger.info(logplannameandcasename + "TestHttp DELETE请求url....." +GetParamUrl);
             responeData=Httphelp.doDelete(Protocal,GetParamUrl,PostData,header,30000);
             logger.info(logplannameandcasename + "TestHttp DELETE请求url完成....." +GetParamUrl);
