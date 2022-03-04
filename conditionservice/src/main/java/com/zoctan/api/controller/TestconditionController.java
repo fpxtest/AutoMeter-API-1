@@ -5,8 +5,11 @@ import cn.hutool.db.Db;
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
+import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.core.service.ParseResponeHelp;
@@ -691,47 +694,90 @@ public class TestconditionController {
         //当结果为失败的情况发邮件通知用户
         if(ConditionResultStatus.equals("失败"))
         {
-            try
-            {
-                List<Dictionary>dictionaryList= dictionaryService.findDicNameValueWithCode("Mail");
-                if(dictionaryList.size()>0)
-                {
-                    Dictionary dictionary=dictionaryList.get(0);
-                    String MailInfo=dictionary.getDicitmevalue();
-                    String[] MailArray=MailInfo.split(",");
-                    if(MailArray.length>4)
-                    {
-                        String Smtp=MailArray[0];
-                        int port=Integer.parseInt(MailArray[1]);
-                        String from=MailArray[2];
-                        String mailuser=MailArray[3];
-                        String pass=MailArray[4];
+            String Subject=testconditionReport.getPlanname()+"|"+testconditionReport.getBatchname()+"前置子条件："+testconditionReport.getSubconditionname()+"执行失败";
+            String Content="-------------【失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！】";
+            SendMessageDingDing(Subject+Content);
+            SendMail(testconditionReport,Respone,user);
+        }
+    }
 
-                        MailAccount account = new MailAccount();
-                        account.setHost(Smtp);
-                        account.setPort(port);
-                        account.setAuth(true);
-                        account.setFrom(from);
-                        account.setUser(mailuser);
-                        account.setPass(pass);
 
-                        List<Account>accountList= accountService.findWithUsername(user);
-                        String mailto="";
-                        if(accountList.size()>0)
-                        {
-                            mailto=accountList.get(0).getEmail();
-                        }
-                        String Subject=testconditionReport.getPlanname()+"|"+testconditionReport.getBatchname()+"前置子条件执行失败："+testconditionReport.getSubconditionname();
-                        String Content="失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！";
-                        MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
-                        TestconditionController.log.info("发送邮件成功-============："+mailto);
+    private  void SendMail(TestconditionReport testconditionReport, String Respone,String user)
+    {
+        try {
+            List<Dictionary> dictionaryList = dictionaryService.findDicNameValueWithCode("Mail");
+            if (dictionaryList.size() > 0) {
+                Dictionary dictionary = dictionaryList.get(0);
+                String MailInfo = dictionary.getDicitmevalue();
+                String[] MailArray = MailInfo.split(",");
+                if (MailArray.length > 4) {
+                    String Smtp = MailArray[0];
+                    int port = Integer.parseInt(MailArray[1]);
+                    String from = MailArray[2];
+                    String mailuser = MailArray[3];
+                    String pass = MailArray[4];
+
+                    MailAccount account = new MailAccount();
+                    account.setHost(Smtp);
+                    account.setPort(port);
+                    account.setAuth(true);
+                    account.setFrom(from);
+                    account.setUser(mailuser);
+                    account.setPass(pass);
+
+                    List<Account> accountList = accountService.findWithUsername(user);
+                    String mailto = "";
+                    if (accountList.size() > 0) {
+                        mailto = accountList.get(0).getEmail();
                     }
+                    String Subject = testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "前置子条件执行失败：" + testconditionReport.getSubconditionname();
+                    String Content = "失败原因：" + Respone + " ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！";
+                    MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
+                    TestconditionController.log.info("发送邮件成功-============：" + mailto);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                TestconditionController.log.info("发送邮件异常-============："+ex.getMessage());
+                TestconditionController.log.info("发送邮件未找到字典包配置邮件信息-============：" );
             }
+        } catch (Exception ex) {
+            TestconditionController.log.info("发送邮件异常-============：" + ex.getMessage());
+        }
+    }
+
+    private void SendMessageDingDing(String MessageContent)
+    {
+        try
+        {
+            List<Dictionary>dictionaryList= dictionaryService.findDicNameValueWithCode("DingDing");
+            if(dictionaryList.size()>0)
+            {
+                Dictionary dictionary=dictionaryList.get(0);
+                String Token=dictionary.getDicitmevalue();
+                //消息内容
+                Map<String, String> contentMap = new HashMap<>();
+                contentMap.put("content", MessageContent);
+                //通知人
+                Map<String, Object> atMap = new HashMap<>();;
+                //1.是否通知所有人
+                atMap.put("isAtAll", true);
+
+                Map<String, Object> reqMap = Maps.newHashMap();
+                reqMap.put("msgtype", "text");
+                reqMap.put("text", contentMap);
+                reqMap.put("at", atMap);
+                String RequestContent= JSON.toJSONString(reqMap);
+                String Respone = HttpRequest.post(Token).body(RequestContent).timeout(10000).execute().body();
+                TestconditionController.log.info("发送钉钉信息响应：-============：" + Respone);
+            }
+            else
+            {
+                TestconditionController.log.info("发送钉钉信息未找到字典表配置钉钉信息：-============：");
+            }
+        }
+        catch (Exception ex)
+        {
+            TestconditionController.log.info("发送钉钉异常：-============："+ex.getMessage());
         }
     }
 

@@ -187,6 +187,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
             getLogger().info("查询计划下的批次调度未完成数量：" + DispatchNotFinishNums);
         } else {
             core.UpdateReportStatics(planid, BatchName, "已完成");
+            core.SendMessageDingDing(planid,BatchName);
             core.SendMailByFinishPlanCase(planid,BatchName);
         }
         //增加邮件通知
