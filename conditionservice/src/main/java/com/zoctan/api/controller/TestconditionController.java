@@ -18,6 +18,7 @@ import com.zoctan.api.entity.*;
 import com.zoctan.api.entity.Dictionary;
 import com.zoctan.api.service.*;
 import com.zoctan.api.util.DnamicCompilerHelp;
+import com.zoctan.api.util.PgsqlConnectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -26,6 +27,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -591,39 +593,61 @@ public class TestconditionController {
         String port = ConnetcArray[2];
         String dbname = ConnetcArray[3];
         String DBUrl = "";
-        if (AssembleType.equals("mysql")) {
+        if (AssembleType.equalsIgnoreCase("pgsql")) {
+            DBUrl = "jdbc:postgresql://";
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equalsIgnoreCase("ip")) {
+                String IP = machine.getIp();
+                DBUrl = DBUrl + IP + ":" + port + "/" + dbname ;
+            } else {
+                String Domain = macdepunit.getDomain();
+                DBUrl = DBUrl + Domain + "/" + dbname ;
+            }
+            PgsqlConnectionUtils.initDbResource(DBUrl,username,pass);
+            String[] SqlArr = Sql.split(";");
+            for (String ExecSql : SqlArr) {
+                TestconditionController.log.info("数据库子条件pgSql开始执行：" + ExecSql);
+                int nums = PgsqlConnectionUtils.execsql(ExecSql);
+                TestconditionController.log.info("数据库子条件pgSql执行完成：" + ExecSql);
+                Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+            }
+        }
+
+        if (AssembleType.equalsIgnoreCase("mysql")) {
             DBUrl = "jdbc:mysql://";
             // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
+            if (deployunitvisittype.equalsIgnoreCase("ip")) {
                 String IP = machine.getIp();
                 DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             } else {
                 String Domain = macdepunit.getDomain();
                 DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             }
+            Respone=UseHutoolDb(DBUrl,username,pass,Sql);
         }
-        if (AssembleType.equals("oracle")) {
+        if (AssembleType.equalsIgnoreCase("oracle")) {
             DBUrl = "jdbc:oracle:thin:@";
             // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
+            if (deployunitvisittype.equalsIgnoreCase("ip")) {
                 String IP = machine.getIp();
                 DBUrl = DBUrl + IP + ":" + port + ":" + dbname;
             } else {
                 String Domain = macdepunit.getDomain();
                 DBUrl = DBUrl + Domain + ":" + dbname;
             }
+            Respone=UseHutoolDb(DBUrl,username,pass,Sql);
         }
-        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-        String[] SqlArr = Sql.split(";");
-        //Db.use(ds).getConnection().setAutoCommit(false);
-//        try
-//        {
-        for (String ExecSql : SqlArr) {
-            TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
-            int nums = Db.use(ds).execute(ExecSql);
-            TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
-            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
-        }
+//        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+//        String[] SqlArr = Sql.split(";");
+//        //Db.use(ds).getConnection().setAutoCommit(false);
+////        try
+////        {
+//        for (String ExecSql : SqlArr) {
+//            TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
+//            int nums = Db.use(ds).execute(ExecSql);
+//            TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
+//            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+//        }
         //Db.use(ds).getConnection().commit();
         // }
 //        catch (Exception ex)
@@ -637,6 +661,22 @@ public class TestconditionController {
 //            System.out.println("Connection is h:"+Db.use(ds).getConnection());
 //
 //        }
+        return Respone;
+    }
+
+    private String UseHutoolDb(String DBUrl,String username,String pass,String Sql) throws SQLException {
+        String Respone="";
+        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+        String[] SqlArr = Sql.split(";");
+        //Db.use(ds).getConnection().setAutoCommit(false);
+//        try
+//        {
+        for (String ExecSql : SqlArr) {
+            TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
+            int nums = Db.use(ds).execute(ExecSql);
+            TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
+            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+        }
         return Respone;
     }
 

@@ -250,12 +250,34 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ojdbc</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ojdbc6.jar</systemPath>
+        </dependency>
+
 
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
             <!-- 打包插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
