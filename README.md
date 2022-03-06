@@ -49,7 +49,7 @@
 
  ![输入图片说明](img/AutoMeter%E6%9E%B6%E6%9E%84%E5%9B%BE.jpg)
 
- [架构设计](https://www.toutiao.com/i6975322437458379271/)
+ [架构设计](https://gitee.com/season-fan/autometer-api/wikis/%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84?sort_id=4936162)
 
 ## 部署
  [部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2?sort_id=4960162)
