@@ -17,3 +17,4 @@ hs_err_pid*
 
 target/
 performancereport/
+apache-jmeter-5.3/backups/
