@@ -45,7 +45,9 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         params.addArgument("headjson", "/opt/");
         params.addArgument("paramsjson", "/opt/");
         params.addArgument("bodyjson", "/opt/");
+        params.addArgument("postdata", "/opt/");
         params.addArgument("dubbojson", "/opt/");
+        params.addArgument("variablesjson", "/opt/");
         params.addArgument("mysqlurl", "/opt/");
         params.addArgument("mysqlusername", "/opt/");
         params.addArgument("mysqlpassword", "/opt/");
@@ -75,7 +77,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             getLogger().info("Finish InitalTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
 
             // 发送用例请求，并返回结果
-            ResponeData responeData = SendCaseRequest(requestObject, Core);
+            ResponeData responeData =Core.request(requestObject);// SendCaseRequest(requestObject, Core);
             getLogger().info("Finish SendCaseRequest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
 
             ActualResult=responeData.getRespone();

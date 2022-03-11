@@ -33,6 +33,11 @@ private ApicasesVariablesMapper apicasesVariablesMapper;
     }
 
     @Override
+    public List<ApicasesVariables> getbyvariablesid(Map<String, Object> params) {
+        return apicasesVariablesMapper.getbyvariablesid(params);
+    }
+
+    @Override
     public int ifexist(Condition con) {
         return countByCondition(con);
     }

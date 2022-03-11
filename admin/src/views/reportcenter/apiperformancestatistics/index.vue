@@ -48,10 +48,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="计划" align="center" prop="executeplanname" width="120"/>
+      <el-table-column label="测试集合" align="center" prop="executeplanname" width="120"/>
       <el-table-column label="用例" align="center" prop="casename" width="120"/>
       <el-table-column label="执行计划" align="center" prop="batchname" width="120"/>
-      <el-table-column label="消耗时间(s)" align="center" prop="runtime" width="120"/>
+      <el-table-column label="tps" align="center" prop="tps" width="80"/>
       <el-table-column label="运行次数" align="center" prop="samples" width="80"/>
       <el-table-column label="错误次数" align="center" prop="errorcount" width="80"/>
       <el-table-column label="错误率" align="center" prop="errorrate" width="80"/>
@@ -62,7 +62,7 @@
       <el-table-column label="90th pct(ms)" align="center" prop="nzpct" width="100"/>
       <el-table-column label="95th pct(ms)" align="center" prop="nfpct" width="100"/>
       <el-table-column label="99th pct(ms)" align="center" prop="nnpct" width="100"/>
-      <el-table-column label="tps" align="center" prop="tps" width="80"/>
+      <el-table-column label="消耗时间(s)" align="center" prop="runtime" width="120"/>
       <el-table-column label="receivekbsec" align="center" prop="receivekbsec" width="80"/>
       <el-table-column label="sendkbsec" align="center" prop="sendkbsec" width="80"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="120">

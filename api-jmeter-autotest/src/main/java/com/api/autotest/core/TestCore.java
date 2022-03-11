@@ -3,8 +3,11 @@ package com.api.autotest.core;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
+import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson.JSON;
 import com.api.autotest.common.utils.*;
 import com.api.autotest.dto.*;
+import com.google.common.collect.Maps;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.log.Logger;
 import java.util.*;
@@ -820,7 +823,6 @@ public class TestCore {
         return result;
     }
 
-
     //断言
     public String FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList, ResponeData responeData) throws Exception {
         String AssertInfo = "";
@@ -892,10 +894,72 @@ public class TestCore {
                     }
                 }
             }
+            else
+            {
+                logger.info("TestCore发送邮件未找到字典表邮件配置信息-============：");
+            }
         }
         catch (Exception ex)
         {
             logger.info("发送邮件异常-============："+ex.getMessage());
+        }
+    }
+
+    private String GetSendContent(String PlanID,String BatchName)
+    {
+        String Content="";
+        ArrayList<HashMap<String, String>> list=GetplanBatchCreator(PlanID,BatchName);
+        if(list.size()>0)
+        {
+            String PlanName=list.get(0).get("executeplanname");
+            String Subject="测试集合："+PlanName+"| 执行计划："+BatchName+" 执行完成！";
+            ArrayList<HashMap<String, String>> liststatics= GetStatic(PlanID,BatchName);
+            long tc=0;
+            long tpc=0;
+            long tfc=0;
+            if(liststatics.size()>0)
+            {
+                tc=Long.parseLong(liststatics.get(0).get("tc"));
+                tpc=Long.parseLong(liststatics.get(0).get("tpc"));
+                tfc=Long.parseLong(liststatics.get(0).get("tfc"));
+            }
+            Content=Subject+"---------此测试集合运行完成结果总计用例数："+tc+"， 成功数："+tpc+"， 失败数："+tfc;
+        }
+        return Content;
+    }
+    //发送钉钉
+    public void SendMessageDingDing(String PlanID,String BatchName)
+    {
+        try
+        {
+            String MessageContent= GetSendContent(PlanID,BatchName);
+            ArrayList<HashMap<String, String>> dicNameValueWithCode= findDicNameValueWithCode("DingDing");
+            if(dicNameValueWithCode.size()>0)
+            {
+                String Token=dicNameValueWithCode.get(0).get("dicitmevalue");
+                //消息内容
+                Map<String, String> contentMap = new HashMap<>();
+                contentMap.put("content", MessageContent);
+                //通知人
+                Map<String, Object> atMap = new HashMap<>();;
+                //1.是否通知所有人
+                atMap.put("isAtAll", true);
+                Map<String, Object> reqMap = Maps.newHashMap();
+                reqMap.put("msgtype", "text");
+                reqMap.put("text", contentMap);
+                reqMap.put("at", atMap);
+                String RequestContent= JSON.toJSONString(reqMap);
+                String Respone = HttpRequest.post(Token).body(RequestContent).timeout(10000).execute().body();
+                logger.info("发送钉钉信息响应：-============：" + Respone);
+            }
+            else
+            {
+                logger.info("发送钉钉信息未找到字典表钉钉配置信息：-============：" );
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.info("发送钉钉信息异常：-============：" + ex.getMessage());
         }
     }
 
@@ -1007,7 +1071,7 @@ public class TestCore {
     }
 
     //根据变量名获取caseid
-    private String GetCaseIdByVariablesName(String VariablesName) {
+    private String GetCaseIdByVariablesName(String VariablesName,String Caseid) {
         String CaseID=testMysqlHelp.GetCaseIdByVariablesName(VariablesName);
 //        String CaseID = "";
 //        try {

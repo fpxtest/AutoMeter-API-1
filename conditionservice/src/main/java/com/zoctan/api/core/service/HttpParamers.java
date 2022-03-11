@@ -42,7 +42,7 @@ public class HttpParamers {
 //        return new HttpParamers(HttpMethod.GET);
 //    }
 
-    public HttpParamers addParam(String name, String value) {
+    public HttpParamers addParam(String name, Object value) {
         this.params.put(name, value);
         return this;
     }

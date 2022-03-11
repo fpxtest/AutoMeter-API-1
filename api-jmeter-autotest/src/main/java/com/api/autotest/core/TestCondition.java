@@ -3,6 +3,7 @@ package com.api.autotest.core;
 import cn.hutool.db.Db;
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import com.api.autotest.common.utils.DnamicCompilerHelp;
+import com.api.autotest.common.utils.PgsqlConnectionUtils;
 import com.api.autotest.dto.RequestObject;
 import com.api.autotest.dto.ResponeData;
 import com.api.autotest.dto.TestconditionReport;
@@ -10,6 +11,7 @@ import com.api.autotest.dto.TestvariablesValue;
 import org.apache.log.Logger;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,19 +22,19 @@ import static com.api.autotest.core.TestCaseData.logplannameandcasename;
 public class TestCondition {
 
     private Logger logger = null;
-    TestMysqlHelp testMysqlHelp=null;
+    TestMysqlHelp testMysqlHelp = null;
     private TestCaseData testCaseData = null;
     private TestHttpRequestData testHttpRequestData = null;
     private TestHttp testHttp = null;
 
-    public TestCondition(Logger log,TestMysqlHelp mysqlHelp,TestCaseData casedata,TestHttpRequestData httprequestdata,TestHttp ttHttp)
-    {
-        testMysqlHelp=mysqlHelp;
-        testCaseData=casedata;
-        testHttpRequestData=httprequestdata;
+    public TestCondition(Logger log, TestMysqlHelp mysqlHelp, TestCaseData casedata, TestHttpRequestData httprequestdata, TestHttp ttHttp) {
+        testMysqlHelp = mysqlHelp;
+        testCaseData = casedata;
+        testHttpRequestData = httprequestdata;
         testHttp = ttHttp;
-        logger=log;
+        logger = log;
     }
+
     //处理接口条件
     public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
         ArrayList<HashMap<String, String>> conditionApiList = testMysqlHelp.GetApiConditionByConditionID(ConditionID);
@@ -49,7 +51,6 @@ public class TestCondition {
             try {
                 CondionCaseID = conditionApi.get("caseid");
                 Start = new Date().getTime();
-
                 re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
                 re = testHttpRequestData.GetFuntionHttpRequestData(re);
                 End = new Date().getTime();
@@ -62,7 +63,7 @@ public class TestCondition {
                 End = new Date().getTime();
                 Respone = ex.getMessage();
                 CostTime = End - Start;
-                SaveApiSubCondition(re,requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+                SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
                 throw new Exception("接口子条件执行异常：" + ex.getMessage());
             }
         }
@@ -84,32 +85,40 @@ public class TestCondition {
         testconditionReport.setStatus("已完成");
         logger.info("TestCondition条件报告保存子条件已完成状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
         testMysqlHelp.SubConditionReportSave(testconditionReport);
-        //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
+        //根据用例是否有中间变量(多个)，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
         ArrayList<HashMap<String, String>> apicasesVariablesList = testMysqlHelp.GetApiCaseVaribales(CaseID);
         if (apicasesVariablesList.size() > 0) {
-            logger.info("TestCondition条件报告子条件处理变量-============：" + apicasesVariablesList.get(0).get("variablesname"));
-            String Variablesid = apicasesVariablesList.get(0).get("id");
-            ArrayList<HashMap<String, String>> VariablesList = testMysqlHelp.GetVaribales(Variablesid);
-            if (VariablesList.size() > 0) {
-                String VariablesPath = VariablesList.get(0).get("variablesexpress");
-                logger.info("TestCondition条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
-                TestAssert testAssert = new TestAssert(logger);
-                String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
-                logger.info("TestCondition条件报告子条件处理变量取值-============：" + ParseValue);
-                TestvariablesValue testvariablesValue = new TestvariablesValue();
-                testvariablesValue.setPlanid(PlanID);
-                testvariablesValue.setPlanname(PlanName);
-                testvariablesValue.setBatchname(BatchName);
-                testvariablesValue.setCaseid(CaseID);
-                testvariablesValue.setCasename(requestObject.getCasename());
-                testvariablesValue.setVariablesid(Long.parseLong(VariablesList.get(0).get("id")));
-                testvariablesValue.setVariablesname(VariablesList.get(0).get("testvariablesname"));
-                testvariablesValue.setVariablesvalue(ParseValue);
-                testvariablesValue.setMemo("test");
-                testMysqlHelp.testVariablesValueSave(testvariablesValue);
+            for (HashMap<String, String> map : apicasesVariablesList) {
+                for (String Key : map.keySet()) {
+                    if (Key.equalsIgnoreCase("variablesid")) {
+                        logger.info("TestCondition条件报告子条件处理变量-============：" + map.get("variablesname"));
+                        String Variablesid = map.get(Key);
+                        ArrayList<HashMap<String, String>> VariablesList = testMysqlHelp.GetVaribales(Variablesid);
+                        if (VariablesList.size() > 0) {
+                            String VariablesPath = VariablesList.get(0).get("variablesexpress");
+                            logger.info("TestCondition条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
+                            TestAssert testAssert = new TestAssert(logger);
+                            String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
+                            logger.info("TestCondition条件报告子条件处理变量取值-============：" + ParseValue);
+                            TestvariablesValue testvariablesValue = new TestvariablesValue();
+                            testvariablesValue.setPlanid(PlanID);
+                            testvariablesValue.setPlanname(PlanName);
+                            testvariablesValue.setBatchname(BatchName);
+                            testvariablesValue.setCaseid(CaseID);
+                            testvariablesValue.setCasename(requestObject.getCasename());
+                            testvariablesValue.setVariablesid(Long.parseLong(Variablesid));
+                            testvariablesValue.setVariablesname(map.get("variablesname"));
+                            testvariablesValue.setVariablesvalue(ParseValue);
+                            testvariablesValue.setMemo("test");
+                            testMysqlHelp.testVariablesValueSave(testvariablesValue);
+                        }
+
+                    }
+                }
             }
         }
     }
+
     //处理脚本条件
     public void ScriptCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
@@ -154,14 +163,14 @@ public class TestCondition {
         testconditionReport.setSubconditionid(Long.parseLong(conditionScript.get("id")));
         testconditionReport.setSubconditionname(conditionScript.get("subconditionname"));
         testconditionReport.setSubconditiontype(SubconditionType);
-        logger.info("TestCondition "+SubconditionType + "条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+        logger.info("TestCondition " + SubconditionType + "条件报告保存子条件进行中状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
 
-        testconditionReport.setConditionresult(Respone.replace("'","''"));
+        testconditionReport.setConditionresult(Respone.replace("'", "''"));
         testconditionReport.setConditionstatus(ConditionResultStatus);
         testconditionReport.setRuntime(CostTime);
         testconditionReport.setStatus("已完成");
         testMysqlHelp.SubConditionReportSave(testconditionReport);
-        logger.info("TestCondition "+SubconditionType + "条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
+        logger.info("TestCondition " + SubconditionType + "条件报告更新子条件结果-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname());
 
     }
 
@@ -217,6 +226,26 @@ public class TestCondition {
                 String port = ConnetcArray[2];
                 String dbname = ConnetcArray[3];
                 String DBUrl = "";
+                Start = new Date().getTime();
+
+                if (AssembleType.equalsIgnoreCase("pgsql")) {
+                    DBUrl = "jdbc:postgresql://";
+                    // 根据访问方式来确定ip还是域名
+                    if (deployunitvisittype.equals("ip")) {
+                        String IP = machinelist.get(0).get("ip");
+                        DBUrl = DBUrl + IP + ":" + port + ":" + dbname;
+                    } else {
+                        String Domain = macdepunitlist.get(0).get("domain");
+                        DBUrl = DBUrl + Domain + ":" + dbname;
+                    }
+                    PgsqlConnectionUtils.initDbResource(DBUrl, username, pass);
+                    String[] SqlArr = Sql.split(";");
+                    for (String ExecSql : SqlArr) {
+                        int nums = PgsqlConnectionUtils.execsql(ExecSql);
+                        Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+                    }
+                }
+
                 if (AssembleType.equals("mysql")) {
                     DBUrl = "jdbc:mysql://";
                     // 根据访问方式来确定ip还是域名
@@ -227,30 +256,32 @@ public class TestCondition {
                         String Domain = macdepunitlist.get(0).get("domain");
                         DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
                     }
+                    Respone = UseHutoolDb(DBUrl, username, pass, Sql);
                 }
+
                 if (AssembleType.equals("oracle")) {
                     DBUrl = "jdbc:oracle:thin:@";
                     // 根据访问方式来确定ip还是域名
                     if (deployunitvisittype.equals("ip")) {
                         String IP = machinelist.get(0).get("ip");
-                        DBUrl = DBUrl + IP + ":" + port + ":" + dbname ;
+                        DBUrl = DBUrl + IP + ":" + port + ":" + dbname;
                     } else {
                         String Domain = macdepunitlist.get(0).get("domain");
-                        DBUrl = DBUrl + Domain + ":" + dbname ;
+                        DBUrl = DBUrl + Domain + ":" + dbname;
                     }
+                    Respone = UseHutoolDb(DBUrl, username, pass, Sql);
                 }
-                Start = new Date().getTime();
-                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-
-                String[] SqlArr = Sql.split(";");
-                for (String ExecSql : SqlArr) {
-                    logger.info(logplannameandcasename + "TestCondition数据库子条件执行sql ....." + ExecSql);
-                    if((!ExecSql.isEmpty())||(ExecSql.equals("")))
-                    {
-                        int nums = Db.use(ds).execute(ExecSql);
-                        Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
-                    }
-                }
+//                DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+//
+//                String[] SqlArr = Sql.split(";");
+//                for (String ExecSql : SqlArr) {
+//                    logger.info(logplannameandcasename + "TestCondition数据库子条件执行sql ....." + ExecSql);
+//                    if((!ExecSql.isEmpty())||(ExecSql.equals("")))
+//                    {
+//                        int nums = Db.use(ds).execute(ExecSql);
+//                        Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+//                    }
+//                }
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 Respone = ex.getMessage();
@@ -262,6 +293,20 @@ public class TestCondition {
                 SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
             }
         }
+    }
+
+    private String UseHutoolDb(String DBUrl, String username, String pass, String Sql) throws SQLException {
+        String Respone = "";
+        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+        String[] SqlArr = Sql.split(";");
+        //Db.use(ds).getConnection().setAutoCommit(false);
+//        try
+//        {
+        for (String ExecSql : SqlArr) {
+            int nums = Db.use(ds).execute(ExecSql);
+            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+        }
+        return Respone;
     }
 
 }

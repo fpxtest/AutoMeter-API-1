@@ -34,7 +34,10 @@
     FROM testvariables_value  where planid = #{planid} and caseid=#{caseid} and variablesname=#{variablesname} and batchname = #{batchname}
   </select>
 
-
+  <select id="gettvlist" resultMap="BaseResultMap">
+    SELECT *
+    FROM testvariables_value  where planid = #{planid} and batchname = #{batchname}
+  </select>
 
   <update id="updatetestvariablesvalue" parameterType="com.zoctan.api.entity.TestvariablesValue">
     update testvariables_value set planid = #{planid},planname=#{planname},caseid=#{caseid},

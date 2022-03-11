@@ -130,6 +130,10 @@ public class Httphelp {
             HttpPost httpPost = new HttpPost(Url);
             httpPost.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpPost, header);
             }
             if (Query != null) {
@@ -146,11 +150,23 @@ public class Httphelp {
             for (Header header1 : httpPost.getAllHeaders()) {
                 Httphelp.log.info("..................Post请求Header名 :  " + header1.getName() + "  Header值：" + header1.getValue());
             }
-            Httphelp.log.info("Post PostWithBody..................Post请求数据 :  " + Query);
+            Httphelp.log.info("Post PostWithBody..................Post开始请求数据 :  " + Query);
             httpResponse = httpClient.execute(httpPost);
-            List<Cookie> cookies = cookieStore.getCookies();
-            testResponeData.setCookies(cookies);
-            testResponeData=GetResponeData(httpResponse);
+            Httphelp.log.info("Post PostWithBody..................Post结束请求");
+            if(cookieStore!=null)
+            {
+                List<Cookie> cookies = cookieStore.getCookies();
+                if(cookies.size()>0)
+                {
+                    testResponeData.setCookies(cookies);
+                    Httphelp.log.info("Post PostWithBody..................Post setCookies结束");
+                }
+            }
+            if(httpResponse!=null)
+            {
+                testResponeData=GetResponeData(httpResponse);
+                Httphelp.log.info("Post PostWithBody..................Post GetResponeData结束");
+            }
         } catch (Exception e) {
             Httphelp.log.info("Post PostWithBody Exception is :" + e.getMessage());
             throw new Exception("请求地址:" + Url + " 发生异常，原因：" + e.getMessage());
@@ -192,6 +208,10 @@ public class Httphelp {
             httpGetWithEntity.setEntity(httpEntity);
             httpGetWithEntity.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpGetWithEntity, header);
             }
             if (Protocal.equalsIgnoreCase("http")) {
@@ -354,6 +374,10 @@ public class Httphelp {
             httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
 
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpPut, header);
             }
             if (query != null) {
@@ -416,6 +440,10 @@ public class Httphelp {
             httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
 
             if (header.getParams().size() > 0) {
+                if(header.getParams().containsKey("Content-Length"))
+                {
+                    header.getParams().remove("Content-Length");
+                }
                 setHeader(httpDelete, header);
             }
             if (query != null) {
@@ -455,7 +483,6 @@ public class Httphelp {
 
     private static void setHeader(HttpRequestBase httpRequestBase, HttpHeader header) {
         if (header != null) {
-            //httpRequestBase.setHeader("Content-Length",  String.valueOf(Postdata.getBytes(StandardCharsets.UTF_8).length));
             Map<String, Object> headerMap = header.getParams();
             if (headerMap != null && !headerMap.isEmpty()) {
                 Set<Map.Entry<String, Object>> entries = headerMap.entrySet();
@@ -496,14 +523,14 @@ public class Httphelp {
         StringBuffer sb = new StringBuffer();// 存储参数
         requestUrl = url;
         Map<String, Object> parameters = paramsob.getParams();
-        if (apistyle.equalsIgnoreCase("restful")) {
-            if (!(url.contains("{") && url.contains("}"))) {
-                throw new Exception("restfulapi-url:" + url + " 未包含{}参数");
-            }
-        }
+//        if (apistyle.equalsIgnoreCase("restful")) {
+//            if (!(url.contains("{") && url.contains("}"))) {
+//                throw new Exception("restfulapi-url:" + url + " 未包含{}参数");
+//            }
+//        }
         if (parameters.size() < 1) {
             if (apistyle.equalsIgnoreCase("restful")) {
-                throw new Exception("restfulapi-未设置url:" + url + " 中的对应的参数和用例数据");
+                throw new Exception("Restful-未设置资源:" + url + " 中的对应的参数和用例数据");
             } else {
                 requestUrl = url;
             }
@@ -557,6 +584,43 @@ public class Httphelp {
         return requestUrl;
     }
 
+    public static String GetNewRequestUrl(String url, String apistyle, HttpParamers paramsob) throws Exception {
+        String requestUrl = url;
+        String params="";// 编码之后的参数
+        StringBuffer sb = new StringBuffer();// 存储参数
+        if(paramsob.getParams().size()>0)
+        {
+            if(!requestUrl.endsWith("/"))
+            {
+                requestUrl=url+"/";
+            }
+            Map<String, Object> parameters = paramsob.getParams();
+            if (apistyle.equalsIgnoreCase("restful")) {
+                for (String name : parameters.keySet()) {
+                    sb.append(name).append("/").append(parameters.get(name));
+                }
+                requestUrl=requestUrl+sb.toString();
+            } else {
+                for (String name : parameters.keySet()) {
+                    try {
+                        sb.append(name).append("=").append(parameters.get(name)).append("&");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                String tempParams = sb.toString();
+                if(tempParams.length()>1)
+                {
+                    params = tempParams.substring(0, tempParams.length() - 1);
+                }
+                requestUrl = requestUrl + "?" + params;
+            }
+        }
+        return requestUrl;
+    }
+
+
+
     private static TestResponeData GetResponeData(CloseableHttpResponse closeableHttpResponse) throws IOException {
         String ActualResult="";
         TestResponeData responeData=new TestResponeData();
@@ -567,7 +631,7 @@ public class Httphelp {
             HttpEntity resEntity = closeableHttpResponse.getEntity();
             if(resEntity!=null)
             {
-                ActualResult = EntityUtils.toString(resEntity);
+                ActualResult = EntityUtils.toString(resEntity,"UTF-8");
                 responeData.setSize(resEntity.getContentLength());
             }
         }

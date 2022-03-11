@@ -30,6 +30,14 @@ export function search(ApicasesVariablesForm) {
   })
 }
 
+export function getbyvariablesid(ApicasesVariablesForm) {
+  return request({
+    url: '/apicases/variables/getbyvariablesid',
+    method: 'post',
+    data: ApicasesVariablesForm
+  })
+}
+
 export function addApicasesVariables(ApicasesVariablesForm) {
   return request({
     url: '/apicases/variables',

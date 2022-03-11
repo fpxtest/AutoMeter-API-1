@@ -9,20 +9,38 @@ package com.zoctan.api.core.service;
  @create 2020/10/17
 */
 
+import com.alibaba.fastjson.JSON;
 import com.zoctan.api.dto.RequestObject;
 import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.entity.*;
+import com.zoctan.api.service.ApicasesVariablesService;
+import com.zoctan.api.service.TestvariablesService;
+import com.zoctan.api.service.TestvariablesValueService;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+
+
 
 /**
  * 用例数据
  */
 @Slf4j
 public class TestCaseHelp {
+    @Resource
+    private ApicasesVariablesService apicasesVariablesService;
+
+    @Resource
+    private TestvariablesService testvariablesService;
+
+    @Resource
+    private TestvariablesValueService testvariablesValueService;
+
+
     // 拼装请求需要的用例数据
     public RequestObject GetCaseRequestData(List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
         RequestObject ro=new RequestObject();
@@ -73,7 +91,10 @@ public class TestCaseHelp {
            if(headmap.size()>0)
            {
                for (String key : headmap.keySet()) {
-                   header.addParam(key, headmap.get(key));
+                   String Value = headmap.get(key);
+                   //Object ObjectValue = GetVariablesObjectValues(Value, PlanID.toString(), BatchName);
+                   header.addParam(key, Value);
+                   //header.addParam(key, headmap.get(key));
                }
            }
            //url参数
@@ -82,7 +103,9 @@ public class TestCaseHelp {
            if(paramsmap.size()>0)
            {
                for (String key : paramsmap.keySet()) {
-                   paramers.addParam(key, paramsmap.get(key));
+                   String Value = paramsmap.get(key);
+                   //Object ObjectValue = GetVariablesObjectValues(Value, PlanID.toString(), BatchName);
+                   paramers.addParam(key, Value);
                }
            }
            //Body参数
@@ -93,8 +116,10 @@ public class TestCaseHelp {
            if(bodymap.size()>0)
            {
                if (requestcontenttype.equalsIgnoreCase("Form表单")) {
-                   for (String key : paramsmap.keySet()) {
-                       Bodyparamers.addParam(key, paramsmap.get(key));
+                   for (String key : bodymap.keySet()) {
+                       String Value = bodymap.get(key);
+                       //Object ObjectValue = GetVariablesObjectValues(Value, PlanID.toString(), BatchName);
+                       Bodyparamers.addParam(key, Value);
                    }
                    try {
                        PostData=GetParasPostData(requestcontenttype,Bodyparamers);
@@ -172,6 +197,130 @@ public class TestCaseHelp {
             httpHeader.addParam("Content-Type", "application/x-www-form-urlencoded");
         }
         return httpHeader;
+    }
+
+    //获取参数值的具体内容，支持$变量
+    private Object GetVariablesObjectValues(String Value, String PlanId, String BatchName) {
+        Object Result = "";
+        if (Value.trim().contains("$")) {
+            if (Value.trim().length() == 1) {
+                Result = Value;
+            } else {
+                String Prix[]=Value.split("\\+");
+                for (String PrixStr: Prix) {
+                    if(PrixStr.contains("$"))
+                    {
+                        TestCaseHelp.log.info("TestHttpRequestData $PrixStr :  " + PrixStr );
+                        Result=Result.toString()+GetVariablesDataType(PrixStr,PlanId,BatchName);
+                        TestCaseHelp.log.info("TestHttpRequestData $PrixStr Result :  " + Result );
+                    }
+                    else
+                    {
+                        TestCaseHelp.log.info("TestHttpRequestData PrixStr :  " + PrixStr );
+                        Result=Result+PrixStr;
+                    }
+                }
+//                Value = Value.substring(1);
+//                String Caseid = testMysqlHelp.GetCaseIdByVariablesName(Value);
+//                if(Caseid.isEmpty())
+//                {
+//                    Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
+//                    return Result;
+//                }
+//                String ValueType = testMysqlHelp.GetVariablesDataType(Value);
+//                if(ValueType.isEmpty())
+//                {
+//                    Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
+//                    return Result;
+//                }
+//                //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+//                String VariablesNameValue = testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
+//                if(VariablesNameValue.isEmpty())
+//                {
+//                    Result="未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值";
+//                    return Result;
+//                }
+//                else
+//                {
+//                    Result=GetDataByType(VariablesNameValue,ValueType);
+//                }
+            }
+        } else {
+            Result = Value;
+        }
+        return Result;
+    }
+
+
+    private Object GetVariablesDataType(String Value,String PlanId, String BatchName)
+    {
+        Object Result="";
+        Value = Value.substring(1);
+        TestCaseHelp.log.info( "TestHttpRequestData GetVariablesDataType Value :  " + Value );
+
+        ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("variablesname",Value);// testMysqlHelp.GetCaseIdByVariablesName(Value);
+        if(apicasesVariables==null)
+        {
+            Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
+            return Result;
+        }
+
+        Testvariables testvariables = testvariablesService.getBy("testvariablesname",Value); //testMysqlHelp.GetVariablesDataType(Value);
+        if(testvariables==null)
+        {
+            Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
+            return Result;
+        }
+        //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
+        String Caseid=apicasesVariables.getCaseid().toString();
+        TestvariablesValue testvariablesValue = testvariablesValueService.findtestvariablesvalue(Long.parseLong(PlanId),Long.parseLong(Caseid),BatchName,Value);//.fi   testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
+        if(testvariablesValue==null)
+        {
+            Result="未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值";
+            return Result;
+        }
+        else
+        {
+            String ValueType=testvariables.getTestvariablestype();
+            String VariablesNameValue =testvariablesValue.getVariablesvalue();
+            Result=GetDataByType(VariablesNameValue,ValueType);
+        }
+        return Result;
+    }
+
+    //根据数据类型转换
+    private Object GetDataByType(String Data,String ValueType)
+    {
+        Object Result=new Object();
+        if (ValueType.equalsIgnoreCase("Number")) {
+            try {
+                Result = Long.parseLong(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+            }
+        }
+        if (ValueType.equalsIgnoreCase("Json")) {
+            try {
+                Result = JSON.parse(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是数字类型，请检查！";
+            }
+        }
+        if (ValueType.equalsIgnoreCase("String")||ValueType.isEmpty()) {
+            Result = Data;
+        }
+        if (ValueType.equalsIgnoreCase("Array")) {
+            String[] Array = Data.split(",");
+            Result = Array;
+        }
+        if (ValueType.equalsIgnoreCase("Bool")) {
+            try {
+                Result = Boolean.parseBoolean(Data);
+            } catch (Exception ex) {
+                Result = "变量值：" + Data + " 不是布尔类型，请检查！";
+            }
+        }
+        return Result;
     }
 
     // 发送http请求

@@ -73,6 +73,8 @@ public class postcondition extends AbstractJavaSamplerClient {
         try {
             core.updatedispatchcasestatus(testplanid,caseid,slaverid,batchid);
             core.PlanBatchAllDipatchFinish(testplanid,batchname);
+            core.SendMessageDingDing(testplanid,batchname);
+            core.SendMailByFinishPlanCase(testplanid,batchname);
             getLogger().info(TestCaseData.logplannameandcasename + "更新调度表状态完成");
             getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+slaverid);
             core.UpdateSlaverStatus(slaverid,"空闲");

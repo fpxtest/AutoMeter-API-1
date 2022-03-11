@@ -56,6 +56,7 @@ public class AutoFixSlaverScheduleTask {
                 //TODO 执行任务结束后需要释放锁
                 try {
                     String MacAddress=getMacByIP(ip);
+                    AutoFixSlaverScheduleTask.log.info("自动修复Slaver更新MacAddress为======================="+MacAddress);
                     List<Slaver> slaverList= slaverMapper.findslaverbymac(MacAddress);
                     if(slaverList.size()>0)
                     {
@@ -101,13 +102,16 @@ public class AutoFixSlaverScheduleTask {
 
     private String getMacByIP(String IP) throws Exception {
         InetAddress ia = InetAddress.getByName(IP);
+        AutoFixSlaverScheduleTask.log.info("自动修复SlavergetMacByIP-getHostAddress: " + ia.getHostAddress());
         byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();
+        AutoFixSlaverScheduleTask.log.info("自动修复Slaver-mac长度: " + mac.length);
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < mac.length; i++) {
             if (i != 0) {
                 sb.append("-");
             }
             String hexString = Integer.toHexString(mac[i] & 0xFF);
+            AutoFixSlaverScheduleTask.log.info("自动修复Slaver-getMacByIP-hexString: " + hexString);
             sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
         }
         return sb.toString().toUpperCase();

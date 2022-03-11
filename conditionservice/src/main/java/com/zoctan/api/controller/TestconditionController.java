@@ -5,8 +5,11 @@ import cn.hutool.db.Db;
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
+import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.core.service.ParseResponeHelp;
@@ -18,6 +21,7 @@ import com.zoctan.api.entity.*;
 import com.zoctan.api.entity.Dictionary;
 import com.zoctan.api.service.*;
 import com.zoctan.api.util.DnamicCompilerHelp;
+import com.zoctan.api.util.PgsqlConnectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -26,6 +30,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -282,15 +287,20 @@ public class TestconditionController {
                 End = new Date().getTime();
             }
 
-            //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，如果解析失败，置条件为失败
-            ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
-            TestvariablesValue testvariablesValue = new TestvariablesValue();
-            try {
-                testvariablesValue = FixApicasesVariables(apicasesVariables, requestObject, Respone, Planid, CaseID, dispatch, apicases);
-            } catch (Exception exception) {
-                ConditionResultStatus="失败";
+            //根据用例是否有中间变量（多个），如果有变量，解析（json，xml，html）保存变量值表，如果解析失败，置条件为失败
+            Condition con = new Condition(ApicasesVariables.class);
+            con.createCriteria().andCondition("caseid = " + apicases.getId());
+            List<ApicasesVariables> apicasesVariablesList = apicasesVariablesService.listByCondition(con);
+            for (ApicasesVariables apicasesVariables:apicasesVariablesList) {
+                //ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
+                TestvariablesValue testvariablesValue = new TestvariablesValue();
+                try {
+                    testvariablesValue = FixApicasesVariables(apicasesVariables, requestObject, Respone, Planid, CaseID, dispatch, apicases);
+                } catch (Exception exception) {
+                    ConditionResultStatus="失败";
+                }
+                VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
             }
-            VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
             CostTime = End - Start;
             //更新条件结果表
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, CostTime,conditionApi.getCreator());
@@ -315,7 +325,7 @@ public class TestconditionController {
                 catch (Exception ex)
                 {
                     ParseValue=ex.getMessage();
-                    throw new Exception(ex.getMessage());
+                    throw new Exception("接口变量："+apicasesVariables.getVariablesname()+" 异常："+ex.getMessage());
                 }
                 finally {
                     TestconditionController.log.info("接口子条件条件报告子条件处理变量取值-============：" + ParseValue);
@@ -401,22 +411,27 @@ public class TestconditionController {
             ResponeData testResponeData = testCaseHelp.request(requestObject);
             String Respone= testResponeData.getContent();
             //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
-            ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
-            if (apicasesVariables != null) {
+            Condition con = new Condition(ApicasesVariables.class);
+            con.createCriteria().andCondition("caseid = " + apicases.getId());
+            List<ApicasesVariables> apicasesVariablesList = apicasesVariablesService.listByCondition(con);
+            for (ApicasesVariables apicasesVariables:apicasesVariablesList) {
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
                 if (testvariables != null) {
-                    String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
-                    VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
+                    try
+                    {
+                        String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
+                        VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("接口子条件执行异常接口变量:"+apicasesVariables.getVariablesname()+" 解析异常,原因为："+ex.getMessage());
+                    }
                 }
                 else
                 {
                     throw new Exception("接口子条件执行异常:接口子条件未找到变量:"+apicasesVariables.getVariablesname()+"，请检查变量管理-变量管理中是否存在！");
                 }
-            }
-            else
-            {
-                throw new Exception("接口子条件执行异常:接口子条件未找到接口:"+apicases.getCasename()+",和变量关系，请检查变量管理-用例变量中是否存在！");
             }
         }
         return ResultGenerator.genOkResult(VariableNameValueMap);
@@ -581,39 +596,61 @@ public class TestconditionController {
         String port = ConnetcArray[2];
         String dbname = ConnetcArray[3];
         String DBUrl = "";
-        if (AssembleType.equals("mysql")) {
+        if (AssembleType.equalsIgnoreCase("pgsql")) {
+            DBUrl = "jdbc:postgresql://";
+            // 根据访问方式来确定ip还是域名
+            if (deployunitvisittype.equalsIgnoreCase("ip")) {
+                String IP = machine.getIp();
+                DBUrl = DBUrl + IP + ":" + port + "/" + dbname ;
+            } else {
+                String Domain = macdepunit.getDomain();
+                DBUrl = DBUrl + Domain + "/" + dbname ;
+            }
+            PgsqlConnectionUtils.initDbResource(DBUrl,username,pass);
+            String[] SqlArr = Sql.split(";");
+            for (String ExecSql : SqlArr) {
+                TestconditionController.log.info("数据库子条件pgSql开始执行：" + ExecSql);
+                int nums = PgsqlConnectionUtils.execsql(ExecSql);
+                TestconditionController.log.info("数据库子条件pgSql执行完成：" + ExecSql);
+                Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+            }
+        }
+
+        if (AssembleType.equalsIgnoreCase("mysql")) {
             DBUrl = "jdbc:mysql://";
             // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
+            if (deployunitvisittype.equalsIgnoreCase("ip")) {
                 String IP = machine.getIp();
                 DBUrl = DBUrl + IP + ":" + port + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             } else {
                 String Domain = macdepunit.getDomain();
                 DBUrl = DBUrl + Domain + "/" + dbname + "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
             }
+            Respone=UseHutoolDb(DBUrl,username,pass,Sql);
         }
-        if (AssembleType.equals("oracle")) {
+        if (AssembleType.equalsIgnoreCase("oracle")) {
             DBUrl = "jdbc:oracle:thin:@";
             // 根据访问方式来确定ip还是域名
-            if (deployunitvisittype.equals("ip")) {
+            if (deployunitvisittype.equalsIgnoreCase("ip")) {
                 String IP = machine.getIp();
                 DBUrl = DBUrl + IP + ":" + port + ":" + dbname;
             } else {
                 String Domain = macdepunit.getDomain();
                 DBUrl = DBUrl + Domain + ":" + dbname;
             }
+            Respone=UseHutoolDb(DBUrl,username,pass,Sql);
         }
-        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
-        String[] SqlArr = Sql.split(";");
-        //Db.use(ds).getConnection().setAutoCommit(false);
-//        try
-//        {
-        for (String ExecSql : SqlArr) {
-            TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
-            int nums = Db.use(ds).execute(ExecSql);
-            TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
-            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
-        }
+//        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+//        String[] SqlArr = Sql.split(";");
+//        //Db.use(ds).getConnection().setAutoCommit(false);
+////        try
+////        {
+//        for (String ExecSql : SqlArr) {
+//            TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
+//            int nums = Db.use(ds).execute(ExecSql);
+//            TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
+//            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+//        }
         //Db.use(ds).getConnection().commit();
         // }
 //        catch (Exception ex)
@@ -630,6 +667,22 @@ public class TestconditionController {
         return Respone;
     }
 
+    private String UseHutoolDb(String DBUrl,String username,String pass,String Sql) throws SQLException {
+        String Respone="";
+        DataSource ds = new SimpleDataSource(DBUrl, username, pass);
+        String[] SqlArr = Sql.split(";");
+        //Db.use(ds).getConnection().setAutoCommit(false);
+//        try
+//        {
+        for (String ExecSql : SqlArr) {
+            TestconditionController.log.info("数据库子条件Sql开始执行：" + ExecSql);
+            int nums = Db.use(ds).execute(ExecSql);
+            TestconditionController.log.info("数据库子条件Sql执行完成：" + ExecSql);
+            Respone = Respone + " 成功执行Sql:" + Sql + " 影响条数：" + nums;
+        }
+        return Respone;
+    }
+
     private void UpdatetestconditionReport(TestconditionReport testconditionReport, String Respone, String ConditionResultStatus, Long CostTime,String user) {
         //更新条件结果表
         testconditionReport.setConditionresult(Respone);
@@ -641,47 +694,90 @@ public class TestconditionController {
         //当结果为失败的情况发邮件通知用户
         if(ConditionResultStatus.equals("失败"))
         {
-            try
-            {
-                List<Dictionary>dictionaryList= dictionaryService.findDicNameValueWithCode("Mail");
-                if(dictionaryList.size()>0)
-                {
-                    Dictionary dictionary=dictionaryList.get(0);
-                    String MailInfo=dictionary.getDicitmevalue();
-                    String[] MailArray=MailInfo.split(",");
-                    if(MailArray.length>4)
-                    {
-                        String Smtp=MailArray[0];
-                        int port=Integer.parseInt(MailArray[1]);
-                        String from=MailArray[2];
-                        String mailuser=MailArray[3];
-                        String pass=MailArray[4];
+            String Subject=testconditionReport.getPlanname()+"|"+testconditionReport.getBatchname()+"前置子条件："+testconditionReport.getSubconditionname()+"执行失败";
+            String Content="-------------【失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！】";
+            SendMessageDingDing(Subject+Content);
+            SendMail(testconditionReport,Respone,user);
+        }
+    }
 
-                        MailAccount account = new MailAccount();
-                        account.setHost(Smtp);
-                        account.setPort(port);
-                        account.setAuth(true);
-                        account.setFrom(from);
-                        account.setUser(mailuser);
-                        account.setPass(pass);
 
-                        List<Account>accountList= accountService.findWithUsername(user);
-                        String mailto="";
-                        if(accountList.size()>0)
-                        {
-                            mailto=accountList.get(0).getEmail();
-                        }
-                        String Subject=testconditionReport.getPlanname()+"|"+testconditionReport.getBatchname()+"前置子条件执行失败："+testconditionReport.getSubconditionname();
-                        String Content="失败原因："+Respone+" ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时前后AutoMeter处理！";
-                        MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
-                        TestconditionController.log.info("发送邮件成功-============："+mailto);
+    private  void SendMail(TestconditionReport testconditionReport, String Respone,String user)
+    {
+        try {
+            List<Dictionary> dictionaryList = dictionaryService.findDicNameValueWithCode("Mail");
+            if (dictionaryList.size() > 0) {
+                Dictionary dictionary = dictionaryList.get(0);
+                String MailInfo = dictionary.getDicitmevalue();
+                String[] MailArray = MailInfo.split(",");
+                if (MailArray.length > 4) {
+                    String Smtp = MailArray[0];
+                    int port = Integer.parseInt(MailArray[1]);
+                    String from = MailArray[2];
+                    String mailuser = MailArray[3];
+                    String pass = MailArray[4];
+
+                    MailAccount account = new MailAccount();
+                    account.setHost(Smtp);
+                    account.setPort(port);
+                    account.setAuth(true);
+                    account.setFrom(from);
+                    account.setUser(mailuser);
+                    account.setPass(pass);
+
+                    List<Account> accountList = accountService.findWithUsername(user);
+                    String mailto = "";
+                    if (accountList.size() > 0) {
+                        mailto = accountList.get(0).getEmail();
                     }
+                    String Subject = testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "前置子条件执行失败：" + testconditionReport.getSubconditionname();
+                    String Content = "失败原因：" + Respone + " ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！";
+                    MailUtil.send(account, CollUtil.newArrayList(mailto), Subject, Content, false);
+                    TestconditionController.log.info("发送邮件成功-============：" + mailto);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                TestconditionController.log.info("发送邮件异常-============："+ex.getMessage());
+                TestconditionController.log.info("发送邮件未找到字典包配置邮件信息-============：" );
             }
+        } catch (Exception ex) {
+            TestconditionController.log.info("发送邮件异常-============：" + ex.getMessage());
+        }
+    }
+
+    private void SendMessageDingDing(String MessageContent)
+    {
+        try
+        {
+            List<Dictionary>dictionaryList= dictionaryService.findDicNameValueWithCode("DingDing");
+            if(dictionaryList.size()>0)
+            {
+                Dictionary dictionary=dictionaryList.get(0);
+                String Token=dictionary.getDicitmevalue();
+                //消息内容
+                Map<String, String> contentMap = new HashMap<>();
+                contentMap.put("content", MessageContent);
+                //通知人
+                Map<String, Object> atMap = new HashMap<>();;
+                //1.是否通知所有人
+                atMap.put("isAtAll", true);
+
+                Map<String, Object> reqMap = Maps.newHashMap();
+                reqMap.put("msgtype", "text");
+                reqMap.put("text", contentMap);
+                reqMap.put("at", atMap);
+                String RequestContent= JSON.toJSONString(reqMap);
+                String Respone = HttpRequest.post(Token).body(RequestContent).timeout(10000).execute().body();
+                TestconditionController.log.info("发送钉钉信息响应：-============：" + Respone);
+            }
+            else
+            {
+                TestconditionController.log.info("发送钉钉信息未找到字典表配置钉钉信息：-============：");
+            }
+        }
+        catch (Exception ex)
+        {
+            TestconditionController.log.info("发送钉钉异常：-============："+ex.getMessage());
         }
     }
 

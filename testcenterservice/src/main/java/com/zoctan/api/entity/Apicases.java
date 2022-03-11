@@ -105,10 +105,18 @@ public class Apicases {
      */
     private String expect;
 
+
+    public Long getLevel() {
+        return level;
+    }
+
+    public void setLevel(Long level) {
+        this.level = level;
+    }
     /**
      * 优先级
      */
-    private String level;
+    private Long level;
 
     /**
      * 备注
@@ -256,24 +264,6 @@ public class Apicases {
      */
     public void setExpect(String expect) {
         this.expect = expect;
-    }
-
-    /**
-     * 获取优先级
-     *
-     * @return level - 优先级
-     */
-    public String getLevel() {
-        return level;
-    }
-
-    /**
-     * 设置优先级
-     *
-     * @param level 优先级
-     */
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     /**

@@ -251,6 +251,17 @@ public class RequestObject {
     private String paramjson;
     private String bodyjson;
 
+    public String getVariablesjson() {
+        return variablesjson;
+    }
+
+    public void setVariablesjson(String variablesjson) {
+        this.variablesjson = variablesjson;
+    }
+
+    private String variablesjson;
+
+
     public String getDeployunitvisittype() {
         return deployunitvisittype;
     }

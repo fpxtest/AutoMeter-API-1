@@ -164,9 +164,10 @@ export const asyncRouterMap = [
     name: '变量管理',
     icon: 'paras',
     children: [
-      { path: 'testvariables/list', name: '变量管理', component: _import('testvariables/testvariables/index'), meta: { title: '变量管理', permission: ['testvariables:list'] }},
-      { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }},
-      { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
+      { path: 'variables/list', name: '随机变量', component: _import('testvariables/variables/index'), meta: { title: '随机变量', permission: ['variables:list'] }},
+      { path: 'testvariables/list', name: '接口变量', component: _import('testvariables/testvariables/index'), meta: { title: '接口变量', permission: ['testvariables:list'] }}
+      // { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }}
+      // { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
     ]
   },
   // {

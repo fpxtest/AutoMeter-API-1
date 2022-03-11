@@ -27,7 +27,10 @@
     </where>
   </select>
 
-
+  <select id="findtestvariablesvalue" resultMap="BaseResultMap">
+    select * from testvariables_value where planid = #{planid} and caseid=#{caseid}
+    and batchname=#{batchname}  and variablesname=#{variablesname}
+  </select>
 
   <update id="updatetestvariablesvalue" parameterType="com.zoctan.api.entity.TestvariablesValue">
     update testvariables_value set planid = #{planid},planname=#{planname},caseid=#{caseid},

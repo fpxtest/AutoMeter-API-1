@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.VariablesMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Variables">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="variablesname" jdbcType="VARCHAR" property="variablesname" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="variablestype" jdbcType="VARCHAR" property="variablestype" />
+    <result column="variablecondition" jdbcType="VARCHAR" property="variablecondition" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+
+  <select id="findvariablesWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM variables a
+    <where>
+      <if test="variablesname != null and variablesname != ''">a.variablesname like CONCAT('%',#{variablesname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updatevariables" parameterType="com.zoctan.api.entity.Variables">
+    update variables set variablesname = #{variablesname},variablestype=#{variablestype},variablecondition = #{variablecondition},
+     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>

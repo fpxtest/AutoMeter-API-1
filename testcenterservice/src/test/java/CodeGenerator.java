@@ -59,7 +59,7 @@ class CodeGenerator {
 //    }
     System.out.print("start!!!");
 
-    CodeGenerator.genCode("condition_order");
+    CodeGenerator.genCode("variables");
     System.out.print("finish!!!");
 
     // genCodeByCustomModelName("输入表名","输入自定义Model名称");

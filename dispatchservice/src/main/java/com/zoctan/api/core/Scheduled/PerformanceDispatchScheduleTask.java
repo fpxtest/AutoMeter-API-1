@@ -85,7 +85,7 @@ public class PerformanceDispatchScheduleTask {
                         if (flag) {
                             List<Dispatch> SlaverIDList = dispatchMapper.getdistinctslaveridandcaaseid("待分配", "性能", PlanID, BatchName, caseid);
                             int SleepSlaverNums = slaverMapper.findbusyslavernums(SlaverIDList, "空闲", "性能");
-                            //判断SlaverIDList中的所有slaver都是空闲状态才请求slaver执行
+                            //判断SlaverIDList中的所有slaver都是空闲状态才请求slaver执行，多机并行执行性能的前提
                             if (SlaverIDList.size() == SleepSlaverNums) {
                                 try {
                                     for (Dispatch dispatch1 : SlaverIDList) {
