@@ -3,6 +3,8 @@ package com.zoctan.api.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 /**
  * @author hacker li
  * @since 08/02/2022 11:14
@@ -12,5 +14,5 @@ import lombok.Setter;
 public class ApiInfo {
     private String name;
     private RequestInfo request;
-    private String response;
+    private ArrayList<String> response;
 }

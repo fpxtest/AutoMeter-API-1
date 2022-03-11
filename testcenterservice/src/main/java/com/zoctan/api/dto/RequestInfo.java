@@ -14,6 +14,6 @@ import java.util.List;
 public class RequestInfo {
     private String method;
     private List<Header> header;
-    private Body body;
-    private Url url;
+    private  Body body;
+    private  Url url;
 }
