@@ -110,13 +110,13 @@
             @click.native.prevent="removeapi(scope.$index)"
           >删除
           </el-button>
-<!--          <el-button-->
-<!--            type="primary"-->
-<!--            size="mini"-->
-<!--            v-if="hasPermission('api:delete') && scope.row.id !== id"-->
-<!--            @click.native.prevent="ShowParamsDialog(scope.$index)"-->
-<!--          >API参数-->
-<!--          </el-button>-->
+          <!--          <el-button-->
+          <!--            type="primary"-->
+          <!--            size="mini"-->
+          <!--            v-if="hasPermission('api:delete') && scope.row.id !== id"-->
+          <!--            @click.native.prevent="ShowParamsDialog(scope.$index)"-->
+          <!--          >API参数-->
+          <!--          </el-button>-->
           <el-button
             type="primary"
             size="mini"
@@ -589,12 +589,12 @@
         </el-form-item>
         <el-form-item>
           <el-upload
-                     style="display: inline"
-                     :auto-upload="false"
-                     :on-change="handleChange"
-                     :file-list="this.fileList"
-                     accept=".json"
-                     action="#">
+            style="display: inline"
+            :auto-upload="false"
+            :on-change="handleChange"
+            :file-list="this.fileList"
+            accept=".json"
+            action="#">
             <el-button  type="success">选择文件</el-button>
           </el-upload>
         </el-form-item>
@@ -623,7 +623,6 @@ import { unix2CurrentTime } from '@/utils'
 // import { getToken } from '@/utils/token'
 import { mapGetters } from 'vuex'
 import store from '@/store'
-
 export default {
   filters: {
     statusFilter(status) {
@@ -765,11 +764,9 @@ export default {
       }
     }
   },
-
   computed: {
     ...mapGetters(['name', 'sidebar', 'avatar'])
   },
-
   created() {
     this.Headertabledatas = [
       { id: '', keyname: '', keytype: '', keydefaultvalue: '', propertytype: 'Header', creator: '' }
@@ -792,7 +789,6 @@ export default {
     this.editAll()
     this.editParamAll()
   },
-
   methods: {
     // 单个复制
     copeHeader(val, index) {
@@ -1016,7 +1012,6 @@ export default {
       }
     },
     unix2CurrentTime,
-
     // submitUpload() {
     //   console.log('aaaaaaaaaaaaaaaaaaa')
     //   console.log('上传' + this.files.name)
@@ -1093,7 +1088,6 @@ export default {
         console.log(this.deployunitList[i].id)
       }
     },
-
     uploadselectChanged(e) {
       for (let i = 0; i < this.deployunitList.length; i++) {
         if (this.deployunitList[i].deployunitname === e) {
@@ -1119,7 +1113,6 @@ export default {
         this.BodyVisible = false
       }
     },
-
     submittypeselectChanged(e) {
       this.tmpapiparams.keyname = ''
       if (this.tmpapiparams.propertytype === 'Body') {
@@ -1140,7 +1133,6 @@ export default {
         this.BodyVisible = false
       }
     },
-
     /**
      * 发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
      */
@@ -1156,7 +1148,6 @@ export default {
         this.$message.error('根据发布单元id获取api列表失败')
       })
     },
-
     /**
      * 源API下拉选择事件获取用例id  e的值为options
      */
@@ -1167,7 +1158,6 @@ export default {
         }
       }
     },
-
     /**
      * 目标发布单元下拉选择事件获取发布单元id  e的值为options
      */
@@ -1178,7 +1168,6 @@ export default {
         }
       }
     },
-
     /**
      * 复制API
      */
@@ -1198,7 +1187,6 @@ export default {
         }
       })
     },
-
     /**
      * 访问方式下拉，为get，不显示请求数据格式  e的值为options的选值
      */
@@ -1211,7 +1199,6 @@ export default {
       //   this.tmpapi.requestcontenttype = ''
       // }
     },
-
     /**
      * 获取api列表
      */
@@ -1228,7 +1215,6 @@ export default {
         this.$message.error('加载api列表失败')
       })
     },
-
     /**
      * 获取apiparams列表
      */
@@ -1250,7 +1236,6 @@ export default {
         this.$message.error('加载字典访问方式列表失败')
       })
     },
-
     /**
      * 获取字典请求数据格式列表
      */
@@ -1261,7 +1246,6 @@ export default {
         this.$message.error('加载请求数据格式列表失败')
       })
     },
-
     /**
      * 获取Body非Form表单数据
      */
@@ -1299,7 +1283,6 @@ export default {
         this.$message.error('加载请求数据格式列表失败')
       })
     },
-
     /**
      * 根据apiid和property获取参数Header
      */
@@ -1325,7 +1308,6 @@ export default {
         this.$message.error('加载请求数据格式列表失败')
       })
     },
-
     /**
      * 根据apiid和property获取参数Body
      */
@@ -1361,7 +1343,6 @@ export default {
         this.$message.error('加载响应数据格式列表失败')
       })
     },
-
     /**
      * 获取发布单元列表
      */
@@ -1375,7 +1356,6 @@ export default {
         this.$message.error('加载发布单元列表失败')
       })
     },
-
     searchBy() {
       this.search.page = 1
       this.listLoading = true
@@ -1391,7 +1371,6 @@ export default {
       this.tmpapiname = this.search.apiname
       this.tmpdeployunitname = this.search.deployunitname
     },
-
     /**
      * 改变每页数量
      * @param size 页大小
@@ -1429,7 +1408,6 @@ export default {
     paramgetIndex(index) {
       return (this.paramssearch.page - 1) * this.paramssearch.size + index + 1
     },
-
     /**
      * 显示添加apiparams对话框
      */
@@ -1467,7 +1445,6 @@ export default {
       this.tmpapi.memo = ''
       this.tmpapi.creator = this.name
     },
-
     /**
      * 显示添加复制api对话框
      */
@@ -1475,7 +1452,6 @@ export default {
       // 显示新增对话框
       this.dialogAddFile = true
     },
-
     /**
      * 显示添加复制api对话框
      */
@@ -1490,7 +1466,6 @@ export default {
       this.tmpcopyapi.objectdeployunitname = ''
       this.tmpcopyapi.newapiname = ''
     },
-
     /**
      * 添加api
      */
@@ -1511,7 +1486,6 @@ export default {
         }
       })
     },
-
     /**
      * 添加api所有参数
      */
@@ -1565,7 +1539,6 @@ export default {
       }
       this.NewParamsdialogFormVisible = false
     },
-
     /**
      * 添加apiparams
      */
@@ -1587,7 +1560,6 @@ export default {
         }
       })
     },
-
     /**
      * 显示参数对话框
      */
@@ -1619,7 +1591,6 @@ export default {
         console.log(this.paramlist)
       }
     },
-
     /**
      * 显示参数对话框
      */
@@ -1704,7 +1675,6 @@ export default {
         }
       })
     },
-
     /**
      * 显示修改apiparams对话框
      * @param index apiparams下标
@@ -1729,7 +1699,6 @@ export default {
         this.paralabel = '参数(英文逗号隔开)'
       }
     },
-
     /**
      * 更新apiparams
      */
@@ -1748,7 +1717,6 @@ export default {
         }
       })
     },
-
     /**
      * 删除api
      * @param index api下标
@@ -1768,7 +1736,6 @@ export default {
         this.$message.info('已取消删除')
       })
     },
-
     /**
      * 删除api参数
      * @param index apiparams下标
@@ -1788,7 +1755,6 @@ export default {
         this.$message.info('已取消删除')
       })
     },
-
     /**
      * api资料是否唯一
      * @param api
