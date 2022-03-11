@@ -1,5 +1,5 @@
-.idea
-.iml
+\.idea/
+*.iml
 .DS_Store
 .git
 *.log
