@@ -566,19 +566,34 @@
         </el-button>
       </div>
     </el-dialog>
-
     <el-dialog title='导入PostMan' :visible.sync="dialogAddFile">
-      <el-form>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="name"></el-input>
+      <el-form
+        :model="uploadData"
+        ref="uploadData"
+      >
+        <el-form-item label="导入到发布单元:" prop="deptname" required>
+          <el-select v-model="uploadData.deptname" placeholder="发布单元" style="width:100%"
+                     @change="uploadselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none"/>
+            <div v-for="(depunitname, index) in deployunitList" :key="index">
+              <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+            </div>
+          </el-select>
         </el-form-item>
 
+        <el-form-item label="API风格:" prop="apistyle" required>
+          <el-select v-model="uploadData.apistyle" placeholder="api风格" style="width:100%">
+            <el-option label="传统方式" value="传统方式"></el-option>
+            <el-option label="Restful" value="restful"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
-          <el-upload ref="upfile"
+          <el-upload
                      style="display: inline"
                      :auto-upload="false"
                      :on-change="handleChange"
-                     :file-list="fileList"
+                     :file-list="this.fileList"
+                     accept=".json"
                      action="#">
             <el-button  type="success">选择文件</el-button>
           </el-upload>
@@ -586,7 +601,7 @@
         <el-form-item>
           <el-button  type="success" @click="upload">点击上传</el-button>
         </el-form-item>
-      </el-form>>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -605,7 +620,9 @@ import {
   searchparamsbyapiid as searchparamsbyapiid
 } from '@/api/deployunit/apiparams'
 import { unix2CurrentTime } from '@/utils'
+// import { getToken } from '@/utils/token'
 import { mapGetters } from 'vuex'
+import store from '@/store'
 
 export default {
   filters: {
@@ -620,7 +637,7 @@ export default {
   },
   data() {
     return {
-      name: '',
+      fileName: '',
       fileList: [],
       dialogAddFile: false, // 导入Postman对话框显示
       Headertabledatas: [],
@@ -740,11 +757,12 @@ export default {
         size: 10,
         apiname: null,
         deployunitname: null
+      },
+      uploadData: {
+        deployid: '',
+        deptname: '',
+        apistyle: ''
       }
-      // paramssearch: {
-      //   page: 1,
-      //   size: 10
-      // }
     }
   },
 
@@ -998,49 +1016,69 @@ export default {
       }
     },
     unix2CurrentTime,
-    // uploadSectionFile(param) {
-    //   console.log('上传开始。。。。。。。。。。。。。。。。。。。。。。')
-    //   console.log(this.fileurl)
-    //   const form = new FormData()
-    //   var that = this
-    //   form.append('file', param.file)
-    //   form.append('dir', 'temp1')
-    //   that.$axios.post(this.fileurl, form, {
+
+    // submitUpload() {
+    //   console.log('aaaaaaaaaaaaaaaaaaa')
+    //   console.log('上传' + this.files.name)
+    //   if (this.fileName === '') {
+    //     this.$message.warning('请选择要上传的文件！')
+    //     return false
+    //   }
+    //   const fileFormData = new FormData()
+    //   this.uploadData.deployid = 1
+    //   this.uploadData.deployunitname = 'aaaa'
+    //   fileFormData.append('deployid', this.uploadData.deployid)
+    //   fileFormData.append('deployunitname', this.uploadData.deployunitname)
+    //   fileFormData.append('file', this.files, this.fileName)
+    //   const requestConfig = {
     //     headers: {
+    //       'Authorization': getToken(),
     //       'Content-Type': 'multipart/form-data'
-    //     },
-    //     onUploadProgress: progressEvent => {
-    //       that.uploadPercent = (progressEvent.loaded / progressEvent.total * 100) | 0
     //     }
-    //   }).then((res) => {
-    //     console.log('上传结束')
-    //     console.log(res)
-    //   }).catch((err) => {
-    //     console.log('上传错误')
-    //     console.log(err)
+    //   }
+    //   console.log('aaaaaaaaaaaaaaaaaaa')
+    //   console.log(fileFormData)
+    //   this.axis.post(this.fileurl, fileFormData, requestConfig).then((res) => {
     //   })
     // },
-
-    //
+    // //
+    // handleChange(file, fileList) {
+    //   this.fileList = fileList
+    //   console.log(fileList)
+    // },
     handleChange(file, fileList) {
       this.fileList = fileList
       console.log(fileList)
     },
     upload() {
-      const fd = new FormData()
-      fd.append('name', this.name)
-      this.fileList.forEach(item => {
-        fd.append('files', item.raw)
-      })
-      axios.post(this.fileurl, fd, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(res => {
-        if (res.data.code === 200) {
-          this.$message('上传成功')
-        } else {
-          this.$message('失败')
+      this.$refs.uploadData.validate(valid => {
+        if (valid) {
+          if (this.fileList.length === 0) {
+            this.$message.warning('请选择PostMan导出的json文件！')
+            return false
+          }
+          const fd = new FormData()
+          fd.append('deployid', this.uploadData.deployid)
+          fd.append('deployunitname', this.uploadData.deptname)
+          fd.append('apistyle', this.uploadData.apistyle)
+          fd.append('creator', this.name)
+          this.fileList.forEach(item => {
+            console.log('xxxxxxxxxxxxxxxxxxxxxxxxx')
+            console.log(item.name)
+            fd.append('file', item.raw)
+          })
+          axios.post(this.fileurl, fd, {
+            headers: {
+              Authorization: store.getters.token,
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.$message('上传成功')
+            } else {
+              this.$message('失败')
+            }
+          })
         }
       })
     },
@@ -1056,6 +1094,14 @@ export default {
       }
     },
 
+    uploadselectChanged(e) {
+      for (let i = 0; i < this.deployunitList.length; i++) {
+        if (this.deployunitList[i].deployunitname === e) {
+          this.uploadData.deployid = this.deployunitList[i].id
+        }
+        console.log(this.deployunitList[i].id)
+      }
+    },
     paratypeselectChanged(e) {
       this.tmpapiparams.keyname = ''
       this.tmpapiparams.bodytype = ''
