@@ -30,6 +30,7 @@ public interface ApiService extends Service<Api> {
     List<Api> listAllbydeploy(String deployunitname);
 
     Api getresponetypebydeployandapiname(String deployunitname,String apiname);
+    Api getapibydvap(Long deployunitid,String visittype,String path);
 
     int ifexist(Condition condition);
 

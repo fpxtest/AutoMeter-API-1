@@ -15,6 +15,6 @@ public class Body {
     private String mode;
     private String raw;
     private  options options;
-    private List<Header> urlencoded;
-
+    private List<Formdata> formdata;
+    private List<Urlencoder> urlencoded;
 }
