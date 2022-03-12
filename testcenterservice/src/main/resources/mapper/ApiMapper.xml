@@ -49,6 +49,12 @@
     FROM api a
   </select>
 
+  <select id="getapibydvap" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api a
+    where a.deployunitid=#{deployunitid} and a.visittype=#{visittype} and a.path=#{path}
+  </select>
+
   <update id="updateApi" parameterType="com.zoctan.api.entity.Api">
     update api set apiname = #{apiname}, deployunitname = #{deployunitname}, visittype = #{visittype},requesttype = #{requesttype},apistyle=#{apistyle}, path = #{path},
     memo = #{memo}, requestcontenttype = #{requestcontenttype}, responecontenttype =#{responecontenttype},creator = #{creator},  lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')

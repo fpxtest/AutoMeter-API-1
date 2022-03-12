@@ -62,4 +62,9 @@ private ApiMapper apiMapper;
     public Api getresponetypebydeployandapiname(String deployunitname, String apiname) {
         return apiMapper.getresponetypebydeployandapiname(deployunitname,apiname);
     }
+
+    @Override
+    public Api getapibydvap(Long deployunitid, String visittype, String path) {
+        return apiMapper.getapibydvap(deployunitid, visittype, path);
+    }
 }

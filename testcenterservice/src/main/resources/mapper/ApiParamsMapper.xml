@@ -61,6 +61,11 @@
     FROM api_params a where a.apiid=#{apiid} and a.propertytype = #{propertytype} and keydefaultvalue!='NoForm'
   </select>
 
+  <select id="findApiParamsbypropertytype" resultMap="BaseResultMap">
+    SELECT *
+    FROM api_params a where a.apiid=#{apiid} and a.propertytype = #{propertytype}
+  </select>
+
   <delete id="deletebyApiid" >
     delete
     FROM api_params  where apiid=#{apiid}

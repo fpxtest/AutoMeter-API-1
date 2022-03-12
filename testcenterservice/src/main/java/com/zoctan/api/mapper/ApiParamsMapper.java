@@ -40,6 +40,7 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
     void SaveApiParams(ApiParams apiParams);
 
     List<ApiParams> getApiParamsbypropertytype(Long apiid,String propertytype);
+    List<ApiParams> findApiParamsbypropertytype(Long apiid,String propertytype);
 
     ApiParams getBodyNoFormbyapiid(Long apiid,String propertytype,String keydefaultvalue,String keytype);
 
