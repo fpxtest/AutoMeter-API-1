@@ -68,15 +68,7 @@ public class ApiController {
                 String GroupJson = gson.toJson(jsonmap.get("item"));
                 HashMap<String,ApiInfo>apiInfoHashMap=new HashMap<>();
                 recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator,apiInfoHashMap);
-//                List<String> resu = GetJson(GroupJson);
-//                for (String apiinfojson : resu) {
-//                    Type apiinfoType = new TypeToken<ArrayList<ApiInfo>>() {}.getType();
-//                    Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
-//                    System.out.println("GroupName:" + apiinfomap.get("name"));
-//                    String apiJson = gson.toJson(apiinfomap.get("item"));
-//                    List<ApiInfo> apiInfoList = gson.fromJson(apiJson, apiinfoType);
-//                    ExportData(apiInfoList,apistyle,deployunitid,deployunitname,creator);
-//                }
+                file.delete();
             }
         } catch (Exception e) {
             e.printStackTrace();

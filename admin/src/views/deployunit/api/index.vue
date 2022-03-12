@@ -594,6 +594,7 @@
             :on-change="handleChange"
             :file-list="this.fileList"
             accept=".json"
+            limit="1"
             action="#">
             <el-button  type="success">选择文件</el-button>
           </el-upload>
@@ -1058,8 +1059,6 @@ export default {
           fd.append('apistyle', this.uploadData.apistyle)
           fd.append('creator', this.name)
           this.fileList.forEach(item => {
-            console.log('xxxxxxxxxxxxxxxxxxxxxxxxx')
-            console.log(item.name)
             fd.append('file', item.raw)
           })
           axios.post(this.fileurl, fd, {
@@ -1069,9 +1068,11 @@ export default {
             }
           }).then(res => {
             if (res.data.code === 200) {
-              this.$message('上传成功')
+              this.dialogAddFile = false
+              this.getapiList()
+              this.$message.success('上传完成')
             } else {
-              this.$message('失败')
+              this.$message('上传失败')
             }
           })
         }
@@ -1451,6 +1452,10 @@ export default {
     showPostManDialog() {
       // 显示新增对话框
       this.dialogAddFile = true
+      this.uploadData.deployid = ''
+      this.uploadData.deptname = ''
+      this.uploadData.apistyle = ''
+      this.fileList = []
     },
     /**
      * 显示添加复制api对话框
