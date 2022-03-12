@@ -52,12 +52,20 @@
  [架构设计](https://gitee.com/season-fan/autometer-api/wikis/%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84?sort_id=4936162)
 
 ## 部署
- [部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2?sort_id=4960162)
+ [服务器部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2?sort_id=4960162)
+
+ [部署更新](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2%EF%BC%8C%E6%9B%B4%E6%96%B0/%E9%83%A8%E7%BD%B2%E6%9B%B4%E6%96%B0)
 
 ## 帮助文档
 [帮助文档](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83)
 
 [开始第一个测试用例](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E5%AE%9E%E8%B7%B5%E5%9C%BA%E6%99%AF/%E5%BC%80%E5%A7%8B%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%8E%A5%E5%8F%A3%E7%94%A8%E4%BE%8B)
+## 版本更新内容
+[更新内容](https://gitee.com/season-fan/autometer-api/wikis/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0)
+
+## 开发计划
+[开发计划](https://gitee.com/season-fan/autometer-api/wikis/%E5%BC%80%E5%8F%91%E8%AE%A1%E5%88%92/%E5%BC%80%E5%8F%91%E8%AE%A1%E5%88%92?sort_id=4948567)
+
 
 ## 在线体验
 [在线体验](http://81.69.0.136/#/login) 
