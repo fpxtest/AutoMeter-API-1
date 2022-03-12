@@ -592,6 +592,7 @@
             style="display: inline"
             :auto-upload="false"
             :on-change="handleChange"
+            :on-remove="removehandleChange"
             :file-list="this.fileList"
             accept=".json"
             limit="1"
@@ -1044,6 +1045,10 @@ export default {
     // },
     handleChange(file, fileList) {
       this.fileList = fileList
+      console.log(fileList)
+    },
+    removehandleChange(file, fileList) {
+      this.fileList = []
       console.log(fileList)
     },
     upload() {

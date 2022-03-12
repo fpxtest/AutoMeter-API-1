@@ -52,6 +52,7 @@ public class ApiController {
 
     @PostMapping("/exportpostman")
     public Result exportpostman(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator) {
+        File file=null;
         try {
             if (multipartFile.isEmpty()) {
                 return ResultGenerator.genFailedResult("上传的文件为空，请检查");
@@ -59,7 +60,7 @@ public class ApiController {
             Long deployunitid = Long.parseLong(deployid);
             String fileName = multipartFile.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            File file = new File(fileName);
+            file = new File(fileName);
             FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
             String jsonString = FileUtils.readFileToString(file, "UTF-8");
             if (".json".equals(suffixName) || ".txt".equals(suffixName)) {
@@ -68,10 +69,12 @@ public class ApiController {
                 String GroupJson = gson.toJson(jsonmap.get("item"));
                 HashMap<String,ApiInfo>apiInfoHashMap=new HashMap<>();
                 recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator,apiInfoHashMap);
-                file.delete();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return ResultGenerator.genFailedResult("导入异常："+e.getMessage());
+        }
+        finally {
+            file.delete();
         }
         return ResultGenerator.genOkResult();
     }
