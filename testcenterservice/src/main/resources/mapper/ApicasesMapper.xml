@@ -55,7 +55,7 @@
 
   <select id="forupdateifexist" resultMap="BaseResultMap">
     SELECT id,apiname,deployunitname,casename,casejmxname,casecontent,casetype,expect,level,memo,create_time,lastmodify_time,creator FROM apicases
-    WHERE deployunitname = #{deployunitname} and apiname = #{apiname}
+    WHERE deployunitid = #{deployunitid} and apiid = #{apiid}
     and id != #{id} and casename = #{casename}
 
   </select>
@@ -66,7 +66,7 @@
   </select>
 
   <update id="updateApicase" parameterType="com.zoctan.api.entity.Apicases">
-    update apicases set casename = #{casename},casejmxname = #{casejmxname}, apiname = #{apiname}, deployunitname = #{deployunitname}, casecontent = #{casecontent},expect = #{expect},
+    update apicases set casename = #{casename},casejmxname = #{casejmxname},apiid=#{apiid}, apiname = #{apiname},deployunitid=#{deployunitid}, deployunitname = #{deployunitname}, casecontent = #{casecontent},expect = #{expect},
     memo = #{memo},casetype=#{casetype},threadnum=#{threadnum},loops=#{loops},middleparam=#{middleparam},level=#{level}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>

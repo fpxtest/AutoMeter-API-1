@@ -1634,8 +1634,10 @@
         this.tmpapicases.id = this.apicasesList[index].id
         this.tmpapicases.casename = this.apicasesList[index].casename
         this.tmpapicases.apiname = this.apicasesList[index].apiname
+        this.tmpapicases.apiid = this.apicasesList[index].apiid
         this.tmpapicases.casetype = this.apicasesList[index].casetype
         this.tmpapicases.deployunitname = this.apicasesList[index].deployunitname
+        this.tmpapicases.deployunitid = this.apicasesList[index].deployunitid
         this.tmpapicases.casejmxname = this.apicasesList[index].casejmxname
         this.tmpapicases.casecontent = this.apicasesList[index].casecontent
         this.tmpapicases.expect = this.apicasesList[index].expect

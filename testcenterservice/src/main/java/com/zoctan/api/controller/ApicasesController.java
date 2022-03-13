@@ -254,7 +254,7 @@ public class ApicasesController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Apicases apicases) {
         if (apicasesService.forupdateifexist(apicases).size() > 0) {
-            return ResultGenerator.genFailedResult("用例名或者jmx名已存在");
+            return ResultGenerator.genFailedResult("用例名已存在");
         } else {
             this.apicasesService.updateApicase(apicases);
             return ResultGenerator.genOkResult();

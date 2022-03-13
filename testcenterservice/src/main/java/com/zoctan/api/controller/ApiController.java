@@ -294,6 +294,7 @@ public class ApiController {
         apicases.setCreator(creator);
         apicases.setMiddleparam("");
         apicases.setMemo(ApiName);
+        apicases.setCasecontent(ApiName);
         return apicases;
     }
     private ApiCasedata GetApicaseData(String ApiName,Long Apicaseid,String ProperTy,String Key,String Value,String ParamType )
@@ -315,46 +316,52 @@ public class ApiController {
     {
         //4.保存用例
         Apicases apicases=GetApiCase(ApiName,Apiid,deployunitid,deployunitname,creator);
-        apicasesService.save(apicases);
-        Long Apicaseid=apicases.getId();
-        //5.保存用例Header数据
-        List<ApiCasedata>Headercasedata=new ArrayList<>();
-        for (Header header:headerList) {
-            ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Header",header.getKey(),header.getValue(),"");
-            Headercasedata.add(apiCasedata);
-        }
-        if(Headercasedata.size()>0)
-        {
-            apiCasedataService.save(Headercasedata);
-        }
-        //6.保存用例Params数据
-        List<ApiCasedata>Paramscasedata=new ArrayList<>();
-        for (Query query:queryList) {
-            ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Params",query.getKey(),query.getValue(),"String");
-            Paramscasedata.add(apiCasedata);
-        }
-        if(Paramscasedata.size()>0)
-        {
-            apiCasedataService.save(Paramscasedata);
-        }
-        //7.保存用例Body数据
-        List<ApiCasedata>BodyParamscasedata=new ArrayList<>();
-        List<ApiParams> BodyParamsList=apiParamsService.findApiParamsbypropertytype(Apiid,"Body");
-        for (ApiParams params: BodyParamsList) {
-            if(params.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
-            {
-                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body","Body",params.getKeyname(),params.getKeytype());
-                BodyParamscasedata.add(apiCasedata);
+        Condition con = new Condition(Apicases.class);
+        con.createCriteria().andCondition("apiid = " + apicases.getApiid())
+                .andCondition("casename = '"+apicases.getCasename()+" '")
+                .andCondition("deployunitid = " + apicases.getDeployunitid());
+        if (apicasesService.ifexist(con) == 0) {
+            apicasesService.save(apicases);
+            Long Apicaseid=apicases.getId();
+            //5.保存用例Header数据
+            List<ApiCasedata>Headercasedata=new ArrayList<>();
+            for (Header header:headerList) {
+                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Header",header.getKey(),header.getValue(),"");
+                Headercasedata.add(apiCasedata);
             }
-            else
+            if(Headercasedata.size()>0)
             {
-                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body",params.getKeyname(),params.getKeydefaultvalue(),params.getKeytype());
-                BodyParamscasedata.add(apiCasedata);
+                apiCasedataService.save(Headercasedata);
             }
-        }
-        if(BodyParamscasedata.size()>0)
-        {
-            apiCasedataService.save(BodyParamscasedata);
+            //6.保存用例Params数据
+            List<ApiCasedata>Paramscasedata=new ArrayList<>();
+            for (Query query:queryList) {
+                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Params",query.getKey(),query.getValue(),"String");
+                Paramscasedata.add(apiCasedata);
+            }
+            if(Paramscasedata.size()>0)
+            {
+                apiCasedataService.save(Paramscasedata);
+            }
+            //7.保存用例Body数据
+            List<ApiCasedata>BodyParamscasedata=new ArrayList<>();
+            List<ApiParams> BodyParamsList=apiParamsService.findApiParamsbypropertytype(Apiid,"Body");
+            for (ApiParams params: BodyParamsList) {
+                if(params.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
+                {
+                    ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body","Body",params.getKeyname(),params.getKeytype());
+                    BodyParamscasedata.add(apiCasedata);
+                }
+                else
+                {
+                    ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body",params.getKeyname(),params.getKeydefaultvalue(),params.getKeytype());
+                    BodyParamscasedata.add(apiCasedata);
+                }
+            }
+            if(BodyParamscasedata.size()>0)
+            {
+                apiCasedataService.save(BodyParamscasedata);
+            }
         }
     }
 

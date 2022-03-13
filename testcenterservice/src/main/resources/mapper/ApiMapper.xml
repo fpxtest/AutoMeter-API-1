@@ -56,7 +56,7 @@
   </select>
 
   <update id="updateApi" parameterType="com.zoctan.api.entity.Api">
-    update api set apiname = #{apiname}, deployunitname = #{deployunitname}, visittype = #{visittype},requesttype = #{requesttype},apistyle=#{apistyle}, path = #{path},
+    update api set apiname = #{apiname}, deployunitid = #{deployunitid}, deployunitname = #{deployunitname}, visittype = #{visittype},requesttype = #{requesttype},apistyle=#{apistyle}, path = #{path},
     memo = #{memo}, requestcontenttype = #{requestcontenttype}, responecontenttype =#{responecontenttype},creator = #{creator},  lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
