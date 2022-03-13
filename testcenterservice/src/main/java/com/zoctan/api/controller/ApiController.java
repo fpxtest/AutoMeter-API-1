@@ -67,6 +67,10 @@ public class ApiController {
                 Gson gson = new Gson();
                 Map<String, Object> jsonmap = gson.fromJson(jsonString, Map.class);
                 String GroupJson = gson.toJson(jsonmap.get("item"));
+                if (GroupJson.equalsIgnoreCase("null"))
+                {
+                    return ResultGenerator.genFailedResult("导入异常,请导入PostMan2.X版本的json文件");
+                }
                 HashMap<String,ApiInfo>apiInfoHashMap=new HashMap<>();
                 recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator,apiInfoHashMap);
             }
@@ -79,7 +83,7 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator,HashMap<String,ApiInfo>apiInfoHashMap) {
+    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator,HashMap<String,ApiInfo>apiInfoHashMap) throws Exception {
         List<String> resu = GetJson(GroupJson);
         for (String apiinfojson : resu) {
             Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
@@ -228,21 +232,29 @@ public class ApiController {
 
     }
 
-    private List<String> GetJson(String itemJson) {
+    private List<String> GetJson(String itemJson) throws Exception {
         List<String> result = new ArrayList<>();
-        JsonParser parser = new JsonParser();
-        JsonElement el = parser.parse(itemJson);
+        try
+        {
+            JsonParser parser = new JsonParser();
+            JsonElement el = parser.parse(itemJson);
 
-        JsonArray jsonArray = null;
-        if (el.isJsonArray()) {
-            jsonArray = el.getAsJsonArray();
+            JsonArray jsonArray = null;
+            if (el.isJsonArray()) {
+                jsonArray = el.getAsJsonArray();
+            }
+
+            Iterator it = jsonArray.iterator();
+            while (it.hasNext()) {
+                JsonElement element = (JsonElement) it.next();
+                result.add(element.toString());
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("PostMan导入的json文件内容不是合法的json，请检查！");
         }
 
-        Iterator it = jsonArray.iterator();
-        while (it.hasNext()) {
-            JsonElement element = (JsonElement) it.next();
-            result.add(element.toString());
-        }
         return result;
     }
 
