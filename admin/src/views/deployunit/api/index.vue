@@ -156,6 +156,21 @@
             v-model="tmpapi.apiname"
           />
         </el-form-item>
+        <el-form-item label="请求方法:" prop="visittype" required>
+          <el-select v-model="tmpapi.visittype" placeholder="请求方法" style="width:100%"
+                     @change="visitypeselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none"/>
+            <div v-for="(vistype, index) in visittypeList" :key="index">
+              <el-option :label="vistype.dicitmevalue" :value="vistype.dicitmevalue" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="API风格:" prop="apistyle" required>
+          <el-select v-model="tmpapi.apistyle" placeholder="api风格" style="width:100%">
+            <el-option label="传统方式" value="传统方式"></el-option>
+            <el-option label="Restful" value="restful"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="Url路径:" prop="path" >
           <el-input
             type="text"
@@ -176,21 +191,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="API风格:" prop="apistyle" required>
-          <el-select v-model="tmpapi.apistyle" placeholder="api风格" style="width:100%">
-            <el-option label="传统方式" value="传统方式"></el-option>
-            <el-option label="Restful" value="restful"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="请求方法:" prop="visittype" required>
-          <el-select v-model="tmpapi.visittype" placeholder="请求方法" style="width:100%"
-                     @change="visitypeselectChanged($event)">
-            <el-option label="请选择" value="''" style="display: none"/>
-            <div v-for="(vistype, index) in visittypeList" :key="index">
-              <el-option :label="vistype.dicitmevalue" :value="vistype.dicitmevalue" required/>
-            </div>
-          </el-select>
-        </el-form-item>
+
+
         <!--        <el-form-item label="数据提交方式:" prop="requesttype" required >-->
         <!--          <el-select v-model="tmpapi.requesttype" placeholder="数据提交方式" style="width:100%">-->
         <!--            <el-option label="Url传值" value="Url传值"></el-option>-->
@@ -1077,7 +1079,7 @@ export default {
               this.getapiList()
               this.$message.success('上传完成')
             } else {
-              this.$message('上传失败')
+              this.$message.error(res.data.message)
             }
           })
         }

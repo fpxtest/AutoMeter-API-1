@@ -67,6 +67,10 @@ public class ApiController {
                 Gson gson = new Gson();
                 Map<String, Object> jsonmap = gson.fromJson(jsonString, Map.class);
                 String GroupJson = gson.toJson(jsonmap.get("item"));
+                if (GroupJson.equalsIgnoreCase("null"))
+                {
+                    return ResultGenerator.genFailedResult("导入异常,请导入PostMan2.X版本的json文件");
+                }
                 HashMap<String,ApiInfo>apiInfoHashMap=new HashMap<>();
                 recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator,apiInfoHashMap);
             }
@@ -79,7 +83,7 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator,HashMap<String,ApiInfo>apiInfoHashMap) {
+    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator,HashMap<String,ApiInfo>apiInfoHashMap) throws Exception {
         List<String> resu = GetJson(GroupJson);
         for (String apiinfojson : resu) {
             Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
@@ -228,21 +232,29 @@ public class ApiController {
 
     }
 
-    private List<String> GetJson(String itemJson) {
+    private List<String> GetJson(String itemJson) throws Exception {
         List<String> result = new ArrayList<>();
-        JsonParser parser = new JsonParser();
-        JsonElement el = parser.parse(itemJson);
+        try
+        {
+            JsonParser parser = new JsonParser();
+            JsonElement el = parser.parse(itemJson);
 
-        JsonArray jsonArray = null;
-        if (el.isJsonArray()) {
-            jsonArray = el.getAsJsonArray();
+            JsonArray jsonArray = null;
+            if (el.isJsonArray()) {
+                jsonArray = el.getAsJsonArray();
+            }
+
+            Iterator it = jsonArray.iterator();
+            while (it.hasNext()) {
+                JsonElement element = (JsonElement) it.next();
+                result.add(element.toString());
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("PostMan导入的json文件内容不是合法的json，请检查！");
         }
 
-        Iterator it = jsonArray.iterator();
-        while (it.hasNext()) {
-            JsonElement element = (JsonElement) it.next();
-            result.add(element.toString());
-        }
         return result;
     }
 
@@ -282,6 +294,7 @@ public class ApiController {
         apicases.setCreator(creator);
         apicases.setMiddleparam("");
         apicases.setMemo(ApiName);
+        apicases.setCasecontent(ApiName);
         return apicases;
     }
     private ApiCasedata GetApicaseData(String ApiName,Long Apicaseid,String ProperTy,String Key,String Value,String ParamType )
@@ -303,46 +316,52 @@ public class ApiController {
     {
         //4.保存用例
         Apicases apicases=GetApiCase(ApiName,Apiid,deployunitid,deployunitname,creator);
-        apicasesService.save(apicases);
-        Long Apicaseid=apicases.getId();
-        //5.保存用例Header数据
-        List<ApiCasedata>Headercasedata=new ArrayList<>();
-        for (Header header:headerList) {
-            ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Header",header.getKey(),header.getValue(),"");
-            Headercasedata.add(apiCasedata);
-        }
-        if(Headercasedata.size()>0)
-        {
-            apiCasedataService.save(Headercasedata);
-        }
-        //6.保存用例Params数据
-        List<ApiCasedata>Paramscasedata=new ArrayList<>();
-        for (Query query:queryList) {
-            ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Params",query.getKey(),query.getValue(),"String");
-            Paramscasedata.add(apiCasedata);
-        }
-        if(Paramscasedata.size()>0)
-        {
-            apiCasedataService.save(Paramscasedata);
-        }
-        //7.保存用例Body数据
-        List<ApiCasedata>BodyParamscasedata=new ArrayList<>();
-        List<ApiParams> BodyParamsList=apiParamsService.findApiParamsbypropertytype(Apiid,"Body");
-        for (ApiParams params: BodyParamsList) {
-            if(params.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
-            {
-                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body","Body",params.getKeyname(),params.getKeytype());
-                BodyParamscasedata.add(apiCasedata);
+        Condition con = new Condition(Apicases.class);
+        con.createCriteria().andCondition("apiid = " + apicases.getApiid())
+                .andCondition("casename = '"+apicases.getCasename()+" '")
+                .andCondition("deployunitid = " + apicases.getDeployunitid());
+        if (apicasesService.ifexist(con) == 0) {
+            apicasesService.save(apicases);
+            Long Apicaseid=apicases.getId();
+            //5.保存用例Header数据
+            List<ApiCasedata>Headercasedata=new ArrayList<>();
+            for (Header header:headerList) {
+                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Header",header.getKey(),header.getValue(),"");
+                Headercasedata.add(apiCasedata);
             }
-            else
+            if(Headercasedata.size()>0)
             {
-                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body",params.getKeyname(),params.getKeydefaultvalue(),params.getKeytype());
-                BodyParamscasedata.add(apiCasedata);
+                apiCasedataService.save(Headercasedata);
             }
-        }
-        if(BodyParamscasedata.size()>0)
-        {
-            apiCasedataService.save(BodyParamscasedata);
+            //6.保存用例Params数据
+            List<ApiCasedata>Paramscasedata=new ArrayList<>();
+            for (Query query:queryList) {
+                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Params",query.getKey(),query.getValue(),"String");
+                Paramscasedata.add(apiCasedata);
+            }
+            if(Paramscasedata.size()>0)
+            {
+                apiCasedataService.save(Paramscasedata);
+            }
+            //7.保存用例Body数据
+            List<ApiCasedata>BodyParamscasedata=new ArrayList<>();
+            List<ApiParams> BodyParamsList=apiParamsService.findApiParamsbypropertytype(Apiid,"Body");
+            for (ApiParams params: BodyParamsList) {
+                if(params.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
+                {
+                    ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body","Body",params.getKeyname(),params.getKeytype());
+                    BodyParamscasedata.add(apiCasedata);
+                }
+                else
+                {
+                    ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body",params.getKeyname(),params.getKeydefaultvalue(),params.getKeytype());
+                    BodyParamscasedata.add(apiCasedata);
+                }
+            }
+            if(BodyParamscasedata.size()>0)
+            {
+                apiCasedataService.save(BodyParamscasedata);
+            }
         }
     }
 

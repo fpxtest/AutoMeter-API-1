@@ -80,10 +80,10 @@ public class TestCaseHelp {
                testserver= macdepunit.getDomain();
                resource = protocal + "://" + testserver  + path;
            }
+
            HashMap<String, String> headmap=fixhttprequestdatas("Header",apiCasedataList);
            HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
            HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
-
 
            //Header
            HttpHeader header = new HttpHeader();
@@ -92,9 +92,7 @@ public class TestCaseHelp {
            {
                for (String key : headmap.keySet()) {
                    String Value = headmap.get(key);
-                   //Object ObjectValue = GetVariablesObjectValues(Value, PlanID.toString(), BatchName);
                    header.addParam(key, Value);
-                   //header.addParam(key, headmap.get(key));
                }
            }
            //url参数
@@ -104,7 +102,6 @@ public class TestCaseHelp {
            {
                for (String key : paramsmap.keySet()) {
                    String Value = paramsmap.get(key);
-                   //Object ObjectValue = GetVariablesObjectValues(Value, PlanID.toString(), BatchName);
                    paramers.addParam(key, Value);
                }
            }
@@ -118,7 +115,6 @@ public class TestCaseHelp {
                if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                    for (String key : bodymap.keySet()) {
                        String Value = bodymap.get(key);
-                       //Object ObjectValue = GetVariablesObjectValues(Value, PlanID.toString(), BatchName);
                        Bodyparamers.addParam(key, Value);
                    }
                    try {

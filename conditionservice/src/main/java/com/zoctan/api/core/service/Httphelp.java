@@ -538,11 +538,15 @@ public class Httphelp {
             }
             Map<String, Object> parameters = paramsob.getParams();
             if (apistyle.equalsIgnoreCase("restful")) {
+                //规定restful在url中用{}拼接完整，用parameters中的值替换
                 for (String name : parameters.keySet()) {
-                    sb.append(name).append("/").append(parameters.get(name));
+                    String ReplaceParams="{"+name+"}";
+                    if(requestUrl.contains(ReplaceParams))
+                    {
+                        requestUrl.replace(ReplaceParams,parameters.get(name).toString());
+                    }
                 }
-                requestUrl=requestUrl+sb.toString();
-            } else {
+            }  else {
                 for (String name : parameters.keySet()) {
                     try {
                         sb.append(name).append("=").append(parameters.get(name)).append("&");
