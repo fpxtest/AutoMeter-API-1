@@ -14,17 +14,6 @@ public class TestHttp {
     {
         logger=log;
     }
-//    public ResponeData request(RequestObject requestObject) throws Exception {
-//        ResponeData result = new ResponeData();
-//        if (requestObject.getProtocal().equals("http") || requestObject.getProtocal().equals("https")) {
-//            if (requestObject.getRequestmMthod().equals("get")) {
-//                logger.info(logplannameandcasename + "TestHttp get请求，request url is ....." + Httphelp.GetRequestUrl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
-//            }
-//            logger.info(logplannameandcasename + "TestHttp doService url is ....." + Httphelp.GetRequestUrl(requestObject.getResource(), requestObject.getApistyle(), requestObject.getParamers()));
-//            result = Httphelp.doService(requestObject.getProtocal(), requestObject.getResource(), requestObject.getRequestmMthod(), requestObject.getApistyle(), requestObject.getParamers(), requestObject.getPostData(), requestObject.getRequestcontenttype(), requestObject.getHeader(), 30000, 30000);
-//        }
-//        return result;
-//    }
 
     public  ResponeData doService(RequestObject requestObject) throws Exception {
         if(requestObject.getProtocal().isEmpty())

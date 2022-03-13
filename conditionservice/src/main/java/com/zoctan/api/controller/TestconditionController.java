@@ -189,6 +189,7 @@ public class TestconditionController {
         return ResultGenerator.genOkResult(VariablesNameVlaueMap);
     }
 
+    //接口子条件
     public HashMap<String, String> APICondition(long ConditionID, Dispatch dispatch, Executeplan executeplan, Long Planid) {
         HashMap<String, String> VariableNameValueMap = new HashMap<>();
         List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
@@ -268,7 +269,7 @@ public class TestconditionController {
             TestCaseHelp testCaseHelp = new TestCaseHelp();
             RequestObject requestObject=new RequestObject();
             try {
-                //前置接口条件没支持接口变量的情况
+                //前置接口参数不支持变量
                  requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             }
             catch (Exception ex)

@@ -98,23 +98,6 @@ public class ApicasesController {
                         }
                     }
                 }
-//                ApiCasedata apiCasedata=new ApiCasedata();
-//                apiCasedata.setCaseid(apicases.getId());
-//                apiCasedata.setCasename(apicases.getCasename());
-//                apiCasedata.setPropertytype(apiParams.getPropertytype());
-//                if(apiParams.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
-//                {
-//                    apiCasedata.setApiparam("Body");
-//                    apiCasedata.setApiparamvalue(apiParams.getKeyname());
-//                }
-//                else
-//                {
-//                    apiCasedata.setApiparam(apiParams.getKeyname());
-//                    apiCasedata.setApiparamvalue(apiParams.getKeydefaultvalue());
-//                }
-//                apiCasedata.setParamstype(apiParams.getKeytype());
-//                apiCasedata.setMemo("");
-//                apiCasedataList.add(apiCasedata);
             }
             if (apiCasedataList.size() > 0) {
                 apiCasedataService.save(apiCasedataList);
@@ -331,7 +314,6 @@ public class ApicasesController {
         header.addParam("Content-Type", "application/json;charset=utf-8");
         TestResponeData testResponeData = testHttp.doService("http", "", Url, header, new HttpParamers(), params, "POST", "", 30000);
         String Respone = testResponeData.getResponeContent();
-        //String Respone = HttphelpB1.doPost(Url, params, header, 30000, 30000);
         if (Respone.contains("条件执行异常")) {
             JSONObject object = JSON.parseObject(Respone);
             throw new Exception(object.getString("message"));
@@ -392,18 +374,15 @@ public class ApicasesController {
                 }
             }
             if (APIRespone != "") {
-                try
-                {
+                try {
                     JSONObject jsonObject = JSON.parseObject(APIRespone);
                     for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
                         String key = objectEntry.getKey();
                         String value = objectEntry.getValue().toString();
                         ParamsValuesMap.put(key, value);
                     }
-                }
-                catch (Exception ex)
-                {
-                    return ResultGenerator.genFailedResult("执行前置接口条件结果异常："+APIRespone);
+                } catch (Exception ex) {
+                    return ResultGenerator.genFailedResult("执行前置接口条件结果异常：" + APIRespone);
                 }
             }
         }
@@ -445,29 +424,48 @@ public class ApicasesController {
                 resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
             }
 
+            List<Variables> variablesList = variablesService.listAll();
+            HashMap<String, String> RadomHashMap = new HashMap<>();
+            for (Variables va : variablesList) {
+                RadomHashMap.put(va.getVariablesname(), va.getVariablestype());
+            }
+
+            //url中的变量替换
+            //1.随机变量替换
+            for (Variables variables : variablesList) {
+                String VariableName = "[" + variables.getVariablesname() + "]";
+                if (resource.contains(VariableName)) {
+                    Object VariableValue = GetRadomValue(variables.getVariablesname());
+                    resource = resource.replace(VariableName, VariableValue.toString());
+                }
+            }
+            //2.接口变量替换
+            for (String Interfacevariables : ParamsValuesMap.keySet()) {
+                String UseInterfacevariables = "<" + Interfacevariables + ">";
+                if (resource.contains(UseInterfacevariables)) {
+                    Object VariableValue = ParamsValuesMap.get(Interfacevariables);// GetVariablesObjectValues("$" +Interfacevariables, ParamsValuesMap);
+                    resource = resource.replace(UseInterfacevariables, VariableValue.toString());
+                }
+            }
+
             List<ApiCasedata> HeaderApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Header");
             List<ApiCasedata> ParamsApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Params");
             List<ApiCasedata> BodyApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Body");
             String requestcontenttype = api.getRequestcontenttype();
 
-            List<Variables> variablesList = variablesService.listAll();
-            HashMap<String ,String> RadomHashMap=new HashMap<>();
-            for (Variables va: variablesList) {
-                RadomHashMap.put(va.getVariablesname(),va.getVariablestype());
-            }
             //Header用例值
-            HttpHeader header= null;
+            HttpHeader header = new HttpHeader();
             try {
-                header = GetHttpHeader(HeaderApiCasedataList,ParamsValuesMap,RadomHashMap);
+                header = GetHttpHeader(HeaderApiCasedataList, ParamsValuesMap, RadomHashMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
             header = AddHeaderByRequestContentType(header, requestcontenttype);
 
             //参数用例值
-            HttpParamers paramers=new HttpParamers();
+            HttpParamers paramers = new HttpParamers();
             try {
-                 paramers=GetHttpParamers(ParamsApiCasedataList,ParamsValuesMap,RadomHashMap);
+                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -477,7 +475,7 @@ public class ApicasesController {
             HttpParamers Bodyparamers = new HttpParamers();
             if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                 try {
-                    Bodyparamers=GetHttpParamers(BodyApiCasedataList,ParamsValuesMap,RadomHashMap);
+                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap);
                 } catch (Exception exception) {
                     return ResultGenerator.genFailedResult(exception.getMessage());
                 }
@@ -486,20 +484,21 @@ public class ApicasesController {
                 }
             } else {
                 for (ApiCasedata Paramdata : BodyApiCasedataList) {
+                    //Body文本内容变量替换
                     PostData = Paramdata.getApiparamvalue();
-                    //获取随机变量列表
-                    for (Variables variables:variablesList) {
-                        String VariableName = "[" + variables.getVariablesname()+"]";
+                    //1.替换随机变量
+                    for (Variables variables : variablesList) {
+                        String VariableName = "[" + variables.getVariablesname() + "]";
                         if (PostData.contains(VariableName)) {
                             Object VariableValue = GetRadomValue(variables.getVariablesname());
                             PostData = PostData.replace(VariableName, VariableValue.toString());
                         }
                     }
-                    //获取接口变量列表
-                    for (String Interfacevariables:ParamsValuesMap.keySet()) {
-                        String UseInterfacevariables="{" +Interfacevariables+"}";
-                        if (PostData.contains("{" +Interfacevariables+"}")) {
-                            Object VariableValue =ParamsValuesMap.get(Interfacevariables);// GetVariablesObjectValues("$" +Interfacevariables, ParamsValuesMap);
+                    //2.替换接口变量
+                    for (String Interfacevariables : ParamsValuesMap.keySet()) {
+                        String UseInterfacevariables = "<" + Interfacevariables + ">";
+                        if (PostData.contains(UseInterfacevariables)) {
+                            Object VariableValue = ParamsValuesMap.get(Interfacevariables);// GetVariablesObjectValues("$" +Interfacevariables, ParamsValuesMap);
                             PostData = PostData.replace(UseInterfacevariables, VariableValue.toString());
                         }
                     }
@@ -548,149 +547,62 @@ public class ApicasesController {
 
 
     //获取HttpHeader
-    private HttpHeader  GetHttpHeader(List<ApiCasedata> HeaderApiCasedataList,HashMap<String, String> ParamsValuesMap,HashMap<String ,String> RadomMap ) throws Exception {
+    private HttpHeader GetHttpHeader(List<ApiCasedata> HeaderApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap) throws Exception {
         HttpHeader header = new HttpHeader();
         for (ApiCasedata Headdata : HeaderApiCasedataList) {
             String HeaderName = Headdata.getApiparam();
             String HeaderValue = Headdata.getApiparamvalue();
-            Object Result=HeaderValue;
-            Result=GetVaraibaleValue(HeaderValue,RadomMap,ParamsValuesMap);
-//            //接口变量
-//            for (String Interfacevariables:ParamsValuesMap.keySet()) {
-//                if(HeaderValue.contains("$"+Interfacevariables))
-//                {
-//                    Object Value = ParamsValuesMap.get(Interfacevariables);// GetVariablesObjectValues("$"+Interfacevariables, ParamsValuesMap);
-//                    HeaderValue=HeaderValue.replace("$"+Interfacevariables,Value.toString());
-//                }
-//            }
-//            //随机变量
-//            for (String variables:variablesHashMap.keySet()) {
-//                if (HeaderValue.contains(variables)) {
-//                    Object Value = GetRadomVariables(variables);
-//                    HeaderValue=HeaderValue.replace(variables,Value.toString());
-//                }
-//            }
+            Object Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap);
             header.addParam(HeaderName, Result);
-//                if (ParamsValuesMap.size() > 0) {
-//                Object Value = GetVariablesObjectValues(HeaderValue, ParamsValuesMap);
-//                header.addParam(HeaderName, Value);
-//            } else {
-//                for (String variables:variablesHashMap.keySet()) {
-//                    if (HeaderValue.contains(variables)) {
-//                        Object Value = GetRadomVariables(variables);
-//                        HeaderValue=HeaderValue.replace(variables,Value.toString());
-//                    } else {
-//                        header.addParam(HeaderName, HeaderValue);
-//                    }
-//                }
-//                header.addParam(HeaderName, HeaderValue);
-//            }
         }
         return header;
     }
+
     //获取HttpParams
-    private HttpParamers  GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList,HashMap<String, String> ParamsValuesMap ,HashMap<String ,String> RadomMap) throws Exception {
-        HttpParamers paramers=new HttpParamers();
+    private HttpParamers GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap) throws Exception {
+        HttpParamers paramers = new HttpParamers();
         for (ApiCasedata Paramdata : ParamsApiCasedataList) {
             String ParamName = Paramdata.getApiparam();
             String ParamValue = Paramdata.getApiparamvalue();
             String DataType = Paramdata.getParamstype();
-            Object ObjectResult=GetVaraibaleValue(ParamValue,RadomMap,ParamsValuesMap);
+            Object ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap);
             Object Result = GetDataByType(ObjectResult.toString(), DataType);
             paramers.addParam(ParamName, Result);
-//            if (ParamValue.contains("$")||ParamValue.contains("#")) {
-//                //接口变量
-//                for (String Interfacevariables:ParamsValuesMap.keySet()) {
-//                    if(ParamValue.contains("$"+Interfacevariables))
-//                    {
-//                        Object Value = ParamsValuesMap.get(Interfacevariables);// GetVariablesObjectValues("$"+Interfacevariables, ParamsValuesMap);
-//                        ParamValue=ParamValue.replace("$"+Interfacevariables,Value.toString());
-//                    }
-//                }
-//                //随机变量
-//                for (String variables:variablesHashMap.keySet()) {
-//                    if (ParamValue.contains(variables)) {
-//                        Object Value = GetRadomVariables(variables);
-//                        ParamValue=ParamValue.replace(variables,Value.toString());
-//                    }
-//                }
-//                paramers.addParam(ParamName, ParamValue);
-//            }
-//            else
-//            {
-//                Object ParseData = new Object();
-//                try {
-//                    ParseData = GetDataByType(ParamValue, DataType);
-//                } catch (Exception exception) {
-//                    throw new Exception("用例Params参数值异常：" + exception.getMessage());
-//                }
-//                paramers.addParam(ParamName, ParseData);
-//            }
-//                if (ParamValue.contains("$")) {
-//                Object Value = GetVariablesObjectValues(ParamValue, ParamsValuesMap);
-//                paramers.addParam(ParamName, Value);
-//            } else {
-//                if (ParamValue.contains("#"))
-//                {
-//                    Object Value = GetRadomVariables(ParamValue);
-//                    paramers.addParam(ParamName, Value);
-//                }
-//                else
-//                {
-//                    Object ParseData = new Object();
-//                    try {
-//                        ParseData = GetDataByType(ParamValue, DataType);
-//                    } catch (Exception exception) {
-//                        throw new Exception("用例Params参数值异常：" + exception.getMessage());
-//                    }
-//                    paramers.addParam(ParamName, ParseData);
-//                }
-//            }
         }
-        return  paramers;
+        return paramers;
     }
 
     private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap) throws Exception {
-        Object ObjectValue=Value;
+        Object ObjectValue = Value;
         //参数值替换接口变量
-        for (String interfacevariablesName:InterfaceMap.keySet()) {
-            boolean flag=GetSubOrNot(InterfaceMap,Value,"{","}");
-            if(Value.contains("{"+interfacevariablesName+"}"))
-            {
+        for (String interfacevariablesName : InterfaceMap.keySet()) {
+            boolean flag = GetSubOrNot(InterfaceMap, Value, "<", ">");
+            if (Value.contains("<" + interfacevariablesName + ">")) {
                 String ActualValue = InterfaceMap.get(interfacevariablesName);
-                if(flag)
-                {
+                if (flag) {
                     //有拼接认为是字符串
-                    Value=Value.replace("{"+interfacevariablesName+"}",ActualValue);
-                    ObjectValue=Value;
-                }
-                else
-                {
+                    Value = Value.replace("<" + interfacevariablesName + ">", ActualValue);
+                    ObjectValue = Value;
+                } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Testvariables testvariables =testvariablesService.getBy("testvariablesname",interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
-                    if(testvariables==null)
-                    {
-                        ObjectValue="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
-                    }
-                    else
-                    {
-                        ObjectValue=GetDataByType(ActualValue,testvariables.getValuetype());
+                    Testvariables testvariables = testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    if (testvariables == null) {
+                        ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
+                    } else {
+                        ObjectValue = GetDataByType(ActualValue, testvariables.getValuetype());
                     }
                 }
             }
         }
         //参数值替换随机变量
-        for (String variables:RadomMap.keySet()) {
-            boolean flag=GetSubOrNot(RadomMap,Value,"[","]");
-            if (Value.contains("["+variables+"]")) {
-                if(flag)
-                {
+        for (String variables : RadomMap.keySet()) {
+            boolean flag = GetSubOrNot(RadomMap, Value, "[", "]");
+            if (Value.contains("[" + variables + "]")) {
+                if (flag) {
                     Object RadomValue = GetRadomValue(variables);
-                    Value=Value.replace("["+variables+"]",RadomValue.toString());
-                    ObjectValue=Value;
-                }
-                else
-                {
+                    Value = Value.replace("[" + variables + "]", RadomValue.toString());
+                    ObjectValue = Value;
+                } else {
                     ObjectValue = GetRadomValue(variables);
                 }
             }
@@ -699,8 +611,7 @@ public class ApicasesController {
     }
 
     //判断是否有拼接
-    private boolean GetSubOrNot(HashMap<String, String> VariablesMap,String Value,String prefix,String profix)
-    {
+    private boolean GetSubOrNot(HashMap<String, String> VariablesMap, String Value, String prefix, String profix) {
         boolean flag = false;
         for (String Key : VariablesMap.keySet()) {
             String ActualValue = prefix + Key + profix;
@@ -719,7 +630,7 @@ public class ApicasesController {
 
     //获取随机变量值
     private Object GetRadomValue(String Value) {
-        Object Result=Value;
+        Object Result = Value;
         String FunctionName = Value;
         List<Variables> variablesList = variablesService.listAll();
         for (Variables variables : variablesList) {
