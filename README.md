@@ -59,7 +59,7 @@
 ## 帮助文档
 [帮助文档](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83/%E5%8F%91%E5%B8%83%E5%8D%95%E5%85%83)
 
-[开始第一个测试用例](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E5%AE%9E%E8%B7%B5%E5%9C%BA%E6%99%AF/%E5%BC%80%E5%A7%8B%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%8E%A5%E5%8F%A3%E7%94%A8%E4%BE%8B)
+[开始第一个测试用例](https://gitee.com/season-fan/autometer-api/wikis/AutoMeter%E6%96%87%E6%A1%A3/%E5%AE%9E%E8%B7%B5%E5%9C%BA%E6%99%AF/%E5%BC%80%E5%A7%8B%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B)
 ## 版本更新内容
 [更新内容](https://gitee.com/season-fan/autometer-api/wikis/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0)
 
