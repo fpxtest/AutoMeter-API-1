@@ -151,7 +151,7 @@ public class TestHttpRequestData {
     }
 
     //性能用例获取Http请求数据
-    public RequestObject GetPerformanceHttpRequestData(RequestObject newob) {
+    public RequestObject GetPerformanceHttpRequestData(RequestObject newob) throws Exception {
         try {
             String requestcontenttype = newob.getRequestcontenttype();
             String headjson = newob.getHeadjson();
@@ -166,7 +166,7 @@ public class TestHttpRequestData {
             //获取随机变量列表
             List<Variables> variablesList = new ArrayList<>();
             HashMap<String, String> RadomVariablesHashMap = new HashMap<>();
-            if (!variablesjson.isEmpty()) {
+            if ((!variablesjson.isEmpty())&&(variablesjson!=null)) {
                 variablesList = JSONObject.parseArray(variablesjson, Variables.class);
                 for (Variables va : variablesList) {
                     if (!RadomVariablesHashMap.containsKey(va.getVariablesname())) {
@@ -192,9 +192,9 @@ public class TestHttpRequestData {
             //Header
             HttpHeader header = new HttpHeader();
             header = AddHeaderByRequestContentType(header, requestcontenttype);
-            if (!headjson.isEmpty()) {
+            if ((headjson!=null)&&(!headjson.isEmpty())) {
                 Map headermaps = (Map) JSON.parse(headjson);
-                logger.info(logplannameandcasename + "TestHttpRequestData headjson： " + headjson);
+                logger.info(logplannameandcasename + "TestHttpRequestData head： " + headjson);
                 for (Object key : headermaps.entrySet()) {
                     Object Value = ((Map.Entry) key).getValue();
                     logger.info(logplannameandcasename + "TestHttpRequestData Header 值：  " + Value);
@@ -206,8 +206,8 @@ public class TestHttpRequestData {
             newob.setHeader(header);
             //Params
             HttpParamers params = new HttpParamers();
-            if (!paramsjson.isEmpty()) {
-                logger.info(logplannameandcasename + "TestHttpRequestData paramsjson： " + paramsjson);
+            if ((!paramsjson.isEmpty())&&(paramsjson!=null)) {
+                logger.info(logplannameandcasename + "TestHttpRequestData params： " + paramsjson);
                 Map paramsmaps = (Map) JSON.parse(paramsjson);
                 logger.info(logplannameandcasename + "TestHttpRequestData 结束 JSON.parse(paramsjson) ");
                 for (Object key : paramsmaps.entrySet()) {
@@ -221,7 +221,7 @@ public class TestHttpRequestData {
             newob.setParamers(params);
             //Body
             String PostData = "";
-            if (!bodyjson.isEmpty()) {
+            if ((!bodyjson.isEmpty())&&(bodyjson!=null)) {
                 logger.info(logplannameandcasename + "TestHttpRequestData bodyjson： " + bodyjson);
                 Map bodyparamsmaps = (Map) JSON.parse(bodyjson);
                 logger.info(logplannameandcasename + "TestHttpRequestData 结束 JSON.parse(bodyjson) ");
@@ -258,6 +258,7 @@ public class TestHttpRequestData {
             newob.setPostData(PostData);
         } catch (Exception ex) {
             logger.info(logplannameandcasename + "TestHttpRequestData 性能异常 " + ex.getMessage());
+            throw new Exception("性能用例数据获取异常："+ex.getMessage());
         }
         return newob;
     }

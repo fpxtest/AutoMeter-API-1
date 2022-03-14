@@ -59,6 +59,8 @@ public class FunctionDispatchScheduleTask {
     private ConditionScriptService conditionScriptService;
     @Autowired(required = false)
     private TestconditionReportService testconditionReportService;
+    @Autowired(required = false)
+    private DispatchService dispatchService;
     private String redisKey = "";
 
 
@@ -223,6 +225,8 @@ public class FunctionDispatchScheduleTask {
             FunctionDispatchScheduleTask.log.info("调度处理条件任务请求条件服务响应: " + respone);
         } catch (Exception ex) {
             FunctionDispatchScheduleTask.log.info("-------------调度处理条件任务请求异常: " + ex.getMessage());
+            dispatch.setMemo("无法连接conditionservice："+ex.getMessage());
+            dispatchService.update(dispatch);
         }
     }
 
