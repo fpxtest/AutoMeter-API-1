@@ -208,6 +208,22 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
 
     // 本地调试
     public static void main(String[] args)  {
+
+
+        String teststr=" ";
+        if ((teststr!=null)&&(!teststr.isEmpty())) {
+
+            System.out.println("ok");
+        }
+
+        String teststr1=null;
+        if ((teststr1!=null)&&(!teststr1.isEmpty())) {
+
+            System.out.println("1111");
+        }
+
+
+
         Arguments params = new Arguments();
         params.addArgument("DispatchIds", "93");
         params.addArgument("SlaverId", "23");

@@ -352,6 +352,8 @@ public class TestMysqlHelp {
                 caseid = context.getParameter("caseid");
                 slaverid = context.getParameter("slaverid");
                 expect = context.getParameter("expect");
+                Url=context.getParameter("resource");
+                Method=context.getParameter("RequestmMthod");
                 batchname = context.getParameter("batchname").replace("'","''");
             } else {
                 casetype = requestObject.getCasetype();// context.getParameter("casetype");
@@ -362,31 +364,30 @@ public class TestMysqlHelp {
                 batchname = requestObject.getBatchname().replace("'","''");// context.getParameter("batchname");
                 Url = requestObject.getResource().replace("'","''");
                 Method = requestObject.getRequestmMthod().toUpperCase();
-                Map<String, Object> headermap = requestObject.getHeader().getParams();
-                for (String key : headermap.keySet()) {
-                    header = header + key + " ：" + headermap.get(key);
-                }
-                header=header.replace("'","''");
-                paramsmap = requestObject.getParamers().getParams();
-                for (String key : paramsmap.keySet()) {
-                    Params = Params + key + " ：" + paramsmap.get(key);
-                }
-                if(!Params.isEmpty())
-                {
-                    PostData= requestObject.getPostData();
-                    PostData="参数："+Params+"--------Body 内容："+PostData;
-                }
-                else
-                {
-                    PostData= requestObject.getPostData();
-                }
-                PostData=PostData.replace("'","''");
             }
+            Map<String, Object> headermap = requestObject.getHeader().getParams();
+            for (String key : headermap.keySet()) {
+                header = header + key + " ：" + headermap.get(key);
+            }
+            header=header.replace("'","''");
+            paramsmap = requestObject.getParamers().getParams();
+            for (String key : paramsmap.keySet()) {
+                Params = Params + key + " ：" + paramsmap.get(key)+" ";
+            }
+            if(!Params.isEmpty())
+            {
+                PostData="参数："+Params;
+            }
+            else
+            {
+                PostData= requestObject.getPostData();
+            }
+            PostData=PostData.replace("'","''");
 
-            if (casetype.equals(new String("功能"))) {
+            if (casetype.equals("功能")) {
                 resulttable = "apicases_report";
             }
-            if (casetype.equals(new String("性能"))) {
+            if (casetype.equals("性能")) {
                 resulttable = "apicases_report_performance";
             }
             Date d = new Date();

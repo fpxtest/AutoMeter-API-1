@@ -84,7 +84,12 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             //断言
             AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
         } catch (Exception ex) {
-            ErrorInfo=CaseException(results, TestAssert, ex.getMessage());
+            String ExceptionMess=ex.getMessage();
+            if(ExceptionMess.contains("Illegal character in path at"))
+            {
+                ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+ex.getMessage();
+            }
+            ErrorInfo=CaseException(results, TestAssert, ExceptionMess);
         } finally {
             // 保存用例运行结果，Jmeter的sample运行结果
             long End = new Date().getTime();

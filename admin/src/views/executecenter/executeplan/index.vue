@@ -687,7 +687,6 @@
       savebatchandexecuteplancase() {
         this.$refs.tmpplanbatch.validate(valid => {
           if (valid) {
-            this.btnLoading = true
             if (this.multipleSelection.length === 0) {
               this.$message.error('未选择执行计划,或者所选计划已经在执行中')
               return

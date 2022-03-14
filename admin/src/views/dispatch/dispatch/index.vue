@@ -54,7 +54,13 @@
       <el-table-column label="执行计划" align="center" prop="batchname" width="150"/>
       <el-table-column label="执行用例" align="center" prop="testcasename" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="100"/>
-      <el-table-column label="备注" align="center" prop="memo" width="150"/>
+      <el-table-column label="备注" align="center" prop="memo" width="150">
+      <template slot-scope="scope">
+        <span v-if="scope.row.memo !== ''" style="color:red">{{ scope.row.memo }}</span>
+      </template>
+      </el-table-column>>
+
+
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

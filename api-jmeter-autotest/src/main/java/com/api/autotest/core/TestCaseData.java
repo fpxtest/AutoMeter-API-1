@@ -25,7 +25,7 @@ public class TestCaseData {
     }
 
     //性能初始化数据根据jmeter传递下来的数据拼装用例请求的数据
-    public RequestObject InitHttpDatabyJmeter(JavaSamplerContext context) {
+    public RequestObject InitHttpDatabyJmeter(JavaSamplerContext context) throws Exception {
         RequestObject newob = new RequestObject();
         try
         {
@@ -78,23 +78,12 @@ public class TestCaseData {
             String protocal = context.getParameter("protocal");
             logger.info(logplannameandcasename + "用例数据 protocal is :  " + protocal);
 
-            String expect = context.getParameter("expect");
-            logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
-            List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
-            if (expect.isEmpty()) {
-                newob.setApicasesAssertList(apicasesAssertList);
-            } else {
-                apicasesAssertList = JSONObject.parseArray(expect, ApicasesAssert.class);
-                newob.setApicasesAssertList(apicasesAssertList);
-            }
-            expect = GetAssertInfo(apicasesAssertList);
             newob.setCaseid(caseid);
             newob.setCasename(casename);
             newob.setTestplanid(testplanid);
             newob.setSlaverid(slaverid);
             newob.setBatchname(batchname);
             newob.setBatchid(batchid);
-            newob.setExpect(expect);
             newob.setCasetype(casetype);
             newob.setResponecontenttype(responecontenttype);
             newob.setResource(resource);
@@ -109,10 +98,21 @@ public class TestCaseData {
             newob.setVariablesjson(variablesjson);
             newob.setDeployunitvisittype(deployvisitytype);
             newob.setMachineip(machineip);
+
+            String expect = context.getParameter("expect");
+            logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
+            List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
+            if ((!expect.isEmpty())&&(expect!=null)) {
+                apicasesAssertList = JSONObject.parseArray(expect, ApicasesAssert.class);
+            }
+            newob.setApicasesAssertList(apicasesAssertList);
+            expect = GetAssertInfo(apicasesAssertList);
+            newob.setExpect(expect);
         }
         catch (Exception ex)
         {
             logger.info(logplannameandcasename + "性能用例数据 InitHttpDatabyJmeter 异常 :  " + ex.getMessage());
+            throw new Exception("性能用例数据获取异常："+ex.getMessage());
         }
         return newob;
     }

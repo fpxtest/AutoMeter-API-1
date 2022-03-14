@@ -29,7 +29,7 @@
           </elementProp>
           <elementProp name="batchname" elementType="Argument">
             <stringProp name="Argument.name">batchname</stringProp>
-            <stringProp name="Argument.value">${__P(batchname,vvvvvv1111111)}</stringProp>
+            <stringProp name="Argument.value">${__P(batchname,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="testclass" elementType="Argument">
@@ -59,62 +59,62 @@
           </elementProp>
           <elementProp name="mysqlurl" elementType="Argument">
             <stringProp name="Argument.name">mysqlurl</stringProp>
-            <stringProp name="Argument.value">${__P(mysqlurl,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(mysqlurl,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="mysqlusername" elementType="Argument">
             <stringProp name="Argument.name">mysqlusername</stringProp>
-            <stringProp name="Argument.value">${__P(mysqlusername,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(mysqlusername,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="mysqlpassword" elementType="Argument">
             <stringProp name="Argument.name">mysqlpassword</stringProp>
-            <stringProp name="Argument.value">${__P(mysqlpassword,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(mysqlpassword,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="executeplanname" elementType="Argument">
             <stringProp name="Argument.name">executeplanname</stringProp>
-            <stringProp name="Argument.value">${__P(executeplanname,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(executeplanname,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="casename" elementType="Argument">
             <stringProp name="Argument.name">casename</stringProp>
-            <stringProp name="Argument.value">${__P(casename,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(casename,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="expect" elementType="Argument">
             <stringProp name="Argument.name">expect</stringProp>
-            <stringProp name="Argument.value">${__P(expect,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(expect,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="protocal" elementType="Argument">
             <stringProp name="Argument.name">protocal</stringProp>
-            <stringProp name="Argument.value">${__P(protocal,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(protocal,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="RequestmMthod" elementType="Argument">
             <stringProp name="Argument.name">RequestmMthod</stringProp>
-            <stringProp name="Argument.value">${__P(RequestmMthod,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(RequestmMthod,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="casetype" elementType="Argument">
             <stringProp name="Argument.name">casetype</stringProp>
-            <stringProp name="Argument.value">${__P(casetype,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(casetype,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="resource" elementType="Argument">
             <stringProp name="Argument.name">resource</stringProp>
-            <stringProp name="Argument.value">${__P(resource,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(resource,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="apistyle" elementType="Argument">
             <stringProp name="Argument.name">apistyle</stringProp>
-            <stringProp name="Argument.value">${__P(apistyle,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(apistyle,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="requestcontenttype" elementType="Argument">
             <stringProp name="Argument.name">requestcontenttype</stringProp>
-            <stringProp name="Argument.value">${__P(requestcontenttype,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(requestcontenttype,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="responecontenttype" elementType="Argument">
@@ -144,12 +144,12 @@
           </elementProp>
           <elementProp name="machineip" elementType="Argument">
             <stringProp name="Argument.name">machineip</stringProp>
-            <stringProp name="Argument.value">${__P(machineip,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(machineip,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="deployvisitytype" elementType="Argument">
             <stringProp name="Argument.name">deployvisitytype</stringProp>
-            <stringProp name="Argument.value">${__P(deployvisitytype,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(deployvisitytype,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="variablesjson" elementType="Argument">
