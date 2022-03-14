@@ -67,7 +67,7 @@ public class ExecuteplanbatchController {
             }
             else
             {
-                return ResultGenerator.genFailedResult("无执行机可用，请检查是否SlaverService是否正常启动!");
+                return ResultGenerator.genFailedResult("无"+plantype+"类型的执行机可用，请到调度中心-测试执行机查看是否有类型为"+plantype+"的执行机");
             }
         }
     }
