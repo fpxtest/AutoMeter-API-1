@@ -83,7 +83,12 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
                     } catch (Exception ex) {
                         getLogger().error("CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
-                        ErrorInfo = CaseException(results, TestAssert, ex.getMessage());
+                        String ExceptionMess=ex.getMessage();
+                        if(ExceptionMess.contains("Illegal character in path at"))
+                        {
+                            ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+ex.getMessage();
+                        }
+                        ErrorInfo = CaseException(results, TestAssert, ExceptionMess);
                     } finally {
                         // 保存用例运行结果，Jmeter的sample运行结果
                         long End = new Date().getTime();
@@ -204,7 +209,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args)  {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "41");
+        params.addArgument("DispatchIds", "93");
         params.addArgument("SlaverId", "23");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
