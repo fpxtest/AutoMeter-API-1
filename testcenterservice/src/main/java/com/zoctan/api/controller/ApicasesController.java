@@ -538,7 +538,12 @@ public class ApicasesController {
                 return ResultGenerator.genOkResult(respon);
 
             } catch (Exception exception) {
-                return ResultGenerator.genFailedResult(exception.getMessage());
+                String ExceptionMess=exception.getMessage();
+                if(ExceptionMess.contains("Illegal character in path at"))
+                {
+                    ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+exception.getMessage();
+                }
+                return ResultGenerator.genFailedResult(ExceptionMess);
             }
         } else {
             return ResultGenerator.genFailedResult("当前环境未部署此用例API所在的发布单元，请先完成环境下的部署！");

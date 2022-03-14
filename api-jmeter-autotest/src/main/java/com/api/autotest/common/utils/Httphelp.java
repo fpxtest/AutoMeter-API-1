@@ -581,7 +581,7 @@ public class Httphelp {
                     String ReplaceParams="{"+name+"}";
                     if(requestUrl.contains(ReplaceParams))
                     {
-                        requestUrl.replace(ReplaceParams,parameters.get(name).toString());
+                        requestUrl=requestUrl.replace(ReplaceParams,parameters.get(name).toString());
                     }
                 }
             } else {

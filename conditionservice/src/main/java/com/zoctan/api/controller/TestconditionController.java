@@ -283,7 +283,12 @@ public class TestconditionController {
                 Respone = testResponeData.getContent();
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
-                Respone = ex.getMessage();
+                String ExceptionMess=ex.getMessage();
+                if(ExceptionMess.contains("Illegal character in path at"))
+                {
+                    ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+ex.getMessage();
+                }
+                Respone = ExceptionMess;
             } finally {
                 End = new Date().getTime();
             }
