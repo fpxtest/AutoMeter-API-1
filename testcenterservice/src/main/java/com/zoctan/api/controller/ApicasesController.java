@@ -142,38 +142,34 @@ public class ApicasesController {
             Condition apcasedatacon = new Condition(Apicases.class);
             apcasedatacon.createCriteria().andCondition("caseid = " + Long.parseLong(sourcecaseid));
             List<ApiCasedata> SourceApicasedataList = apiCasedataService.listByCondition(apcasedatacon);
-            if (SourceApicasedataList.size() > 0) {
-                //复制用例
-                Sourcecase.setDeployunitid(Long.parseLong(sourcedeployunitid));
-                Sourcecase.setDeployunitname(sourcedeployunitname);
-                Sourcecase.setCasename(newcasename);
-                Sourcecase.setCreateTime(new Date());
-                Sourcecase.setLastmodifyTime(new Date());
-                Sourcecase.setId(null);
-                apicasesService.save(Sourcecase);
-                Long NewCaseId = Sourcecase.getId();
-                //复制用例数据
-                for (ApiCasedata apiCasedata : SourceApicasedataList) {
-                    apiCasedata.setCaseid(NewCaseId);
-                    apiCasedata.setId(null);
-                    apiCasedata.setCasename(newcasename);
-                    apiCasedata.setCreateTime(new Date());
-                    apiCasedata.setLastmodifyTime(new Date());
-                    apiCasedataService.save(apiCasedata);
-                }
-                //复制断言
-                Condition AssertDataCondition = new Condition(ApicasesAssert.class);
-                AssertDataCondition.createCriteria().andCondition("caseid = " + Long.parseLong(sourcecaseid));
-                List<ApicasesAssert> SourceAssertdataList = apicasesAssertService.listByCondition(AssertDataCondition);
-                for (ApicasesAssert apicasesAssert : SourceAssertdataList) {
-                    apicasesAssert.setCaseid(NewCaseId);
-                    apicasesAssert.setId(null);
-                    apicasesAssertService.save(apicasesAssert);
-                }
-                return ResultGenerator.genOkResult();
-            } else {
-                return ResultGenerator.genFailedResult("当前选择的源用例还未完成用例数据，请完成后再进行复制操作");
+            //复制用例
+            Sourcecase.setDeployunitid(Long.parseLong(sourcedeployunitid));
+            Sourcecase.setDeployunitname(sourcedeployunitname);
+            Sourcecase.setCasename(newcasename);
+            Sourcecase.setCreateTime(new Date());
+            Sourcecase.setLastmodifyTime(new Date());
+            Sourcecase.setId(null);
+            apicasesService.save(Sourcecase);
+            Long NewCaseId = Sourcecase.getId();
+            //复制用例数据
+            for (ApiCasedata apiCasedata : SourceApicasedataList) {
+                apiCasedata.setCaseid(NewCaseId);
+                apiCasedata.setId(null);
+                apiCasedata.setCasename(newcasename);
+                apiCasedata.setCreateTime(new Date());
+                apiCasedata.setLastmodifyTime(new Date());
+                apiCasedataService.save(apiCasedata);
             }
+            //复制断言
+            Condition AssertDataCondition = new Condition(ApicasesAssert.class);
+            AssertDataCondition.createCriteria().andCondition("caseid = " + Long.parseLong(sourcecaseid));
+            List<ApicasesAssert> SourceAssertdataList = apicasesAssertService.listByCondition(AssertDataCondition);
+            for (ApicasesAssert apicasesAssert : SourceAssertdataList) {
+                apicasesAssert.setCaseid(NewCaseId);
+                apicasesAssert.setId(null);
+                apicasesAssertService.save(apicasesAssert);
+            }
+            return ResultGenerator.genOkResult();
         }
     }
 
