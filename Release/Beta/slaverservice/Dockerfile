@@ -1,8 +1,7 @@
 FROM openjdk:8
 USER root
 WORKDIR /home/slaverservice
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
-RUN apt-get update -y && apt-get install vim -y
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone && apt-get update -y && apt-get install vim -y
 COPY ./slaverservice.jar slaverservice.jar
 COPY ./config/application.yml application.yml
 COPY ./apache-jmeter-5.3 apache-jmeter-5.3
