@@ -6,6 +6,8 @@ COPY ./slaverservice.jar slaverservice.jar
 COPY ./config/application.yml application.yml
 COPY ./apache-jmeter-5.3 apache-jmeter-5.3
 COPY ./servicejmxcase servicejmxcase
+#在环境准备好后修改apache-jmeter-5.3/bin/jmeter的文件格式为unix
+RUN apt-get install tofrodos -y && fromdos apache-jmeter-5.3/bin/jmeter
 ENV JAVA_TOOL_OPTIONS="-Xms256m -Xmx256m -Djava.security.egd=file:/dev/./urandom"
 EXPOSE 8081
 ENTRYPOINT java -jar $JAVA_TOOL_OPTIONS slaverservice.jar --spring.config.location=application.yml
