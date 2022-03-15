@@ -1,4 +1,5 @@
 FROM openjdk:8
+USER root
 WORKDIR /home/testcenterservice
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
 RUN apt-get update -y && apt-get install vim -y
