@@ -70,7 +70,7 @@ public class AutoFixSlaverScheduleTask {
                         }
                         else
                         {
-                            if(slaver.getStatus().equals("已下线"))
+                            if(slaver.getStatus().equals("已下线")||slaver.getStatus().equals("运行中"))
                             {
                                 slaver.setStatus("空闲");
                                 slaverMapper.updateSlaver(slaver);

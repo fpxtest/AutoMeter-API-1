@@ -130,6 +130,6 @@ jwt:
 logging:
 #  # 以文件方式记录日志
   level.com.zoctan.api: debug
-  file: testcenterservice.log
+  file: /home/testcenterservice/log/testcenterservice.log
 #  # 设置目录
   path: /opt/testcenterservice/log

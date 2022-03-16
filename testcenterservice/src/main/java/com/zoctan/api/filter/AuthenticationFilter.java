@@ -64,10 +64,12 @@ public class AuthenticationFilter implements Filter {
     //String[] allowDomains = {"http://localhost:9999","http://81.69.0.136", "http://127.0.0.1:8080","http://centeradmin.cdmtzz.com"};
     Set<String> allowOrigins = new HashSet<>(Arrays.asList(allowDomains));
     String origin = request.getHeader("Origin");
-    if (allowOrigins.contains(origin)) {
-      // 设置允许跨域的配置
-      response.setHeader("Access-Control-Allow-Origin", origin);
-    }
+//    if (allowOrigins.contains(origin)) {
+//      // 设置允许跨域的配置
+//      response.setHeader("Access-Control-Allow-Origin", origin);
+//    }
+    response.setHeader("Access-Control-Allow-Origin", "*");
+
     response.setHeader("Access-Control-Allow-Credentials", "true");
     response.setHeader(
         "Access-Control-Allow-Headers", "Content-Type, Content-Length, Authorization");
