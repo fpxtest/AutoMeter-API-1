@@ -31,7 +31,7 @@ spring:
     # 数据库索引（默认为0）
     database: 0
     # 服务器地址
-    host: 127.0.0.1
+    host: 192.168.3.95
     # 服务器连接端口
     port: 6379
     # 服务器连接密码 root
@@ -129,7 +129,7 @@ jwt:
 # 日志
 logging:
 #  # 以文件方式记录日志
-  level.com.zoctan.api: debug
+  level.com.zo ctan.api: debug
   file: testcenterservice.log
 #  # 设置目录
   path: /opt/testcenterservice/log
