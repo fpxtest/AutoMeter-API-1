@@ -10,8 +10,6 @@ services:
     ports:
       - "8083:8083"
     restart: always
-    volumes:
-      - "/Volumes/PRO/workspace/log:/home/conditionservice/log"
     depends_on:
       - mysql
       - redis
@@ -29,8 +27,6 @@ services:
     ports:
       - "8082:8082"
     restart: always
-    volumes:
-      - "/Volumes/PRO/workspace/log:/home/dispatchservice/log"
     depends_on:
       - mysql
       - redis
@@ -48,8 +44,6 @@ services:
     ports:
       - "8081:8081"
     restart: always
-    volumes:
-      - "/Volumes/PRO/workspace/log:/home/slaverservice/log"
     depends_on:
       - mysql
       - redis
@@ -66,8 +60,6 @@ services:
     ports:
       - "8080:8080"
     restart: always
-    volumes:
-      - "/Volumes/PRO/workspace/log:/home/testcenterservice/log"
     depends_on:
       - mysql
       - redis
@@ -97,12 +89,18 @@ services:
       - "3306:3306"
     restart: always
     environment:
+      TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: testcenter
     volumes:
-      - "/Volumes/PRO/workspace/mysql/data:/var/lib/mysql"
-      - "/Volumes/PRO/workspace/mysql/config:/etc/mysql/conf.d"
+      - "../Beta/sql/init-sql:/docker-entrypoint-initdb.d/"
+      - "../BackupData/mysql/data:/var/lib/mysql"
+      - "../BackupData/mysql/config:/etc/mysql/conf.d"
     networks:
       - autometer-network
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
 
   redis:
     container_name: redis
@@ -112,8 +110,8 @@ services:
       - "6379:6379"
     restart: always
     volumes:
-      - "/Volumes/PRO/workspace/redis/data:/data"
-      - "/Volumes/PRO/workspace/redis/config:/etc/redis/redis.conf"
+      - "../BackupData/redis/data:/data"
+      - "../BackupData/redis/config:/etc/redis/redis.conf"
     networks:
       - autometer-network
 
