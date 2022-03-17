@@ -6,17 +6,17 @@ spring:
       # 修改代码后自动重启
       enabled: true
   dispatchserver:
-    serverurl: http://dispatchservice:8082
+    serverurl: http://192.168.3.95:8082
   conditionserver:
-    serverurl: http://conditionservice:8083
+    serverurl: http://192.168.3.95:8083
     # 数据源（应该全部加密）
   datasource:
     # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
-    url: jdbc:mysql://mysql:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.3.95:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
     # 用户名 root
-    username: MyEnc({X0YMzMg81sJhvBNkGJUvLw==})
+    username: MyEnc({2oq5sk2pnQEe463zkOQ29Q==})
     # 密码 root
-    password: MyEnc({LOmchlUwlITmcrIhYYsLRA==})
+    password: MyEnc({zn4HSOc+m0ZLHUygmePkcg==})
     # 驱动类
     driver-class-name: com.mysql.jdbc.Driver
   cache:
@@ -31,7 +31,7 @@ spring:
     # 数据库索引（默认为0）
     database: 0
     # 服务器地址
-    host: redis
+    host: 192.168.3.95
     # 服务器连接端口
     port: 6379
     # 服务器连接密码 root
@@ -46,8 +46,8 @@ spring:
       # 连接池中的最小空闲连接
       min-idle: 0
       testOnBorrow: false
-  domain:
-    allowdomain: http://192.168.31.8,http://127.0.0.1
+#  domain:
+#    allowdomain: http://192.168.130.87,http://localhost:9999
 
   profiles:
     # 激活的配置
@@ -128,6 +128,8 @@ jwt:
 
 # 日志
 logging:
-  # 以文件方式记录日志
-  level.com.zoctan.api: debug
-  file: /home/testcenterservice/log/testcenterservice.log
+#  # 以文件方式记录日志
+  level.com.zo ctan.api: debug
+  file: testcenterservice.log
+#  # 设置目录
+  path: /opt/testcenterservice/log

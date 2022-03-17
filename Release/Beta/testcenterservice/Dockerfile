@@ -8,7 +8,6 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shangh
   && apt-get clean \
   && apt-get update -y \
   && apt-get install vim -y
-VOLUME ["/home/testcenterservice/log"]
 ENV JAVA_TOOL_OPTIONS="-Xms256m -Xmx256m -Djava.security.egd=file:/dev/./urandom"
 EXPOSE 8080
 ENTRYPOINT java -jar $JAVA_TOOL_OPTIONS testcenterservice.jar --spring.config.location=application.yml

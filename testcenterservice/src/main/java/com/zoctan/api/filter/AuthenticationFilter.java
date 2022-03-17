@@ -33,8 +33,8 @@ import java.util.Set;
 @Component
 public class AuthenticationFilter implements Filter {
 
-  @Value("${spring.domain.allowdomain}")
-  private String allowdomain;
+//  @Value("${spring.domain.allowdomain}")
+//  private String allowdomain;
 
   @Resource private JwtUtil jwtUtil;
 
@@ -60,10 +60,10 @@ public class AuthenticationFilter implements Filter {
 
     // 设置允许多个域名请求
 
-    String[] allowDomains =allowdomain.split(",");
-    //String[] allowDomains = {"http://localhost:9999","http://81.69.0.136", "http://127.0.0.1:8080","http://centeradmin.cdmtzz.com"};
-    Set<String> allowOrigins = new HashSet<>(Arrays.asList(allowDomains));
-    String origin = request.getHeader("Origin");
+//    String[] allowDomains =allowdomain.split(",");
+//    //String[] allowDomains = {"http://localhost:9999","http://81.69.0.136", "http://127.0.0.1:8080","http://centeradmin.cdmtzz.com"};
+//    Set<String> allowOrigins = new HashSet<>(Arrays.asList(allowDomains));
+//    String origin = request.getHeader("Origin");
 //    if (allowOrigins.contains(origin)) {
 //      // 设置允许跨域的配置
 //      response.setHeader("Access-Control-Allow-Origin", origin);
