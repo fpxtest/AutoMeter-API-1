@@ -15,7 +15,8 @@ services:
       - redis
       - slaverservice
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.7
 
   dispatchservice:
     container_name: dispatchservice
@@ -32,7 +33,8 @@ services:
       - redis
       - conditionservice
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.6
 
   slaverservice:
     container_name: slaverservice
@@ -48,7 +50,8 @@ services:
       - mysql
       - redis
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.5
 
   testcenterservice:
     container_name: testcenterservice
@@ -65,7 +68,8 @@ services:
       - redis
       - dispatchservice
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.4
 
   testcenterapp:
     container_name: testcenterapp
@@ -80,7 +84,8 @@ services:
     depends_on:
       - testcenterservice
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.3
 
   mysql:
     container_name: mysql
@@ -96,8 +101,11 @@ services:
       - "../Beta/sql/init-sql:/docker-entrypoint-initdb.d/"
       - "../BackupData/mysql/data:/var/lib/mysql"
       - "../BackupData/mysql/config:/etc/mysql/conf.d"
+    depends_on:
+      - redis
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.2
     command:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -113,8 +121,12 @@ services:
       - "../BackupData/redis/data:/data"
       - "../BackupData/redis/config:/etc/redis/redis.conf"
     networks:
-      - autometer-network
+      autometer:
+        ipv4_address: 172.20.1.8
 
 networks:
-  autometer-network:
+  autometer:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
