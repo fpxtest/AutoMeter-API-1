@@ -65,13 +65,15 @@ public class TestPlanCaseController {
             return ResultGenerator.genOkResult("此测试集合:" + ep.getExecuteplanname()+" 还没用例，请先装载用例");
         }
         //获取对应计划类型的所有slaver
-        List<Slaver> slaverlist = slaverMapper.findslaverbytype(ep.getUsetype());
+        //List<Slaver> slaverlist = slaverMapper.findslaverbytype(ep.getUsetype());
+        List<Slaver> slaverlist = slaverMapper.findslaveralive(ep.getUsetype(),"已下线");
+
         //增加检测slaver是否正常，在salver的control做个检测的请求返回
-        slaverlist=GetAliveSlaver(slaverlist);
+        //slaverlist=GetAliveSlaver(slaverlist);
         List<List<Dispatch>> dispatchList=new ArrayList<>();
         if (slaverlist.size() == 0) {
-            TestPlanCaseController.log.info("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
-            return ResultGenerator.genOkResult("未获取类型"+ep.getUsetype()+"的执行机，请先完成执行机注册");
+            TestPlanCaseController.log.info("没有类型"+ep.getUsetype()+"的可用的执行机，请检查slaverservice是否在运行");
+            return ResultGenerator.genOkResult("没有类型"+ep.getUsetype()+"的可用的执行机，请检查slaverservice是否在运行");
         } else {
             if(ep.getUsetype().equals("功能"))
             {

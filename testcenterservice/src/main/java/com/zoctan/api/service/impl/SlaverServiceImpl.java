@@ -33,6 +33,11 @@ private SlaverMapper slaverMapper;
     }
 
     @Override
+    public List<Slaver> findslaveralive(String stype, String status) {
+        return slaverMapper.findslaveralive(stype, status);
+    }
+
+    @Override
     public Integer getslavernum() {
         return slaverMapper.getslavernum();
     }

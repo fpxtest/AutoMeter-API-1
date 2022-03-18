@@ -13,7 +13,6 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shangh
  && apt-get install vim -y \
  && apt-get install tofrodos -y \
  && fromdos apache-jmeter-5.3/bin/jmeter
-VOLUME ["/home/slaverservice/log"]
 #ENV JAVA_TOOL_OPTIONS="-Xms256m -Xmx256m -Djava.security.egd=file:/dev/./urandom"
 ENV JAVA_TOOL_OPTIONS="-Djava.security.egd=file:/dev/./urandom"
 EXPOSE 8081

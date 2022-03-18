@@ -32,6 +32,12 @@
     where stype = #{stype}
   </select>
 
+  <select id="findslaveralive" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where stype = #{stype} and status!=#{status}
+  </select>
+
   <select id="getslavernum" resultType="java.lang.Integer">
     SELECT count(*)
     FROM slaver a

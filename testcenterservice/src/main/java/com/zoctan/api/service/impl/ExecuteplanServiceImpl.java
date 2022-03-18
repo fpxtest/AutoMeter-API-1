@@ -80,8 +80,9 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
                 HttpHeader header = new HttpHeader();
                 String DispatchServerurl = dispatchserver + "/exectestplancase/exec";
                 String plantype = ep.getUsetype();
-                List<Slaver> slaverlist = slaverMapper.findslaverWithType(plantype);
-                slaverlist = GetAliveSlaver(slaverlist);
+                //List<Slaver> slaverlist = slaverMapper.findslaverWithType(plantype);
+                List<Slaver> slaverlist = slaverMapper.findslaveralive(plantype,"已下线");
+                //slaverlist = GetAliveSlaver(slaverlist);
                 if (slaverlist.size() == 0) {
                     ExecuteplanServiceImpl.log.info("未找到可用的：" + plantype + "的测试执行机，或者执行机已下线，请检查部署");
                     throw new ServiceException("未找到可用的：" + plantype + "的测试执行机，或者执行机已下线，请检查部署");

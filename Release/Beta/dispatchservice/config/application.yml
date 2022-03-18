@@ -7,14 +7,14 @@ spring:
       enabled: true
     # 条件服务地址
   conditionserver:
-    serverurl: http://conditionservice:8083
+    serverurl: http://192.168.3.95:8083
   datasource:
     # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
-    url: jdbc:mysql://mysql:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.3.95:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     # 用户名 root
-    username: MyEnc({X0YMzMg81sJhvBNkGJUvLw==})
+    username: MyEnc({Qjn8FaKnAiApiz6g3RM5Ow==})
     # 密码 root
-    password: MyEnc({LOmchlUwlITmcrIhYYsLRA==})
+    password: MyEnc({w5CeK9tnNUROTUGdRRmd1Q==})
     # 驱动类
     driver-class-name: com.mysql.cj.jdbc.Driver
   cache:
@@ -29,7 +29,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 0
     # Redis服务器地址
-    host: redis
+    host: 192.168.3.95
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
@@ -124,6 +124,8 @@ jwt:
 
 # 日志
 logging:
-  # 以文件方式记录日志
+#  # 以文件方式记录日志
   level.com.zoctan.api: debug
-  file: /home/dispatchservice/log/dispatchservice.log
+  file: dispatchservice.log
+#  # 设置目录
+  path: /opt/dispatchservice/log

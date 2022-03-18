@@ -75,7 +75,7 @@ public class TestAssert {
         }
         catch (Exception ex)
         {
-            Result=ex.getMessage();
+            Result="解析Json结果异常"+ex.getMessage()+"解析内容："+JsonRespone;
         }
         return Result;
     }
@@ -89,7 +89,7 @@ public class TestAssert {
         }
         catch (Exception ex)
         {
-            Result=ex.getMessage();
+            Result="解析Xml结果异常"+ex.getMessage()+"解析内容："+ActualXml;
         }
         return Result;
     }
