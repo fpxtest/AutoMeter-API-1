@@ -43,6 +43,12 @@
     where stype=#{stype}
   </select>
 
+  <select id="findslaveralive" resultMap="BaseResultMap">
+    SELECT *
+    FROM slaver
+    where stype = #{stype} and status!=#{status}
+  </select>
+
   <select id="findslaverbytypeandstatus" resultMap="BaseResultMap">
     SELECT *
     FROM slaver
@@ -64,6 +70,11 @@
   <update id="updateSlaver" parameterType="com.zoctan.api.entity.Slaver">
     update slaver set slavername = #{slavername}, ip = #{ip}, port= #{port},stype= #{stype},
     memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+
+  <update id="updateSlaverStatus" >
+    update slaver set status = #{status}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 

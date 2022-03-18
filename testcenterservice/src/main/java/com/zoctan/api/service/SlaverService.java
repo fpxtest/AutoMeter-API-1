@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.Slaver;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ public interface SlaverService extends Service<Slaver> {
      * @return 用户列表
      */
     void updateSlaver(Slaver params);
+
+    List<Slaver> findslaveralive(String stype, String status);
 
     Integer getslavernum();
 

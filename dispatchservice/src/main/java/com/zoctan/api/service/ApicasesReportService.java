@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.ApicasesReport;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ public interface ApicasesReportService extends Service<ApicasesReport> {
      * @return 用户列表
      */
     List<ApicasesReport> findApicasereportWithName(final Map<String, Object> params);
+
+    int ifexist(Condition condition);
 
     List<ApicasesReport> listallresult();
 

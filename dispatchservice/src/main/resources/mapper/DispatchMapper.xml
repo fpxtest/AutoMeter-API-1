@@ -29,6 +29,11 @@
     select COUNT(*) from dispatch a where a.status = #{status} and a.slaverid = #{slaverid}
   </select>
 
+
+  <select id="findnotfinishdis" resultType="BaseResultMap">
+    select * from dispatch a where a.status != #{status} and a.slaverid = #{slaverid}
+  </select>
+
   <select id="getcasebyslaverid" resultMap="BaseResultMap">
     select * from dispatch a where a.slaverid = #{slaverid} and status =#{status} and plantype=#{plantype} order by id ASC limit ${maxthread}
   </select>
@@ -88,6 +93,11 @@
   <update id="updatedispatchstatusandmemo">
     update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where slaverid = #{slaverid}
     and execplanid = #{execplanid} and testcaseid = #{testcaseid} and batchid = #{batchid}
+  </update>
+
+  <update id="updatedispatchfail">
+    update  dispatch set status=#{status} , memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where slaverid = #{slaverid}
+    and execplanid = #{execplanid}  and batchid = #{batchid}
   </update>
 
   <update id="updatedispatchstatusbyplanandbatch">

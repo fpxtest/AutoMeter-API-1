@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.ApicasesReportMapper;
 import com.zoctan.api.service.ApicasesReportService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,6 +25,11 @@ private ApicasesReportMapper apicasesReportMapper;
     @Override
     public List<ApicasesReport> findApicasereportWithName(Map<String, Object> params) {
         return apicasesReportMapper.findApicasereportWithName(params);
+    }
+
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
     }
 
     @Override

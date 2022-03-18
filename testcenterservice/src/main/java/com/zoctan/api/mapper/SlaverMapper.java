@@ -16,6 +16,8 @@ public interface SlaverMapper extends MyMapper<Slaver> {
 
     void updateSlaverStatus(@Param("id") Long id,@Param("status") String status);
 
+    List<Slaver> findslaveralive(@Param("stype") final String stype, @Param("stype") final String status);
+
     Integer getslavernum();
 
 }

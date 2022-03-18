@@ -8,7 +8,7 @@ spring:
     # 数据源（应该全部加密）
   datasource:
     # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
-    url: jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.3.95:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     # 用户名 root
     username: MyEnc({Qjn8FaKnAiApiz6g3RM5Ow==})
     # 密码 root
@@ -27,7 +27,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 0
     # Redis服务器地址
-    host: 127.0.0.1
+    host: 192.168.3.95
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码（默认为空）
@@ -129,4 +129,4 @@ logging:
   level.com.zoctan.api: debug
   file: slaverservice.log
 #  # 设置目录
-  path: /app/AutoMeter/slaverservice/log
+  path: /Users/fanseasn/Work/QAP/testplantform/slaverservice/log

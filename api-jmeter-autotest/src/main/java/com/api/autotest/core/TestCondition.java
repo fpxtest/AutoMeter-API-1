@@ -84,6 +84,8 @@ public class TestCondition {
         testconditionReport.setSubconditiontype("接口");
         testconditionReport.setStatus("已完成");
         logger.info("TestCondition条件报告保存子条件已完成状态-============：" + testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "|" + requestObject.getCasename());
+
+        //增加判断是否已经存在
         testMysqlHelp.SubConditionReportSave(testconditionReport);
         //根据用例是否有中间变量(多个)，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
         ArrayList<HashMap<String, String>> apicasesVariablesList = testMysqlHelp.GetApiCaseVaribales(CaseID);
@@ -110,9 +112,9 @@ public class TestCondition {
                             testvariablesValue.setVariablesname(map.get("variablesname"));
                             testvariablesValue.setVariablesvalue(ParseValue);
                             testvariablesValue.setMemo("test");
+                            //增加判断是否已经存在
                             testMysqlHelp.testVariablesValueSave(testvariablesValue);
                         }
-
                     }
                 }
             }
