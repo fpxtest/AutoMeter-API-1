@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ApicasesReportstaticsMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ApicasesReportstatics">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="testplanid" jdbcType="BIGINT" property="testplanid" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="slaverid" jdbcType="BIGINT" property="slaverid" />
+    <result column="totalcases" jdbcType="BIGINT" property="totalcases" />
+    <result column="totalpasscases" jdbcType="BIGINT" property="totalpasscases" />
+    <result column="totalfailcases" jdbcType="BIGINT" property="totalfailcases" />
+    <result column="runtime" jdbcType="BIGINT" property="runtime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+
+  <select id="getapicasesreportstatics" resultMap="BaseResultMap">
+    SELECT testplanid , sum(totalcases) as totalcases ,sum(totalpasscases) as totalpasscases,sum(totalfailcases) as totalfailcases,sum(runtime) as runtime
+    FROM apicases_reportstatics
+    where create_time BETWEEN #{startTime} and #{endTime} group by testplanid
+  </select>
+
+  <select id="getdeployunitapicasesreportstatics" resultMap="BaseResultMap">
+    SELECT deployunitid , sum(totalcases) as totalcases ,sum(totalpasscases) as totalpasscases,sum(totalfailcases) as totalfailcases,sum(runtime) as runtime
+    FROM apicases_reportstatics
+    where create_time BETWEEN #{startTime} and #{endTime} group by deployunitid
+  </select>
+</mapper>

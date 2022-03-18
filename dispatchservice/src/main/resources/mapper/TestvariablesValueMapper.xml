@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.TestvariablesValueMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.TestvariablesValue">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="planid" jdbcType="BIGINT" property="planid" />
+    <result column="planname" jdbcType="VARCHAR" property="planname" />
+    <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="caseid" jdbcType="BIGINT" property="caseid" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="variablesid" jdbcType="BIGINT" property="variablesid" />
+    <result column="variablesname" jdbcType="VARCHAR" property="variablesname" />
+    <result column="variablesvalue" jdbcType="VARCHAR" property="variablesvalue" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findtestvariablesvalueWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM testvariables_value a
+    <where>
+      <if test="testvariablesname != null and testvariablesname != ''">a.testvariablesname like CONCAT('%',#{testvariablesname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+
+
+  <update id="updatetestvariablesvalue" parameterType="com.zoctan.api.entity.TestvariablesValue">
+    update testvariables_value set planid = #{planid},planname=#{planname},caseid=#{caseid},
+    casename=#{casename},variablesid=#{variablesid},variablesname=#{variablesname},variablesvalue=#{variablesvalue},
+    memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+</mapper>
