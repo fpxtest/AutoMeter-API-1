@@ -109,119 +109,122 @@ public class CheckSlaverAliveScheduleTask {
     public void CheckAliveSlaver() {
         List<Slaver> SlaverList=slaverMapper.selectAll();
         for (Slaver slaver : SlaverList) {
-            String IP = slaver.getIp();
-            String Port = slaver.getPort();
-            String ServerUrl = "http://" + IP + ":" + Port + "/exectestplancase/test";
-            ExecuteplanTestcase plancase = new ExecuteplanTestcase();
-            String params = JSON.toJSONString(plancase);
-            HttpHeader header = new HttpHeader();
-            String respon = "";
-            try {
-                 respon = Httphelp.doPost(ServerUrl, params, header, 3000);
-                CheckSlaverAliveScheduleTask.log.info("检测：" + ServerUrl + "请求响应结果。。。。。。。。。。。。。。。。。。。。。。。。：" + respon);
-            } catch (Exception e) {
-                //1.置为已下线
-                slaverMapper.updateSlaverStatus(slaver.getId(), "已下线");
-                CheckSlaverAliveScheduleTask.log.info(slaver.getSlavername()+"检测结果为下线：" + ServerUrl + "请求响应结果异常。。。。。。。。。。。。。。。。。。。。。。。。：" + e.getMessage());
-                //补偿
-                if(slaver.getStype().equalsIgnoreCase("功能"))
-                {
-                    //2.获取当前slaver状态为非已完成的dispatch
-                    List<Dispatch> dispatchList= dispatchMapper.findnotfinishdis(slaver.getId(),"已完成");
-                    //3.删除dispatch生成的用例报告，条件报告，条件变量值数据
-                    HashMap<String,Dispatch>PlanidBatchidmap=new HashMap<>();
-                    for (Dispatch dis: dispatchList) {
-                        Long Planid= dis.getExecplanid();
-                        Long Caseid= dis.getTestcaseid();
-                        Long Batchid= dis.getBatchid();
-                        String PlanidBatchid=Planid.toString()+Batchid.toString();
-                        if(!PlanidBatchidmap.containsKey(PlanidBatchid))
-                        {
-                            PlanidBatchidmap.put(PlanidBatchid,dis);
-                        }
-                        String BatchName=dis.getBatchname();
-                        //条件报告，条件变量值
-                        List<Testcondition> testconditionList= testconditionMapper.GetConditionByPlanIDAndConditionType(Caseid,"测试用例");
-                        if(testconditionList.size()>0)
-                        {
-                            Long ConditionID=testconditionList.get(0).getId();
-                            //删除接口条件报告
-                            ConditionApi conditionApi= conditionApiService.getBy("conditionid",ConditionID);
-                            if(conditionApi!=null)
+            if(!slaver.getStatus().equalsIgnoreCase("已下线"))
+            {
+                String IP = slaver.getIp();
+                String Port = slaver.getPort();
+                String ServerUrl = "http://" + IP + ":" + Port + "/exectestplancase/test";
+                ExecuteplanTestcase plancase = new ExecuteplanTestcase();
+                String params = JSON.toJSONString(plancase);
+                HttpHeader header = new HttpHeader();
+                String respon = "";
+                try {
+                    respon = Httphelp.doPost(ServerUrl, params, header, 3000);
+                    CheckSlaverAliveScheduleTask.log.info("检测：" + ServerUrl + "请求响应结果。。。。。。。。。。。。。。。。。。。。。。。。：" + respon);
+                } catch (Exception e) {
+                    //1.置为已下线
+                    slaverMapper.updateSlaverStatus(slaver.getId(), "已下线");
+                    CheckSlaverAliveScheduleTask.log.info(slaver.getSlavername()+"检测结果为下线：" + ServerUrl + "请求响应结果异常。。。。。。。。。。。。。。。。。。。。。。。。：" + e.getMessage());
+                    //补偿
+                    if(slaver.getStype().equalsIgnoreCase("功能"))
+                    {
+                        //2.获取当前slaver状态为非已完成的dispatch
+                        List<Dispatch> dispatchList= dispatchMapper.findnotfinishdis(slaver.getId(),"已完成");
+                        //3.删除dispatch生成的用例报告，条件报告，条件变量值数据
+                        HashMap<String,Dispatch>PlanidBatchidmap=new HashMap<>();
+                        for (Dispatch dis: dispatchList) {
+                            Long Planid= dis.getExecplanid();
+                            Long Caseid= dis.getTestcaseid();
+                            Long Batchid= dis.getBatchid();
+                            String PlanidBatchid=Planid.toString()+Batchid.toString();
+                            if(!PlanidBatchidmap.containsKey(PlanidBatchid))
                             {
-                                Long ApiSubConditionID=conditionApi.getId();
-                                Condition apicon=new Condition(TestconditionReport.class);
-                                apicon.createCriteria().andCondition("conditionid = " + ConditionID)
-                                        .andCondition("testplanid = " + Planid)
-                                        .andCondition("batchname = '" + BatchName+" '")
-                                        .andCondition("subconditionid = " + ApiSubConditionID);
-                                if(testconditionReportService.ifexist(apicon)==0)
-                                {
-                                    testconditionReportService.deleteByCondition(apicon);
-                                }
-                                //删除接口产生的变量
-                                Long BindCaseid=conditionApi.getCaseid();
-                                Condition variablevaluecon=new Condition(TestvariablesValue.class);
-                                variablevaluecon.createCriteria().andCondition("caseid = " + BindCaseid)
-                                        .andCondition("planid = " + Planid)
-                                        .andCondition("batchname = '" + BatchName+" '");
-                                if(testvariablesValueService.ifexist(variablevaluecon)==0)
-                                {
-                                    testvariablesValueService.deleteByCondition(variablevaluecon);
-                                }
+                                PlanidBatchidmap.put(PlanidBatchid,dis);
                             }
-                            //删除数据库条件报告
-                            ConditionDb conditionDb=conditionDbService.getBy("conditionid",ConditionID);
-                            if(conditionDb!=null)
+                            String BatchName=dis.getBatchname();
+                            //条件报告，条件变量值
+                            List<Testcondition> testconditionList= testconditionMapper.GetConditionByPlanIDAndConditionType(Caseid,"测试用例");
+                            if(testconditionList.size()>0)
                             {
-                                Long DBSubConditionID=conditionDb.getId();
-                                Condition dbcon=new Condition(TestconditionReport.class);
-                                dbcon.createCriteria().andCondition("conditionid = " + ConditionID)
-                                        .andCondition("testplanid = " + Planid)
-                                        .andCondition("batchname = '" + BatchName+" '")
-                                        .andCondition("subconditionid = " + DBSubConditionID);
+                                Long ConditionID=testconditionList.get(0).getId();
+                                //删除接口条件报告
+                                ConditionApi conditionApi= conditionApiService.getBy("conditionid",ConditionID);
+                                if(conditionApi!=null)
+                                {
+                                    Long ApiSubConditionID=conditionApi.getId();
+                                    Condition apicon=new Condition(TestconditionReport.class);
+                                    apicon.createCriteria().andCondition("conditionid = " + ConditionID)
+                                            .andCondition("testplanid = " + Planid)
+                                            .andCondition("batchname = '" + BatchName+" '")
+                                            .andCondition("subconditionid = " + ApiSubConditionID);
+                                    if(testconditionReportService.ifexist(apicon)>0)
+                                    {
+                                        testconditionReportService.deleteByCondition(apicon);
+                                    }
+                                    //删除接口产生的变量
+                                    Long BindCaseid=conditionApi.getCaseid();
+                                    Condition variablevaluecon=new Condition(TestvariablesValue.class);
+                                    variablevaluecon.createCriteria().andCondition("caseid = " + BindCaseid)
+                                            .andCondition("planid = " + Planid)
+                                            .andCondition("batchname = '" + BatchName+" '");
+                                    if(testvariablesValueService.ifexist(variablevaluecon)>0)
+                                    {
+                                        testvariablesValueService.deleteByCondition(variablevaluecon);
+                                    }
+                                }
+                                //删除数据库条件报告
+                                ConditionDb conditionDb=conditionDbService.getBy("conditionid",ConditionID);
+                                if(conditionDb!=null)
+                                {
+                                    Long DBSubConditionID=conditionDb.getId();
+                                    Condition dbcon=new Condition(TestconditionReport.class);
+                                    dbcon.createCriteria().andCondition("conditionid = " + ConditionID)
+                                            .andCondition("testplanid = " + Planid)
+                                            .andCondition("batchname = '" + BatchName+" '")
+                                            .andCondition("subconditionid = " + DBSubConditionID);
 
-                                if(testconditionReportService.ifexist(dbcon)==0)
+                                    if(testconditionReportService.ifexist(dbcon)>0)
+                                    {
+                                        testconditionReportService.deleteByCondition(dbcon);
+                                    }
+                                }
+                                //删除脚本条件报告
+                                ConditionScript conditionScript=conditionScriptService.getBy("conditionid",ConditionID);
+                                if(conditionScript!=null)
                                 {
-                                    testconditionReportService.deleteByCondition(dbcon);
+                                    Long ScriptSubConditionID=conditionScript.getId();
+                                    Condition scriptcon=new Condition(TestconditionReport.class);
+                                    scriptcon.createCriteria().andCondition("conditionid = " + ConditionID)
+                                            .andCondition("testplanid = " + Planid)
+                                            .andCondition("batchname = '" + BatchName+" '")
+                                            .andCondition("subconditionid = " + ScriptSubConditionID);
+                                    if(testconditionReportService.ifexist(scriptcon)>0)
+                                    {
+                                        testconditionReportService.deleteByCondition(scriptcon);
+                                    }
                                 }
                             }
-                            //删除脚本条件报告
-                            ConditionScript conditionScript=conditionScriptService.getBy("conditionid",ConditionID);
-                            if(conditionScript!=null)
+                            //用例报告
+                            Condition reportcon=new Condition(ApicasesReport.class);
+                            reportcon.createCriteria().andCondition("caseid = " + Caseid)
+                                    .andCondition("testplanid = " + Planid)
+                                    .andCondition("batchname = '" + BatchName+" '")
+                                    .andCondition("slaverid = " + slaver.getId());
+                            if(apicasesReportService.ifexist(reportcon)>0)
                             {
-                                Long ScriptSubConditionID=conditionScript.getId();
-                                Condition scriptcon=new Condition(TestconditionReport.class);
-                                scriptcon.createCriteria().andCondition("conditionid = " + ConditionID)
-                                        .andCondition("testplanid = " + Planid)
-                                        .andCondition("batchname = '" + BatchName+" '")
-                                        .andCondition("subconditionid = " + ScriptSubConditionID);
-                                if(testconditionReportService.ifexist(scriptcon)==0)
-                                {
-                                    testconditionReportService.deleteByCondition(scriptcon);
-                                }
+                                apicasesReportService.deleteByCondition(reportcon);
                             }
                         }
-                        //用例报告
-                        Condition reportcon=new Condition(ApicasesReport.class);
-                        reportcon.createCriteria().andCondition("caseid = " + Caseid)
-                                .andCondition("testplanid = " + Planid)
-                                .andCondition("batchname = '" + BatchName+" '")
-                                .andCondition("slaverid = " + slaver.getId());
-                        if(apicasesReportService.ifexist(reportcon)==0)
-                        {
-                            apicasesReportService.deleteByCondition(reportcon);
+                        //4.更新dispatch状态为待分配，更新为可用的slaverid
+                        for (String ids:PlanidBatchidmap.keySet()) {
+                            Long Planid=PlanidBatchidmap.get(ids).getExecplanid();
+                            CompensateAfterFail("用例所分配的执行机:"+slaver.getSlavername()+"已下线，请检查此slaver是否正常运行！", PlanidBatchidmap.get(ids),Planid,dispatchList);
                         }
                     }
-                    //4.更新dispatch状态为待分配，更新为可用的slaverid
-                    for (String ids:PlanidBatchidmap.keySet()) {
-                        Long Planid=PlanidBatchidmap.get(ids).getExecplanid();
-                        CompensateAfterFail("用例所分配的执行机:"+slaver.getSlavername()+"已下线，请检查此slaver是否正常运行！", PlanidBatchidmap.get(ids),Planid,dispatchList);
+                    else
+                    {
+                        //.性能补偿.....
                     }
-                }
-                else
-                {
-                    //.性能补偿.....
                 }
             }
         }

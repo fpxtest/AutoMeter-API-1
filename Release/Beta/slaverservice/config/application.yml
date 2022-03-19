@@ -8,11 +8,11 @@ spring:
     # 数据源（应该全部加密）
   datasource:
     # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
-    url: jdbc:mysql://192.168.3.95:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.3.95:3406/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     # 用户名 root
-    username: MyEnc({Qjn8FaKnAiApiz6g3RM5Ow==})
+    username: MyEnc({k/LqLqGoeBEoMz+MLuB6cg==})
     # 密码 root
-    password: MyEnc({w5CeK9tnNUROTUGdRRmd1Q==})
+    password: MyEnc({I6NT3SWbkubdgO2sXBEivg==})
     # 驱动类
     driver-class-name: com.mysql.cj.jdbc.Driver
   cache:
@@ -29,7 +29,7 @@ spring:
     # Redis服务器地址
     host: 192.168.3.95
     # Redis服务器连接端口
-    port: 6379
+    port: 6479
     # Redis服务器连接密码（默认为空）
     #password:
     # 连接池最大连接数（使用负值表示没有限制）

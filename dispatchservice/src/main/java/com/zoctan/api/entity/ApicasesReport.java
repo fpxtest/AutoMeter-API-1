@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "apicases_report")
-public class ApicasesReport extends Apicases {
+public class ApicasesReport  {
     /**
      * Id
      */

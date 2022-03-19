@@ -30,7 +30,7 @@
   </select>
 
 
-  <select id="findnotfinishdis" resultType="BaseResultMap">
+  <select id="findnotfinishdis" resultMap="BaseResultMap">
     select * from dispatch a where a.status != #{status} and a.slaverid = #{slaverid}
   </select>
 
