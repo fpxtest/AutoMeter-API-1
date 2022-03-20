@@ -64,11 +64,21 @@ public class RadomVariables {
     }
 
     //获取当前时间
-    public String GetCurrentDate()
+    public String GetCurrentDate(String Condition)
     {
         String Result="";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         Result=df.format(new Date());
+        if(Condition.equalsIgnoreCase("/"))
+        {
+            df = new SimpleDateFormat("yyyy/MM/dd");//设置日期格式
+            Result=df.format(new Date());
+        }
+        if(Condition.equalsIgnoreCase("-"))
+        {
+            df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+            Result=df.format(new Date());
+        }
         return Result;
     }
 

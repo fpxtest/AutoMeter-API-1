@@ -104,7 +104,7 @@
             },
             itemStyle: {
               normal: {
-                color: 'rgb(300,189,27)',
+                color: 'rgb(156,95,167)',
                 borderColor: 'rgba(300,189,2,0.27)',
                 borderWidth: 12
 
@@ -123,14 +123,14 @@
         console.log('000000000000000000000000000000000000000000000000000')
         this.chart = echarts.init(document.getElementById(this.id))
         this.chart.setOption({
-          backgroundColor: '#08060a',
+          backgroundColor: 'rgba(246,246,245,0.99)',
           title: {
             top: 20,
             text: this.LineName,
             textStyle: {
               fontWeight: 'normal',
               fontSize: 16,
-              color: '#F1F1F3'
+              color: '#6527a3'
             },
             left: '1%'
           },
@@ -138,7 +138,7 @@
             trigger: 'axis',
             axisPointer: {
               lineStyle: {
-                color: '#57617B'
+                color: '#f6f6fa'
               }
             }
           },
@@ -152,7 +152,7 @@
             right: '4%',
             textStyle: {
               fontSize: 12,
-              color: '#F1F1F3'
+              color: '#b34227'
             }
           },
           grid: {
@@ -167,7 +167,7 @@
             boundaryGap: false,
             axisLine: {
               lineStyle: {
-                color: '#57617B'
+                color: '#e7e9ee'
               }
             },
             data: this.PlanDateData

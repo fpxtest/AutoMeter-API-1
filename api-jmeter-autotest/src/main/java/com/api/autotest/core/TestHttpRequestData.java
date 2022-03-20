@@ -491,7 +491,7 @@ public class TestHttpRequestData {
             logger.info("随机变量名当前时间为:  " + Result);
         }
         if (Variablestype.equalsIgnoreCase("当前日期")) {
-            Result = radomVariables.GetCurrentDate();
+            Result = radomVariables.GetCurrentDate(Params);
             logger.info("随机变量名当前日期为:  " + Result);
         }
         if (Variablestype.equalsIgnoreCase("当前时间戳")) {

@@ -104,6 +104,8 @@
         <el-form-item label="变量类型" prop="variablestype" required >
           <el-select v-model="tmpvariables.variablestype" placeholder="变量类型" style="width:100%" @change="variablestypeselectChanged($event)">
             <el-option label="当前时间" value="当前时间"></el-option>
+            <el-option label="当前日期" value="当前日期"></el-option>
+            <el-option label="当前时间戳" value="当前时间戳"></el-option>
             <el-option label="随机IP" value="随机IP"></el-option>
             <el-option label="随机小数" value="随机小数"></el-option>
             <el-option label="GUID" value="GUID"></el-option>
@@ -253,7 +255,7 @@
        * 条件下拉选择事件获取条件id  e的值为options的选值
        */
       variablestypeselectChanged(e) {
-        if (e === '随机字符串' || e === '随机整数' || e === '随机小数') {
+        if (e === '随机字符串' || e === '随机整数' || e === '随机小数' || e === '当前日期') {
           this.variablecondition = true
         } else {
           this.variablecondition = false

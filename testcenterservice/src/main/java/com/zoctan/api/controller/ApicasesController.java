@@ -685,7 +685,7 @@ public class ApicasesController {
                     Result = radomVariables.GetCurrentTime();
                 }
                 if (Variablestype.equalsIgnoreCase("当前日期")) {
-                    Result = radomVariables.GetCurrentDate();
+                    Result = radomVariables.GetCurrentDate(Params);
                 }
                 if (Variablestype.equalsIgnoreCase("当前时间戳")) {
                     Result = radomVariables.GetCurrentTimeMillis();
