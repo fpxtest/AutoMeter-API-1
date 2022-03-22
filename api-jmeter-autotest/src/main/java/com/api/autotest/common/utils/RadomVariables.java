@@ -2,8 +2,11 @@ package com.api.autotest.common.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -104,15 +107,23 @@ public class RadomVariables {
 
     public static void main(String[] args) {
 
-        String test="{\n" +
-                "    \"id\": \"\",\n" +
-                "    \"enviromentname\": \"[TestRadomNumber]-{{code}}[[TestRadomString][TestRadomNumber]\",\n" +
-                "    \"envtype\": \"功能\",\n" +
-                "    \"memo\": \"{code}}[TestGuid]{code}[\",\n" +
-                "    \"creator\": \"admin\"\n" +
-                "}";
-        test=test.replace("\n","").replace(" ","");
 
-        System.out.println(test);
+        List<String> list1=new ArrayList<>();
+        list1.add("11");
+        list1.add("22");
+
+        List<String> list2=new ArrayList<>();
+        list2.add("11");
+        list2.add("22");
+        list2.add("33");
+
+
+        float successrate=Float.valueOf(list1.size())/Float.valueOf(list2.size());
+        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        String p=decimalFormat.format(successrate);
+        System.out.println(p);
+
+
+
     }
 }

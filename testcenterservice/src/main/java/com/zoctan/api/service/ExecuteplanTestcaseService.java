@@ -15,6 +15,8 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> findexplanWithName(final Map<String, Object> params);
 
+    List<ExecuteplanTestcase> getplancasesbyplanid(final long executeplanid);
+
     void savetestplancase(final List<ExecuteplanTestcase> testcase);
 
     List<ExecuteplanTestcase> finddeployunitbyplanid(final long executeplanid);

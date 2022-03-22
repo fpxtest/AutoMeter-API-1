@@ -27,6 +27,12 @@ private ApicasesReportMapper apicasesReportMapper;
     }
 
     @Override
+    public List<ApicasesReport> findApicasereportWithNameandStatus(long planid, String status, String batchname) {
+        return apicasesReportMapper.findApicasereportWithNameandStatus(planid, status, batchname);
+    }
+
+
+    @Override
     public Long getApicasetotalsWithName(Map<String, Object> params) {
         return apicasesReportMapper.getApicasetotalsWithName(params);
     }
@@ -44,5 +50,10 @@ private ApicasesReportMapper apicasesReportMapper;
     @Override
     public List<ApicasesReport> listallresult() {
         return apicasesReportMapper.listallresult();
+    }
+
+    @Override
+    public List<ApicasesReport> getreportbyplanandbatchstatus(long planid, String status, String batchname) {
+        return apicasesReportMapper.getreportbyplanandbatchstatus(planid,status,batchname);
     }
 }

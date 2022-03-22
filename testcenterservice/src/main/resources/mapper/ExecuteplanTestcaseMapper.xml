@@ -91,6 +91,10 @@
   inner JOIN executeplan b on a.executeplanid=b.id group by a.executeplanid
 </select>
 
-
-
+  <select id="getplancasesbyplanid" resultMap="BaseResultMap">
+    SELECT *
+    FROM executeplan_testcase a
+    where executeplanid = #{executeplanid}
+</select>
+  
 </mapper>

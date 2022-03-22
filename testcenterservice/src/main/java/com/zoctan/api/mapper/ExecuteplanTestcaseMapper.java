@@ -39,4 +39,6 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> getstaticsplancases();
 
+    List<ExecuteplanTestcase> getplancasesbyplanid(final long executeplanid);
+
 }

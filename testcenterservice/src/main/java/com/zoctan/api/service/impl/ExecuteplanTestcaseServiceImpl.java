@@ -29,6 +29,11 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
     }
 
     @Override
+    public List<ExecuteplanTestcase> getplancasesbyplanid(long executeplanid) {
+        return executeplanTestcaseMapper.getplancasesbyplanid(executeplanid);
+    }
+
+    @Override
     public void savetestplancase(List<ExecuteplanTestcase> testcase) {
         List<ExecuteplanTestcase> caselist = new ArrayList<ExecuteplanTestcase>();
         for (ExecuteplanTestcase tc : testcase) {
