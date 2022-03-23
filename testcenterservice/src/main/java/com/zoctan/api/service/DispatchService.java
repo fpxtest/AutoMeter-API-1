@@ -13,5 +13,7 @@ import java.util.Map;
 public interface DispatchService extends Service<Dispatch> {
     List<Dispatch> findDispatchWithName(final Map<String, Object> params);
 
+    List<Dispatch> getDispatchWithstatus(long testplanid,String batchname,String status);
+
 
 }

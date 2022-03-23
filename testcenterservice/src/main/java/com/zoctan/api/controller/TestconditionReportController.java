@@ -68,4 +68,16 @@ public class TestconditionReportController {
         final PageInfo<TestconditionReport> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
+
+    @PostMapping("/findconditionreport")
+    public Result findconditionreport(@RequestBody final Map<String, Object> param) {
+        Integer page = Integer.parseInt(param.get("page").toString());
+        Integer size = Integer.parseInt(param.get("size").toString());
+        Long executeplanid = Long.parseLong(param.get("executeplanid").toString());
+        String batchname = param.get("batchname").toString();
+        PageHelper.startPage(page, size);
+        final List<TestconditionReport> list = this.testconditionReportService.findconditionreport(executeplanid,batchname);
+        final PageInfo<TestconditionReport> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
 }

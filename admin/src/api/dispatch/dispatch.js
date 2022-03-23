@@ -16,6 +16,14 @@ export function search(dispatchForm) {
   })
 }
 
+export function getDispatchWithstatus(dispatchForm) {
+  return request({
+    url: '/dispatch/getDispatchWithstatus',
+    method: 'post',
+    data: dispatchForm
+  })
+}
+
 export function adddispatch(dispatchForm) {
   return request({
     url: '/dispatch',

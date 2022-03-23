@@ -50,6 +50,11 @@ public class ApicasesReportController {
     @Resource
     private ConditionScriptService conditionScriptService;
 
+    @Resource
+    private TestconditionReportService testconditionReportService;
+
+
+
 
     @PostMapping
     public Result add(@RequestBody ApicasesReport apicasesReport) {
@@ -110,6 +115,18 @@ public class ApicasesReportController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
+//    @PostMapping("/findconditionreport")
+//    public Result findconditionreport(@RequestBody final Map<String, Object> param) {
+//        Integer page = Integer.parseInt(param.get("page").toString());
+//        Integer size = Integer.parseInt(param.get("size").toString());
+//        Long executeplanid = Long.parseLong(param.get("executeplanid").toString());
+//        String batchname = param.get("batchname").toString();
+//        PageHelper.startPage(page, size);
+//        final List<TestconditionReport> list = this.testconditionReportService.findconditionreport(executeplanid,batchname);
+//        final PageInfo<TestconditionReport> pageInfo = new PageInfo<>(list);
+//        return ResultGenerator.genOkResult(pageInfo);
+//    }
+
 
 
 
@@ -167,9 +184,9 @@ public class ApicasesReportController {
             Condition dispatchnotexeccon = new Condition(Dispatch.class);
             dispatchnotexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
                     .andCondition("batchid = " + batchid)
-                    .andCondition("status = '" + "待分配" + "'");
+                    .andCondition("status != '" + "已完成" + "'");
             List<Dispatch> dispatchnotexecList = dispatchService.listByCondition(dispatchnotexeccon);
-            functionCaseStatis.setExecCaseNums(dispatchnotexecList.size());
+            functionCaseStatis.setNotExecCaseNums(dispatchnotexecList.size());
 
             List<ApicasesReport> apicasesReportSuccessList = apicasesReportService.getreportbyplanandbatchstatus(executeplanid, "成功", batchname);
             functionCaseStatis.setSuccessCaseNums(apicasesReportSuccessList.size());
@@ -206,7 +223,7 @@ public class ApicasesReportController {
 
             Condition testconditioncon = new Condition(Testcondition.class);
             testconditioncon.createCriteria().andCondition("objecttype = '" + "测试集合" + "'")
-                    .andCondition("objectid = " + batchid);
+                    .andCondition("objectid = " + executeplanid);
             List<Testcondition> testconditionList = testconditionService.listByCondition(testconditioncon);
 
             long totalconditionnums = 0;
@@ -254,7 +271,7 @@ public class ApicasesReportController {
                     }
                 }
             }
-            functionConditionStatis.setTestCollectionConditionsNUms(caseconditionnums);
+            functionConditionStatis.setCaseConditionNums(caseconditionnums);
         }
         List<FunctionConditionStatis> functionConditionStatisList = new ArrayList<>();
         functionConditionStatisList.add(functionConditionStatis);

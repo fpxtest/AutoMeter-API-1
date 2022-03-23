@@ -25,4 +25,10 @@ private TestconditionReportMapper testconditionReportMapper;
     public List<TestconditionReport> findTestconditionReportWithName(Map<String, Object> params) {
         return testconditionReportMapper.findTestconditionReportWithName(params);
     }
+
+    @Override
+    public List<TestconditionReport> findconditionreport(long planid, String batchname) {
+        return testconditionReportMapper.findconditionreport(planid,batchname);
+    }
+
 }

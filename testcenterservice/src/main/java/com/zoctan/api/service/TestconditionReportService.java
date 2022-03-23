@@ -15,5 +15,7 @@ import java.util.Map;
 public interface TestconditionReportService extends Service<TestconditionReport> {
 
     List<TestconditionReport> findTestconditionReportWithName(final Map<String, Object> params);
+    List<TestconditionReport> findconditionreport(long planid,String batchname);
+
 
 }

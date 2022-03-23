@@ -32,4 +32,9 @@
     </where>
     order by lastmodify_time  DESC
   </select>
+
+  <select id="getDispatchWithstatus" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM dispatch a where a.execplanid =#{execplanid} and batchname = #{batchname} and status != #{status}
+  </select>
 </mapper>

@@ -25,4 +25,9 @@ private DispatchMapper dispatchMapper;
     public List<Dispatch> findDispatchWithName(Map<String, Object> params) {
         return dispatchMapper.findDispatchWithName(params);
     }
+
+    @Override
+    public List<Dispatch> getDispatchWithstatus(long testplanid, String batchname, String status) {
+        return dispatchMapper.getDispatchWithstatus(testplanid, batchname, status);
+    }
 }

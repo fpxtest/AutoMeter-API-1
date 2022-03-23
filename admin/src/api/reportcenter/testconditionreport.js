@@ -30,6 +30,14 @@ export function search(testconditionreportForm) {
   })
 }
 
+export function findconditionreport(testconditionreportForm) {
+  return request({
+    url: '/testcondition/report/findconditionreport',
+    method: 'post',
+    data: testconditionreportForm
+  })
+}
+
 export function addtestconditionreport(testconditionreportForm) {
   return request({
     url: '/testcondition/report',

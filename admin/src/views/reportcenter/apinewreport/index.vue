@@ -41,26 +41,12 @@
 
     <div class="dashboard-editor-container">
       <github-corner class="github-corner" />
-      <el-row :gutter="60">
+      <el-row :gutter="50">
         <el-col :xs="24" :sm="24" :lg="9">
           <div id="22" class="chart-wrapper">
             <template>
-              <div id="mian" style="width: 300px;height:250px;"></div>
+              <div id="mian" style="width: 300px;height:280px;"></div>
             </template>
-            <el-table
-              style="width: 120vh"
-              :data="casestaticsList"
-              :key="itemKey"
-              v-loading.body="listLoading"
-              size="mini"
-              element-loading-text="loading"
-              border
-              highlight-current-row
-            >
-              <el-table-column label="成功率" align="center" prop="successrate" width="160">
-              </el-table-column>
-              <el-table-column label="失败率" align="center" prop="failrate" width="200"/>
-            </el-table>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="15">
@@ -83,7 +69,25 @@
             </el-table>
           </div>
         </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
+        <el-col :xs="24" :sm="24" :lg="15">
+          <div id="14" class="chart-wrapper">
+            <el-table
+              style="width: 120vh"
+              :data="casestaticsList"
+              :key="itemKey"
+              v-loading.body="listLoading"
+              size="mini"
+              element-loading-text="loading"
+              border
+              highlight-current-row
+            >
+              <el-table-column label="总成功率" align="center" prop="successrate" width="350">
+              </el-table-column>
+              <el-table-column label="总失败率" align="center" prop="failrate" width="340"/>
+            </el-table>
+          </div>
+        </el-col>
+        <el-col :xs="24" :sm="24" :lg="15">
           <div id="13" class="chart-wrapper">
             <el-table
               style="width: 100vh"
@@ -95,9 +99,9 @@
               border
               highlight-current-row
             >
-              <el-table-column label="测试集合子条件" align="center" prop="caseConditionNums" width="150">
+              <el-table-column label="测试集合前置条件数" align="center" prop="testCollectionConditionsNUms" width="350">
               </el-table-column>
-              <el-table-column label="用例子条件" align="center" prop="testCollectionConditionsNUms" width="150"/>
+              <el-table-column label="测试用例前置条件数" align="center" prop="caseConditionNums" width="340"/>
             </el-table>
           </div>
         </el-col>
@@ -105,11 +109,9 @@
     </div>
 
     <el-tabs v-model="activeName" type="card" ref="tabs">
-      <el-tab-pane label="用例结果报告" name="zero">
-
+      <el-tab-pane label="用例执行报告" name="zero">
         <div class="filter-container">
           <el-form :inline="true">
-
           <el-form-item label="状态:" prop="testplanname" >
               <el-select v-model="tmpquery.caseststus" style="width:100%" placeholder="值类型">
                 <el-option label="成功" value="成功"></el-option>
@@ -119,7 +121,6 @@
           <el-form-item>
             <el-button type="primary" @click="searchcaseReportBy" :loading="btnLoading">查询</el-button>
           </el-form-item>
-
           </el-form>
         </div>
 
@@ -248,66 +249,105 @@
           ></el-pagination>
         </template>
       </el-tab-pane>
-      <el-tab-pane label="条件报告" name="first">
+      <el-tab-pane label="条件执行结果" name="first">
         <template>
           <el-table
-            style="width: 90vh"
-            :data="apiList"
+            :data="caseconditionreport"
             :key="itemKey"
             v-loading.body="listLoading"
-            size="mini"
             element-loading-text="loading"
             border
+            fit
             highlight-current-row
           >
-            <el-table-column label="用例数" align="center" width="100">
+            <el-table-column label="编号" align="center" width="60">
+              <template slot-scope="scope">
+                <span v-text="conditiongetIndex(scope.$index)"></span>
+              </template>
             </el-table-column>
-            <el-table-column label="执行中" align="center" prop="apiname" width="120"/>
-            <el-table-column label="成功数" align="center" prop="deployunitname" width="130"/>
-            <el-table-column label="失败数" align="center" prop="apistyle" width="80"/>
-            <el-table-column label="未执行数" align="center" prop="visittype" width="80"/>
+            <el-table-column label="集合/用例名" align="center" prop="planname" width="150"/>
+            <el-table-column label="执行计划名" align="center" prop="batchname" width="120"/>
+            <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
+            <el-table-column label="子条件名" align="center" prop="subconditionname" width="180"/>
+            <el-table-column label="子条件类型" align="center" prop="subconditiontype" width="100"/>
+            <el-table-column label="条件结果" align="center" prop="conditionresult" width="100">
+              <template slot-scope="scope">
+                <el-popover trigger="hover" placement="top">
+                  <p>{{ scope.row.conditionresult }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="medium">...</el-tag>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column label="条件状态" align="center" prop="conditionstatus" width="100">
+              <template slot-scope="scope">
+                <span v-if="scope.row.conditionstatus === '失败'" style="color:red">{{ scope.row.conditionstatus }}</span>
+                <span v-else style="color: #37B328">{{ scope.row.conditionstatus }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="消耗时长(ms)" align="center" prop="runtime" width="100"/>
+            <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+              <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
+            </el-table-column>
+
           </el-table>
+          <el-pagination
+            @size-change="conditionhandleSizeChange"
+            @current-change="conditionhandleCurrentChange"
+            :current-page="tmpconditionquery.page"
+            :page-size="tmpconditionquery.size"
+            :total="conditiontotal"
+            :page-sizes="[10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next, jumper"
+          ></el-pagination>
         </template>
       </el-tab-pane>
-      <el-tab-pane label="条件变量值" name="second">
+      <el-tab-pane label="未执行用例" name="three">
         <template>
           <el-table
-            style="width: 90vh"
-            :data="apiList"
+            :data="dispatchdata"
             :key="itemKey"
             v-loading.body="listLoading"
-            size="mini"
             element-loading-text="loading"
             border
+            fit
             highlight-current-row
           >
-            <el-table-column label="用例数" align="center" width="100">
+            <el-table-column label="编号" align="center" width="60">
+              <template slot-scope="scope">
+                <span v-text="dispatchgetIndex(scope.$index)"></span>
+              </template>
             </el-table-column>
-            <el-table-column label="执行中" align="center" prop="apiname" width="120"/>
-            <el-table-column label="成功数" align="center" prop="deployunitname" width="130"/>
-            <el-table-column label="失败数" align="center" prop="apistyle" width="80"/>
-            <el-table-column label="未执行数" align="center" prop="visittype" width="80"/>
-          </el-table>        </template>
-      </el-tab-pane>
-      <el-tab-pane label="异常用例" name="three">
-        <template>
-          <el-table
-            style="width: 90vh"
-            :data="apiList"
-            :key="itemKey"
-            v-loading.body="listLoading"
-            size="mini"
-            element-loading-text="loading"
-            border
-            highlight-current-row
-          >
-            <el-table-column label="用例数" align="center" width="100">
+            <el-table-column label="执行机" align="center" prop="slavername" width="150"/>
+            <el-table-column label="测试集合" align="center" prop="execplanname" width="150"/>
+            <el-table-column label="执行计划" align="center" prop="batchname" width="150"/>
+            <el-table-column label="执行用例" align="center" prop="testcasename" width="150"/>
+            <el-table-column label="状态" align="center" prop="status" width="100"/>
+            <el-table-column label="备注" align="center" prop="memo" width="150">
+              <template slot-scope="scope">
+                <span v-if="scope.row.memo !== ''" style="color:red">{{ scope.row.memo }}</span>
+              </template>
+            </el-table-column>>
+
+
+            <el-table-column label="创建时间" align="center" prop="createTime" width="140">
+              <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
             </el-table-column>
-            <el-table-column label="执行中" align="center" prop="apiname" width="120"/>
-            <el-table-column label="成功数" align="center" prop="deployunitname" width="130"/>
-            <el-table-column label="失败数" align="center" prop="apistyle" width="80"/>
-            <el-table-column label="未执行数" align="center" prop="visittype" width="80"/>
+            <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
+              <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
+              </template>
+            </el-table-column>
           </el-table>
+          <el-pagination
+            @size-change="dispatchhandleSizeChange"
+            @current-change="dispatchhandleCurrentChange"
+            :current-page="tmpdispatchquery.page"
+            :page-size="tmpdispatchquery.size"
+            :total="dispatchtotal"
+            :page-sizes="[10, 20, 30, 40]"
+            layout="total, sizes, prev, pager, next, jumper"
+          ></el-pagination>
         </template>
       </el-tab-pane>
 
@@ -318,12 +358,12 @@
 </template>
 
 <script>
-  // import PieChart from '@/views/dashboard/admin/components/PieChart'
+  import { getDispatchWithstatus } from '@/api/dispatch/dispatch'
   import { search as search, getfunctioncasestatics as getfunctioncasestatics, getfunctionconditionstatics as getfunctionconditionstatics, getfunctionCaseSandF as getfunctionCaseSandF, findApicasereportWithNameandStatus as findApicasereportWithNameandStatus } from '@/api/reportcenter/apireport'
+  import { findconditionreport } from '@/api/reportcenter/testconditionreport'
   import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
   import { getallexplanbytype as getallexplanbytype } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
-  // import echarts from 'echarts'
 
   export default {
     filters: {
@@ -346,6 +386,8 @@
         seriesData: [],
         casestaticsList: [], // api报告列表
         casesconditiontaticsList: [], // api报告列表
+        caseconditionreport: [],
+        dispatchdata: [],
         itemKey: null,
         tmptestplanname: '',
         tmptestplanid: null,
@@ -362,6 +404,8 @@
           diccode: 'httpvisittype' // 获取字典表入参
         },
         total: 0, // 数据总数
+        conditiontotal: 0, // 条件报告总数
+        dispatchtotal: 0, // 调度总数
         listQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
@@ -400,6 +444,20 @@
           batchid: '',
           batchname: '',
           caseststus: ''
+        },
+        tmpconditionquery: {
+          page: 1,
+          size: 10,
+          executeplanid: '',
+          batchid: '',
+          batchname: ''
+        },
+        tmpdispatchquery: {
+          page: 1,
+          size: 10,
+          executeplanid: '',
+          batchid: '',
+          batchname: ''
         },
         tmpexecplantype: {
           usetype: ''
@@ -468,6 +526,24 @@
         })
       },
 
+      findconditionreport() {
+        findconditionreport(this.tmpconditionquery).then(response => {
+          this.caseconditionreport = response.data.list
+          this.conditiontotal = response.data.total
+        }).catch(res => {
+          this.$message.error('加载api报告列表失败')
+        })
+      },
+
+      getDispatchWithstatus() {
+        getDispatchWithstatus(this.tmpdispatchquery).then(response => {
+          this.dispatchdata = response.data.list
+          this.dispatchtotal = response.data.total
+        }).catch(res => {
+          this.$message.error('加载api报告列表失败')
+        })
+      },
+
       searchcaseReportBy() {
         this.$refs.tmpquery.validate(valid => {
           if (valid) {
@@ -511,6 +587,8 @@
         await this.getfunctionCaseSandF()
         this.drawLine()
         this.getapireportList()
+        this.findconditionreport()
+        this.getDispatchWithstatus()
       },
 
       getfunctionconditionstatics() {
@@ -531,6 +609,8 @@
         for (let i = 0; i < this.execplanList.length; i++) {
           if (this.execplanList[i].executeplanname === e) {
             this.tmpquery.executeplanid = this.execplanList[i].id
+            this.tmpconditionquery.executeplanid = this.execplanList[i].id
+            this.tmpdispatchquery.executeplanid = this.execplanList[i].id
           }
         }
         getbatchbyplan(this.tmpquery).then(response => {
@@ -545,12 +625,23 @@
         for (let i = 0; i < this.planbatchList.length; i++) {
           if (this.planbatchList[i].batchname === e) {
             this.tmpquery.batchid = this.planbatchList[i].id
+            this.tmpconditionquery.batchid = this.planbatchList[i].id
+            this.tmpdispatchquery.batchid = this.planbatchList[i].id
+            this.tmpdispatchquery.batchname = e
+            this.tmpconditionquery.batchname = e
           }
         }
       },
 
       getIndex(index) {
         return (this.tmpquery.page - 1) * this.tmpquery.size + index + 1
+      },
+
+      conditiongetIndex(index) {
+        return (this.tmpconditionquery.page - 1) * this.tmpconditionquery.size + index + 1
+      },
+      dispatchgetIndex(index) {
+        return (this.tmpdispatchquery.page - 1) * this.tmpdispatchquery.size + index + 1
       },
       /**
        * 改变每页数量
@@ -561,6 +652,18 @@
         this.tmpquery.size = size
         this.getapireportList()
       },
+
+      conditionhandleSizeChange(size) {
+        this.tmpconditionquery.page = 1
+        this.tmpconditionquery.size = size
+        this.findconditionreport()
+      },
+
+      dispatchhandleSizeChange(size) {
+        this.tmpdispatchquery.page = 1
+        this.tmpdispatchquery.size = size
+        this.getDispatchWithstatus()
+      },
       /**
        * 改变页码
        * @param page 页号
@@ -568,6 +671,14 @@
       handleCurrentChange(page) {
         this.tmpquery.page = page
         this.getapireportList()
+      },
+      conditionhandleCurrentChange(page) {
+        this.tmpconditionquery.page = page
+        this.findconditionreport()
+      },
+      dispatchhandleCurrentChange(page) {
+        this.tmpdispatchquery.page = page
+        this.getDispatchWithstatus()
       }
 
     }
@@ -592,7 +703,7 @@
   .chart-wrapper {
     background: #fffffb;
     padding: 16px 16px 0;
-    margin-bottom: 32px;
+    margin-bottom: 10px;
   }
 }
 

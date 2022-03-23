@@ -67,4 +67,17 @@ public class DispatchController {
         final PageInfo<Dispatch> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
+
+    @PostMapping("/getDispatchWithstatus")
+    public Result getDispatchWithstatus(@RequestBody final Map<String, Object> param) {
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        Long executeplanid = Long.parseLong(param.get("executeplanid").toString());
+        Long batchid = Long.parseLong(param.get("batchid").toString());
+        String batchname = param.get("batchname").toString();
+        PageHelper.startPage(page, size);
+        final List<Dispatch> list = this.dispatchService.getDispatchWithstatus(executeplanid,batchname,"已完成");
+        final PageInfo<Dispatch> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
 }

@@ -62,7 +62,6 @@
       </el-table-column>
       <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
 
-
       <el-table-column label="请求地址" align="center" prop="url" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
