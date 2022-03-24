@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.EnvmachineMapper;
 import com.zoctan.api.service.EnvmachineService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -31,7 +32,20 @@ private EnvmachineMapper envmachineMapper;
         return this.envmachineMapper.findEnvAndMacWithName(params);
     }
 
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
+    }
 
+    @Override
+    public List<Envmachine> findmachinebyid(long machineid) {
+        return envmachineMapper.findmachinebyid(machineid);
+    }
+
+    @Override
+    public List<Envmachine> findmachinebyenvid(long envid) {
+        return envmachineMapper.findmachinebyenvid(envid);
+    }
 
     @Override
     public void updateEnvAndMac(Envmachine params) {

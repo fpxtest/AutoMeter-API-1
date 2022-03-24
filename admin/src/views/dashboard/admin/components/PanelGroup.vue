@@ -98,7 +98,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            执行节点
+            测试执行机
           </div>
           <count-to :start-val="slavernum.start" :end-val="slavernum.end" :duration="2600" class="card-panel-num" />
         </div>

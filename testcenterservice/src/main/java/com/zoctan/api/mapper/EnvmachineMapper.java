@@ -35,5 +35,7 @@ public interface EnvmachineMapper extends MyMapper<Envmachine> {
 
     Envmachine findexist(@Param("enviromentname")String enviromentname, @Param("machinename")String machinename);
     Envmachine findexistwithoutself(@Param("enviromentname")String enviromentname,@Param("machinename")String machinename,@Param("id")Long id);
+    List<Envmachine> findmachinebyid(@Param("machineid")long machineid);
+    List<Envmachine> findmachinebyenvid(@Param("envid")long envid);
 
 }

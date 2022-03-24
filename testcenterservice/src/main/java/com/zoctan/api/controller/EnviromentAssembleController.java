@@ -8,6 +8,7 @@ import com.zoctan.api.entity.EnviromentAssemble;
 import com.zoctan.api.entity.Macdepunit;
 import com.zoctan.api.entity.Machine;
 import com.zoctan.api.service.EnviromentAssembleService;
+import com.zoctan.api.service.MacdepunitService;
 import com.zoctan.api.service.MachineService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
@@ -30,6 +31,8 @@ public class EnviromentAssembleController {
     private EnviromentAssembleService enviromentAssembleService;
     @Resource
     private MachineService machineService;
+    @Resource
+    private MacdepunitService macdepunitService;
 
 
     @PostMapping
@@ -50,8 +53,16 @@ public class EnviromentAssembleController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        enviromentAssembleService.deleteById(id);
-        return ResultGenerator.genOkResult();
+        List<Macdepunit>macdepunitList= macdepunitService.findassemblebyassid(id);
+        if(macdepunitList.size()>0)
+        {
+            return ResultGenerator.genFailedResult("当前组件在环境部署中还在使用，无法删除！");
+        }
+        else
+        {
+            enviromentAssembleService.deleteById(id);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     /**

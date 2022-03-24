@@ -40,6 +40,18 @@
     where  a.id=c.machineid
   </select>
 
+  <select id="findmachinebyid" resultMap="BaseResultMap">
+    select * from envmachine
+    where  machineid=#{machineid}
+  </select>
+
+  <select id="findmachinebyenvid" resultMap="BaseResultMap">
+    select * from envmachine
+    where  envid=#{envid}
+  </select>
+
+
+
   <update id="updateEnvAndMac" parameterType="com.zoctan.api.entity.Envmachine">
     update envmachine set envid = #{envid}, machineid = #{machineid},machinename= #{machinename},
     enviromentname= #{enviromentname},creator = #{creator},

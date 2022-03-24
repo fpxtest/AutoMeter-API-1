@@ -1,6 +1,7 @@
 package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
+import com.zoctan.api.entity.Envmachine;
 import com.zoctan.api.entity.Macdepunit;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
@@ -32,5 +33,8 @@ public interface MacdepunitMapper extends MyMapper<Macdepunit> {
 
     List<Macdepunit> getenvassemblelistbyenvidandtype(@Param("envid")long envid, @Param("assembletype") String  assembletype);
 
+    List<Macdepunit> findmachinebyid(@Param("machineid")long machineid);
+    List<Macdepunit> findenviromentbyenvid(@Param("envid")long envid);
+    List<Macdepunit> findassemblebyassid(@Param("assembleid")long assid);
 
 }

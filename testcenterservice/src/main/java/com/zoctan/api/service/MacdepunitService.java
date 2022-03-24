@@ -1,6 +1,7 @@
 package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
+import com.zoctan.api.entity.Envmachine;
 import com.zoctan.api.entity.Macdepunit;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -35,6 +36,11 @@ public interface MacdepunitService extends Service<Macdepunit> {
     Macdepunit getmacdepbyenvidanddepid(long envid,long depunitid);
 
     List<Macdepunit> getenvassemblelistbyenvidandtype(long envid,String  assembletype);
+
+    List<Macdepunit> findmachinebyid(long machineid);
+    List<Macdepunit> findenviromentbyenvid(long envid);
+
+    List<Macdepunit> findassemblebyassid(long assid);
 
 
 

@@ -4,7 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.Dispatch;
+import com.zoctan.api.entity.Envmachine;
+import com.zoctan.api.entity.Macdepunit;
 import com.zoctan.api.entity.Machine;
+import com.zoctan.api.service.EnvmachineService;
+import com.zoctan.api.service.MacdepunitService;
 import com.zoctan.api.service.MachineService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
@@ -23,6 +28,9 @@ public class MachineController {
     @Resource
     private MachineService machineService;
 
+    @Resource
+    private MacdepunitService macdepunitService;
+
     @PostMapping
     public Result add(@RequestBody Machine machine) {
         Condition con=new Condition(Machine.class);
@@ -39,8 +47,17 @@ public class MachineController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        machineService.deleteById(id);
-        return ResultGenerator.genOkResult();
+        //增加判断此服务器当前是否有环境在使用
+        List<Macdepunit>macdepunitList= macdepunitService.findmachinebyid(id);
+        if(macdepunitList.size()>0)
+        {
+            return ResultGenerator.genFailedResult("当前服务器在环境部署中还在使用，无法删除！");
+        }
+        else
+        {
+            machineService.deleteById(id);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @PutMapping("/detail")

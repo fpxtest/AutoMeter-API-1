@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.Envmachine;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -38,5 +39,10 @@ public interface EnvmachineService extends Service<Envmachine> {
     Envmachine findexist(String enviromentname,String machinename);
 
     Envmachine findexistwithoutself(String enviromentname,String machinename,Long id);
+    int ifexist(Condition condition);
+
+    List<Envmachine> findmachinebyid(long machineid);
+    List<Envmachine> findmachinebyenvid(long envid);
+
 
 }

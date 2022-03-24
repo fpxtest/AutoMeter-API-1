@@ -1,5 +1,6 @@
 package com.zoctan.api.service.impl;
 
+import com.zoctan.api.entity.Envmachine;
 import com.zoctan.api.mapper.MacdepunitMapper;
 import com.zoctan.api.entity.Macdepunit;
 import com.zoctan.api.service.MacdepunitService;
@@ -50,5 +51,20 @@ private MacdepunitMapper macdepunitMapper;
     @Override
     public List<Macdepunit> getenvassemblelistbyenvidandtype(long envid, String assembletype) {
         return macdepunitMapper.getenvassemblelistbyenvidandtype(envid, assembletype);
+    }
+
+    @Override
+    public List<Macdepunit> findmachinebyid(long machineid) {
+        return macdepunitMapper.findmachinebyid(machineid);
+    }
+
+    @Override
+    public List<Macdepunit> findenviromentbyenvid(long envid) {
+        return macdepunitMapper.findenviromentbyenvid(envid);
+    }
+
+    @Override
+    public List<Macdepunit> findassemblebyassid(long assid) {
+        return macdepunitMapper.findassemblebyassid(assid);
     }
 }

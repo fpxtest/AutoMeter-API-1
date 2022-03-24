@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.Api;
 import com.zoctan.api.entity.Deployunit;
+import com.zoctan.api.service.ApiService;
 import com.zoctan.api.service.DeployunitService;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
@@ -22,6 +24,9 @@ import java.util.Map;
 public class DeployunitController {
     @Resource
     private DeployunitService deployunitService;
+
+    @Resource
+    private ApiService apiService;
 
     @PostMapping
     public Result add(@RequestBody Deployunit deployunit) {
@@ -41,8 +46,16 @@ public class DeployunitController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        deployunitService.deleteById(id);
-        return ResultGenerator.genOkResult();
+        List<Api> apiList= apiService.getapibydeployunitid(id);
+        if(apiList.size()>0)
+        {
+            return ResultGenerator.genFailedResult("当前发布单元还存在API，无法删除！");
+        }
+        else
+        {
+            deployunitService.deleteById(id);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @PatchMapping

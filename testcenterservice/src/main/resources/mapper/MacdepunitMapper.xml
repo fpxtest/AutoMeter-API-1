@@ -50,4 +50,20 @@
   <select id="getenvassemblelistbyenvidandtype" resultMap="BaseResultMap">
     select a.* as assemblename from macdepunit a  where a.envid =#{envid} and assembletype=#{assembletype}
   </select>
+
+
+  <select id="findmachinebyid" resultMap="BaseResultMap">
+    select * from macdepunit
+    where  machineid=#{machineid}
+  </select>
+
+  <select id="findenviromentbyenvid" resultMap="BaseResultMap">
+    select * from macdepunit
+    where  envid=#{envid}
+  </select>
+
+  <select id="findassemblebyassid" resultMap="BaseResultMap">
+    select * from macdepunit
+    where  assembleid=#{assembleid}
+  </select>
 </mapper>
