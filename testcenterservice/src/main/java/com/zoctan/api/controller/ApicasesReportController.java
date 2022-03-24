@@ -196,10 +196,26 @@ public class ApicasesReportController {
 
             float successrate = Float.valueOf(apicasesReportSuccessList.size()) / Float.valueOf(executeplanTestcaseList.size());
             float failrate = Float.valueOf(apicasesReportFailList.size()) / Float.valueOf(executeplanTestcaseList.size());
-
+            String sresultrate="";
+            String fresultrate = "";
             DecimalFormat decimalFormat=new DecimalFormat(".00");
-            String sresultrate=decimalFormat.format(successrate* 100)+ "%";
-            String fresultrate=decimalFormat.format(failrate* 100)+ "%";
+
+            if(successrate==0.0)
+            {
+                sresultrate="0%";
+            }
+            else
+            {
+                 sresultrate=decimalFormat.format(successrate* 100)+ "%";
+            }
+            if(failrate==0.0)
+            {
+                fresultrate="0%";
+            }
+            else
+            {
+                 fresultrate=decimalFormat.format(failrate* 100)+ "%";
+            }
 
             functionCaseStatis.setFailrate(fresultrate);
             functionCaseStatis.setSuccessrate(sresultrate);
