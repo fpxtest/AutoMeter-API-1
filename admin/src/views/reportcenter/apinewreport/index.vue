@@ -249,7 +249,7 @@
           ></el-pagination>
         </template>
       </el-tab-pane>
-      <el-tab-pane label="条件执行结果" name="first">
+      <el-tab-pane label="前置条件执行结果" name="first">
         <template>
           <el-table
             :data="caseconditionreport"

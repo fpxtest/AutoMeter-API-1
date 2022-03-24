@@ -6,6 +6,7 @@ import com.zoctan.api.service.DispatchService;
 import com.zoctan.api.core.service.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,5 +30,10 @@ private DispatchMapper dispatchMapper;
     @Override
     public List<Dispatch> getDispatchWithstatus(long testplanid, String batchname, String status) {
         return dispatchMapper.getDispatchWithstatus(testplanid, batchname, status);
+    }
+
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
     }
 }

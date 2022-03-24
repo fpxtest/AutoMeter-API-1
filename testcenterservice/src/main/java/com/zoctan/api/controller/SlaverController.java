@@ -4,9 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.Dispatch;
+import com.zoctan.api.entity.Machine;
 import com.zoctan.api.entity.Slaver;
+import com.zoctan.api.service.DispatchService;
 import com.zoctan.api.service.SlaverService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -22,6 +26,9 @@ public class SlaverController {
     @Resource
     private SlaverService slaverService;
 
+    @Resource
+    private DispatchService dispatchService;
+
     @PostMapping
     public Result add(@RequestBody Slaver slaver) {
         slaverService.save(slaver);
@@ -30,8 +37,18 @@ public class SlaverController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
-        slaverService.deleteById(id);
-        return ResultGenerator.genOkResult();
+        //增加判断此slaver当前是否有调度分配
+        Condition con=new Condition(Dispatch.class);
+        con.createCriteria().andCondition("slaverid = " + id).andCondition("status != '" + "已完成" + "'");
+        if(dispatchService.ifexist(con)>0)
+        {
+            return ResultGenerator.genFailedResult("当前执行机还有未执行完成的测试用例，无法删除");
+        }
+        else
+        {
+            slaverService.deleteById(id);
+            return ResultGenerator.genOkResult();
+        }
     }
 
     @PatchMapping

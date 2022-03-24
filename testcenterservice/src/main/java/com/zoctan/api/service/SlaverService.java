@@ -3,6 +3,7 @@ package com.zoctan.api.service;
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.Slaver;
 import org.apache.ibatis.annotations.Param;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
