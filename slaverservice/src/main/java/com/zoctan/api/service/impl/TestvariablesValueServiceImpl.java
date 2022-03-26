@@ -43,8 +43,8 @@ private TestvariablesValueMapper testvariablesValueMapper;
     }
 
     @Override
-    public List<TestvariablesValue> gettvlist(Long planid, String batchname) {
-        return testvariablesValueMapper.gettvlist(planid, batchname);
+    public List<TestvariablesValue> gettvlist(Long planid, String batchname,String variablestype) {
+        return testvariablesValueMapper.gettvlist(planid, batchname,variablestype);
     }
 
 }

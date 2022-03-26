@@ -66,20 +66,6 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/assets',
-  //   component: Layout,
-  //   name: '资产管理',
-  //   alwaysShow: true,
-  //   activeMenu: '/assets',
-  //   icon: 'asset',
-  //   children: [
-  //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
-  //     //  { path: 'role/list', name: '测试点', component: _import('system/role/list'), meta: { permission: ['role:detail'] }},
-  //     { path: 'cases/apicases/list', name: '测试用例', component: _import('assets/cases/apicases/index'), meta: { title: '测试用例', permission: ['apicases:list'] }},
-  //     { path: 'cases/apicasesvariables/list', name: '用例变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '用例变量', permission: ['ApicasesVariables:list'] }}
-  //   ]
-  // },
   {
     path: '/enviroment',
     component: Layout,
@@ -165,7 +151,8 @@ export const asyncRouterMap = [
     icon: 'paras',
     children: [
       { path: 'variables/list', name: '随机变量', component: _import('testvariables/variables/index'), meta: { title: '随机变量', permission: ['variables:list'] }},
-      { path: 'testvariables/list', name: '接口变量', component: _import('testvariables/testvariables/index'), meta: { title: '接口变量', permission: ['testvariables:list'] }}
+      { path: 'testvariables/list', name: '接口变量', component: _import('testvariables/testvariables/index'), meta: { title: '接口变量', permission: ['testvariables:list'] }},
+      { path: 'dbvariables/list', name: '数据库变量', component: _import('testvariables/dbvariables/index'), meta: { title: '数据库变量', permission: ['dbvariables:list'] }}
       // { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }}
       // { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
     ]

@@ -14,6 +14,7 @@
     <result column="variablesid" jdbcType="BIGINT" property="variablesid" />
     <result column="variablesname" jdbcType="VARCHAR" property="variablesname" />
     <result column="variablesvalue" jdbcType="VARCHAR" property="variablesvalue" />
+    <result column="variablestype" jdbcType="VARCHAR" property="variablestype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -36,7 +37,7 @@
 
   <select id="gettvlist" resultMap="BaseResultMap">
     SELECT *
-    FROM testvariables_value  where planid = #{planid} and batchname = #{batchname}
+    FROM testvariables_value  where planid = #{planid} and batchname = #{batchname} and variablestype=#{variablestype}
   </select>
 
   <update id="updatetestvariablesvalue" parameterType="com.zoctan.api.entity.TestvariablesValue">

@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('testvariables:add')"
             @click.native.prevent="showAddtestvariablesDialog"
-          >添加变量</el-button>
+          >添加接口变量</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('testvariables:search')">
@@ -121,11 +121,11 @@
         </el-form-item>
 
 
-        <el-form-item label="变量类型" prop="testvariablestype" required >
-          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型" style="width:100%">
-            <el-option label="接口变量" value="用例变量"></el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="变量类型" prop="testvariablestype" required >-->
+<!--          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型" style="width:100%">-->
+<!--            <el-option label="接口变量" value="用例变量"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 
         <el-form-item label="变量值类型" prop="valuetype" required >
           <el-select v-model="tmptestvariables.valuetype" placeholder="变量值类型" style="width:100%">
@@ -138,7 +138,7 @@
 
 
 
-        <el-form-item label="变量值表示" prop="variablesexpress" required>
+        <el-form-item label="变量值提取表达" prop="variablesexpress" required>
           <el-input
             type="textarea"
             rows="5"
@@ -152,7 +152,7 @@
           <div class="right">
             <el-tooltip placement="right-start">
               <div slot="content">1.如果获取变量值的接口返回数据类型是Json则使用JsonPath表达式提取变量值，例如：$.store.book[0].title   在线解析网站：http://www.e123456.com/aaaphp/online/jsonpath/<br/>2.如果获取变量值接口返回是html，xml则使用XPath表达式提取变量值， 例如：//div/h3//text()   在线解析网站： http://www.ab173.com/other/xpath.php</div>
-              <el-button>变量值表示语法规则</el-button>
+              <el-button>变量值提取表达语法规则</el-button>
             </el-tooltip>
           </div>
         </el-form-item>
@@ -346,9 +346,9 @@
         BindVariablesDialogVisible: false,
         BindFormVisible: false,
         textMap: {
-          updateRole: '修改变量',
-          update: '修改变量',
-          add: '添加变量'
+          updateRole: '修改接口变量',
+          update: '修改接口变量',
+          add: '添加接口变量'
         },
         BindtextMap: {
           updateRole: '修改绑定变量',
@@ -372,7 +372,7 @@
           testvariablesname: '',
           variablesdes: '',
           valuetype: '',
-          testvariablestype: '',
+          testvariablestype: '接口变量',
           variablesexpress: '',
           memo: '',
           creator: ''

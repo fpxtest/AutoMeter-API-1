@@ -59,6 +59,17 @@ public class TestvariablesValue {
      */
     private String variablesvalue;
 
+    public String getVariablestype() {
+        return variablestype;
+    }
+
+    public void setVariablestype(String variablestype) {
+        this.variablestype = variablestype;
+    }
+
+    private String variablestype;
+
+
     /**
      * 备注
      */

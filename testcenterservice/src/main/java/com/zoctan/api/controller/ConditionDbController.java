@@ -72,6 +72,13 @@ public class ConditionDbController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
+    @GetMapping("/listalldbcondition")
+    public Result listalldbcondition() {
+        List<ConditionDb> list = conditionDbService.listAll();
+        PageInfo<ConditionDb> pageInfo = PageInfo.of(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
     /**
      * 更新自己的资料
      */

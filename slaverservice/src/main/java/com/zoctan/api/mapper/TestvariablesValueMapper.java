@@ -23,6 +23,6 @@ public interface TestvariablesValueMapper extends MyMapper<TestvariablesValue> {
 
     int ifexist(Condition condition);
 
-    List<TestvariablesValue> gettvlist(@Param("planid") Long planid, @Param("batchname")String batchname);
+    List<TestvariablesValue> gettvlist(@Param("planid") Long planid, @Param("batchname")String batchname,@Param("variablestype")String variablestype);
 
 }

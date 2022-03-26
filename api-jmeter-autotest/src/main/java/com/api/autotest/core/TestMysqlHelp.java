@@ -134,6 +134,22 @@ public class TestMysqlHelp {
         return ValueType;
     }
 
+    //获取数据库变量值类型
+    public String GetDBVariablesDataType(String VariablesName) {
+        String ValueType = "";
+        try {
+            String sql = "select valuetype from dbvariables where  dbvariablesname='" + VariablesName + "'";
+            logger.info(logplannameandcasename + "获取数据库 获取数据库变量值类型 result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
+            if (result.size() > 0) {
+                ValueType = result.get(0).get("valuetype");
+            }
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 获取数据库变量值类型异常...........: " + e.getMessage());
+        }
+        return ValueType;
+    }
+
     //获取接口变量列表
     public ArrayList<HashMap<String, String>> GetInterfaceVariables() {
         ArrayList<HashMap<String, String>> result=new ArrayList<>();
@@ -293,6 +309,21 @@ public class TestMysqlHelp {
         }
         return list;
     }
+
+    //获取数据库关联变量
+    public ArrayList<HashMap<String, String>> getbyconditionid(long dbconditionid) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM dbcondition_variables where dbcondition_variables= "+dbconditionid;
+            logger.info(logplannameandcasename + "获取随机变量  result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取随机变量 异常...........: " + e.getMessage());
+        }
+        return list;
+    }
+
+
 
     //查询变量
     public ArrayList<HashMap<String, String>> GetVaribales(String VaribaleID) {

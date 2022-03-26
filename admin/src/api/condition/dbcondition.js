@@ -8,6 +8,13 @@ export function getdbconditionList(params) {
   })
 }
 
+export function listalldbcondition() {
+  return request({
+    url: '/condition/db/listalldbcondition',
+    method: 'get'
+  })
+}
+
 export function getdbconditionnum() {
   return request({
     url: '/condition/db/getdbconditionnum',

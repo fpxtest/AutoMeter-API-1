@@ -94,6 +94,9 @@ public class TestPlanCaseController {
     @Autowired(required = false)
     private VariablesService variablesService;
 
+    @Autowired(required = false)
+    private DbvariablesService dbvariablesService;
+
 
     @PostMapping("/exec")
     //    public Result exec(@RequestBody List<TestplanCase> plancaseList) {
@@ -417,7 +420,10 @@ public class TestPlanCaseController {
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
 
         TestPlanCaseController.log.info("GetJmeterPerformanceCaseRequestData :" + PlanID+" BatchName:"+BatchName);
-        List<TestvariablesValue>testvariablesValueList=testvariablesValueService.gettvlist(Long.parseLong(PlanID),BatchName);
+        List<TestvariablesValue>testvariablesValueList=testvariablesValueService.gettvlist(Long.parseLong(PlanID),BatchName,"接口");
+
+        List<TestvariablesValue>DBtestvariablesValueList=testvariablesValueService.gettvlist(Long.parseLong(PlanID),BatchName,"数据库");
+
         TestPlanCaseController.log.info("gettvlist size :" +testvariablesValueList.size());
 
         HashMap<String,String > InterFaceMap=new HashMap<>();
@@ -425,7 +431,12 @@ public class TestPlanCaseController {
             InterFaceMap.put(te.getVariablesname(),te.getVariablesvalue());
         }
 
-        //Url替换接口变量
+        HashMap<String,String > DBMap=new HashMap<>();
+        for (TestvariablesValue te:DBtestvariablesValueList) {
+            DBMap.put(te.getVariablesname(),te.getVariablesvalue());
+        }
+
+        //1.Url替换接口变量
         String RequestUrl=jmeterPerformanceObject.getResource();
         for (String VariableName :InterFaceMap.keySet()) {
             String UseVariableName="<"+VariableName+">";
@@ -435,6 +446,16 @@ public class TestPlanCaseController {
                 RequestUrl = RequestUrl.replace(UseVariableName,VariableValue);
             }
         }
+        //2.Url替换数据库变量
+        for (String VariableName :DBMap.keySet()) {
+            String UseVariableName="<<"+VariableName+">>";
+            if(RequestUrl.contains(UseVariableName))
+            {
+                String VariableValue=DBMap.get(VariableName);
+                RequestUrl = RequestUrl.replace(UseVariableName,VariableValue);
+            }
+        }
+
         jmeterPerformanceObject.setResource(RequestUrl);
         //String Caseid=dispatch.getTestcaseid().toString();
         HashMap<String, Object> HeaderMap = new HashMap<>();
@@ -446,21 +467,22 @@ public class TestPlanCaseController {
             String Paramvalue = apiCasedata.getApiparamvalue();
             String DataType = apiCasedata.getParamstype();
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
-                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap);
+                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
                 Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                 ParamsMap.put(ParamName,LastObjectValue);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
-                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap);
+                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
                 HeaderMap.put(ParamName,Result);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
-                    Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap);
+                    Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
                     Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                     BodyMap.put(ParamName,LastObjectValue);
                 } else {
                     PostData = Paramvalue;
+                    //替换接口变量
                     for (String VariableName :InterFaceMap.keySet()) {
                         String UseVariableName="<"+VariableName+">";
                         if(PostData.contains(UseVariableName))
@@ -469,11 +491,20 @@ public class TestPlanCaseController {
                             PostData = PostData.replace(UseVariableName,VariableValue);
                         }
                     }
+                    //替换数据库变量
+                    for (String VariableName :DBMap.keySet()) {
+                        String UseVariableName="<<"+VariableName+">>";
+                        if(PostData.contains(UseVariableName))
+                        {
+                            String VariableValue=DBMap.get(VariableName);
+                            PostData = PostData.replace(UseVariableName,VariableValue);
+                        }
+                    }
                 }
             }
         }
         //全局参数Header
-        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, InterFaceMap);
+        HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, InterFaceMap,DBMap);
 
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));
@@ -532,7 +563,7 @@ public class TestPlanCaseController {
         return flag;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap)
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap)
     {
         Object ObjectValue=Value;
         //参数值替换接口变量
@@ -562,17 +593,44 @@ public class TestPlanCaseController {
                 }
             }
         }
+        //参数值替换数据库变量
+        for (String DBvariablesName:DBMap.keySet()) {
+            boolean flag=GetSubOrNot(DBMap,Value,"<<",">>");
+            if(Value.contains("<<"+DBvariablesName+">>"))
+            {
+                String ActualValue = DBMap.get(DBvariablesName);
+                if(flag)
+                {
+                    //有拼接认为是字符串
+                    Value=Value.replace("<<"+DBvariablesName+">>",ActualValue);
+                    ObjectValue=Value;
+                }
+                else
+                {
+                    //无拼接则转换成具体类型,根据变量名获取变量类型
+                    Dbvariables dbvariables = dbvariablesService.getBy("dbvariablesname", DBvariablesName);
+                    if(dbvariables==null)
+                    {
+                        ObjectValue="未找到变量："+Value+" 请检查变量管理-数据库变量中是否存在此变量";
+                    }
+                    else
+                    {
+                        ObjectValue=GetDataByType(ActualValue,dbvariables.getValuetype());
+                    }
+                }
+            }
+        }
         return ObjectValue;
     }
 
 
-    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch,  HashMap<String, String> InterfaceMap) throws Exception {
+    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch,  HashMap<String, String> InterfaceMap,  HashMap<String, String> DBMap) throws Exception {
         List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
         //全局Header如果有参数，则替换原参数，没有则加上全局Header参数
         for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
             String ParamName = executeplanParams.getKeyname();
             String ParamValue = executeplanParams.getKeyvalue();
-            Object Result= GetVaraibaleValue(ParamValue,InterfaceMap);
+            Object Result= GetVaraibaleValue(ParamValue,InterfaceMap,DBMap);
             HeaderMap.put(ParamName, Result);
         }
         return HeaderMap;
