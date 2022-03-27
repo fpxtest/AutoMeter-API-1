@@ -23,6 +23,15 @@
           <el-form-item>
             <el-input clearable maxlength="40" v-model="search.projectname" @keyup.enter.native="searchBy" placeholder="项目迭代名"></el-input>
           </el-form-item>
+
+          <el-form-item label="状态" prop="status"  >
+          <el-select v-model="search.status" placeholder="状态" style="width:100%">
+            <el-option label="待测试" value="待测试"></el-option>
+            <el-option label="测试中" value="测试中"></el-option>
+            <el-option label="测试完成" value="测试完成"></el-option>
+          </el-select>
+        </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
           </el-form-item>
@@ -209,7 +218,8 @@
         search: {
           page: 1,
           size: 10,
-          projectname: null
+          projectname: null,
+          status: null
         }
       }
     },

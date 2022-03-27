@@ -66,15 +66,15 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="集合名" align="center" prop="executeplanname" width="100"/>
+      <el-table-column label="集合名" align="center" prop="executeplanname" width="160"/>
       <el-table-column label="envid" align="center" v-if="show" prop="envid" width="50"/>
       <el-table-column label="状态" align="center" prop="status" v-if="show" width="50"/>
       <el-table-column label="业务类型" align="center" prop="businesstype" width="100"/>
       <el-table-column label="执行环境" align="center" prop="enviromentname" width="100"/>
       <el-table-column label="类型" align="center" prop="usetype" width="60"/>
       <el-table-column label="运行模式" align="center" prop="runmode" width="80"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="80"/>
-      <el-table-column label="描述" align="center" prop="memo" width="80"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="60"/>
+      <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
