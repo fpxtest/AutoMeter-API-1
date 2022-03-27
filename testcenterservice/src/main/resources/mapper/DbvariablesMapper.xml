@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.DbvariablesMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Dbvariables">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="dbvariablesname" jdbcType="VARCHAR" property="dbvariablesname" />
+    <result column="variablesdes" jdbcType="VARCHAR" property="variablesdes" />
+    <result column="valuetype" jdbcType="VARCHAR" property="valuetype" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="finddbvariablesWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM dbvariables a
+    <where>
+      <if test="dbvariablesname != null and dbvariablesname != ''">a.dbvariablesname like CONCAT('%',#{dbvariablesname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updatedbvariables" parameterType="com.zoctan.api.entity.Dbvariables">
+    update dbvariables set dbvariablesname = #{dbvariablesname},variablesdes=#{variablesdes},valuetype=#{valuetype},
+    creator = #{creator},memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>
