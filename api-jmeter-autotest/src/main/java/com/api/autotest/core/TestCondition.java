@@ -347,7 +347,7 @@ public class TestCondition {
         if (AssembleType.equalsIgnoreCase("pgsql")) {
             DBUrl=GetDbUrl(AssembleType,macdepunitlist,deployunitvisittype,machinelist,dbname,port);
             PgsqlConnectionUtils.initDbResource(DBUrl,username,pass);
-            if(SqlType.equalsIgnoreCase("查询")) {
+            if(SqlType.equalsIgnoreCase("Select")) {
                 //查询语句结果解析到数据库变量中
                 // 1.查询数据库条件是否有变量关联
                 ArrayList<HashMap<String, String>> dbconditionVariablesList = testMysqlHelp.getbyconditionid(Conidtiondbid);
@@ -359,8 +359,12 @@ public class TestCondition {
                         String Variablesname = dbconditionVariables.get("variablesname");
                         String columnname = dbconditionVariables.get("fieldname");
                         long roworder =Long.parseLong(dbconditionVariables.get("roworder"));
+                        if (roworder > 0) {
+                            roworder = roworder - 1;
+                        }
                         String VariablesValue = GetDBResultValueByMap(result, columnname, roworder);
                         //保存数据库变量
+                        Respone = Respone + "成功获取 数据库变量名：" + Variablesname + " 值:" + VariablesValue;
                         SaveDBTestVariablesValue(planid,planname,batchname, Conidtiondbid, DBConditionName, variablesid, Variablesname, VariablesValue);
                     }
                 }
@@ -390,7 +394,7 @@ public class TestCondition {
         String Respone="";
         DataSource ds = new SimpleDataSource(DBUrl, username, pass);
 
-        if(SqlType.equalsIgnoreCase("查询"))
+        if(SqlType.equalsIgnoreCase("Select"))
         {
             // 1.查询数据库条件是否有变量关联
             ArrayList<HashMap<String, String>> dbconditionVariablesList = testMysqlHelp.getbyconditionid(Conidtiondbid);
@@ -402,7 +406,11 @@ public class TestCondition {
                     String Variablesname = dbconditionVariables.get("variablesname");
                     String columnname = dbconditionVariables.get("fieldname");
                     long roworder =Long.parseLong(dbconditionVariables.get("roworder"));
+                    if (roworder > 0) {
+                        roworder = roworder - 1;
+                    }
                     String VariablesValue = GetDBResultValueByEntity(result, columnname, roworder);
+                    Respone = Respone + "成功获取 数据库变量名：" + Variablesname + " 值:" + VariablesValue;
                     //保存数据库变量
                     SaveDBTestVariablesValue(planid,planname,batchname, Conidtiondbid, DBConditionName, variablesid, Variablesname, VariablesValue);
                 }

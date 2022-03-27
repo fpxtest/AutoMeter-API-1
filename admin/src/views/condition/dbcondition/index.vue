@@ -50,8 +50,8 @@
       <el-table-column label="数据库条件名" align="center" prop="subconditionname" width="120"/>
       <el-table-column label="环境" align="center" prop="enviromentname" width="120"/>
       <el-table-column label="组件名" align="center" prop="assemblename" width="120"/>
-      <el-table-column label="数据库类型" align="center" prop="dbtype" width="120"/>
-      <el-table-column label="数据库内容" align="center" prop="dbcontent" width="120">
+      <el-table-column label="Sql类型" align="center" prop="dbtype" width="120"/>
+      <el-table-column label="Sql内容" align="center" prop="dbcontent" width="120">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.dbcontent }}</p>
@@ -149,6 +149,7 @@
             <el-option label="新增" value="Insert"  />
             <el-option label="删除" value="Delete"  />
             <el-option label="修改" value="Update"  />
+            <el-option label="查询" value="Select"  />
           </el-select>
         </el-form-item>
 

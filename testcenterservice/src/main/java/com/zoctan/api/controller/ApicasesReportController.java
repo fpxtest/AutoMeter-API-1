@@ -273,18 +273,21 @@ public class ApicasesReportController {
 
                 if (testcaseconditionList.size() > 0) {
                     long conditionid = testcaseconditionList.get(0).getId();
-                    ConditionApi conditionApi = conditionApiService.getBy("conditionid", conditionid);
-                    if (conditionApi != null) {
-                        caseconditionnums = caseconditionnums + 1;
-                    }
-                    ConditionDb conditionDb = conditionDbService.getBy("conditionid", conditionid);
-                    if (conditionDb != null) {
-                        caseconditionnums = caseconditionnums + 1;
-                    }
-                    ConditionScript conditionScript = conditionScriptService.getBy("conditionid", conditionid);
-                    if (conditionScript != null) {
-                        caseconditionnums = caseconditionnums + 1;
-                    }
+
+                    Condition conditionApi = new Condition(ConditionApi.class);
+                    conditionApi.createCriteria().andCondition("conditionid = " + conditionid);
+                    List<ConditionApi>conditionApiList = conditionApiService.listByCondition(conditionApi);
+                    caseconditionnums = caseconditionnums+conditionApiList.size();
+
+                    Condition conditionDB = new Condition(ConditionDb.class);
+                    conditionDB.createCriteria().andCondition("conditionid = " + conditionid);
+                    List<ConditionDb>conditionDbList = conditionDbService.listByCondition(conditionDB);
+                    caseconditionnums = caseconditionnums+conditionDbList.size();
+
+                    Condition conditionScript = new Condition(ConditionScript.class);
+                    conditionScript.createCriteria().andCondition("conditionid = " + conditionid);
+                    List<ConditionScript>conditionScriptList = conditionScriptService.listByCondition(conditionDB);
+                    caseconditionnums = caseconditionnums+conditionScriptList.size();
                 }
             }
             functionConditionStatis.setCaseConditionNums(caseconditionnums);
