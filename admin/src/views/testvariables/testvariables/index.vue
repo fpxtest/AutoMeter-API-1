@@ -44,9 +44,9 @@
         </template>
       </el-table-column>
       <el-table-column label="变量名" align="center" prop="testvariablesname" width="100"/>
-      <el-table-column label="变量描述" align="center" prop="variablesdes" width="100"/>
+      <el-table-column label="变量描述" align="center" prop="variablesdes" width="150"/>
       <el-table-column label="变量值类型" align="center" prop="valuetype" width="100"/>
-      <el-table-column label="变量值表示" align="center" prop="variablesexpress" width="100"/>
+      <el-table-column label="变量值提取表达" align="center" prop="variablesexpress" width="120"/>
       <el-table-column label="备注" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="150">

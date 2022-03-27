@@ -4,7 +4,7 @@ import Router from 'vue-router'
 
 /* layout */
 import Layout from '../views/layout/Layout'
-import nestedRouterTestManager from './modules/nested'
+// import nestedRouterTestManager from './modules/nested'
 // import nestedRouterSubCondition from './modules/subconditionnested'
 
 const _import = require('./_import_' + process.env.NODE_ENV)
@@ -44,19 +44,6 @@ export const constantRouterMap = [
       { path: 'Dashboard', name: '首页', component: _import('dashboard/index'), meta: { title: '首页', icon: 'dashboard', noCache: true }}
     ]
   }
-  // {
-  //   path: '',
-  //   component: Layout,
-  //   redirect: 'dashboard',
-  //   icon: 'dashboard',
-  //   noDropDown: true,
-  //   children: [{
-  //     path: 'dashboard',
-  //     name: '控制台',
-  //     component: _import('dashboard/index'),
-  //     meta: { title: 'dashboard', noCache: true }
-  //   }]
-  // }
 ]
 
 export default new Router({
@@ -93,7 +80,20 @@ export const asyncRouterMap = [
       // { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
     ]
   },
-  nestedRouterTestManager,
+  {
+    path: '/assets',
+    component: Layout,
+    name: '测试管理',
+    alwaysShow: true,
+    activeMenu: '/assets',
+    icon: 'testmanager',
+    children: [
+      { path: 'apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }, icon: 'testmanager' },
+      { path: 'project/list', name: '项目/迭代', component: _import('assets/project/index'), meta: { title: '项目/迭代', permission: ['project:list'] }, icon: 'testmanager' }
+      // { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
+    ]
+  },
+  // nestedRouterTestManager,
   // nestedRouterSubCondition,
 
   {
