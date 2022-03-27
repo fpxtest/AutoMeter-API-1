@@ -28,7 +28,7 @@ CREATE TABLE `dbcondition_variables`
     `dbconditionname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例名',
     `variablesid`  bigint(20) unsigned    NOT NULL  COMMENT '变量Id',
     `variablesname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '变量名',
-    `fieldorder`  bigint(20) unsigned    NOT NULL  COMMENT '字段顺序',
+    `fieldname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '字段名',
     `roworder`  bigint(20) unsigned    NOT NULL  COMMENT '行序号',
     `memo`          varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',
