@@ -75,5 +75,15 @@ public class FunctionCaseStatis {
     private String successrate;
     private String failrate;
 
+    public float getCosttime() {
+        return costtime;
+    }
+
+    public void setCosttime(float costtime) {
+        this.costtime = costtime;
+    }
+
+    private float costtime;
+
 
 }

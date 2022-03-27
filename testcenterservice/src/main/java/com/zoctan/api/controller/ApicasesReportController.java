@@ -53,6 +53,8 @@ public class ApicasesReportController {
     @Resource
     private TestconditionReportService testconditionReportService;
 
+    @Resource
+    private ApicasesReportstaticsService apicasesReportstaticsService;
 
 
 
@@ -219,6 +221,13 @@ public class ApicasesReportController {
 
             functionCaseStatis.setFailrate(fresultrate);
             functionCaseStatis.setSuccessrate(sresultrate);
+            List<ApicasesReportstatics> apicasesReportstaticsList= apicasesReportstaticsService.getapicasesreportstaticsbypandb(executeplanid,batchname);
+
+            float costtime=0;
+            for (ApicasesReportstatics apicasesReportstatics :apicasesReportstaticsList) {
+                costtime=costtime+apicasesReportstatics.getRuntime();
+            }
+            functionCaseStatis.setCosttime(costtime/1000);
 
             List<FunctionCaseStatis> functionCaseStatisList = new ArrayList<>();
             functionCaseStatisList.add(functionCaseStatis);

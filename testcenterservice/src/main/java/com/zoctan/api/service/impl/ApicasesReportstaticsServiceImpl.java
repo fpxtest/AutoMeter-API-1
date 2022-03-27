@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * @author SeasonFan
@@ -19,4 +20,8 @@ public class ApicasesReportstaticsServiceImpl extends AbstractService<ApicasesRe
 @Resource
 private ApicasesReportstaticsMapper apicasesReportstaticsMapper;
 
+    @Override
+    public List<ApicasesReportstatics> getapicasesreportstaticsbypandb(long planid, String batchname) {
+        return apicasesReportstaticsMapper.getapicasesreportstaticsbypandb(planid, batchname);
+    }
 }

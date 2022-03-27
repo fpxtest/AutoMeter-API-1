@@ -26,6 +26,13 @@
     where create_time BETWEEN #{startTime} and #{endTime} group by testplanid
   </select>
 
+
+  <select id="getapicasesreportstaticsbypandb" resultMap="BaseResultMap">
+    SELECT *
+    FROM apicases_reportstatics
+    where testplanid = #{testplanid} and batchname=#{batchname}
+  </select>
+
   <select id="getdeployunitapicasesreportstatics" resultMap="BaseResultMap">
     SELECT deployunitid , sum(totalcases) as totalcases ,sum(totalpasscases) as totalpasscases,sum(totalfailcases) as totalfailcases,sum(runtime) as runtime
     FROM apicases_reportstatics
