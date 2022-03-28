@@ -9,10 +9,10 @@ import javax.xml.xpath.XPathConstants;
 public class ParseResponeHelp {
     public String ParseRespone(String ResponeResultType,String Respone,String Path) throws Exception {
         String Result="";
-        if (ResponeResultType.equals("json")) {
+        if (ResponeResultType.equalsIgnoreCase("json")||ResponeResultType.equalsIgnoreCase("application/json;charset=utf-8")) {
             Result = ParseJsonRespone(Path, Respone);
         }
-        if (ResponeResultType.equals("xml")) {
+        if (ResponeResultType.equalsIgnoreCase("xml")||ResponeResultType.equalsIgnoreCase("application/xml;charset=utf-8")) {
             Result = ParseXmlRespone(Path, Respone);
             //处理xml
         }

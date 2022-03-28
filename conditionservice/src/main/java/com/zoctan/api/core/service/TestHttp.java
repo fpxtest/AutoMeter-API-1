@@ -2,12 +2,13 @@ package com.zoctan.api.core.service;
 
 
 import com.zoctan.api.dto.RequestObject;
+import com.zoctan.api.dto.TestResponeData;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TestHttp {
-    public  ResponeData doService(RequestObject requestObject) throws Exception {
-        ResponeData responeData=new ResponeData();
+    public TestResponeData doService(RequestObject requestObject) throws Exception {
+        TestResponeData responeData=new TestResponeData();
         String Protocal=requestObject.getProtocal();
         String ApiStyle=requestObject.getApistyle();
         String Url=requestObject.getResource();

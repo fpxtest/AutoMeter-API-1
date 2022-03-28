@@ -168,7 +168,7 @@
         <el-form-item label="API风格:" prop="apistyle" required>
           <el-select v-model="tmpapi.apistyle" placeholder="api风格" style="width:100%">
             <el-option label="传统方式" value="传统方式"></el-option>
-            <el-option label="Restful" value="restful"></el-option>
+            <el-option label="Restful" value="Restful"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Url路径:" prop="path" >

@@ -4,6 +4,7 @@ import cn.hutool.Hutool.*;
 import cn.hutool.core.util.XmlUtil;
 import com.api.autotest.dto.ApicasesAssert;
 import com.api.autotest.dto.ResponeData;
+import com.api.autotest.dto.TestResponeData;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -35,12 +36,12 @@ public class TestAssert {
     }
 
     //通过JsonPath获取实际值和期望值比较，返回断言信息
-    public String ParseJsonResult(ResponeData responeData, ApicasesAssert apicasesAssert )  {
+    public String ParseJsonResult(TestResponeData responeData, ApicasesAssert apicasesAssert )  {
         String ActualJson = "";
         String AssertInfo = "";
         if (responeData!=null)
         {
-            ActualJson = responeData.getRespone();
+            ActualJson = responeData.getResponeContent();
         }
         //获取实际值使用JsonPath解析
         String ExpectValue = apicasesAssert.getAssertvalues();
@@ -57,10 +58,10 @@ public class TestAssert {
     public String ParseRespone(String ResponeResultType,String Respone,String Path)
     {
         String Result="";
-        if (ResponeResultType.equalsIgnoreCase("json")) {
+        if (ResponeResultType.equalsIgnoreCase("json")||ResponeResultType.equalsIgnoreCase("application/json;charset=utf-8")) {
             Result = ParseJson(Path, Respone);
         }
-        if (ResponeResultType.equalsIgnoreCase("xml")) {
+        if (ResponeResultType.equalsIgnoreCase("xml")||ResponeResultType.equalsIgnoreCase("application/xml;charset=utf-8")) {
             Result = ParseXml(Path, Respone);
             //处理xml
         }
@@ -94,12 +95,12 @@ public class TestAssert {
         return Result;
     }
 
-    public String ParseXmlResult(ResponeData responeData, ApicasesAssert apicasesAssert )  {
+    public String ParseXmlResult(TestResponeData responeData, ApicasesAssert apicasesAssert )  {
         String ActualXml = "";
         String AssertInfo = "";
         if (responeData!=null)
         {
-            ActualXml = responeData.getRespone();
+            ActualXml = responeData.getResponeContent();
         }
         //获取实际值使用XPath解析
         String ExpectValue = apicasesAssert.getAssertvalues();
@@ -111,7 +112,7 @@ public class TestAssert {
         return AssertInfo;
     }
 
-    public String ParseResponeResult(ResponeData responeData, ApicasesAssert apicasesAssert )  {
+    public String ParseResponeResult(TestResponeData responeData, ApicasesAssert apicasesAssert )  {
         String AssertInfo = "";
         if (responeData!=null)
         {
@@ -120,14 +121,14 @@ public class TestAssert {
             if (apicasesAssert.getAsserttype().equals("Respone")) {
                 if (apicasesAssert.getAssertsubtype().equals("Code"))
                 {
-                    int Code=responeData.getCode();
+                    int Code=responeData.getResponeCode();
                     ActualResult=String.valueOf(Code);
                     logger.info(TestCaseData.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
                     AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
                 }
                 if (apicasesAssert.getAssertsubtype().equals("文本"))
                 {
-                    ActualResult=responeData.getContent();
+                    ActualResult=responeData.getResponeContent();
                     logger.info(TestCaseData.logplannameandcasename + "响应断言  ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
                     AssertInfo = AssertCondition(apicasesAssert, ExpectValue, ActualResult);
                 }

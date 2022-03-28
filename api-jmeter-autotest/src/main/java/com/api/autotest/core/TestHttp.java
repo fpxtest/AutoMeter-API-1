@@ -5,6 +5,7 @@ import com.api.autotest.common.utils.HttpParamers;
 import com.api.autotest.common.utils.Httphelp;
 import com.api.autotest.dto.RequestObject;
 import com.api.autotest.dto.ResponeData;
+import com.api.autotest.dto.TestResponeData;
 import org.apache.log.Logger;
 import static com.api.autotest.core.TestCaseData.logplannameandcasename;
 
@@ -15,7 +16,7 @@ public class TestHttp {
         logger=log;
     }
 
-    public  ResponeData doService(RequestObject requestObject) throws Exception {
+    public  TestResponeData doService(RequestObject requestObject) throws Exception {
         if(requestObject.getProtocal().isEmpty())
         {
             throw new Exception("当前用例所属的API所在的发布单元不存在，请检查是否已经被删除");
@@ -32,7 +33,7 @@ public class TestHttp {
         {
             throw new Exception("当前用例所在的发布单元部署环境的服务器不存在，请检查是否已经被删除");
         }
-        ResponeData responeData=new ResponeData();
+        TestResponeData responeData=new TestResponeData();
         String Protocal=requestObject.getProtocal();
         String ApiStyle=requestObject.getApistyle();
         String Url=requestObject.getResource();

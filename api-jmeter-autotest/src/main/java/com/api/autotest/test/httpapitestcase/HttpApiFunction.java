@@ -5,6 +5,7 @@ import com.api.autotest.core.TestCore;
 import com.api.autotest.dto.ApicasesReportstatics;
 import com.api.autotest.dto.RequestObject;
 import com.api.autotest.dto.ResponeData;
+import com.api.autotest.dto.TestResponeData;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -77,8 +78,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                     try {
                         //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
                         Core.FixCondition(requestObject);
-                        ResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
-                        ActualResult = responeData.getRespone();
+                        TestResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
+                        ActualResult = responeData.getResponeContent();
                         //断言
                         AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
                     } catch (Exception ex) {
@@ -142,8 +143,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private ResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
-        ResponeData Result = core.request(ob);
+    private TestResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
+        TestResponeData Result = core.request(ob);
         return Result;
     }
 

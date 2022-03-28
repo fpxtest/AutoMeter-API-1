@@ -119,13 +119,13 @@ public class TestCore {
     }
 
     // 发送http请求
-    public ResponeData request(RequestObject requestObject) throws Exception {
-        ResponeData result = testHttp.doService(requestObject);
+    public TestResponeData request(RequestObject requestObject) throws Exception {
+        TestResponeData result = testHttp.doService(requestObject);
         return result;
     }
 
     //断言
-    public String FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList, ResponeData responeData) throws Exception {
+    public String FixAssert(TestAssert TestAssert, List<ApicasesAssert> apicasesAssertList, TestResponeData responeData) throws Exception {
         String AssertInfo = "";
         for (ApicasesAssert apicasesAssert : apicasesAssertList) {
 

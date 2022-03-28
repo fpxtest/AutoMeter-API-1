@@ -4,6 +4,7 @@ import com.api.autotest.core.TestAssert;
 import com.api.autotest.core.TestCore;
 import com.api.autotest.dto.RequestObject;
 import com.api.autotest.dto.ResponeData;
+import com.api.autotest.dto.TestResponeData;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.http.HttpEntity;
@@ -77,10 +78,10 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             getLogger().info("Finish InitalTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
 
             // 发送用例请求，并返回结果
-            ResponeData responeData =Core.request(requestObject);// SendCaseRequest(requestObject, Core);
+            TestResponeData responeData =Core.request(requestObject);// SendCaseRequest(requestObject, Core);
             getLogger().info("Finish SendCaseRequest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
 
-            ActualResult=responeData.getRespone();
+            ActualResult=responeData.getResponeContent();
             //断言
             AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
         } catch (Exception ex) {
@@ -112,9 +113,9 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
     }
 
     //用例发送请求
-    private ResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
+    private TestResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
         getLogger().error("开始请求。。。。。。。。。。。。。。。。"+ob.getResource() );
-        ResponeData responeData = core.request(ob);
+        TestResponeData responeData = core.request(ob);
         return responeData;
     }
 

@@ -320,8 +320,8 @@ public class TestCaseHelp {
     }
 
     // 发送http请求
-    public ResponeData request(RequestObject requestObject) throws Exception {
-        ResponeData result=new ResponeData();
+    public TestResponeData request(RequestObject requestObject) throws Exception {
+        TestResponeData result=new TestResponeData();
         TestHttp testHttp=new TestHttp();
         if (requestObject.getProtocal().equals("http")||requestObject.getProtocal().equals("https")) {
             result = testHttp.doService(requestObject);

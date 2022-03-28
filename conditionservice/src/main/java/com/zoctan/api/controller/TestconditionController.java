@@ -24,6 +24,7 @@ import com.zoctan.api.service.*;
 import com.zoctan.api.util.DnamicCompilerHelp;
 import com.zoctan.api.util.PgsqlConnectionUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -278,8 +279,17 @@ public class TestconditionController {
             try {
                 Start = new Date().getTime();
                 TestconditionController.log.info("接口子条件条件请求数据-============：" + requestObject.getPostData());
-                ResponeData testResponeData = testCaseHelp.request(requestObject);
-                Respone = testResponeData.getContent();
+                TestResponeData testResponeData = testCaseHelp.request(requestObject);
+                Respone = testResponeData.getResponeContent();
+                String ResponeContentType="application/json;charset=utf-8";
+                List<Header>responeheaderlist= testResponeData.getHeaderList();
+                for (Header head: responeheaderlist) {
+                    if(head.getName().equalsIgnoreCase("Content-Type"))
+                    {
+                        ResponeContentType=head.getValue();
+                    }
+                }
+                requestObject.setResponecontenttype(ResponeContentType);
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
                 String ExceptionMess = ex.getMessage();
@@ -407,8 +417,17 @@ public class TestconditionController {
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
             RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
-            ResponeData testResponeData = testCaseHelp.request(requestObject);
-            String Respone = testResponeData.getContent();
+            TestResponeData testResponeData = testCaseHelp.request(requestObject);
+            String Respone = testResponeData.getResponeContent();
+            String ResponeContentType="application/json;charset=utf-8";
+            List<Header>responeheaderlist= testResponeData.getHeaderList();
+            for (Header head: responeheaderlist) {
+                if(head.getName().equalsIgnoreCase("Content-Type"))
+                {
+                    ResponeContentType=head.getValue();
+                }
+            }
+            requestObject.setResponecontenttype(ResponeContentType);
             //根据用例是否有中间变量，如果有变量，解析（json，xml，html）保存变量值表，没有变量直接保存条件结果表
             Condition con = new Condition(ApicasesVariables.class);
             con.createCriteria().andCondition("caseid = " + apicases.getId());

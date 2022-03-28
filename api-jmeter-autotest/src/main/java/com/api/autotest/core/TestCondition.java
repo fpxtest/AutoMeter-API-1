@@ -5,10 +5,8 @@ import cn.hutool.db.Entity;
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import com.api.autotest.common.utils.DnamicCompilerHelp;
 import com.api.autotest.common.utils.PgsqlConnectionUtils;
-import com.api.autotest.dto.RequestObject;
-import com.api.autotest.dto.ResponeData;
-import com.api.autotest.dto.TestconditionReport;
-import com.api.autotest.dto.TestvariablesValue;
+import com.api.autotest.dto.*;
+import org.apache.http.Header;
 import org.apache.log.Logger;
 
 import javax.sql.DataSource;
@@ -56,8 +54,18 @@ public class TestCondition {
                 re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
                 re = testHttpRequestData.GetFuntionHttpRequestData(re);
                 End = new Date().getTime();
-                ResponeData responeData = testHttp.doService(re);
-                Respone = responeData.getRespone();
+                TestResponeData responeData = testHttp.doService(re);
+                Respone = responeData.getResponeContent();
+
+                String ResponeContentType="application/json;charset=utf-8";
+                List<Header>responeheaderlist= responeData.getHeaderList();
+                for (Header head: responeheaderlist) {
+                    if(head.getName().equalsIgnoreCase("Content-Type"))
+                    {
+                        ResponeContentType=head.getValue();
+                    }
+                }
+                requestObject.setResponecontenttype(ResponeContentType);
                 CostTime = End - Start;
                 SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             } catch (Exception ex) {
