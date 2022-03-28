@@ -222,7 +222,7 @@ public class TestconditionController {
             Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
 
             if (apicases == null) {
-                Respone = "未找到条件运行的接口，请检查是否存在或已被删除";
+                Respone = "未找到条件运行的接口用例，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
                 break;
@@ -263,7 +263,7 @@ public class TestconditionController {
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                Respone = "未找到环境组件部署的服务器 "+macdepunit.getMachinename()+" ，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
                 break;
@@ -393,7 +393,7 @@ public class TestconditionController {
             Long CaseID = conditionApi.getCaseid();
             Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
             if (apicases == null) {
-                throw new Exception("接口子条件执行异常:接口子条件未找到条件运行的接口，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到条件运行的接口用例，请检查是否存在或已被删除！");
             }
             Long ApiID = apicases.getApiid();
             Api api = apiService.getBy("id", ApiID);
@@ -409,11 +409,11 @@ public class TestconditionController {
             //区分环境类型
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnviromentID, deployunit.getId());
             if (macdepunit == null) {
-                throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件所在的发布单元："+deployunit.getDeployunitname()+" 未在运行环境中部署，请检查是否部署或已被删除！");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署的服务器，请检查是否存在或已被删除！");
+                throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署的服务器："+macdepunit.getMachinename()+" ，请检查是否存在或已被删除！");
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
             RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
@@ -459,7 +459,7 @@ public class TestconditionController {
             Long Assembleid = conditionDb.getAssembleid();
             EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
             if (enviromentAssemble == null) {
-                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件，请检查是否存在或已被删除！");
+                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件 "+conditionDb.getAssemblename()+" ，请检查在环境组件中是否存在或已被删除！");
             }
             String Respone = "";
             String AssembleType = enviromentAssemble.getAssembletype();
@@ -469,11 +469,11 @@ public class TestconditionController {
             String ConnnectStr = enviromentAssemble.getConnectstr();
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidandassmbleid(Envid, Assembleid);
             if (macdepunit == null) {
-                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件部署，请检查是否存在或已被删除");
+                throw new Exception("数据库子条件执行异常:数据库子条件未找到 ："+conditionDb.getAssemblename()+" 组件在环境中部署，请检查是否部署或已被删除");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件部署的服务器，请检查是否存在或已被删除");
+                throw new Exception("数据库子条件执行异常:数据库子条件未找到环境组件部署的服务器： "+macdepunit.getMachinename()+" ，请检查是否存在或已被删除");
             }
             String deployunitvisittype = macdepunit.getVisittype();
             String[] ConnetcArray = ConnnectStr.split(",");
@@ -482,7 +482,7 @@ public class TestconditionController {
             }
             try {
                 VariableNameValueMap = RundbforDebug(conditionDb, ConnetcArray, AssembleType, deployunitvisittype, machine, macdepunit, Sql, Sqltype);
-                return ResultGenerator.genOkResult(Respone);
+                return ResultGenerator.genOkResult(VariableNameValueMap);
             } catch (Exception ex) {
                 throw new Exception("数据库子条件执行异常：" + ex.getMessage());
                 //return ResultGenerator.genFailedResult("数据库子条件执行异常：" + ex.getMessage());
@@ -521,7 +521,7 @@ public class TestconditionController {
             String SqlType = conditionDb.getDbtype();
             EnviromentAssemble enviromentAssemble = enviromentAssembleService.getBy("id", Assembleid);
             if (enviromentAssemble == null) {
-                Respone = "未找到环境组件，请检查是否存在或已被删除";
+                Respone = "未找到环境组件："+conditionDb.getAssemblename()+"，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionDb.getCreator());
                 break;
@@ -533,14 +533,14 @@ public class TestconditionController {
             String ConnnectStr = enviromentAssemble.getConnectstr();
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidandassmbleid(Envid, Assembleid);
             if (macdepunit == null) {
-                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                Respone = "未找到环境部署组件："+conditionDb.getAssemblename()+"，请检查是否部署存在或已被删除";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionDb.getCreator());
                 break;
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {
-                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                Respone = "未找到环境组件部署的服务器："+macdepunit.getMachinename()+" ，请检查是否存在或已被删除";
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionDb.getCreator());
                 break;
@@ -548,7 +548,7 @@ public class TestconditionController {
             String deployunitvisittype = macdepunit.getVisittype();
             String[] ConnetcArray = ConnnectStr.split(",");
             if (ConnetcArray.length < 4) {
-                Respone = "数据库连接字填写不规范，请按规则填写";
+                Respone = "数据库连接字填写不规范，请按规则填写 "+ConnnectStr;
                 ConditionResultStatus = "失败";
                 UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionDb.getCreator());
                 break;
