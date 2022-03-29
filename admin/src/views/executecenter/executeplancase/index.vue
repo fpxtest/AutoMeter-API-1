@@ -248,6 +248,7 @@
         apiQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
+          deployunitid: '',
           deployunitname: '' // 获取字典表入参
         },
         dialogStatus: 'add',
@@ -466,6 +467,7 @@
         for (let i = 0; i < this.loaddeployunitList.length; i++) {
           if (this.loaddeployunitList[i].deployunitname === e) {
             this.tmploaddeployunitid = this.loaddeployunitList[i].id
+            this.apiQuery.deployunitid = this.loaddeployunitList[i].id
           }
         }
         this.loadapiList = null
@@ -486,6 +488,7 @@
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.tmpdeployunitid = this.deployunitList[i].id
+            this.apiQuery.deployunitid = this.deployunitList[i].id
           }
         }
         this.apiList = null
@@ -641,12 +644,12 @@
             })
           }
           addexecuteplantestcase(this.testcaseList).then(() => {
+            this.casedialogFormVisible = false
+            this.getexecuteplancaseList()
             this.$message.success('装载成功')
           }).catch(res => {
             this.$message.error('装载失败')
           })
-          this.casedialogFormVisible = false
-          this.getexecuteplancaseList()
         }
       },
 

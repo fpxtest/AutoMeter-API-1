@@ -17,6 +17,26 @@ public class ApicasesVariables {
      */
     private Long caseid;
 
+    private Long apiid;
+
+    public Long getApiid() {
+        return apiid;
+    }
+
+    public void setApiid(Long apiid) {
+        this.apiid = apiid;
+    }
+
+    public Long getDeployunitid() {
+        return deployunitid;
+    }
+
+    public void setDeployunitid(Long deployunitid) {
+        this.deployunitid = deployunitid;
+    }
+
+    private Long deployunitid;
+
     /**
      * 用例名
      */

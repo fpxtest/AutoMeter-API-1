@@ -279,7 +279,7 @@ public class TestMysqlHelp {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,creator,batchname)" +
-                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname().replace("'","''") + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename().replace("'","''") + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname().replace("'","''") + "', '" + testvariablesValue.getMemo().replace("'","''") + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')" + ", '" + testvariablesValue.getBatchname().replace("'","''") + "'";
+                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname().replace("'","''") + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename().replace("'","''") + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname().replace("'","''") + "', '" + testvariablesValue.getMemo().replace("'","''") + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testvariablesValue.getBatchname().replace("'","''") + "')";
         logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + sql);
         logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
     }

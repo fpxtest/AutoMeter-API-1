@@ -26,12 +26,12 @@
   </resultMap>
 
   <select id="findApiCaseWithName" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM apicases a
+    SELECT b.deployunitname,c.apiname,a.*
+    FROM apicases a inner join  deployunit b  inner join api c on a.deployunitid=b.id and a.apiid=c.id
     <where>
-      <if test="apiname != null and apiname != ''">a.apiname = #{apiname}</if>
+      <if test="apiid != null and apiid != ''">a.apiid = #{apiid}</if>
       <if test="casetype != null and casetype != ''">and a.casetype = #{casetype}</if>
-      <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname = #{deployunitname}</if>
+      <if test="deployunitid != null  and deployunitid != ''">and a.deployunitid = #{deployunitid}</if>
       <if test="casename != null and casename != ''">and a.casename like CONCAT('%',#{casename},'%')</if>
     </where>
     order by lastmodify_time  DESC
@@ -49,7 +49,7 @@
 
   <select id="getapicasebyName" resultMap="BaseResultMap">
     SELECT a.casename,a.id
-    FROM apicases a where a.apiname =#{apiname} and a.deployunitname = #{deployunitname}
+    FROM apicases a where a.apiid =#{apiid} and a.deployunitid = #{deployunitid}
   </select>
 
 

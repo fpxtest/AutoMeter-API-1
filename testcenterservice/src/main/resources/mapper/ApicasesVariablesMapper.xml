@@ -6,6 +6,8 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apiid" jdbcType="BIGINT" property="apiid" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
     <result column="caseid" jdbcType="BIGINT" property="caseid" />
     <result column="casename" jdbcType="VARCHAR" property="casename" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
@@ -35,7 +37,7 @@
   </select>
 
   <update id="updateApicasesVariables" parameterType="com.zoctan.api.entity.ApicasesVariables">
-    update apicases_variables set casename = #{casename},variablesname=#{variablesname},caseid=#{caseid},variablesid=#{variablesid},
+    update apicases_variables set casename = #{casename},variablesname=#{variablesname},apiid=#{apiid},deployunitid=#{deployunitid},caseid=#{caseid},variablesid=#{variablesid},
     deployunitname=#{deployunitname},apiname=#{apiname} , memo = #{memo},creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>

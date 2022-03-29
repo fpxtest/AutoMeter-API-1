@@ -31,7 +31,7 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
 
     List<Apicases> forupdateifexist(Apicases apicase);
 
-    List<Apicases> getapicasebyName(@Param("deployunitname")String deployunitname,@Param("apiname") String apiname);
+    List<Apicases> getapicasebyName(@Param("deployunitid")long deployunitid,@Param("apiid") long apiid);
 
     Integer getcasenum(@Param("casetype")String casetype);
 

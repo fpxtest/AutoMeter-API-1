@@ -37,7 +37,7 @@ public interface ApicasesService extends Service<Apicases> {
 
     List<Apicases> forupdateifexist(Apicases apicase);
 
-    List<Apicases> getapicasebyName(String deployunitname,String apiname);
+    List<Apicases> getapicasebyName(long deployunitid,long apiid);
 
     Integer getcasenum(String casetype);
 

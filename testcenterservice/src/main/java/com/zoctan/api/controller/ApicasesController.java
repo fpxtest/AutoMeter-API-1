@@ -301,9 +301,9 @@ public class ApicasesController {
      */
     @PostMapping("/searchbyname")
     public Result searchbyname(@RequestBody final Map<String, Object> param) {
-        String deployunitname = (String) param.get("casedeployunitname");
-        String apiname = (String) param.get("caseapiname");
-        final List<Apicases> list = this.apicasesService.getapicasebyName(deployunitname, apiname);
+        long deployunitid = Long.parseLong(param.get("deployunitid").toString());
+        long apiid = Long.parseLong(param.get("apiid").toString());
+        final List<Apicases> list = this.apicasesService.getapicasebyName(deployunitid, apiid);
         return ResultGenerator.genOkResult(list);
     }
 

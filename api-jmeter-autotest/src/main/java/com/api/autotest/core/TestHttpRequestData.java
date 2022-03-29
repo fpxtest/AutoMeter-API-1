@@ -40,7 +40,7 @@ public class TestHttpRequestData {
             String APIId = testMysqlHelp.getcaseValue("apiid", caselist);
 
             ArrayList<HashMap<String, String>> casedatalist = testMysqlHelp.getcaseData("select * from api_casedata where caseid=" + TestCaseId);
-            ArrayList<HashMap<String, String>> caseptlist = testMysqlHelp.getcaseData("select DISTINCT propertytype  from api_params where apiid=" + APIId);
+            ArrayList<HashMap<String, String>> caseptlist = testMysqlHelp.getcaseData("select DISTINCT propertytype  from api_casedata where caseid=" + TestCaseId);
             ArrayList<HashMap<String, String>> planparamslist = testMysqlHelp.getcaseData("select * from executeplan_params where executeplanid=" + PlanId);
 
             List<String> PropertyList = GetCaseDataPropertyType(caseptlist);

@@ -23,8 +23,8 @@
 
 
   <select id="findApiWithName" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM api a
+    SELECT b.deployunitname,a.*
+    FROM api a inner join deployunit b on a.deployunitid=b.id
     <where>
       <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
@@ -35,7 +35,7 @@
   <select id="listAllbydeploy" resultMap="BaseResultMap">
     SELECT a.*
     FROM api a
-    where a.deployunitname=#{deployunitname}
+    where a.deployunitid=#{deployunitid}
   </select>
 
   <select id="getresponetypebydeployandapiname" resultMap="BaseResultMap">

@@ -25,7 +25,7 @@ public interface ApiMapper extends MyMapper<Api> {
      */
     void updateApi(Api params);
 
-    List<Api> listAllbydeploy(@Param("deployunitname") String deployunitname);
+    List<Api> listAllbydeploy(@Param("deployunitid") long deployunitid);
 
     Api getresponetypebydeployandapiname(@Param("deployunitname")String deployunitname,@Param("apiname")String apiname);
     Api getapibydvap(@Param("deployunitid") Long deployunitid,@Param("visittype")String visittype,@Param("path")String path);

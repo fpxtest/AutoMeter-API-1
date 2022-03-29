@@ -203,11 +203,14 @@
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         deployunitQuery: {
+          deployunitid: '',
           deployunitname: '' // 获取字典表入参
         },
         apiquery: {
           casedeployunitname: '',
-          caseapiname: ''
+          caseapiname: '',
+          apiid: '',
+          deployunitid: ''
         },
         apicaseQuery: {
           apiname: '' // 获取字典表入参
@@ -267,6 +270,8 @@
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.tmpapicondition.deployunitid = this.deployunitList[i].id
+            this.deployunitQuery.deployunitid = this.deployunitList[i].id
+            this.apiquery.deployunitid = this.deployunitList[i].id
           }
         }
         this.tmpapicondition.apiname = ''
@@ -291,6 +296,7 @@
         this.tmpapicondition.casename = ''
         this.apiquery.caseapiname = e
         this.apiquery.casedeployunitname = this.deployunitQuery.deployunitname
+        this.apiquery.apiid = this.tmpapicondition.apiid
         findcasesbyname(this.apiquery).then(response => {
           this.caseList = response.data
         }).catch(res => {
@@ -461,10 +467,12 @@
         this.tmpapicondition.conditionid = this.apiconditionList[index].conditionid
         this.tmpapicondition.deployunitid = this.apiconditionList[index].deployunitid
         this.tmpapicondition.caseid = this.apiconditionList[index].caseid
+        this.tmpapicondition.apiid = this.apiconditionList[index].apiid
         this.tmpapicondition.conditionname = this.apiconditionList[index].conditionname
         this.tmpapicondition.deployunitname = this.apiconditionList[index].deployunitname
         this.tmpapicondition.subconditionname = this.apiconditionList[index].subconditionname
         this.deployunitQuery.deployunitname = this.tmpapicondition.deployunitname
+        this.deployunitQuery.deployunitid = this.apiconditionList[index].deployunitid
         getapiListbydeploy(this.deployunitQuery).then(response => {
           this.apiList = response.data
         }).catch(res => {
@@ -472,9 +480,10 @@
         })
 
         this.tmpapicondition.apiname = this.apiconditionList[index].apiname
-
         this.apiquery.caseapiname = this.tmpapicondition.apiname
         this.apiquery.casedeployunitname = this.tmpapicondition.deployunitname
+        this.apiquery.deployunitid = this.apiconditionList[index].deployunitid
+        this.apiquery.apiid = this.apiconditionList[index].apiid
         findcasesbyname(this.apiquery).then(response => {
           this.caseList = response.data
         }).catch(res => {

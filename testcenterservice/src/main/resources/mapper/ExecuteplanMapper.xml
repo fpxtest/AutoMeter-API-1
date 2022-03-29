@@ -21,8 +21,8 @@
   </resultMap>
 
   <select id="findexplanWithName" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM executeplan a
+    SELECT b.enviromentname,a.*
+    FROM executeplan a inner join enviroment b on a.envid=b.id
     <where>
       <if test="businesstype != null and businesstype != ''">a.businesstype = #{businesstype} </if>
       <if test="executeplanname != null and executeplanname != ''">and a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>

@@ -54,8 +54,8 @@ private ApiMapper apiMapper;
     }
 
     @Override
-    public List<Api> listAllbydeploy(String deployunitname) {
-        return apiMapper.listAllbydeploy(deployunitname);
+    public List<Api> listAllbydeploy(long deployunitid) {
+        return apiMapper.listAllbydeploy(deployunitid);
     }
 
     @Override

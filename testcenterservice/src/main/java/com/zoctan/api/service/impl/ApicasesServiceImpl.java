@@ -90,8 +90,8 @@ private ApicasesMapper apicasesMapper;
     }
 
     @Override
-    public List<Apicases> getapicasebyName(String deployunitname, String apiname) {
-        return apicasesMapper.getapicasebyName(deployunitname,apiname);
+    public List<Apicases> getapicasebyName(long deployunitid, long apiid) {
+        return apicasesMapper.getapicasebyName(deployunitid,apiid);
     }
 
     @Override

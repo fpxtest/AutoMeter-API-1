@@ -32,7 +32,7 @@
         <span v-if="hasPermission('apicases:search')">
           <el-form-item>
             <el-select v-model="search.deployunitname" placeholder="发布单元" @change="deployunitselectChanged($event)">
-              <el-option label="请选择" value />
+              <el-option label="请选择" value="请选择" />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname"/>
               </div>
@@ -40,8 +40,8 @@
           </el-form-item>
 
           <el-form-item>
-            <el-select v-model="search.apiname" placeholder="api名">
-              <el-option label="请选择" value />
+            <el-select v-model="search.apiname" placeholder="api名" @change="searchapiselectChanged($event)">
+              <el-option label="请选择" value="请选择" />
               <div v-for="(api, index) in apiList" :key="index">
                 <el-option :label="api.apiname" :value="api.apiname"/>
               </div>
@@ -848,8 +848,10 @@
         assertitemKey: null,
         tmpasserttype: null,
         tmpprotocal: null,
-        tmpdeployunitname: null,
-        tmpapiname: null,
+        // tmpdeployunitname: null,
+        // tmpapiname: null,
+        tmpapiid: null,
+        tmpdeployunitid: null,
         tmpcasetype: null,
         tmpcasename: null,
         paraList: [], // paraList参数值列表
@@ -887,6 +889,7 @@
           apiname: '' // api名
         },
         apiQuery: {
+          deployunitid: '',
           deployunitname: '' // 获取字典表入参
         },
         dialogStatus: 'add',
@@ -1010,6 +1013,8 @@
           page: 1,
           size: 10,
           deployunitname: null,
+          apiid: '',
+          deployunitid: '',
           apiname: null,
           casetype: null,
           casename: null
@@ -1217,8 +1222,8 @@
        */
       getapicasesList() {
         this.listLoading = true
-        this.search.deployunitname = this.tmpdeployunitname
-        this.search.apiname = this.tmpapiname
+        this.search.deployunitid = this.tmpdeployunitid
+        this.search.apiid = this.tmpapiid
         this.search.casetype = this.tmpcasetype
         this.search.casename = this.tmpcasename
         search(this.search).then(response => {
@@ -1249,6 +1254,7 @@
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.tmpapicases.deployunitid = this.deployunitList[i].id
+            this.apiQuery.deployunitid = this.deployunitList[i].id
           }
         }
         getapiListbydeploy(this.apiQuery).then(response => {
@@ -1314,16 +1320,36 @@
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
        */
       deployunitselectChanged(e) {
-        this.apiList = []
+        this.apiList = null
+        this.search.deployunitid = ''
         this.search.apiname = ''
+        this.search.apiid = ''
+        this.search.casetype = ''
+        this.apiQuery.deployunitid = 0
         this.apiQuery.deployunitname = e
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpapicases.deployunitid = this.deployunitList[i].id
+            this.apiQuery.deployunitid = this.deployunitList[i].id
+            this.search.deployunitid = this.deployunitList[i].id
+          }
+        }
         getapiListbydeploy(this.apiQuery).then(response => {
           this.apiList = response.data
         }).catch(res => {
           this.$message.error('加载api列表失败')
         })
       },
-
+      searchapiselectChanged(e) {
+        this.search.apiid = ''
+        console.log(e)
+        for (let i = 0; i < this.apiList.length; i++) {
+          if (this.apiList[i].apiname === e) {
+            this.search.apiid = this.apiList[i].id
+            console.log(this.search.apiid)
+          }
+        }
+      },
       /**
        * 获取发布单元列表
        */
@@ -1346,8 +1372,8 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
-        this.tmpdeployunitname = this.search.deployunitname
-        this.tmpapiname = this.search.apiname
+        this.tmpdeployunitid = this.search.deployunitid
+        this.tmpapiid = this.search.apiid
         this.tmpcasetype = this.search.casetype
         this.tmpcasename = this.search.casename
       },
@@ -1759,6 +1785,7 @@
        */
       showTestDialog(index) {
         this.tmptestdata.caseid = this.apicasesList[index].id
+        this.checked = false
         this.tmptestdata.prixflag = this.checked
         this.tmpapicases.casename = this.apicasesList[index].casename
         this.activeName = 'zero'

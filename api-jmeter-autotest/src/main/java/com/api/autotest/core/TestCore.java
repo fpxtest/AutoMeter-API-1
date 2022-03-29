@@ -245,7 +245,7 @@ public class TestCore {
                 Map<String, Object> atMap = new HashMap<>();;
                 //1.是否通知所有人
                 atMap.put("isAtAll", true);
-                Map<String, Object> reqMap = Maps.newHashMap();
+                Map<String, Object> reqMap =new HashMap<>(); //Maps.newHashMap();
                 reqMap.put("msgtype", "text");
                 reqMap.put("text", contentMap);
                 reqMap.put("at", atMap);

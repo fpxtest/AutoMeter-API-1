@@ -24,8 +24,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     public Arguments getDefaultParameters() {
         Arguments params = new Arguments();
         //定义一个参数，显示到Jmeter的参数列表中，第一个参数为参数默认的显示名称，第二个参数为默认值
-        params.addArgument("DispatchIds", "11");
-        params.addArgument("SlaverId", "12");
+        params.addArgument("DispatchIds", "14");
+        params.addArgument("SlaverId", "1");
         params.addArgument("mysqlurl", "/opt/");
         params.addArgument("mysqlusername", "/opt/");
         params.addArgument("mysqlpassword", "/opt/");
@@ -226,8 +226,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
 
 
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "93");
-        params.addArgument("SlaverId", "23");
+        params.addArgument("DispatchIds", "14");
+        params.addArgument("SlaverId", "1");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
         params.addArgument("mysqlpassword", "test");

@@ -22,7 +22,9 @@
   </resultMap>
 
   <select id="findMacAndDepWithName" resultMap="BaseResultMap">
-    select c.* from macdepunit c
+    select a.enviromentname,b.machinename,c.* from
+        macdepunit c inner join enviroment a inner join machine b
+        on a.id=c.envid and b.id=c.machineid
     <where>
       <if test="enviromentname != null and enviromentname != ''">and c.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
       <if test="deployunitname != null and deployunitname != ''">and c.deployunitname like CONCAT('%',#{deployunitname},'%')</if>

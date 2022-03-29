@@ -357,9 +357,12 @@
         },
         apiquery: {
           casedeployunitname: '',
-          caseapiname: ''
+          caseapiname: '',
+          apiid: '',
+          deployunitid: ''
         },
         deployunitQuery: {
+          deployunitid: '', // 获取字典表入参
           deployunitname: '' // 获取字典表入参
         },
         VariablescaseQuery: {
@@ -455,6 +458,8 @@
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.tmpApicasesVariables.deployunitid = this.deployunitList[i].id
+            this.deployunitQuery.deployunitid = this.deployunitList[i].id
+            this.apiquery.deployunitid = this.deployunitList[i].id
           }
         }
         this.tmpApicasesVariables.apiname = ''
@@ -474,6 +479,7 @@
         for (let i = 0; i < this.apiList.length; i++) {
           if (this.apiList[i].apiname === e) {
             this.tmpApicasesVariables.apiid = this.apiList[i].id
+            this.apiquery.apiid = this.apiList[i].id
           }
         }
         this.tmpApicasesVariables.casename = ''
