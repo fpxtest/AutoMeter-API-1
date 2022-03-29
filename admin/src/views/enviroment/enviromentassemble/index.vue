@@ -51,11 +51,11 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="组件名" align="center" prop="assemblename" width="160"/>
-      <el-table-column label="组件类型" align="center" prop="assembletype" width="100"/>
-      <el-table-column label="连接字" align="center" prop="connectstr" width="250"/>
-      <el-table-column label="备注" align="center" prop="memo" width="60"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
+      <el-table-column label="组件名" align="center" prop="assemblename" width="120"/>
+      <el-table-column label="组件类型" align="center" prop="assembletype" width="80"/>
+      <el-table-column label="连接字" align="center" prop="connectstr" width="200"/>
+      <el-table-column label="备注" align="center" prop="memo" width="150"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="80"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

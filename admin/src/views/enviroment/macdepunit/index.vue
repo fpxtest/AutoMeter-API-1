@@ -47,11 +47,11 @@
         </template>
       </el-table-column>
       <el-table-column label="测试环境" align="center" prop="enviromentname" width="120"/>
-      <el-table-column label="服务器" align="center" prop="machinename" width="120"/>
+      <el-table-column label="服务器" align="center" prop="machinename" width="100"/>
       <el-table-column label="发布单元,组件名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="组件类型" align="center" prop="assembletype" width="70"/>
       <el-table-column label="访问方式" align="center" prop="visittype" width="70"/>
-      <el-table-column label="访问域名" align="center" prop="domain" width="200"/>
+      <el-table-column label="访问域名" align="center" prop="domain" width="150"/>
       <el-table-column label="操作人" align="center" prop="creator" width="60"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
