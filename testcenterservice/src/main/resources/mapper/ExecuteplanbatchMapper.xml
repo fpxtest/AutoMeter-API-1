@@ -46,8 +46,8 @@
 
 
   <select id="findexplanbatchWithName" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM executeplanbatch a
+    SELECT b.executeplanname, a.*
+    FROM executeplanbatch a inner join executeplan b on a.executeplanid = b.id
     <where>
       <if test="batchname != null and batchname != ''">a.batchname = #{batchname} </if>
       <if test="executeplanname != null and executeplanname != ''">and a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>

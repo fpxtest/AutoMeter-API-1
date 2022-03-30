@@ -32,8 +32,8 @@
   </select>
 
   <select id="getbyvariablesid" resultMap="BaseResultMap">
-    SELECT *
-    FROM apicases_variables where variablesid=#{variablesid}
+    SELECT b.casename,a.*
+    FROM apicases_variables a inner join apicases b on a.caseid=b.id where a.variablesid=#{variablesid}
   </select>
 
   <update id="updateApicasesVariables" parameterType="com.zoctan.api.entity.ApicasesVariables">

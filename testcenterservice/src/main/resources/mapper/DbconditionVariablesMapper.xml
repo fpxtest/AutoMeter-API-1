@@ -18,8 +18,8 @@
   </resultMap>
 
   <select id="getbyvariablesid" resultMap="BaseResultMap">
-    SELECT *
-    FROM dbcondition_variables where variablesid=#{variablesid}
+    SELECT b.subconditionname as dbconditionname,a.*
+    FROM dbcondition_variables a inner join condition_db b on a.dbconditionid=b.id where a.variablesid=#{variablesid}
   </select>
 
   <update id="updatedbconditionvariables" parameterType="com.zoctan.api.entity.DbconditionVariables">

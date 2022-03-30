@@ -24,11 +24,11 @@
 
 
   <select id="finddbconditionWithName" resultMap="BaseResultMap">
-    SELECT *
-    FROM condition_db
+    SELECT b.conditionname, a.*
+    FROM condition_db  a inner join testcondition b on a.conditionid=b.id
     <where>
-      <if test="conditionname != null and conditionname != ''">conditionname like CONCAT('%',#{conditionname},'%')</if>
-      <if test="subconditionname != null and subconditionname != ''">subconditionname like CONCAT('%',#{subconditionname},'%')</if>
+      <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
+      <if test="subconditionname != null and subconditionname != ''">a.subconditionname like CONCAT('%',#{subconditionname},'%')</if>
     </where>
     order by lastmodify_time  DESC
   </select>

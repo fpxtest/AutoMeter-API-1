@@ -24,8 +24,8 @@
   </resultMap>
 
   <select id="findDispatchWithName" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM dispatch a
+    SELECT b.executeplanname as execplanname,a.*
+    FROM dispatch a inner join executeplan b on a.execplanid=b.id
     <where>
       <if test="execplanname != null and execplanname != ''">a.execplanname like CONCAT('%',#{execplanname},'%')</if>
       <if test="batchname != null  and batchname != ''">and a.batchname like CONCAT('%',#{batchname},'%')</if>
@@ -34,7 +34,8 @@
   </select>
 
   <select id="getDispatchWithstatus" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM dispatch a where a.execplanid =#{execplanid} and batchname = #{batchname} and status != #{status}
+    SELECT b.executeplanname as execplanname,c.casename as testcasename,a.*
+    FROM dispatch a inner join executeplan b inner join apicases c on a.execplanid=b.id and a.testcaseid=c.id
+    where a.execplanid =#{execplanid} and a.batchname = #{batchname} and a.status != #{status}
   </select>
 </mapper>

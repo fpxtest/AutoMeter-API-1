@@ -19,8 +19,9 @@
   </resultMap>
 
   <select id="findexplanWithName" resultMap="BaseResultMap">
-    SELECT a.*, b.executeplanname
-    FROM executeplan_testcase a join executeplan b on a.executeplanid=b.id
+    SELECT b.executeplanname,c.deployunitname,d.apiname,e.casename,a.*
+    FROM executeplan_testcase a join executeplan b  inner join deployunit c inner join api d inner join apicases e
+    on a.executeplanid=b.id and a.deployunitid=c.id and a.apiid=d.id and a.testcaseid=e.id
     <where>
       <if test="deployunitid != null and deployunitid != ''">a.deployunitid = #{deployunitid} </if>
       <if test="executeplanid != null and executeplanid != ''">and a.executeplanid = #{executeplanid}</if>

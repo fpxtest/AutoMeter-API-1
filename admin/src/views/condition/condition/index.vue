@@ -284,9 +284,12 @@
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         deployunitquery: {
+          deployunitid: '',
           deployunitname: ''
         },
         apiquery: {
+          apiid: '',
+          deployunitid: '',
           casedeployunitname: '',
           caseapiname: ''
         },
@@ -404,6 +407,12 @@
        */
       selectChanged(e) {
         this.tmpcondition.apiname = ''
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.deployunitquery.deployunitid = this.deployunitList[i].id
+            this.apiquery.deployunitid = this.deployunitList[i].id
+          }
+        }
         this.deployunitquery.deployunitname = e
         this.tmpcondition.apiname = ''
         this.tmpcondition.objectname = ''
@@ -419,6 +428,11 @@
        */
       apiselectChanged(e) {
         this.tmpcondition.objectname = ''
+        for (let i = 0; i < this.apiList.length; i++) {
+          if (this.apiList[i].apiname === e) {
+            this.apiquery.apiid = this.apiList[i].id
+          }
+        }
         this.apiquery.caseapiname = e
         this.apiquery.casedeployunitname = this.deployunitquery.deployunitname
         findcasesbyname(this.apiquery).then(response => {

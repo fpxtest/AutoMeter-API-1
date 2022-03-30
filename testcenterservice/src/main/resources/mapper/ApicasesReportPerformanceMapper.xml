@@ -36,7 +36,7 @@
   </select>
 
   <select id="listallresult" resultMap="BaseResultMap">
-    SELECT b.casename,b.apiname,a.requestheader,a.requestmethod,a.url,a.requestdatas,a.status,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time
-    FROM apicases_report_performance a inner join apicases b on a.caseid=b.id  order by a.lastmodify_time  DESC
+    SELECT b.casename,c.apiname,d.deployunitname,a.* FROM apicases_report_performance a inner join apicases b inner join api c inner join deployunit d
+        on a.caseid=b.id and b.apiid=c.id and b.deployunitid=d.id  order by a.lastmodify_time  DESC
   </select>
 </mapper>
