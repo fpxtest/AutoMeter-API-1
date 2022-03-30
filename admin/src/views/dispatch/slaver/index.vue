@@ -110,6 +110,7 @@
         <el-form-item label="端口" prop="port">
           <el-input
             type="text"
+            readonly="true"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpslaver.port"
