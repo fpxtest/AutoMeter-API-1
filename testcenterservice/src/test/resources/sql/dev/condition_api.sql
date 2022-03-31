@@ -25,8 +25,8 @@ DROP TABLE IF EXISTS `condition_api`;
 CREATE TABLE `condition_api`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `conditionid`    bigint(20) unsigned  COMMENT '条件id',
-    `deployunitid`    bigint(20) unsigned  COMMENT '发布单元id',
+    `conditionid`    bigint(20) unsigned  COMMENT '父条件id',
+    `conditionname`     varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '父条件名',
     `caseid`    bigint(20) unsigned  COMMENT '接口caseid',
     `memo`          varchar(200) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '备注',
     `create_time`   datetime DEFAULT NOW() COMMENT '创建时间',

@@ -106,6 +106,9 @@ public class TestconditionController {
     private DbconditionVariablesService dbconditionVariablesService;
 
     @Resource
+    private ConditionDelayService conditionDelayService;
+
+    @Resource
     private DbvariablesService dbvariablesService;
 
 
@@ -492,6 +495,7 @@ public class TestconditionController {
         return ResultGenerator.genOkResult(VariableNameValueMap);
     }
 
+
     public void DBCondition(long ConditionID, Dispatch dispatch) {
         List<ConditionDb> conditionDbListList = conditionDbService.GetDBConditionByConditionID(ConditionID);
         TestconditionController.log.info("数据库子条件条件报告数据库子条件数量-============：" + conditionDbListList.size());
@@ -568,7 +572,6 @@ public class TestconditionController {
             }
         }
     }
-
 
     private String GetDbUrl(String AssembleType, Macdepunit macdepunit, String deployunitvisittype, Machine machine, String dbname, String port) {
         String DBUrl = "";
@@ -842,7 +845,6 @@ public class TestconditionController {
             SendMail(testconditionReport, Respone, user);
         }
     }
-
 
     private void SendMail(TestconditionReport testconditionReport, String Respone, String user) {
         try {

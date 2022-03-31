@@ -57,12 +57,11 @@ public class TestCondition {
                 TestResponeData responeData = testHttp.doService(re);
                 Respone = responeData.getResponeContent();
 
-                String ResponeContentType="application/json;charset=utf-8";
-                List<Header>responeheaderlist= responeData.getHeaderList();
-                for (Header head: responeheaderlist) {
-                    if(head.getName().equalsIgnoreCase("Content-Type"))
-                    {
-                        ResponeContentType=head.getValue();
+                String ResponeContentType = "application/json;charset=utf-8";
+                List<Header> responeheaderlist = responeData.getHeaderList();
+                for (Header head : responeheaderlist) {
+                    if (head.getName().equalsIgnoreCase("Content-Type")) {
+                        ResponeContentType = head.getValue();
                     }
                 }
                 requestObject.setResponecontenttype(ResponeContentType);
@@ -165,6 +164,38 @@ public class TestCondition {
         }
     }
 
+    //处理延时条件
+    public void DelayCondition(long ConditionID, RequestObject requestObject) throws Exception {
+        Long PlanID = Long.parseLong(requestObject.getTestplanid());
+        ArrayList<HashMap<String, String>> conditionDelayList = testMysqlHelp.GetDelayConditionByConditionID(ConditionID);
+        for (HashMap<String, String> conditionDelay : conditionDelayList) {
+            long Start = 0;
+            long End = 0;
+            long CostTime = 0;
+            String Respone = "执行延时条件成功";
+            String ConditionResultStatus = "成功";
+            try {
+                Start = new Date().getTime();
+                long delaytime = Long.parseLong(conditionDelay.get("delaytime"))*1000;
+                logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + delaytime);
+                Thread.sleep(delaytime);
+                Respone = Respone + "（毫秒）:" + delaytime;
+                logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + Respone);
+                End = new Date().getTime();
+                CostTime = End - Start;
+                SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
+            } catch (Exception ex) {
+                ConditionResultStatus = "失败";
+                Respone = ex.getMessage();
+                End = new Date().getTime();
+                CostTime = End - Start;
+                SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
+                throw new Exception("延时子条件执行异常：" + ex.getMessage());
+            }
+        }
+    }
+
+
     private void SaveSubCondition(String SubconditionType, RequestObject requestObject, Long PlanID, Long ConditionID, HashMap<String, String> conditionScript, String Respone, String ConditionResultStatus, long CostTime) {
         //更新条件结果表
         TestconditionReport testconditionReport = new TestconditionReport();
@@ -197,9 +228,9 @@ public class TestCondition {
             String Respone = "";
             String ConditionResultStatus = "成功";
             Long Assembleid = Long.parseLong(conditionDb.get("assembleid"));
-            Long DBConditionid=Long.parseLong(conditionDb.get("id"));
-            String SqlType=conditionDb.get("dbtype");
-            String DBConditionName=conditionDb.get("subconditionname");
+            Long DBConditionid = Long.parseLong(conditionDb.get("id"));
+            String SqlType = conditionDb.get("dbtype");
+            String DBConditionName = conditionDb.get("subconditionname");
             try {
                 ArrayList<HashMap<String, String>> enviromentAssemblelist = testMysqlHelp.getcaseData("select * from enviroment_assemble where id=" + Assembleid);
                 if (enviromentAssemblelist.size() == 0) {
@@ -237,8 +268,8 @@ public class TestCondition {
                     SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
                     break;
                 }
-                Long planid=Long.parseLong(requestObject.getTestplanid());
-                Rundb(planid,requestObject.getTestplanname(),requestObject.getBatchname(),DBConditionid,DBConditionName,macdepunitlist,machinelist,ConnetcArray,AssembleType,deployunitvisittype,Sql, SqlType);
+                Long planid = Long.parseLong(requestObject.getTestplanid());
+                Rundb(planid, requestObject.getTestplanname(), requestObject.getBatchname(), DBConditionid, DBConditionName, macdepunitlist, machinelist, ConnetcArray, AssembleType, deployunitvisittype, Sql, SqlType);
                 Start = new Date().getTime();
             } catch (Exception ex) {
                 ConditionResultStatus = "失败";
@@ -254,9 +285,8 @@ public class TestCondition {
     }
 
     //获取数据库连接字
-    private String GetDbUrl(String AssembleType,ArrayList<HashMap<String, String>> macdepunitlist,String deployunitvisittype,ArrayList<HashMap<String, String>> machinelist,String dbname,String port)
-    {
-        String DBUrl="";
+    private String GetDbUrl(String AssembleType, ArrayList<HashMap<String, String>> macdepunitlist, String deployunitvisittype, ArrayList<HashMap<String, String>> machinelist, String dbname, String port) {
+        String DBUrl = "";
         if (AssembleType.equalsIgnoreCase("pgsql")) {
             DBUrl = "jdbc:postgresql://";
             // 根据访问方式来确定ip还是域名
@@ -294,18 +324,14 @@ public class TestCondition {
     }
 
     //获取数据库变量值
-    private String GetDBResultValueByMap(List<HashMap<String,String>> DbResult, String columnname, long rownum)
-    {
-        String Result="未获得数据库变量值，请确认查询sql是否能正常获取数据，或者列名是否和Sql中匹配";
-        for(int i=0;i<DbResult.size();i++)
-        {
-            if(i==rownum)
-            {
-                HashMap<String,String> rowdata=DbResult.get(i);
-                for (String Cloumn:rowdata.keySet()) {
-                    if(Cloumn.equalsIgnoreCase(columnname))
-                    {
-                        Result=rowdata.get(Cloumn);
+    private String GetDBResultValueByMap(List<HashMap<String, String>> DbResult, String columnname, long rownum) {
+        String Result = "未获得数据库变量值，请确认查询sql是否能正常获取数据，或者列名是否和Sql中匹配";
+        for (int i = 0; i < DbResult.size(); i++) {
+            if (i == rownum) {
+                HashMap<String, String> rowdata = DbResult.get(i);
+                for (String Cloumn : rowdata.keySet()) {
+                    if (Cloumn.equalsIgnoreCase(columnname)) {
+                        Result = rowdata.get(Cloumn);
                     }
                 }
             }
@@ -314,23 +340,19 @@ public class TestCondition {
     }
 
     //获取数据库变量值
-    private String GetDBResultValueByEntity(List<Entity> DbResult, String columnname, long rownum)
-    {
-        String Result="未获得数据库变量值，请确认查询sql是否能正常获取数据，或者列名是否和Sql中匹配";
-        for(int i=0;i<DbResult.size();i++)
-        {
-            if(i==rownum)
-            {
-                Entity row=DbResult.get(i);
-                Result=row.getStr(columnname);
+    private String GetDBResultValueByEntity(List<Entity> DbResult, String columnname, long rownum) {
+        String Result = "未获得数据库变量值，请确认查询sql是否能正常获取数据，或者列名是否和Sql中匹配";
+        for (int i = 0; i < DbResult.size(); i++) {
+            if (i == rownum) {
+                Entity row = DbResult.get(i);
+                Result = row.getStr(columnname);
             }
         }
         return Result;
     }
 
     //保存数据库变量值
-    private void SaveDBTestVariablesValue(long planid,String planname,String batchname,long Conidtiondbid,String DBConditionName,long variablesid,String Variablesname,String VariablesValue)
-    {
+    private void SaveDBTestVariablesValue(long planid, String planname, String batchname, long Conidtiondbid, String DBConditionName, long variablesid, String Variablesname, String VariablesValue) {
         TestvariablesValue testvariablesValue = new TestvariablesValue();
         testvariablesValue.setPlanid(planid);
         testvariablesValue.setPlanname(planname);
@@ -345,7 +367,7 @@ public class TestCondition {
         testMysqlHelp.testVariablesValueSave(testvariablesValue);
     }
 
-    private String Rundb(long planid,String planname,String batchname, long Conidtiondbid,String DBConditionName,ArrayList<HashMap<String, String>> macdepunitlist,ArrayList<HashMap<String, String>> machinelist, String[] ConnetcArray, String AssembleType, String deployunitvisittype, String Sql ,String SqlType) throws Exception {
+    private String Rundb(long planid, String planname, String batchname, long Conidtiondbid, String DBConditionName, ArrayList<HashMap<String, String>> macdepunitlist, ArrayList<HashMap<String, String>> machinelist, String[] ConnetcArray, String AssembleType, String deployunitvisittype, String Sql, String SqlType) throws Exception {
         String Respone = "";
         String username = ConnetcArray[0];
         String pass = ConnetcArray[1];
@@ -353,9 +375,9 @@ public class TestCondition {
         String dbname = ConnetcArray[3];
         String DBUrl = "";
         if (AssembleType.equalsIgnoreCase("pgsql")) {
-            DBUrl=GetDbUrl(AssembleType,macdepunitlist,deployunitvisittype,machinelist,dbname,port);
-            PgsqlConnectionUtils.initDbResource(DBUrl,username,pass);
-            if(SqlType.equalsIgnoreCase("Select")) {
+            DBUrl = GetDbUrl(AssembleType, macdepunitlist, deployunitvisittype, machinelist, dbname, port);
+            PgsqlConnectionUtils.initDbResource(DBUrl, username, pass);
+            if (SqlType.equalsIgnoreCase("Select")) {
                 //查询语句结果解析到数据库变量中
                 // 1.查询数据库条件是否有变量关联
                 ArrayList<HashMap<String, String>> dbconditionVariablesList = testMysqlHelp.getbyconditionid(Conidtiondbid);
@@ -363,22 +385,20 @@ public class TestCondition {
                     //2.获取查询结果
                     List<HashMap<String, String>> result = PgsqlConnectionUtils.query(Sql);
                     for (HashMap<String, String> dbconditionVariables : dbconditionVariablesList) {
-                        long variablesid =Long.parseLong(dbconditionVariables.get("variablesid"));
+                        long variablesid = Long.parseLong(dbconditionVariables.get("variablesid"));
                         String Variablesname = dbconditionVariables.get("variablesname");
                         String columnname = dbconditionVariables.get("fieldname");
-                        long roworder =Long.parseLong(dbconditionVariables.get("roworder"));
+                        long roworder = Long.parseLong(dbconditionVariables.get("roworder"));
                         if (roworder > 0) {
                             roworder = roworder - 1;
                         }
                         String VariablesValue = GetDBResultValueByMap(result, columnname, roworder);
                         //保存数据库变量
                         Respone = Respone + "成功获取 数据库变量名：" + Variablesname + " 值:" + VariablesValue;
-                        SaveDBTestVariablesValue(planid,planname,batchname, Conidtiondbid, DBConditionName, variablesid, Variablesname, VariablesValue);
+                        SaveDBTestVariablesValue(planid, planname, batchname, Conidtiondbid, DBConditionName, variablesid, Variablesname, VariablesValue);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 String[] SqlArr = Sql.split(";");
                 for (String ExecSql : SqlArr) {
                     int nums = PgsqlConnectionUtils.execsql(ExecSql);
@@ -388,44 +408,41 @@ public class TestCondition {
         }
 
         if (AssembleType.equalsIgnoreCase("mysql")) {
-            DBUrl=GetDbUrl(AssembleType,macdepunitlist,deployunitvisittype,machinelist,dbname,port);
-            Respone=UseHutoolDb(planid,planname,batchname,Conidtiondbid, DBConditionName,SqlType,DBUrl,username,pass,Sql);
+            DBUrl = GetDbUrl(AssembleType, macdepunitlist, deployunitvisittype, machinelist, dbname, port);
+            Respone = UseHutoolDb(planid, planname, batchname, Conidtiondbid, DBConditionName, SqlType, DBUrl, username, pass, Sql);
         }
         if (AssembleType.equalsIgnoreCase("oracle")) {
-            DBUrl=GetDbUrl(AssembleType,macdepunitlist,deployunitvisittype,machinelist,dbname,port);
-            Respone=UseHutoolDb(planid,planname,batchname,Conidtiondbid, DBConditionName,SqlType,DBUrl,username,pass,Sql);
+            DBUrl = GetDbUrl(AssembleType, macdepunitlist, deployunitvisittype, machinelist, dbname, port);
+            Respone = UseHutoolDb(planid, planname, batchname, Conidtiondbid, DBConditionName, SqlType, DBUrl, username, pass, Sql);
         }
         return Respone;
     }
 
-    private String UseHutoolDb(long planid,String planname,String batchname, long Conidtiondbid, String DBConditionName,String SqlType, String DBUrl,String username,String pass,String Sql) throws SQLException {
-        String Respone="";
+    private String UseHutoolDb(long planid, String planname, String batchname, long Conidtiondbid, String DBConditionName, String SqlType, String DBUrl, String username, String pass, String Sql) throws SQLException {
+        String Respone = "";
         DataSource ds = new SimpleDataSource(DBUrl, username, pass);
 
-        if(SqlType.equalsIgnoreCase("Select"))
-        {
+        if (SqlType.equalsIgnoreCase("Select")) {
             // 1.查询数据库条件是否有变量关联
             ArrayList<HashMap<String, String>> dbconditionVariablesList = testMysqlHelp.getbyconditionid(Conidtiondbid);
             if (dbconditionVariablesList.size() > 0) {
                 //2.获取查询结果
                 List<Entity> result = Db.use(ds).query(Sql);
                 for (HashMap<String, String> dbconditionVariables : dbconditionVariablesList) {
-                    long variablesid =Long.parseLong(dbconditionVariables.get("variablesid"));
+                    long variablesid = Long.parseLong(dbconditionVariables.get("variablesid"));
                     String Variablesname = dbconditionVariables.get("variablesname");
                     String columnname = dbconditionVariables.get("fieldname");
-                    long roworder =Long.parseLong(dbconditionVariables.get("roworder"));
+                    long roworder = Long.parseLong(dbconditionVariables.get("roworder"));
                     if (roworder > 0) {
                         roworder = roworder - 1;
                     }
                     String VariablesValue = GetDBResultValueByEntity(result, columnname, roworder);
                     Respone = Respone + "成功获取 数据库变量名：" + Variablesname + " 值:" + VariablesValue;
                     //保存数据库变量
-                    SaveDBTestVariablesValue(planid,planname,batchname, Conidtiondbid, DBConditionName, variablesid, Variablesname, VariablesValue);
+                    SaveDBTestVariablesValue(planid, planname, batchname, Conidtiondbid, DBConditionName, variablesid, Variablesname, VariablesValue);
                 }
             }
-        }
-        else
-        {
+        } else {
             String[] SqlArr = Sql.split(";");
             for (String ExecSql : SqlArr) {
                 int nums = Db.use(ds).execute(ExecSql);

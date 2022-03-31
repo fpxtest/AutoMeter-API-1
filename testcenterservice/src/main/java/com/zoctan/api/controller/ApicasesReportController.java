@@ -51,7 +51,7 @@ public class ApicasesReportController {
     private ConditionScriptService conditionScriptService;
 
     @Resource
-    private TestconditionReportService testconditionReportService;
+    private ConditionDelayService conditionDelayService;
 
     @Resource
     private ApicasesReportstaticsService apicasesReportstaticsService;
@@ -254,18 +254,27 @@ public class ApicasesReportController {
             long totalconditionnums = 0;
             if (testconditionList.size() > 0) {
                 long conditionid = testconditionList.get(0).getId();
-                ConditionApi conditionApi = conditionApiService.getBy("conditionid", conditionid);
-                if (conditionApi != null) {
-                    totalconditionnums = totalconditionnums + 1;
+                Condition apiconditioncon = new Condition(ConditionApi.class);
+                apiconditioncon.createCriteria().andCondition("conditionid = " + conditionid);
+                List<ConditionApi> conditionApiList = conditionApiService.listByCondition(apiconditioncon);
+                if (conditionApiList.size() > 0) {
+                    totalconditionnums = totalconditionnums + conditionApiList.size();
                 }
-                ConditionDb conditionDb = conditionDbService.getBy("conditionid", conditionid);
-                if (conditionDb != null) {
-                    totalconditionnums = totalconditionnums + 1;
+
+                Condition dbconditioncon = new Condition(ConditionDb.class);
+                dbconditioncon.createCriteria().andCondition("conditionid = " + conditionid);
+                List<ConditionDb> conditionDBList = conditionDbService.listByCondition(dbconditioncon);
+                if (conditionDBList.size() > 0) {
+                    totalconditionnums = totalconditionnums + conditionDBList.size();
                 }
-                ConditionScript conditionScript = conditionScriptService.getBy("conditionid", conditionid);
-                if (conditionScript != null) {
-                    totalconditionnums = totalconditionnums + 1;
+
+                Condition scriptconditioncon = new Condition(ConditionScript.class);
+                scriptconditioncon.createCriteria().andCondition("conditionid = " + conditionid);
+                List<ConditionScript> conditionScriptList = conditionScriptService.listByCondition(scriptconditioncon);
+                if (conditionScriptList.size() >0) {
+                    totalconditionnums = totalconditionnums + conditionScriptList.size();
                 }
+
             }
             functionConditionStatis.setTestCollectionConditionsNUms(totalconditionnums);
 
@@ -297,6 +306,12 @@ public class ApicasesReportController {
                     conditionScript.createCriteria().andCondition("conditionid = " + conditionid);
                     List<ConditionScript>conditionScriptList = conditionScriptService.listByCondition(conditionDB);
                     caseconditionnums = caseconditionnums+conditionScriptList.size();
+
+
+                    Condition delayconditioncon = new Condition(ConditionDelay.class);
+                    delayconditioncon.createCriteria().andCondition("conditionid = " + conditionid);
+                    List<ConditionDelay> conditionDelayList = conditionDelayService.listByCondition(delayconditioncon);
+                    caseconditionnums = caseconditionnums+conditionDelayList.size();
                 }
             }
             functionConditionStatis.setCaseConditionNums(caseconditionnums);

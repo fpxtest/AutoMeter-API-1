@@ -35,10 +35,12 @@
   </select>
 
   <select id="findconditionorderWithidandtype" resultMap="BaseResultMap">
-    SELECT *
-    FROM condition_order
-    where conditionid = #{conditionid} and subconditiontype=#{subconditiontype}
-    order by conditionorder  asc
+    SELECT b.conditionname ,a.conditionid,a.subconditionid,a.subconditiontype,
+           a.subconditionname,a.orderstatus,a.conditionorder,
+           a.create_time,a.lastmodify_time,a.creator
+    FROM condition_order a inner join testcondition b on a.conditionid=b.id
+    where a.conditionid = #{conditionid} and a.subconditiontype=#{subconditiontype}
+    order by a.conditionorder  asc
   </select>
 
   <insert id="saveconditionorder">
