@@ -8,6 +8,10 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
     <result column="objectid" jdbcType="BIGINT" property="objectid" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="apiid" jdbcType="BIGINT" property="apiid" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="objectname" jdbcType="VARCHAR" property="objectname" />
     <result column="objecttype" jdbcType="VARCHAR" property="objecttype" />
     <result column="conditiontype" jdbcType="VARCHAR" property="conditiontype" />

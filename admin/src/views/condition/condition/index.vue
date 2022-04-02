@@ -312,6 +312,8 @@
           objecttype: '',
           objectid: '',
           objectname: '',
+          apiid: '',
+          deployunitid: '',
           conditiontype: '',
           memo: '',
           creator: '',
@@ -411,6 +413,7 @@
           if (this.deployunitList[i].deployunitname === e) {
             this.deployunitquery.deployunitid = this.deployunitList[i].id
             this.apiquery.deployunitid = this.deployunitList[i].id
+            this.tmpcondition.deployunitid = this.deployunitList[i].id
           }
         }
         this.deployunitquery.deployunitname = e
@@ -431,6 +434,7 @@
         for (let i = 0; i < this.apiList.length; i++) {
           if (this.apiList[i].apiname === e) {
             this.apiquery.apiid = this.apiList[i].id
+            this.tmpcondition.apiid = this.apiList[i].id
           }
         }
         this.apiquery.caseapiname = e
@@ -554,6 +558,8 @@
         this.tmpcondition.conditionname = ''
         this.tmpcondition.objectid = ''
         this.tmpcondition.objectname = ''
+        this.tmpcondition.deployunitname = ''
+        this.tmpcondition.apiname = ''
         this.tmpcondition.objecttype = ''
         this.tmpcondition.conditiontype = ''
         this.tmpcondition.memo = ''
@@ -630,9 +636,10 @@
           this.executeplanVisible = false
         }
         this.tmpcondition.id = this.conditionList[index].id
-        this.tmpcondition.apiname = ''
         this.tmpcondition.objectid = this.conditionList[index].objectid
         this.tmpcondition.conditionname = this.conditionList[index].conditionname
+        this.tmpcondition.apiname = this.conditionList[index].apiname
+        this.tmpcondition.deployunitname = this.conditionList[index].deployunitname
         this.tmpcondition.objectname = this.conditionList[index].objectname
         this.tmpcondition.objecttype = this.conditionList[index].objecttype
         this.tmpcondition.conditiontype = this.conditionList[index].conditiontype

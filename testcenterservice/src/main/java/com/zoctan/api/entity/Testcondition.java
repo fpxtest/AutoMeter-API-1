@@ -19,6 +19,28 @@ public class Testcondition {
      */
     private Long objectid;
 
+    private Long apiid;
+
+    public Long getApiid() {
+        return apiid;
+    }
+
+    public void setApiid(Long apiid) {
+        this.apiid = apiid;
+    }
+
+    public Long getDeployunitid() {
+        return deployunitid;
+    }
+
+    public void setDeployunitid(Long deployunitid) {
+        this.deployunitid = deployunitid;
+    }
+
+    private Long deployunitid;
+
+
+
 
     public String getConditionname() {
         return conditionname;
@@ -49,6 +71,27 @@ public class Testcondition {
      * 备注
      */
     private String memo;
+
+    public String getApiname() {
+        return apiname;
+    }
+
+    public void setApiname(String apiname) {
+        this.apiname = apiname;
+    }
+
+    public String getDeployunitname() {
+        return deployunitname;
+    }
+
+    public void setDeployunitname(String deployunitname) {
+        this.deployunitname = deployunitname;
+    }
+
+    private String apiname;
+    private String deployunitname;
+
+
 
     /**
      * 创建时间
