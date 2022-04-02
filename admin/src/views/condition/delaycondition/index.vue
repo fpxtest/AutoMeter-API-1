@@ -175,7 +175,7 @@
         itemKey: null,
         tmpconditionname: '',
         conditionList: [], // 条件列表
-        delayconditionList: [], // 脚本条件列表
+        delayconditionList: [], // 延时条件列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         listQuery: {
@@ -186,9 +186,9 @@
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改脚本条件',
-          update: '修改脚本条件',
-          add: '添加脚本条件'
+          updateRole: '修改延时条件',
+          update: '修改延时条件',
+          add: '添加延时条件'
         },
         btnLoading: false, // 按钮等待动画
         tmpconditionquery: {
@@ -244,7 +244,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载测试脚本条件列表失败')
+          this.$message.error('加载测试延时条件列表失败')
         })
       },
 
@@ -320,7 +320,7 @@
         return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
-       * 显示添加脚本条件对话框
+       * 显示添加延时条件对话框
        */
       showAdddelayconditionDialog() {
         // 显示新增对话框
@@ -333,7 +333,7 @@
         this.tmpdelaycondition.creator = this.name
       },
       /**
-       * 添加脚本条件
+       * 添加延时条件
        */
       adddelaycondition() {
         this.$refs.tmpdelaycondition.validate(valid => {
@@ -352,8 +352,8 @@
         })
       },
       /**
-       * 显示修改脚本条件对话框
-       * @param index 脚本条件下标
+       * 显示修改延时条件对话框
+       * @param index 延时条件下标
        */
       showUpdatedelayconditionDialog(index) {
         this.dialogFormVisible = true
@@ -370,7 +370,7 @@
         }
       },
       /**
-       * 更新脚本条件
+       * 更新延时条件
        */
       updatedelaycondition() {
         this.$refs.tmpdelaycondition.validate(valid => {
@@ -387,11 +387,11 @@
       },
 
       /**
-       * 删除脚本条件
-       * @param index 脚本条件下标
+       * 删除延时条件
+       * @param index 延时条件下标
        */
       removedelaycondition(index) {
-        this.$confirm('删除该脚本条件？', '警告', {
+        this.$confirm('删除该延时条件？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
@@ -407,15 +407,15 @@
       },
 
       /**
-       * 脚本条件是否唯一
-       * @param 脚本条件
+       * 延时条件是否唯一
+       * @param 延时条件
        */
       isUniqueDetail(delaycondition) {
         for (let i = 0; i < this.delayconditionList.length; i++) {
           if (this.delayconditionList[i].id !== delaycondition.id) { // 排除自己
             if (this.delayconditionList[i].enviromentname === delaycondition.enviromentname) {
               if (this.delayconditionList[i].machinename === delaycondition.machinename) {
-                this.$message.error('脚本条件名已存在')
+                this.$message.error('延时条件名已存在')
                 return false
               }
             }
