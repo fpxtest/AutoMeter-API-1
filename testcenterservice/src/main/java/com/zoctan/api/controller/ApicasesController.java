@@ -353,6 +353,7 @@ public class ApicasesController {
                     if (conditionOrderList.size() > 0) {
                         for (ConditionOrder conditionOrder : conditionOrderList) {
                             if (conditionOrder.getSubconditiontype().equals("接口")) {
+                                param.put("dbvariablesvalue", DBRespone);
                                 APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                             }
                             if (conditionOrder.getSubconditiontype().equals("数据库")) {
@@ -364,11 +365,11 @@ public class ApicasesController {
                         }
                     } else {
                         DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                        param.put("dbvariablesvalue", DBRespone);
                         APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                         getSubConditionRespone(ScriptConditionServerurl, params, header);
 
                     }
-                    param.put("dbvariablesvalue", DBRespone);
                 } catch (Exception ex) {
                     if (ex.getMessage().contains("Connection refused")) {
                         return ResultGenerator.genFailedResult("无法连接条件服务器，请检查ConditionService是否正常启动！");
