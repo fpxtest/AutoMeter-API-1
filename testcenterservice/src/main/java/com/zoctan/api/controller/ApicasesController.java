@@ -357,7 +357,6 @@ public class ApicasesController {
                             }
                             if (conditionOrder.getSubconditiontype().equals("数据库")) {
                                 DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
-                                param.put("dbvariablesvalue", DBRespone);
                             }
                             if (conditionOrder.getSubconditiontype().equals("脚本")) {
                                 getSubConditionRespone(ScriptConditionServerurl, params, header);
@@ -365,11 +364,11 @@ public class ApicasesController {
                         }
                     } else {
                         DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
-                        param.put("dbvariablesvalue", DBRespone);
                         APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                         getSubConditionRespone(ScriptConditionServerurl, params, header);
 
                     }
+                    param.put("dbvariablesvalue", DBRespone);
                 } catch (Exception ex) {
                     if (ex.getMessage().contains("Connection refused")) {
                         return ResultGenerator.genFailedResult("无法连接条件服务器，请检查ConditionService是否正常启动！");
