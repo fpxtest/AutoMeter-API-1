@@ -11,6 +11,7 @@ import com.zoctan.api.dto.*;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
 import com.zoctan.api.util.RadomVariables;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.*;
  * @author Zoctan
  * @date 2020/09/11
  */
+@Slf4j
 @RestController
 @RequestMapping("/apicases")
 public class ApicasesController {
@@ -347,28 +349,56 @@ public class ApicasesController {
                 conditionmap.put("conditionid", ConditionID);
                 List<ConditionOrder> conditionOrderList = conditionOrderService.findconditionorderWithid(conditionmap);
                 param.put("ConditionID", ConditionID);
+
                 HttpHeader header = new HttpHeader();
-                String params = JSON.toJSONString(param);
                 try {
                     if (conditionOrderList.size() > 0) {
                         for (ConditionOrder conditionOrder : conditionOrderList) {
+                            param.put("dbvariablesvalue", DBRespone);
+                            String params = JSON.toJSONString(param);
                             if (conditionOrder.getSubconditiontype().equals("接口")) {
-                                param.put("dbvariablesvalue", DBRespone);
+                                ApicasesController.log.info("。。。。。。。。接口前置子条件请求数据："+params);
                                 APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                             }
                             if (conditionOrder.getSubconditiontype().equals("数据库")) {
                                 DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                                param.put("dbvariablesvalue", DBRespone);
                             }
                             if (conditionOrder.getSubconditiontype().equals("脚本")) {
                                 getSubConditionRespone(ScriptConditionServerurl, params, header);
                             }
                         }
                     } else {
-                        DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                        String params = JSON.toJSONString(param);
+                        Condition dbcon=new Condition(ConditionDb.class);
+                        dbcon.createCriteria().andCondition("conditionid="+ConditionID);
+                        List<ConditionDb> conditionDbList= conditionDbService.listByCondition(dbcon);
+                        if(conditionDbList.size()>0)
+                        {
+                            ApicasesController.log.info("。。。。。。。。数据库前置子条件非顺序请求数据："+params);
+                            DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                        }
                         param.put("dbvariablesvalue", DBRespone);
-                        APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
-                        getSubConditionRespone(ScriptConditionServerurl, params, header);
+                        ApicasesController.log.info("。。。。。。。。数据库前置子条件非顺序结果："+DBRespone);
+                        Condition apicon=new Condition(ConditionApi.class);
+                        apicon.createCriteria().andCondition("conditionid="+ConditionID);
+                        List<ConditionApi> conditionApiList= conditionApiService.listByCondition(apicon);
+                        if(conditionApiList.size()>0)
+                        {
+                            params = JSON.toJSONString(param);
+                            ApicasesController.log.info("。。。。。。。。接口前置子条件非顺序请求数据："+params);
+                            APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
+                        }
 
+                        Condition scriptcon=new Condition(ConditionScript.class);
+                        scriptcon.createCriteria().andCondition("conditionid="+ConditionID);
+                        List<ConditionScript> conditionScriptList= conditionScriptService.listByCondition(scriptcon);
+
+                        if(conditionScriptList.size()>0)
+                        {
+                            ApicasesController.log.info("。。。。。。。。脚本前置子条件非顺序请求数据："+params);
+                            getSubConditionRespone(ScriptConditionServerurl, params, header);
+                        }
                     }
                 } catch (Exception ex) {
                     if (ex.getMessage().contains("Connection refused")) {
