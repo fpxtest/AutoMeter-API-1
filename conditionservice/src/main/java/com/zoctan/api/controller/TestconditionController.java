@@ -8,6 +8,7 @@ import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
@@ -275,7 +276,7 @@ public class TestconditionController {
             RequestObject requestObject = new RequestObject();
             try {
                 //前置接口参数不支持变量
-                requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+                requestObject = testCaseHelp.GetCaseRequestData(dispatch,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             } catch (Exception ex) {
                 TestconditionController.log.info("接口子条件条件获取请求数据GetCaseRequestData异常-============：" + ex.getMessage());
             }
@@ -317,6 +318,7 @@ public class TestconditionController {
                     ConditionResultStatus = "失败";
                 }
                 VariableNameValueMap.put(testvariablesValue.getVariablesname(), testvariablesValue.getVariablesvalue());
+                TestconditionController.log.info("接口子条件条件执行用例："+apicases.getCasename()+" 请求数据后变量解析结果-============：变量名：" + testvariablesValue.getVariablesname()+" 变量值："+testvariablesValue.getVariablesvalue());
             }
             CostTime = End - Start;
             //更新条件结果表
@@ -389,6 +391,23 @@ public class TestconditionController {
     public Result ConditionForAPI(@RequestBody final Map<String, Object> param) throws Exception {
         Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
         Long EnviromentID = Long.parseLong(param.get("enviromentid").toString());
+        String DBVariablesValue=param.get("dbvariablesvalue").toString();
+
+        HashMap<String, String> DBVariableNameValueMap = new HashMap<>();
+
+        if (DBVariablesValue != "") {
+            try {
+                JSONObject jsonObject = JSON.parseObject(DBVariablesValue);
+                for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
+                    String key = objectEntry.getKey();
+                    String value = objectEntry.getValue().toString();
+                    DBVariableNameValueMap.put(key, value);
+                }
+            } catch (Exception ex) {
+                return ResultGenerator.genFailedResult("执行前置数据库条件结果异常：" + DBVariablesValue);
+            }
+        }
+
         HashMap<String, String> VariableNameValueMap = new HashMap<>();
         List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
         TestconditionController.log.info("调试接口子条件条件报告API子条件数量-============：" + conditionApiList.size());
@@ -419,7 +438,7 @@ public class TestconditionController {
                 throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署的服务器："+macdepunit.getMachinename()+" ，请检查是否存在或已被删除！");
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
-            RequestObject requestObject = testCaseHelp.GetCaseRequestData(apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+            RequestObject requestObject = testCaseHelp.GetCaseRequestDataForDebug(DBVariableNameValueMap,VariableNameValueMap,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             TestResponeData testResponeData = testCaseHelp.request(requestObject);
             String Respone = testResponeData.getResponeContent();
             String ResponeContentType="application/json;charset=utf-8";

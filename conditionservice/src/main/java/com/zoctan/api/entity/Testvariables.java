@@ -1,10 +1,7 @@
 package com.zoctan.api.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Date;
+import javax.persistence.*;
 
 public class Testvariables {
     /**
@@ -23,6 +20,18 @@ public class Testvariables {
      * 变量类型，用例变量，全局变量
      */
     private String testvariablestype;
+
+    public String getValuetype() {
+        return valuetype;
+    }
+
+    public void setValuetype(String valuetype) {
+        this.valuetype = valuetype;
+    }
+
+    private String valuetype;
+
+
 
     /**
      * 变量表达

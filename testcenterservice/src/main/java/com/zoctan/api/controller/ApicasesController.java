@@ -357,15 +357,18 @@ public class ApicasesController {
                             }
                             if (conditionOrder.getSubconditiontype().equals("数据库")) {
                                 DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                                param.put("dbvariablesvalue", DBRespone);
                             }
                             if (conditionOrder.getSubconditiontype().equals("脚本")) {
                                 getSubConditionRespone(ScriptConditionServerurl, params, header);
                             }
                         }
                     } else {
+                        DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                        param.put("dbvariablesvalue", DBRespone);
                         APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                         getSubConditionRespone(ScriptConditionServerurl, params, header);
-                        DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+
                     }
                 } catch (Exception ex) {
                     if (ex.getMessage().contains("Connection refused")) {
