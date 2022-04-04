@@ -278,7 +278,11 @@ public class TestconditionController {
                 //前置接口参数不支持变量
                 requestObject = testCaseHelp.GetCaseRequestData(dispatch,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             } catch (Exception ex) {
+                Respone = ex.getMessage();
+                ConditionResultStatus = "失败";
+                UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
                 TestconditionController.log.info("接口子条件条件获取请求数据GetCaseRequestData异常-============：" + ex.getMessage());
+                break;
             }
             try {
                 Start = new Date().getTime();

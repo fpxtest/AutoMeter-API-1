@@ -364,8 +364,10 @@ public class TestCaseHelp  {
            {
                for (String key : paramsmap.keySet()) {
                    String Value = paramsmap.get(key);
+                   String DataType = paramsmap.get("paramstype").trim();
                    Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                   paramers.addParam(key, ObjectValue);
+                   Object Result = GetDataByType(ObjectValue.toString(), DataType);
+                   paramers.addParam(key, Result);
                }
            }
            //Body参数
@@ -451,10 +453,12 @@ public class TestCaseHelp  {
 
     private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
         Object ObjectValue = Value;
+        boolean exist=false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
         for (String interfacevariablesName : InterfaceMap.keySet()) {
             boolean flag = GetSubOrNot(InterfaceMap, Value, "<", ">");
             if (Value.contains("<" + interfacevariablesName + ">")) {
+                exist=true;
                 String ActualValue = InterfaceMap.get(interfacevariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -475,6 +479,7 @@ public class TestCaseHelp  {
         for (String DBvariablesName : DBMap.keySet()) {
             boolean flag = GetSubOrNot(DBMap, Value, "<<", ">>");
             if (Value.contains("<<" + DBvariablesName + ">>")) {
+                exist=true;
                 String ActualValue = DBMap.get(DBvariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -495,6 +500,7 @@ public class TestCaseHelp  {
         for (String variables : RadomMap.keySet()) {
             boolean flag = GetSubOrNot(RadomMap, Value, "[", "]");
             if (Value.contains("[" + variables + "]")) {
+                exist=true;
                 if (flag) {
                     Object RadomValue = GetRadomValue(variables);
                     Value = Value.replace("[" + variables + "]", RadomValue.toString());
@@ -504,6 +510,11 @@ public class TestCaseHelp  {
                 }
             }
         }
+        if(!exist)
+        {
+            throw new Exception("当前用例参数值中的变量："+Value+"未找到对应值，请检查是否有配置对应的子条件获取此变量值");
+        }
+
         return ObjectValue;
     }
 

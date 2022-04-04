@@ -408,6 +408,8 @@ public class ApicasesController {
                     }
                 }
             }
+            ApicasesController.log.info("。。。。。。。。接口前置子条件响应数据："+APIRespone);
+
             if (!APIRespone.isEmpty()) {
                 try {
                     JSONObject jsonObject = JSON.parseObject(APIRespone);
@@ -420,6 +422,8 @@ public class ApicasesController {
                     return ResultGenerator.genFailedResult("执行前置接口条件结果异常：" + APIRespone);
                 }
             }
+            ApicasesController.log.info("。。。。。。。。数据库前置子条件响应数据："+DBRespone);
+
             if (!DBRespone.isEmpty()) {
                 try {
                     JSONObject jsonObject = JSON.parseObject(DBRespone);
@@ -477,6 +481,8 @@ public class ApicasesController {
                 RadomHashMap.put(va.getVariablesname(), va.getVariablestype());
             }
 
+            ApicasesController.log.info("。。。。。。。。处理前的resource Url："+resource);
+
             //url中的变量替换
             //1.随机变量替换
             for (Variables variables : variablesList) {
@@ -503,6 +509,9 @@ public class ApicasesController {
                     resource = resource.replace(UseDBvariables, VariableValue.toString());
                 }
             }
+
+            ApicasesController.log.info("。。。。。。。。处理后的resource Url："+resource);
+
 
             List<ApiCasedata> HeaderApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Header");
             List<ApiCasedata> ParamsApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Params");
@@ -643,10 +652,12 @@ public class ApicasesController {
 
     private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
         Object ObjectValue = Value;
+        boolean exist=false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
         for (String interfacevariablesName : InterfaceMap.keySet()) {
             boolean flag = GetSubOrNot(InterfaceMap, Value, "<", ">");
             if (Value.contains("<" + interfacevariablesName + ">")) {
+                exist=true;
                 String ActualValue = InterfaceMap.get(interfacevariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -667,6 +678,7 @@ public class ApicasesController {
         for (String DBvariablesName : DBMap.keySet()) {
             boolean flag = GetSubOrNot(DBMap, Value, "<<", ">>");
             if (Value.contains("<<" + DBvariablesName + ">>")) {
+                exist=true;
                 String ActualValue = DBMap.get(DBvariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -687,6 +699,7 @@ public class ApicasesController {
         for (String variables : RadomMap.keySet()) {
             boolean flag = GetSubOrNot(RadomMap, Value, "[", "]");
             if (Value.contains("[" + variables + "]")) {
+                exist=true;
                 if (flag) {
                     Object RadomValue = GetRadomValue(variables);
                     Value = Value.replace("[" + variables + "]", RadomValue.toString());
@@ -695,6 +708,10 @@ public class ApicasesController {
                     ObjectValue = GetRadomValue(variables);
                 }
             }
+        }
+        if(!exist)
+        {
+            throw new Exception("当前用例参数值中的变量："+Value+"未找到对应值，请检查是否有配置对应的子条件获取此变量值");
         }
         return ObjectValue;
     }

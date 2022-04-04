@@ -316,7 +316,12 @@ public class TestHttpRequestData {
         HashMap<String, String> headmap = testMysqlHelp.fixhttprequestdatas("Header", casedatalist);
         for (String key : headmap.keySet()) {
             String Value = headmap.get(key);
-            Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+            Object ObjectValue = Value;
+            try {
+                ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+            } catch (Exception exception) {
+                logger.info(logplannameandcasename + "TestHttpRequestData Header替换变量异常 :  "+ exception.getMessage());
+            }
             header.addParam(key, ObjectValue);
             logger.info(logplannameandcasename + "TestHttpRequestData Header中添加Key is :  " + key + "   Value  is:   " + ObjectValue);
         }
@@ -342,12 +347,14 @@ public class TestHttpRequestData {
         return flag;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
         Object ObjectValue = Value;
+        boolean exist=false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
         for (String interfacevariablesName : InterfaceMap.keySet()) {
             boolean flag = GetSubOrNot(InterfaceMap, Value, "<", ">");
             if (Value.contains("<" + interfacevariablesName + ">")) {
+                exist=true;
                 String ActualValue = InterfaceMap.get(interfacevariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -369,6 +376,7 @@ public class TestHttpRequestData {
         for (String DBvariablesName : DBMap.keySet()) {
             boolean flag = GetSubOrNot(DBMap, Value, "<<", ">>");
             if (Value.contains("<<" + DBvariablesName + ">>")) {
+                exist=true;
                 String ActualValue = DBMap.get(DBvariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -390,6 +398,7 @@ public class TestHttpRequestData {
         for (String variables : RadomMap.keySet()) {
             boolean flag = GetSubOrNot(RadomMap, Value, "[", "]");
             if (Value.contains("[" + variables + "]")) {
+                exist=true;
                 if (flag) {
                     Object RadomValue = GetRadomValue(variables);
                     Value = Value.replace("[" + variables + "]", RadomValue.toString());
@@ -398,6 +407,10 @@ public class TestHttpRequestData {
                     ObjectValue = GetRadomValue(variables);
                 }
             }
+        }
+        if(!exist)
+        {
+            throw new Exception("当前用例参数值中的变量："+Value+"未找到对应值，请检查是否有配置对应的子条件获取此变量值");
         }
         return ObjectValue;
     }
@@ -429,9 +442,15 @@ public class TestHttpRequestData {
                 String Key = data.get("apiparam").trim();
                 String Value = data.get("apiparamvalue").trim();
                 String DataType = data.get("paramstype").trim();
-                Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                Object LastObjectValue = GetDataByType(ObjectValue.toString(), DataType);
-                paramers.addParam(Key, LastObjectValue);
+                Object ObjectValue = Value;
+                try {
+                    ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                    Object LastObjectValue = GetDataByType(ObjectValue.toString(), DataType);
+                    ObjectValue = LastObjectValue;
+                } catch (Exception exception) {
+                    logger.info(logplannameandcasename + "TestHttpRequestData 处理Params参数变量替换异常"  + exception.getMessage());
+                }
+                paramers.addParam(Key, ObjectValue);
                 logger.info(logplannameandcasename + "TestHttpRequestData -" + Property + "-中添加Key is :  " + Key + "   Value  is:   " + ObjectValue + " 类型：" + DataType);
             }
         }
@@ -546,7 +565,11 @@ public class TestHttpRequestData {
         for (String key : headmapfromparam.keySet()) {
             String Value = headmapfromparam.get(key);
             Object ObjectValue = Value;
-            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+            try {
+                ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+            } catch (Exception exception) {
+                logger.info(logplannameandcasename + "TestHttpRequestData 全局参数Header处理变量替换异常:  " + exception.getMessage());
+            }
             //如果有相同的参数，则以全局参数的覆盖之,如果没有则添加
             header.getParams().put(key, ObjectValue);
             logger.info(logplannameandcasename + "TestHttpRequestData 全局参数Header中添加Key is :  " + key + "   Value  is:   " + ObjectValue);
