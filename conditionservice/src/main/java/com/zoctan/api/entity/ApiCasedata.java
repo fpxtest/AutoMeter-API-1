@@ -42,6 +42,16 @@ public class ApiCasedata {
      */
     private String memo;
 
+    public String getParamstype() {
+        return paramstype;
+    }
+
+    public void setParamstype(String paramstype) {
+        this.paramstype = paramstype;
+    }
+
+    private String paramstype;
+
     /**
      * 创建时间
      */

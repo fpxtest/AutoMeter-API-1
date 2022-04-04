@@ -27,7 +27,7 @@ public class ParseResponeHelp {
         catch (Exception ex)
         {
             Result=ex.getMessage();
-            throw new Exception("变量管理中的变量值表达式JsonPath："+JSPath+" 在接口响应结果中未匹配到对应的值："+" 异常信息："+Result.replace("'", ""));
+            throw new Exception("变量管理中此变量值表达式JsonPath："+JSPath+" 在接口子条件的请求响应: "+JsonRespone+" 中未匹配到对应的值");
         }
         return Result;
     }
@@ -42,7 +42,7 @@ public class ParseResponeHelp {
         catch (Exception ex)
         {
             Result=ex.getMessage();
-            throw new Exception("变量管理中的变量值表达式XPath："+XPath+" 在接口响应结果中未匹配到对应的值："+" 异常信息："+Result.replace("'", ""));
+            throw new Exception("变量管理中此变量值表达式XPath："+XPath+" 在接口子条件的请求响应："+ActualXml+" 中未匹配到对应的值");
         }
         return Result;
     }

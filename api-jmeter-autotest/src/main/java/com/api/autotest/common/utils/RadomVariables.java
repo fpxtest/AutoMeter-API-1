@@ -108,20 +108,18 @@ public class RadomVariables {
     public static void main(String[] args) {
 
 
-        List<String> list1=new ArrayList<>();
-        list1.add("11");
-        list1.add("22");
+        String value="aaaa";
 
-        List<String> list2=new ArrayList<>();
-        list2.add("11");
-        list2.add("22");
-        list2.add("33");
+        if((value.contains("<")&&value.contains(">"))||(value.contains("<<")&&value.contains(">>"))||(value.contains("[")&&value.contains("]")))
+        {
+            System.out.println(value);
 
+        }
+        else
+        {
+            System.out.println("no");
 
-        float successrate=Float.valueOf(list1.size())/Float.valueOf(list2.size());
-        DecimalFormat decimalFormat=new DecimalFormat(".00");
-        String p=decimalFormat.format(successrate);
-        System.out.println(p);
+        }
 
 
 

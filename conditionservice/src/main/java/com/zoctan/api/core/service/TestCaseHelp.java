@@ -144,9 +144,9 @@ public class TestCaseHelp  {
                 }
             }
 
-            HashMap<String, String> headmap=fixhttprequestdatas("Header",apiCasedataList);
-            HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
-            HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
+            HashMap<String, ApiCasedata> headmap=fixhttprequestdatas("Header",apiCasedataList);
+            HashMap<String, ApiCasedata> bodymap=fixhttprequestdatas("Body",apiCasedataList);
+            HashMap<String, ApiCasedata> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
 
             //Header
             HttpHeader header = new HttpHeader();
@@ -154,8 +154,12 @@ public class TestCaseHelp  {
             if(headmap.size()>0)
             {
                 for (String key : headmap.keySet()) {
-                    String Value = headmap.get(key);
-                    Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                    String Value = headmap.get(key).getApiparamvalue().trim();
+                    Object ObjectValue = Value;
+                    if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
+                    {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                    }
                     header.addParam(key, ObjectValue);
                 }
             }
@@ -165,9 +169,15 @@ public class TestCaseHelp  {
             if(paramsmap.size()>0)
             {
                 for (String key : paramsmap.keySet()) {
-                    String Value = paramsmap.get(key);
-                    Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                    paramers.addParam(key, ObjectValue);
+                    String Value = paramsmap.get(key).getApiparamvalue().trim();
+                    String DataType = paramsmap.get(key).getParamstype();
+                    Object ObjectValue = Value;
+                    if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
+                    {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                    }
+                    Object Result = GetDataByType(ObjectValue.toString(), DataType);
+                    paramers.addParam(key, Result);
                 }
             }
             //Body参数
@@ -179,9 +189,15 @@ public class TestCaseHelp  {
             {
                 if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                     for (String key : bodymap.keySet()) {
-                        String Value = bodymap.get(key);
-                        Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                        Bodyparamers.addParam(key, ObjectValue);
+                        String DataType = bodymap.get(key).getParamstype();
+                        String Value = bodymap.get(key).getApiparamvalue().trim();
+                        Object ObjectValue = Value;
+                        if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
+                        {
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                        }
+                        Object Result = GetDataByType(ObjectValue.toString(), DataType);
+                        Bodyparamers.addParam(key, Result);
                     }
                     try {
                         PostData=GetParasPostData(requestcontenttype,Bodyparamers);
@@ -193,8 +209,7 @@ public class TestCaseHelp  {
                 else
                 {
                     for (String Key : bodymap.keySet()) {
-                        PostData = bodymap.get(Key);
-
+                        PostData = bodymap.get(Key).getApiparamvalue();
                         //1.替换随机变量
                         for (String VaraibaleName : RadomMap.keySet()) {
                             String UseVariableName = "[" + VaraibaleName + "]";
@@ -342,9 +357,9 @@ public class TestCaseHelp  {
                }
            }
 
-           HashMap<String, String> headmap=fixhttprequestdatas("Header",apiCasedataList);
-           HashMap<String, String> bodymap=fixhttprequestdatas("Body",apiCasedataList);
-           HashMap<String, String> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
+           HashMap<String, ApiCasedata> headmap=fixhttprequestdatas("Header",apiCasedataList);
+           HashMap<String, ApiCasedata> bodymap=fixhttprequestdatas("Body",apiCasedataList);
+           HashMap<String, ApiCasedata> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
 
            //Header
            HttpHeader header = new HttpHeader();
@@ -352,8 +367,12 @@ public class TestCaseHelp  {
            if(headmap.size()>0)
            {
                for (String key : headmap.keySet()) {
-                   String Value = headmap.get(key);
-                   Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                   String Value = headmap.get(key).getApiparamvalue().trim();
+                   Object ObjectValue = Value;
+                   if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
+                   {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                   }
                    header.addParam(key, ObjectValue);
                }
            }
@@ -363,9 +382,13 @@ public class TestCaseHelp  {
            if(paramsmap.size()>0)
            {
                for (String key : paramsmap.keySet()) {
-                   String Value = paramsmap.get(key);
-                   String DataType = paramsmap.get("paramstype").trim();
-                   Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                   String Value = paramsmap.get(key).getApiparamvalue().trim();
+                   String DataType = paramsmap.get(key).getParamstype().trim();
+                   Object ObjectValue =Value ;
+                   if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
+                   {
+                       ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                   }
                    Object Result = GetDataByType(ObjectValue.toString(), DataType);
                    paramers.addParam(key, Result);
                }
@@ -379,9 +402,15 @@ public class TestCaseHelp  {
            {
                if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                    for (String key : bodymap.keySet()) {
-                       String Value = bodymap.get(key);
-                       Object ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                       Bodyparamers.addParam(key, ObjectValue);
+                       String Value = bodymap.get(key).getApiparamvalue().trim();
+                       String DataType = bodymap.get(key).getParamstype();
+                       Object ObjectValue = Value;
+                       if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
+                       {
+                           ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                       }
+                       Object Result = GetDataByType(ObjectValue.toString(), DataType);
+                       Bodyparamers.addParam(key, Result);
                    }
                    try {
                        PostData=GetParasPostData(requestcontenttype,Bodyparamers);
@@ -393,7 +422,7 @@ public class TestCaseHelp  {
                else
                {
                    for (String Key : bodymap.keySet()) {
-                       PostData = bodymap.get(Key);
+                       PostData = bodymap.get(Key).getApiparamvalue();
 
                        //1.替换随机变量
                        for (String VaraibaleName : RadomMap.keySet()) {
@@ -512,7 +541,7 @@ public class TestCaseHelp  {
         }
         if(!exist)
         {
-            throw new Exception("当前用例参数值中的变量："+Value+"未找到对应值，请检查是否有配置对应的子条件获取此变量值");
+            throw new Exception("当前接口子条件参数值中存在变量："+Value+" 未找到对应值，请检查是否有配置变量对应的子条件获取此变量值");
         }
 
         return ObjectValue;
@@ -603,12 +632,12 @@ public class TestCaseHelp  {
     }
 
     // 获取用例Header，params，Body，Dubbo数据
-    public HashMap<String, String> fixhttprequestdatas(String MapType,List<ApiCasedata> casedatalist) {
-        HashMap<String, String> DataMap=new HashMap<>();
+    public HashMap<String, ApiCasedata> fixhttprequestdatas(String MapType,List<ApiCasedata> casedatalist) {
+        HashMap<String, ApiCasedata> DataMap=new HashMap<>();
         for (ApiCasedata data : casedatalist) {
             String propertytype= data.getPropertytype();
             if (propertytype.equals(MapType)) {
-                DataMap.put(data.getApiparam().trim(), data.getApiparamvalue().trim());
+                DataMap.put(data.getApiparam().trim(), data);
             }
         }
         return DataMap;

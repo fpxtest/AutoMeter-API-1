@@ -11,6 +11,7 @@
     <result column="apiparam" jdbcType="VARCHAR" property="apiparam" />
     <result column="apiparamvalue" jdbcType="VARCHAR" property="apiparamvalue" />
     <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
+    <result column="paramstype" jdbcType="VARCHAR" property="paramstype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />

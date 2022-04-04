@@ -404,7 +404,7 @@ public class ApicasesController {
                     if (ex.getMessage().contains("Connection refused")) {
                         return ResultGenerator.genFailedResult("无法连接条件服务器，请检查ConditionService是否正常启动！");
                     } else {
-                        return ResultGenerator.genFailedResult("执行前置条件异常：" + ex.getMessage());
+                        return ResultGenerator.genFailedResult(ex.getMessage());
                     }
                 }
             }
@@ -630,7 +630,11 @@ public class ApicasesController {
         for (ApiCasedata Headdata : HeaderApiCasedataList) {
             String HeaderName = Headdata.getApiparam();
             String HeaderValue = Headdata.getApiparamvalue();
-            Object Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap,DBMap);
+            Object Result = HeaderValue;
+            if((HeaderValue.contains("<")&&HeaderValue.contains(">"))||(HeaderValue.contains("<<")&&HeaderValue.contains(">>"))||(HeaderValue.contains("[")&&HeaderValue.contains("]")))
+            {
+                Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap,DBMap);
+            }
             header.addParam(HeaderName, Result);
         }
         return header;
@@ -643,7 +647,10 @@ public class ApicasesController {
             String ParamName = Paramdata.getApiparam();
             String ParamValue = Paramdata.getApiparamvalue();
             String DataType = Paramdata.getParamstype();
-            Object ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap,DBMap);
+            Object ObjectResult = ParamValue;
+            if((ParamValue.contains("<")&&ParamValue.contains(">"))||(ParamValue.contains("<<")&&ParamValue.contains(">>"))||(ParamValue.contains("[")&&ParamValue.contains("]"))) {
+                ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap,DBMap);
+            }
             Object Result = GetDataByType(ObjectResult.toString(), DataType);
             paramers.addParam(ParamName, Result);
         }
@@ -711,7 +718,7 @@ public class ApicasesController {
         }
         if(!exist)
         {
-            throw new Exception("当前用例参数值中的变量："+Value+"未找到对应值，请检查是否有配置对应的子条件获取此变量值");
+            throw new Exception("当前用例参数值中存在变量："+Value+" 未找到对应值，请检查是否执行前置条件，或者是否有配置变量对应的前置子条件获取此变量值");
         }
         return ObjectValue;
     }

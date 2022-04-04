@@ -467,17 +467,29 @@ public class TestPlanCaseController {
             String Paramvalue = apiCasedata.getApiparamvalue();
             String DataType = apiCasedata.getParamstype();
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
-                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
+                Object Result = Paramvalue;
+                if((Paramvalue.contains("<")&&Paramvalue.contains(">"))||(Paramvalue.contains("<<")&&Paramvalue.contains(">>"))||(Paramvalue.contains("[")&&Paramvalue.contains("]")))
+                {
+                    Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
+                }
                 Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                 ParamsMap.put(ParamName,LastObjectValue);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
-                Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
+                Object Result = Paramvalue;
+                if((Paramvalue.contains("<")&&Paramvalue.contains(">"))||(Paramvalue.contains("<<")&&Paramvalue.contains(">>"))||(Paramvalue.contains("[")&&Paramvalue.contains("]")))
+                {
+                     Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
+                }
                 HeaderMap.put(ParamName,Result);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
-                    Object Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
+                    Object Result = Paramvalue;
+                    if((Paramvalue.contains("<")&&Paramvalue.contains(">"))||(Paramvalue.contains("<<")&&Paramvalue.contains(">>"))||(Paramvalue.contains("[")&&Paramvalue.contains("]")))
+                    {
+                         Result= GetVaraibaleValue(Paramvalue,InterFaceMap,DBMap);
+                    }
                     Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                     BodyMap.put(ParamName,LastObjectValue);
                 } else {
@@ -626,7 +638,7 @@ public class TestPlanCaseController {
 
         if(!exist)
         {
-            throw new Exception("当前用例参数值中的变量："+Value+"未找到对应值，请检查是否有配置对应的子条件获取此变量值");
+            throw new Exception("当前用例参数值中存在变量："+Value+" 未找到对应值，请检查是否有配置对应变量的子条件获取此变量值");
         }
         return ObjectValue;
     }
@@ -638,7 +650,11 @@ public class TestPlanCaseController {
         for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
             String ParamName = executeplanParams.getKeyname();
             String ParamValue = executeplanParams.getKeyvalue();
-            Object Result= GetVaraibaleValue(ParamValue,InterfaceMap,DBMap);
+            Object Result= ParamValue;
+            if((ParamValue.contains("<")&&ParamValue.contains(">"))||(ParamValue.contains("<<")&&ParamValue.contains(">>"))||(ParamValue.contains("[")&&ParamValue.contains("]")))
+            {
+                 Result= GetVaraibaleValue(ParamValue,InterfaceMap,DBMap);
+            }
             HeaderMap.put(ParamName, Result);
         }
         return HeaderMap;
