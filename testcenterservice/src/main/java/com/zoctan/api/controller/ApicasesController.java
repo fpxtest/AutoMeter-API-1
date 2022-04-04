@@ -408,7 +408,7 @@ public class ApicasesController {
                     }
                 }
             }
-            if (APIRespone != "") {
+            if (!APIRespone.isEmpty()) {
                 try {
                     JSONObject jsonObject = JSON.parseObject(APIRespone);
                     for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
@@ -420,7 +420,7 @@ public class ApicasesController {
                     return ResultGenerator.genFailedResult("执行前置接口条件结果异常：" + APIRespone);
                 }
             }
-            if (DBRespone != "") {
+            if (!DBRespone.isEmpty()) {
                 try {
                     JSONObject jsonObject = JSON.parseObject(DBRespone);
                     for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {

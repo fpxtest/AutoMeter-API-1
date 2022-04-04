@@ -16,9 +16,14 @@ import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
 import com.zoctan.api.util.RadomVariables;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.entity.Condition;
 
-import javax.annotation.Resource;
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,21 +35,35 @@ import java.util.List;
 /**
  * 用例数据
  */
+@Component
 @Slf4j
-public class TestCaseHelp {
-    @Resource
+public class TestCaseHelp  {
+
+    public static TestCaseHelp tch;
+
+    @PostConstruct
+    public void init() {
+        tch = this;
+        tch.apicasesVariablesService = this.apicasesVariablesService;
+        tch.testvariablesService = this.testvariablesService;
+        tch.testvariablesValueService = this.testvariablesValueService;
+        tch.variablesService = this.variablesService;
+        tch.dbvariablesService = this.dbvariablesService;
+    }
+
+    @Autowired(required = false)
     private ApicasesVariablesService apicasesVariablesService;
 
-    @Resource
+    @Autowired(required = false)
     private TestvariablesService testvariablesService;
 
-    @Resource
+    @Autowired(required = false)
     private TestvariablesValueService testvariablesValueService;
 
-    @Resource
+    @Autowired(required = false)
     private VariablesService variablesService;
 
-    @Resource
+    @Autowired(required = false)
     private DbvariablesService dbvariablesService;
 
 
@@ -92,7 +111,7 @@ public class TestCaseHelp {
             HashMap<String, String> DBMap = DBValueMap;
 //            HashMap<String, String> ScriptMap = GetMap(scriptValueList);
 
-            List<Variables> variablesList = variablesService.listAll();
+            List<Variables> variablesList = tch.variablesService.listAll();
             HashMap<String, String> RadomMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomMap.put(va.getVariablesname(), va.getVariablestype());
@@ -220,6 +239,7 @@ public class TestCaseHelp {
         catch (Exception ex)
         {
             TestCaseHelp.log.info("GetCaseRequestData异常："+ex.getMessage());
+            throw new Exception("接口子条件用例："+apicases.getCasename()+" 准备数据异常："+ex.getMessage());
         }
         return ro;
     }
@@ -269,19 +289,19 @@ public class TestCaseHelp {
            interfacecon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
            .andCondition("batchname = '" + dispatch.getBatchname()+"'")
            .andCondition("variablestype = '"+"接口"+"'");
-           List<TestvariablesValue> interfaceValueList = testvariablesValueService.listByCondition(interfacecon);
+           List<TestvariablesValue> interfaceValueList = tch.testvariablesValueService.listByCondition(interfacecon);
 
            Condition dbcon = new Condition(TestvariablesValue.class);
            dbcon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
                    .andCondition("batchname = '" + dispatch.getBatchname()+"'")
                    .andCondition("variablestype = '"+"数据库"+"'");
-           List<TestvariablesValue> dbValueList = testvariablesValueService.listByCondition(dbcon);
+           List<TestvariablesValue> dbValueList = tch.testvariablesValueService.listByCondition(dbcon);
 
            Condition scriptcon = new Condition(TestvariablesValue.class);
            scriptcon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
                    .andCondition("batchname = '" + dispatch.getBatchname()+"'")
                    .andCondition("variablestype = '"+"脚本"+"'");
-           List<TestvariablesValue> scriptValueList = testvariablesValueService.listByCondition(scriptcon);
+           List<TestvariablesValue> scriptValueList = tch.testvariablesValueService.listByCondition(scriptcon);
 
 
            HashMap<String, String> InterfaceMap = GetMap(interfaceValueList);
@@ -289,7 +309,7 @@ public class TestCaseHelp {
            HashMap<String, String> ScriptMap = GetMap(scriptValueList);
 
 
-           List<Variables> variablesList = variablesService.listAll();
+           List<Variables> variablesList = tch.variablesService.listAll();
            HashMap<String, String> RadomMap = new HashMap<>();
            for (Variables va : variablesList) {
                RadomMap.put(va.getVariablesname(), va.getVariablestype());
@@ -442,7 +462,7 @@ public class TestCaseHelp {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Testvariables testvariables = testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Testvariables testvariables = tch.testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (testvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {
@@ -462,7 +482,7 @@ public class TestCaseHelp {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Dbvariables dbvariables = dbvariablesService.getBy("dbvariablesname", DBvariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Dbvariables dbvariables = tch.dbvariablesService.getBy("dbvariablesname", DBvariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (dbvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {
@@ -509,7 +529,7 @@ public class TestCaseHelp {
     private Object GetRadomValue(String Value) {
         Object Result = Value;
         String FunctionName = Value;
-        List<Variables> variablesList = variablesService.listAll();
+        List<Variables> variablesList = tch.variablesService.listAll();
         for (Variables variables : variablesList) {
             if (variables.getVariablesname().equalsIgnoreCase(FunctionName)) {
                 String Params = variables.getVariablecondition();
@@ -673,14 +693,14 @@ public class TestCaseHelp {
         Value = Value.substring(1);
         TestCaseHelp.log.info( "TestHttpRequestData GetVariablesDataType Value :  " + Value );
 
-        ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("variablesname",Value);// testMysqlHelp.GetCaseIdByVariablesName(Value);
+        ApicasesVariables apicasesVariables = tch.apicasesVariablesService.getBy("variablesname",Value);// testMysqlHelp.GetCaseIdByVariablesName(Value);
         if(apicasesVariables==null)
         {
             Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
             return Result;
         }
 
-        Testvariables testvariables = testvariablesService.getBy("testvariablesname",Value); //testMysqlHelp.GetVariablesDataType(Value);
+        Testvariables testvariables = tch.testvariablesService.getBy("testvariablesname",Value); //testMysqlHelp.GetVariablesDataType(Value);
         if(testvariables==null)
         {
             Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
@@ -688,7 +708,7 @@ public class TestCaseHelp {
         }
         //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
         String Caseid=apicasesVariables.getCaseid().toString();
-        TestvariablesValue testvariablesValue = testvariablesValueService.findtestvariablesvalue(Long.parseLong(PlanId),Long.parseLong(Caseid),BatchName,Value);//.fi   testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
+        TestvariablesValue testvariablesValue = tch.testvariablesValueService.findtestvariablesvalue(Long.parseLong(PlanId),Long.parseLong(Caseid),BatchName,Value);//.fi   testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
         if(testvariablesValue==null)
         {
             Result="未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值";
@@ -747,4 +767,6 @@ public class TestCaseHelp {
         }
         return result;
     }
+
+
 }

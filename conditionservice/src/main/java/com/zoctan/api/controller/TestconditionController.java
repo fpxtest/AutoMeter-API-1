@@ -395,7 +395,7 @@ public class TestconditionController {
 
         HashMap<String, String> DBVariableNameValueMap = new HashMap<>();
 
-        if (DBVariablesValue != "") {
+        if (!DBVariablesValue.isEmpty()) {
             try {
                 JSONObject jsonObject = JSON.parseObject(DBVariablesValue);
                 for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
@@ -438,7 +438,15 @@ public class TestconditionController {
                 throw new Exception("接口子条件执行异常:接口子条件未找到环境组件部署的服务器："+macdepunit.getMachinename()+" ，请检查是否存在或已被删除！");
             }
             TestCaseHelp testCaseHelp = new TestCaseHelp();
-            RequestObject requestObject = testCaseHelp.GetCaseRequestDataForDebug(DBVariableNameValueMap,VariableNameValueMap,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+            RequestObject requestObject=new RequestObject();
+            try
+            {
+                requestObject = testCaseHelp.GetCaseRequestDataForDebug(DBVariableNameValueMap,VariableNameValueMap,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.getMessage());
+            }
             TestResponeData testResponeData = testCaseHelp.request(requestObject);
             String Respone = testResponeData.getResponeContent();
             String ResponeContentType="application/json;charset=utf-8";
