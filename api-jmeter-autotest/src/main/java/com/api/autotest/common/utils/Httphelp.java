@@ -61,8 +61,9 @@ public class Httphelp {
             List<NameValuePair> list = new ArrayList<NameValuePair>();
             list.add(new BasicNameValuePair("idCard", "1234567890"));
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             //url格式编码
             UrlEncodedFormEntity uefEntity = new UrlEncodedFormEntity(list, "UTF-8");
             httpPost.setEntity(uefEntity);
@@ -130,8 +131,9 @@ public class Httphelp {
                     .setSocketTimeout(connectTimeout).build();
             String Query = Postdata;
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             HttpPost httpPost = new HttpPost(Url);
             httpPost.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
@@ -202,8 +204,9 @@ public class Httphelp {
                     .setSocketTimeout(connectTimeout).build();
             String query = PostData;
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             HttpGetWithEntity httpGetWithEntity = new HttpGetWithEntity(Url);
             HttpEntity httpEntity = new StringEntity(query, "utf-8");
             httpGetWithEntity.setEntity(httpEntity);
@@ -255,7 +258,10 @@ public class Httphelp {
                     .setSocketTimeout(connectTimeout).build();
             HttpGet httpGet = new HttpGet(url);
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             httpGet.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
@@ -313,7 +319,10 @@ public class Httphelp {
 
             HttpGet httpGet = new HttpGet(url);
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
+
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             httpGet.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
@@ -371,8 +380,9 @@ public class Httphelp {
             HttpPut httpPut = new HttpPut(url);
             httpPut.setConfig(requestConfig);
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             if (header.getParams().size() > 0) {
                 if (header.getParams().containsKey("Content-Length")) {
                     header.getParams().remove("Content-Length");
@@ -436,8 +446,9 @@ public class Httphelp {
             HttpDeleteWithBody httpDelete = new HttpDeleteWithBody(url);
             httpDelete.setConfig(requestConfig);
             CookieStore cookieStore = new BasicCookieStore();
-            httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-
+            httpClient = HttpClients.custom()
+                    .setDefaultCookieStore(cookieStore)
+                    .setDefaultRequestConfig(requestConfig).build();
             if (header.getParams().size() > 0) {
                 if (header.getParams().containsKey("Content-Length")) {
                     header.getParams().remove("Content-Length");

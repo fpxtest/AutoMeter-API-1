@@ -81,40 +81,58 @@ public class TestCore {
             if(conditionorderList.size()>0)
             {
                 for (HashMap<String, String> conditionorder:conditionorderList) {
+                    long subconditionid=Long.parseLong(conditionorder.get("subconditionid"));
                     if(conditionorder.get("subconditiontype").equals("接口"))
                     {
-                        logger.info("TestCore 开始处理用例前置条件顺序-API子条件-============：");
-                        testCondition.APICondition(ConditionID, requestObject);
-                        logger.info("TestCore 完成处理用例前置条件顺序-API子条件-============：");
+                        ArrayList<HashMap<String, String>> result= testMysqlHelp.GetApiConditionByID(subconditionid);
+                        if(result.size()>0)
+                        {
+                            logger.info("TestCore 开始处理用例前置条件顺序-API子条件-============：");
+                            testCondition.conditionapi(result.get(0),ConditionID, requestObject,Long.parseLong(requestObject.getTestplanid()));
+                            logger.info("TestCore 完成处理用例前置条件顺序-API子条件-============：");
+                        }
                     }
                     if(conditionorder.get("subconditiontype").equals("数据库"))
                     {
-                        logger.info("TestCore 开始处理用例前置条件顺序-数据库子条件-============：");
-                        testCondition.DBCondition(ConditionID, requestObject);
-                        logger.info("TestCore 完成处理用例前置条件顺序-数据库子条件-============：");
+                        ArrayList<HashMap<String, String>> result= testMysqlHelp.GetDBConditionByID(subconditionid);
+                        if(result.size()>0)
+                        {
+                            logger.info("TestCore 开始处理用例前置条件顺序-数据库子条件-============：");
+                            testCondition.conditiondb(result.get(0),ConditionID, requestObject,Long.parseLong(requestObject.getTestplanid()));
+                            logger.info("TestCore 完成处理用例前置条件顺序-数据库子条件-============：");
+                        }
                     }
                     if(conditionorder.get("subconditiontype").equals("脚本"))
                     {
-                        logger.info("TestCore 开始处理用例前置条件顺序-脚本子条件-============：");
-                        testCondition.ScriptCondition(ConditionID, requestObject);
-                        logger.info("TestCore 完成处理用例前置条件顺序-脚本子条件-============：");
+                        ArrayList<HashMap<String, String>> result= testMysqlHelp.GetScriptConditionByID(subconditionid);
+                        if(result.size()>0)
+                        {
+                            logger.info("TestCore 开始处理用例前置条件顺序-脚本子条件-============：");
+                            testCondition.conditionscript(result.get(0),ConditionID, requestObject,Long.parseLong(requestObject.getTestplanid()),Long.parseLong(requestObject.getCaseid()));
+                            logger.info("TestCore 完成处理用例前置条件顺序-脚本子条件-============：");
+                        }
                     }
                     if(conditionorder.get("subconditiontype").equals("延时"))
                     {
-                        logger.info("TestCore 开始处理用例前置条件顺序-延时子条件-============：");
-                        testCondition.DelayCondition(ConditionID, requestObject);
-                        logger.info("TestCore 完成处理用例前置条件顺序-延时子条件-============：");
+                        ArrayList<HashMap<String, String>> result= testMysqlHelp.GetDelayConditionByID(subconditionid);
+                        if(result.size()>0) {
+                            logger.info("TestCore 开始处理用例前置条件顺序-延时子条件-============：");
+                            testCondition.conditiondelay(result.get(0),ConditionID, requestObject,Long.parseLong(requestObject.getTestplanid()));
+                            logger.info("TestCore 完成处理用例前置条件顺序-延时子条件-============：");
+                        }
                     }
                 }
             }
             else
             {
+                //处理数据库条件
+                logger.info("TestCore 开始处理用例前置条件-数据库子条件-============：");
+                testCondition.DBCondition(ConditionID, requestObject);
+                logger.info("TestCore 完成处理用例前置条件-数据库条件-============：");
                 //处理接口条件
                 logger.info("TestCore 开始处理用例前置条件-API子条件-============：");
                 testCondition.APICondition(ConditionID, requestObject);
                 logger.info("TestCore 完成处理用例前置条件-API子条件-============：");
-                //处理数据库条件
-                testCondition.DBCondition(ConditionID, requestObject);
                 //处理脚本条件
                 logger.info("TestCore 开始处理用例前置条件-脚本子条件-============：");
                 testCondition.ScriptCondition(ConditionID, requestObject);
@@ -129,7 +147,7 @@ public class TestCore {
 
     // 发送http请求
     public TestResponeData request(RequestObject requestObject) throws Exception {
-        TestResponeData result = testHttp.doService(requestObject);
+        TestResponeData result = testHttp.doService(requestObject,30000);
         return result;
     }
 

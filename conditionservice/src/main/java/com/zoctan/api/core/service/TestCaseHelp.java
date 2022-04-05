@@ -803,7 +803,7 @@ public class TestCaseHelp  {
         TestResponeData result=new TestResponeData();
         TestHttp testHttp=new TestHttp();
         if (requestObject.getProtocal().equals("http")||requestObject.getProtocal().equals("https")) {
-            result = testHttp.doService(requestObject);
+            result = testHttp.doService(requestObject,30000);
         }
         return result;
     }

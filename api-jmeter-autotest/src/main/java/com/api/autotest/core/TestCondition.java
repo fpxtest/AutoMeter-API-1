@@ -35,46 +35,86 @@ public class TestCondition {
         logger = log;
     }
 
-    //处理接口条件
+
+    //接口子条件处理
+    public void conditionapi(HashMap<String, String> conditionApi,long ConditionID, RequestObject requestObject,long PlanID) throws Exception {
+        long Start = 0;
+        long End = 0;
+        long CostTime = 0;
+        String Respone = "";
+        String ConditionResultStatus = "成功";
+        RequestObject re = new RequestObject();
+        String CondionCaseID = "";
+        try {
+            CondionCaseID = conditionApi.get("caseid");
+            Start = new Date().getTime();
+            re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
+            re = testHttpRequestData.GetFuntionHttpRequestData(re);
+            End = new Date().getTime();
+            TestResponeData responeData = testHttp.doService(re,30000);
+            Respone = responeData.getResponeContent();
+
+            String ResponeContentType = "application/json;charset=utf-8";
+            List<Header> responeheaderlist = responeData.getHeaderList();
+            for (Header head : responeheaderlist) {
+                if (head.getName().equalsIgnoreCase("Content-Type")) {
+                    ResponeContentType = head.getValue();
+                }
+            }
+            requestObject.setResponecontenttype(ResponeContentType);
+            CostTime = End - Start;
+            SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+        } catch (Exception ex) {
+            ConditionResultStatus = "失败";
+            End = new Date().getTime();
+            Respone = ex.getMessage();
+            CostTime = End - Start;
+            SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+            throw new Exception("接口子条件执行异常：" + ex.getMessage());
+        }
+    }
+
+    //接口条件入口
     public void APICondition(long ConditionID, RequestObject requestObject) throws Exception {
         ArrayList<HashMap<String, String>> conditionApiList = testMysqlHelp.GetApiConditionByConditionID(ConditionID);
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         logger.info("TestCondition条件报告API子条件数量-============：" + conditionApiList.size());
         for (HashMap<String, String> conditionApi : conditionApiList) {
-            long Start = 0;
-            long End = 0;
-            long CostTime = 0;
-            String Respone = "";
-            String ConditionResultStatus = "成功";
-            RequestObject re = new RequestObject();
-            String CondionCaseID = "";
-            try {
-                CondionCaseID = conditionApi.get("caseid");
-                Start = new Date().getTime();
-                re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
-                re = testHttpRequestData.GetFuntionHttpRequestData(re);
-                End = new Date().getTime();
-                TestResponeData responeData = testHttp.doService(re);
-                Respone = responeData.getResponeContent();
-
-                String ResponeContentType = "application/json;charset=utf-8";
-                List<Header> responeheaderlist = responeData.getHeaderList();
-                for (Header head : responeheaderlist) {
-                    if (head.getName().equalsIgnoreCase("Content-Type")) {
-                        ResponeContentType = head.getValue();
-                    }
-                }
-                requestObject.setResponecontenttype(ResponeContentType);
-                CostTime = End - Start;
-                SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
-            } catch (Exception ex) {
-                ConditionResultStatus = "失败";
-                End = new Date().getTime();
-                Respone = ex.getMessage();
-                CostTime = End - Start;
-                SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
-                throw new Exception("接口子条件执行异常：" + ex.getMessage());
-            }
+            conditionapi(conditionApi,ConditionID,requestObject,PlanID);
+//            long Start = 0;
+//            long End = 0;
+//            long CostTime = 0;
+//            String Respone = "";
+//            String ConditionResultStatus = "成功";
+//            RequestObject re = new RequestObject();
+//            String CondionCaseID = "";
+//            try {
+//                CondionCaseID = conditionApi.get("caseid");
+//                Start = new Date().getTime();
+//                re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
+//                re = testHttpRequestData.GetFuntionHttpRequestData(re);
+//                End = new Date().getTime();
+//                TestResponeData responeData = testHttp.doService(re,30000);
+//                Respone = responeData.getResponeContent();
+//
+//                String ResponeContentType = "application/json;charset=utf-8";
+//                List<Header> responeheaderlist = responeData.getHeaderList();
+//                for (Header head : responeheaderlist) {
+//                    if (head.getName().equalsIgnoreCase("Content-Type")) {
+//                        ResponeContentType = head.getValue();
+//                    }
+//                }
+//                requestObject.setResponecontenttype(ResponeContentType);
+//                CostTime = End - Start;
+//                SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+//            } catch (Exception ex) {
+//                ConditionResultStatus = "失败";
+//                End = new Date().getTime();
+//                Respone = ex.getMessage();
+//                CostTime = End - Start;
+//                SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+//                throw new Exception("接口子条件执行异常：" + ex.getMessage());
+//            }
         }
     }
 
@@ -131,67 +171,125 @@ public class TestCondition {
         }
     }
 
-    //处理脚本条件
+    //处理脚本子条件
+    public void conditionscript(HashMap<String, String> conditionScript, long ConditionID, RequestObject requestObject,Long PlanID,Long CaseID) throws Exception {
+        long Start = 0;
+        long End = 0;
+        long CostTime = 0;
+        String Respone = "执行脚本成功";
+        String ConditionResultStatus = "成功";
+        try {
+            Start = new Date().getTime();
+            DnamicCompilerHelp dnamicCompilerHelp = new DnamicCompilerHelp();
+            //数据库中获取脚本
+            String JavaSource = conditionScript.get("script");
+            logger.info("TestCondition条件报告脚本子条件:-============：" + JavaSource);
+            String Source = dnamicCompilerHelp.GetCompeleteClass(JavaSource, CaseID);
+            dnamicCompilerHelp.CallDynamicScript(Source);
+            End = new Date().getTime();
+            CostTime = End - Start;
+            SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
+        } catch (Exception ex) {
+            ConditionResultStatus = "失败";
+            Respone = ex.getMessage();
+            End = new Date().getTime();
+            CostTime = End - Start;
+            SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
+            throw new Exception("脚本子条件执行异常：" + ex.getMessage());
+        }
+    }
+
+    //处理脚本条件入口
     public void ScriptCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         Long CaseID = Long.parseLong(requestObject.getCaseid());
         ArrayList<HashMap<String, String>> conditionScriptList = testMysqlHelp.GetScriptConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionScript : conditionScriptList) {
-            long Start = 0;
-            long End = 0;
-            long CostTime = 0;
-            String Respone = "执行脚本成功";
-            String ConditionResultStatus = "成功";
-            try {
-                Start = new Date().getTime();
-                DnamicCompilerHelp dnamicCompilerHelp = new DnamicCompilerHelp();
-                //数据库中获取脚本
-                String JavaSource = conditionScript.get("script");
-                logger.info("TestCondition条件报告脚本子条件:-============：" + JavaSource);
-                String Source = dnamicCompilerHelp.GetCompeleteClass(JavaSource, CaseID);
-                dnamicCompilerHelp.CallDynamicScript(Source);
-                End = new Date().getTime();
-                CostTime = End - Start;
-                SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
-            } catch (Exception ex) {
-                ConditionResultStatus = "失败";
-                Respone = ex.getMessage();
-                End = new Date().getTime();
-                CostTime = End - Start;
-                SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
-                throw new Exception("脚本子条件执行异常：" + ex.getMessage());
-            }
+            conditionscript(conditionScript,ConditionID,requestObject,PlanID,CaseID);
+//            long Start = 0;
+//            long End = 0;
+//            long CostTime = 0;
+//            String Respone = "执行脚本成功";
+//            String ConditionResultStatus = "成功";
+//            try {
+//                Start = new Date().getTime();
+//                DnamicCompilerHelp dnamicCompilerHelp = new DnamicCompilerHelp();
+//                //数据库中获取脚本
+//                String JavaSource = conditionScript.get("script");
+//                logger.info("TestCondition条件报告脚本子条件:-============：" + JavaSource);
+//                String Source = dnamicCompilerHelp.GetCompeleteClass(JavaSource, CaseID);
+//                dnamicCompilerHelp.CallDynamicScript(Source);
+//                End = new Date().getTime();
+//                CostTime = End - Start;
+//                SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
+//            } catch (Exception ex) {
+//                ConditionResultStatus = "失败";
+//                Respone = ex.getMessage();
+//                End = new Date().getTime();
+//                CostTime = End - Start;
+//                SaveSubCondition("脚本", requestObject, PlanID, ConditionID, conditionScript, Respone, ConditionResultStatus, CostTime);
+//                throw new Exception("脚本子条件执行异常：" + ex.getMessage());
+//            }
         }
     }
 
-    //处理延时条件
+
+    //延时子条件处理
+    public void conditiondelay(HashMap<String, String> conditionDelay,long ConditionID, RequestObject requestObject,Long PlanID) throws Exception {
+        long Start = 0;
+        long End = 0;
+        long CostTime = 0;
+        String Respone = "执行延时条件成功";
+        String ConditionResultStatus = "成功";
+        try {
+            Start = new Date().getTime();
+            long delaytime = Long.parseLong(conditionDelay.get("delaytime"))*1000;
+            logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + delaytime);
+            Thread.sleep(delaytime);
+            Respone = Respone + "（毫秒）:" + delaytime;
+            logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + Respone);
+            End = new Date().getTime();
+            CostTime = End - Start;
+            SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
+        } catch (Exception ex) {
+            ConditionResultStatus = "失败";
+            Respone = ex.getMessage();
+            End = new Date().getTime();
+            CostTime = End - Start;
+            SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
+            throw new Exception("延时子条件执行异常：" + ex.getMessage());
+        }
+    }
+
+    //延时子条件入口
     public void DelayCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         ArrayList<HashMap<String, String>> conditionDelayList = testMysqlHelp.GetDelayConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionDelay : conditionDelayList) {
-            long Start = 0;
-            long End = 0;
-            long CostTime = 0;
-            String Respone = "执行延时条件成功";
-            String ConditionResultStatus = "成功";
-            try {
-                Start = new Date().getTime();
-                long delaytime = Long.parseLong(conditionDelay.get("delaytime"))*1000;
-                logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + delaytime);
-                Thread.sleep(delaytime);
-                Respone = Respone + "（毫秒）:" + delaytime;
-                logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + Respone);
-                End = new Date().getTime();
-                CostTime = End - Start;
-                SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
-            } catch (Exception ex) {
-                ConditionResultStatus = "失败";
-                Respone = ex.getMessage();
-                End = new Date().getTime();
-                CostTime = End - Start;
-                SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
-                throw new Exception("延时子条件执行异常：" + ex.getMessage());
-            }
+            conditiondelay(conditionDelay,ConditionID,requestObject,PlanID);
+//            long Start = 0;
+//            long End = 0;
+//            long CostTime = 0;
+//            String Respone = "执行延时条件成功";
+//            String ConditionResultStatus = "成功";
+//            try {
+//                Start = new Date().getTime();
+//                long delaytime = Long.parseLong(conditionDelay.get("delaytime"))*1000;
+//                logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + delaytime);
+//                Thread.sleep(delaytime);
+//                Respone = Respone + "（毫秒）:" + delaytime;
+//                logger.info("TestCondition条件报告延时子条件，延时时间为（毫秒）:-============：" + Respone);
+//                End = new Date().getTime();
+//                CostTime = End - Start;
+//                SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
+//            } catch (Exception ex) {
+//                ConditionResultStatus = "失败";
+//                Respone = ex.getMessage();
+//                End = new Date().getTime();
+//                CostTime = End - Start;
+//                SaveSubCondition("延时", requestObject, PlanID, ConditionID, conditionDelay, Respone, ConditionResultStatus, CostTime);
+//                throw new Exception("延时子条件执行异常：" + ex.getMessage());
+//            }
         }
     }
 
@@ -218,69 +316,131 @@ public class TestCondition {
 
     }
 
+
+    //处理数据库子条件
+    public void conditiondb(HashMap<String, String> conditionDb,long ConditionID, RequestObject requestObject,Long PlanID) throws Exception {
+        long Start = 0;
+        long End = 0;
+        long CostTime = 0;
+        String Respone = "";
+        String ConditionResultStatus = "成功";
+        Long Assembleid = Long.parseLong(conditionDb.get("assembleid"));
+        Long DBConditionid = Long.parseLong(conditionDb.get("id"));
+        String SqlType = conditionDb.get("dbtype");
+        String DBConditionName = conditionDb.get("subconditionname");
+        try {
+            ArrayList<HashMap<String, String>> enviromentAssemblelist = testMysqlHelp.getcaseData("select * from enviroment_assemble where id=" + Assembleid);
+            if (enviromentAssemblelist.size() == 0) {
+                Respone = "未找到环境组件，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+            }
+            String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
+            Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
+            String Sql = conditionDb.get("dbcontent");
+            logger.info(logplannameandcasename + "TestCondition数据库子条件完整的sql ....." + Sql);
+            String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
+            ArrayList<HashMap<String, String>> macdepunitlist = testMysqlHelp.getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
+            if (macdepunitlist.size() == 0) {
+                Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+            }
+
+            Long MachineID = Long.parseLong(macdepunitlist.get(0).get("machineid"));
+            ArrayList<HashMap<String, String>> machinelist = testMysqlHelp.getcaseData("select * from machine where id=" + MachineID);
+            if (machinelist.size() == 0) {
+                Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+            }
+            String deployunitvisittype = macdepunitlist.get(0).get("visittype");
+            String[] ConnetcArray = ConnnectStr.split(",");
+            if (ConnetcArray.length < 4) {
+                Respone = "数据库连接字填写不规范，请按规则填写";
+                ConditionResultStatus = "失败";
+                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+            }
+            Long planid = Long.parseLong(requestObject.getTestplanid());
+            Rundb(planid, requestObject.getTestplanname(), requestObject.getBatchname(), DBConditionid, DBConditionName, macdepunitlist, machinelist, ConnetcArray, AssembleType, deployunitvisittype, Sql, SqlType);
+            Start = new Date().getTime();
+        } catch (Exception ex) {
+            ConditionResultStatus = "失败";
+            Respone = ex.getMessage();
+            throw new Exception("数据库子条件执行异常：" + ex.getMessage());
+        } finally {
+            End = new Date().getTime();
+            CostTime = End - Start;
+            //更新条件结果表
+            SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+        }
+    }
+
+    //数据库条件入口
     public void DBCondition(long ConditionID, RequestObject requestObject) throws Exception {
         Long PlanID = Long.parseLong(requestObject.getTestplanid());
         ArrayList<HashMap<String, String>> conditionDbListList = testMysqlHelp.GetDBConditionByConditionID(ConditionID);
         for (HashMap<String, String> conditionDb : conditionDbListList) {
-            long Start = 0;
-            long End = 0;
-            long CostTime = 0;
-            String Respone = "";
-            String ConditionResultStatus = "成功";
-            Long Assembleid = Long.parseLong(conditionDb.get("assembleid"));
-            Long DBConditionid = Long.parseLong(conditionDb.get("id"));
-            String SqlType = conditionDb.get("dbtype");
-            String DBConditionName = conditionDb.get("subconditionname");
-            try {
-                ArrayList<HashMap<String, String>> enviromentAssemblelist = testMysqlHelp.getcaseData("select * from enviroment_assemble where id=" + Assembleid);
-                if (enviromentAssemblelist.size() == 0) {
-                    Respone = "未找到环境组件，请检查是否存在或已被删除";
-                    ConditionResultStatus = "失败";
-                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                    break;
-                }
-                String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
-                Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
-                String Sql = conditionDb.get("dbcontent");
-                logger.info(logplannameandcasename + "TestCondition数据库子条件完整的sql ....." + Sql);
-                String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
-                ArrayList<HashMap<String, String>> macdepunitlist = testMysqlHelp.getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
-                if (macdepunitlist.size() == 0) {
-                    Respone = "未找到环境组件部署，请检查是否存在或已被删除";
-                    ConditionResultStatus = "失败";
-                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                    break;
-                }
-
-                Long MachineID = Long.parseLong(macdepunitlist.get(0).get("machineid"));
-                ArrayList<HashMap<String, String>> machinelist = testMysqlHelp.getcaseData("select * from machine where id=" + MachineID);
-                if (machinelist.size() == 0) {
-                    Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
-                    ConditionResultStatus = "失败";
-                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                    break;
-                }
-                String deployunitvisittype = macdepunitlist.get(0).get("visittype");
-                String[] ConnetcArray = ConnnectStr.split(",");
-                if (ConnetcArray.length < 4) {
-                    Respone = "数据库连接字填写不规范，请按规则填写";
-                    ConditionResultStatus = "失败";
-                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-                    break;
-                }
-                Long planid = Long.parseLong(requestObject.getTestplanid());
-                Rundb(planid, requestObject.getTestplanname(), requestObject.getBatchname(), DBConditionid, DBConditionName, macdepunitlist, machinelist, ConnetcArray, AssembleType, deployunitvisittype, Sql, SqlType);
-                Start = new Date().getTime();
-            } catch (Exception ex) {
-                ConditionResultStatus = "失败";
-                Respone = ex.getMessage();
-                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
-            } finally {
-                End = new Date().getTime();
-                CostTime = End - Start;
-                //更新条件结果表
-                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
-            }
+            conditiondb(conditionDb,ConditionID,requestObject,PlanID);
+//            long Start = 0;
+//            long End = 0;
+//            long CostTime = 0;
+//            String Respone = "";
+//            String ConditionResultStatus = "成功";
+//            Long Assembleid = Long.parseLong(conditionDb.get("assembleid"));
+//            Long DBConditionid = Long.parseLong(conditionDb.get("id"));
+//            String SqlType = conditionDb.get("dbtype");
+//            String DBConditionName = conditionDb.get("subconditionname");
+//            try {
+//                ArrayList<HashMap<String, String>> enviromentAssemblelist = testMysqlHelp.getcaseData("select * from enviroment_assemble where id=" + Assembleid);
+//                if (enviromentAssemblelist.size() == 0) {
+//                    Respone = "未找到环境组件，请检查是否存在或已被删除";
+//                    ConditionResultStatus = "失败";
+//                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+//                    break;
+//                }
+//                String AssembleType = enviromentAssemblelist.get(0).get("assembletype");
+//                Long Envid = Long.parseLong(conditionDb.get("enviromentid"));
+//                String Sql = conditionDb.get("dbcontent");
+//                logger.info(logplannameandcasename + "TestCondition数据库子条件完整的sql ....." + Sql);
+//                String ConnnectStr = enviromentAssemblelist.get(0).get("connectstr");
+//                ArrayList<HashMap<String, String>> macdepunitlist = testMysqlHelp.getcaseData("select * from macdepunit where envid=" + Envid + " and assembleid=" + Assembleid);
+//                if (macdepunitlist.size() == 0) {
+//                    Respone = "未找到环境组件部署，请检查是否存在或已被删除";
+//                    ConditionResultStatus = "失败";
+//                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+//                    break;
+//                }
+//
+//                Long MachineID = Long.parseLong(macdepunitlist.get(0).get("machineid"));
+//                ArrayList<HashMap<String, String>> machinelist = testMysqlHelp.getcaseData("select * from machine where id=" + MachineID);
+//                if (machinelist.size() == 0) {
+//                    Respone = "未找到环境组件部署的服务器，请检查是否存在或已被删除";
+//                    ConditionResultStatus = "失败";
+//                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+//                    break;
+//                }
+//                String deployunitvisittype = macdepunitlist.get(0).get("visittype");
+//                String[] ConnetcArray = ConnnectStr.split(",");
+//                if (ConnetcArray.length < 4) {
+//                    Respone = "数据库连接字填写不规范，请按规则填写";
+//                    ConditionResultStatus = "失败";
+//                    SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+//                    break;
+//                }
+//                Long planid = Long.parseLong(requestObject.getTestplanid());
+//                Rundb(planid, requestObject.getTestplanname(), requestObject.getBatchname(), DBConditionid, DBConditionName, macdepunitlist, machinelist, ConnetcArray, AssembleType, deployunitvisittype, Sql, SqlType);
+//                Start = new Date().getTime();
+//            } catch (Exception ex) {
+//                ConditionResultStatus = "失败";
+//                Respone = ex.getMessage();
+//                throw new Exception("数据库子条件执行异常：" + ex.getMessage());
+//            } finally {
+//                End = new Date().getTime();
+//                CostTime = End - Start;
+//                //更新条件结果表
+//                SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
+//            }
         }
     }
 

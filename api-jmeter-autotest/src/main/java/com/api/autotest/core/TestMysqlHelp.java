@@ -235,11 +235,37 @@ public class TestMysqlHelp {
         return result;
     }
 
+    //获取接口条件
+    public ArrayList<HashMap<String, String>> GetApiConditionByID(Long ID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        try {
+            String sql = "select * from condition_api where conditionid=" + ID;
+            logger.info(logplannameandcasename + "获取数据库 获取接口条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 获取接口条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
     //获取脚本条件
     public ArrayList<HashMap<String, String>> GetScriptConditionByConditionID(Long ConditionID) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
             String sql = "select * from condition_script where conditionid=" + ConditionID;
+            logger.info(logplannameandcasename + "获取数据库 获取脚本条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 获取脚本条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //获取脚本条件
+    public ArrayList<HashMap<String, String>> GetScriptConditionByID(Long ID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        try {
+            String sql = "select * from condition_script where conditionid=" + ID;
             logger.info(logplannameandcasename + "获取数据库 获取脚本条件 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
@@ -261,11 +287,37 @@ public class TestMysqlHelp {
         return result;
     }
 
+    //获取延时条件
+    public ArrayList<HashMap<String, String>> GetDelayConditionByID(Long ID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        try {
+            String sql = "select * from condition_delay where conditionid=" + ID;
+            logger.info(logplannameandcasename + "获取数据库 获取延时条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 获取延时条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
     //获取数据库条件
     public ArrayList<HashMap<String, String>> GetDBConditionByConditionID(Long ConditionID) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
             String sql = "select * from condition_db where conditionid=" + ConditionID;
+            logger.info(logplannameandcasename + "获取数据库 获取数据库条件 result sql is...........: " + sql);
+            result = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 获取数据库条件异常...........: " + e.getMessage());
+        }
+        return result;
+    }
+
+    //获取数据库条件
+    public ArrayList<HashMap<String, String>> GetDBConditionByID(Long ID) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
+        try {
+            String sql = "select * from condition_db where conditionid=" + ID;
             logger.info(logplannameandcasename + "获取数据库 获取数据库条件 result sql is...........: " + sql);
             result = MysqlConnectionUtils.query(sql);
         } catch (Exception e) {
