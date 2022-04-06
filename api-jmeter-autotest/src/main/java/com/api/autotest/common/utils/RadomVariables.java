@@ -106,22 +106,5 @@ public class RadomVariables {
     }
 
     public static void main(String[] args) {
-
-
-        String value="aaaa";
-
-        if((value.contains("<")&&value.contains(">"))||(value.contains("<<")&&value.contains(">>"))||(value.contains("[")&&value.contains("]")))
-        {
-            System.out.println(value);
-
-        }
-        else
-        {
-            System.out.println("no");
-
-        }
-
-
-
     }
 }

@@ -16,6 +16,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -32,6 +33,9 @@ import java.util.*;
 */
 @Slf4j
 public class Httphelp {
+
+
+
     /**
      * post方法
      *
@@ -78,7 +82,7 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
 
             Httphelp.log.info("..................Post请求地址 :  " + url);
@@ -147,7 +151,7 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (Protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
             Httphelp.log.info("Post PostWithBody..................Post请求地址 :  " + Url);
             for (Header header1 : httpPost.getAllHeaders()) {
@@ -220,7 +224,8 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (Protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                //httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
             Httphelp.log.info("Httphelp..................doGetWithBody请求地址 :  " + Url);
             for (Header header1 : httpGetWithEntity.getAllHeaders()) {
@@ -259,7 +264,8 @@ public class Httphelp {
             CookieStore cookieStore = new BasicCookieStore();
             httpClient = HttpClients.custom()
                     .setDefaultCookieStore(cookieStore)
-                    .setDefaultRequestConfig(requestConfig).build();            httpGet.setConfig(requestConfig);
+                    .setDefaultRequestConfig(requestConfig).build();
+            httpGet.setConfig(requestConfig);
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
@@ -267,7 +273,7 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
 
             Httphelp.log.info("Httphelp..................GetWithNoParams请求地址 :  " + url);
@@ -326,7 +332,7 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
 
             Httphelp.log.info("Httphelp..................Get请求地址 :  " + url);
@@ -392,7 +398,7 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
 
             Httphelp.log.info("Httphelp..................Put请求地址 :  " + url);
@@ -458,7 +464,7 @@ public class Httphelp {
                 httpClient = HttpClients.createDefault();
             }
             if (protocal.equalsIgnoreCase("https")) {
-                httpClient = new SSLClient();
+                httpClient=SSLClient.createSSLClientDefault(cookieStore);
             }
 
             Httphelp.log.info("Httphelp..................Delete请求地址 :  " + url);
@@ -662,7 +668,12 @@ public class Httphelp {
     }
 
     public static void main(String[] args) {
-
+        HttpHeader header = new HttpHeader();
+        try {
+            GetWithBody("https","https://www.baidu.com","test",header,10000);
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
     }
 
 }
