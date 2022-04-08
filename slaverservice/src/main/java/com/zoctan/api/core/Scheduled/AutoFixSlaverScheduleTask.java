@@ -13,9 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.net.SocketException;
+import java.util.*;
 
 /**
  * Created by fanseasn on 2020/11/21.
@@ -55,7 +54,9 @@ public class AutoFixSlaverScheduleTask {
             if (lock) {
                 //TODO 执行任务结束后需要释放锁
                 try {
-                    String MacAddress=getMacByIP(ip);
+//                    String MacAddress=getMacByIP(ip);
+                    List<String>list= getMACAddress();
+                    String MacAddress=list.get(0);
                     AutoFixSlaverScheduleTask.log.info("自动修复Slaver更新MacAddress为======================="+MacAddress);
                     List<Slaver> slaverList= slaverMapper.findslaverbymac(MacAddress);
                     if(slaverList.size()>0)
@@ -115,5 +116,29 @@ public class AutoFixSlaverScheduleTask {
             sb.append(hexString.length() == 1 ? "0" + hexString : hexString);
         }
         return sb.toString().toUpperCase();
+    }
+
+    public static List<String> getMACAddress() throws SocketException {
+        Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+        List<String> list = new ArrayList<>();
+        while (nis.hasMoreElements()) {
+            NetworkInterface ni = nis.nextElement();
+            if (ni != null && ni.isUp()) {
+                byte[] bytes = ni.getHardwareAddress();
+                if (bytes != null && bytes.length == 6) {
+                    StringBuilder sb = new StringBuilder();
+                    for (byte b : bytes) {
+                        //与11110000作按位与运算以便读取当前字节高4位
+                        sb.append(Integer.toHexString((b & 240) >> 4));
+                        //与00001111作按位与运算以便读取当前字节低4位
+                        sb.append(Integer.toHexString(b & 15));
+                        sb.append("-");
+                    }
+                    sb.deleteCharAt(sb.length() - 1);
+                    list.add(sb.toString().toUpperCase());
+                }
+            }
+        }
+        return list;
     }
 }

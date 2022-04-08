@@ -1,5 +1,6 @@
 package com.zoctan.api.service.impl;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.SlaverMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -40,7 +44,9 @@ public class InitSlaver {
             String ip = address.getHostAddress();
             String MacAddredss = "";
             try {
-                MacAddredss = getMacByIP(ip);
+                //MacAddredss = getMacByIP(ip);
+                List<String>list= getMACAddress();
+                MacAddredss=list.get(0);
             } catch (Exception ex) {
                 InitSlaver.log.info("启动注册slaver获取mac地址失败......................................................." + ex.getMessage());
             }
@@ -94,5 +100,41 @@ public class InitSlaver {
         }
         return sb.toString().toUpperCase();
     }
+
+
+    public static List<String> getMACAddress() throws SocketException {
+        Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+        List<String> list = new ArrayList<>();
+        while (nis.hasMoreElements()) {
+            NetworkInterface ni = nis.nextElement();
+            if (ni != null && ni.isUp()) {
+                byte[] bytes = ni.getHardwareAddress();
+                if (bytes != null && bytes.length == 6) {
+                    StringBuilder sb = new StringBuilder();
+                    for (byte b : bytes) {
+                        //与11110000作按位与运算以便读取当前字节高4位
+                        sb.append(Integer.toHexString((b & 240) >> 4));
+                        //与00001111作按位与运算以便读取当前字节低4位
+                        sb.append(Integer.toHexString(b & 15));
+                        sb.append("-");
+                    }
+                    sb.deleteCharAt(sb.length() - 1);
+                    list.add(sb.toString().toUpperCase());
+                }
+            }
+        }
+        return list;
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            List<String>list= getMACAddress();
+            System.out.println(list);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
