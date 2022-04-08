@@ -15,6 +15,7 @@ public interface TestconditionService extends Service<Testcondition> {
     List<Testcondition> findtestconditionWithName(final Map<String, Object> params);
 
     void updateTestcondition(Testcondition params);
+    void updatecasename(long caseid,String objecttype ,String newcasename);
 
     int ifexist(Condition condition);
 

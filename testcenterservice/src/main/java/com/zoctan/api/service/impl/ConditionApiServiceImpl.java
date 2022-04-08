@@ -34,6 +34,11 @@ private ConditionApiMapper conditionApiMapper;
     }
 
     @Override
+    public void updatecasename(long caseid, String newcasename) {
+        conditionApiMapper.updatecasename(caseid, newcasename);
+    }
+
+    @Override
     public void deletesubconditionbyconid(Long conditionid) {
         conditionApiMapper.deletesubconditionbyconid(conditionid);
     }

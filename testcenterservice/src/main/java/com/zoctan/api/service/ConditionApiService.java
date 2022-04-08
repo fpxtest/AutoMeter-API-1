@@ -16,6 +16,7 @@ public interface ConditionApiService extends Service<ConditionApi> {
     List<ConditionApi> findtestconditionapiWithName(final Map<String, Object> params);
 
     void updateTestconditionapi(ConditionApi params);
+    void updatecasename(long caseid ,String newcasename);
 
     void deletesubconditionbyconid(Long conditionid);
 

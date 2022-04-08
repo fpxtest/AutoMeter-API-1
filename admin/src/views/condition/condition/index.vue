@@ -115,6 +115,7 @@
           <el-select v-model="tmpcondition.objecttype" placeholder="目标类型" style="width:100%" @change="targetChanged($event)">
             <el-option label="测试用例" value="测试用例"/>
             <el-option label="测试集合" value="测试集合"></el-option>
+            <el-option label="调试用例" value="调试用例"></el-option>
           </el-select>
         </el-form-item>
 
@@ -386,12 +387,17 @@
           this.testcasevisible = false
           this.tmpcondition.objectid = ''
           this.tmpcondition.objectname = ''
+          this.tmpcondition.apiid = 0
+          this.tmpcondition.deployunitid = 0
           this.getallexplan()
-          // getallexplan().then(response => {
-          //   this.execplanList = response.data
-          // }).catch(res => {
-          //   this.$message.error('加载测试集合列表失败')
-          // })
+        }
+        if (e === '调试用例') {
+          this.executeplanVisible = false
+          this.testcasevisible = false
+          this.tmpcondition.objectid = 0
+          this.tmpcondition.objectname = '调试用例'
+          this.tmpcondition.apiid = 0
+          this.tmpcondition.deployunitid = 0
         }
         if (e === '测试用例') {
           this.executeplanVisible = false

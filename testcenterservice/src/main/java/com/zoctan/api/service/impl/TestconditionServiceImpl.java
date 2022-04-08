@@ -33,6 +33,11 @@ private TestconditionMapper testconditionMapper;
     }
 
     @Override
+    public void updatecasename(long caseid, String objecttype, String newcasename) {
+        testconditionMapper.updatecasename(caseid, objecttype, newcasename);
+    }
+
+    @Override
     public int ifexist(Condition con) {
         return countByCondition(con);
     }

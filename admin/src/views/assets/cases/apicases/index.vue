@@ -23,15 +23,31 @@
           <el-button
             type="primary"
             size="mini"
-            icon="el-icon-plus"
             v-if="hasPermission('apicases:add')"
             @click.native.prevent="showCopyapicasesDialog"
           >复制用例
           </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            v-if="hasPermission('apicases:add')"
+            @click.native.prevent="showAddapicasesconditionnotexistDialog"
+          >调试前置条件
+          </el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            v-if="hasPermission('apicases:add')"
+            @click.native.prevent="showdeleteapicasesconditionnotexistDialog"
+          >取消调试前置
+          </el-button>
         </el-form-item>
-        <span v-if="hasPermission('apicases:search')">
+        </el-form>
+      <el-form :inline="true">
+        <span v-if="hasPermission('apicases:search')" >
           <el-form-item>
-            <el-select v-model="search.deployunitname" placeholder="发布单元" @change="deployunitselectChanged($event)">
+            <el-select v-model="search.deployunitname" placeholder="发布单元" clearable @change="deployunitselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname"/>
@@ -40,7 +56,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-select v-model="search.apiname" placeholder="api名" @change="searchapiselectChanged($event)">
+            <el-select v-model="search.apiname" placeholder="api名" clearable @change="searchapiselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(api, index) in apiList" :key="index">
                 <el-option :label="api.apiname" :value="api.apiname"/>
@@ -49,7 +65,7 @@
           </el-form-item>
 
           <el-form-item >
-          <el-select v-model="search.casetype" placeholder="用例类型">
+          <el-select v-model="search.casetype" placeholder="用例类型" clearable>
             <el-option label="请选择" value />
             <el-option label="功能" value="功能"></el-option>
             <el-option label="性能" value="性能"></el-option>
@@ -57,7 +73,7 @@
          </el-form-item>
 
           <el-form-item>
-            <el-input clearable v-model="search.casename" @keyup.enter.native="searchBy" placeholder="用例" style="width:150px">
+            <el-input clearable v-model="search.casename" clearable @keyup.enter.native="searchBy" placeholder="用例" style="width:150px">
             </el-input>
           </el-form-item>
 
@@ -803,6 +819,141 @@
 
       </el-form>
     </el-dialog>
+
+    <el-dialog title="添加调试前置条件用例" :visible.sync="casedebugconditionnotexistdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchnotexistcase" ref="searchnotexistcase" >
+
+          <el-form-item label="前置调试父条件:"  prop="conditionname" required>
+            <el-select v-model="searchnotexistcase.conditionname" placeholder="前置父条件" @change="notexistconditionnameselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(testcase, index) in conditionList" :key="index">
+                <el-option :label="testcase.conditionname" :value="testcase.conditionname" />
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="发布单元:" prop="deployunitname" required>
+            <el-select v-model="searchnotexistcase.deployunitname" placeholder="发布单元" @change="notexistdeployunitnameselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(depname, index) in deployunitList" :key="index">
+                <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
+              </div>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchnotexistcaseBy" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+        </el-form>
+
+      </div>
+      <el-table
+        ref="caseTable"
+        :data="apicasesnotexistList"
+        :key="casenotexistKey"
+        @row-click="casenotexisthandleClickTableRow"
+        @selection-change="casenotexisthandleSelectionChange"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="casenotexistgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column type="selection" prop="status" width="50"/>
+        <el-table-column label="用例名" align="center" prop="casename" width="350"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+      </el-table>
+      <el-pagination
+        @size-change="casenotexisthandleSizeChange"
+        @current-change="casenotexisthandleCurrentChange"
+        :current-page="searchnotexistcase.page"
+        :page-size="searchnotexistcase.size"
+        :total="casenotexisttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="casedebugconditionnotexistdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="adddebugconditiontestcase"
+        >添加前置</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="取消调试前置条件用例" :visible.sync="casedebugconditionexistdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchexistcase" ref="searchexistcase" >
+
+          <el-form-item label="前置调试父条件:"  prop="conditionname" required>
+            <el-select v-model="searchexistcase.conditionname" placeholder="前置父条件" @change="existconditionnameselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(testcase, index) in conditionList" :key="index">
+                <el-option :label="testcase.conditionname" :value="testcase.conditionname" />
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="发布单元:" prop="deployunitname" required>
+            <el-select v-model="searchexistcase.deployunitname" placeholder="发布单元" @change="existdeployunitnameselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(depname, index) in deployunitList" :key="index">
+                <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
+              </div>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchexistcaseBy" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+        </el-form>
+
+      </div>
+      <el-table
+        ref="caseTable"
+        :data="apicasesexistList"
+        :key="caseexistKey"
+        @row-click="caseexisthandleClickTableRow"
+        @selection-change="caseexisthandleSelectionChange"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="caseexistgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column type="selection" prop="status" width="50"/>
+        <el-table-column label="用例名" align="center" prop="casename" width="350"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+      </el-table>
+      <el-pagination
+        @size-change="caseexisthandleSizeChange"
+        @current-change="caseexisthandleCurrentChange"
+        :current-page="searchexistcase.page"
+        :page-size="searchexistcase.size"
+        :total="caseexisttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="casedebugconditionexistdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="delatedebugconditiontestcase"
+        >取消前置</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -824,6 +975,8 @@
   import { unix2CurrentTime } from '@/utils'
   import { addapicasesassert, getassertbycaseid as getassertbycaseid, searchassert as searchassert, removeapicasesassert, updateapicasesassert } from '@/api/assets/apicasesassert'
   import { mapGetters } from 'vuex'
+  import { searchnotexist, searchexist, addcasesdebugcondition, delatedebugconditiontestcase } from '@/api/assets/apicasesdebugcondition'
+  import { getalltestconditionbytype } from '@/api/condition/condition'
 
   export default {
     filters: {
@@ -845,6 +998,8 @@
         checked: 'false',
         activeName: 'zero',
         itemKey: null,
+        casenotexistKey: null,
+        caseexistKey: null,
         assertitemKey: null,
         tmpasserttype: null,
         tmpprotocal: null,
@@ -854,8 +1009,14 @@
         tmpdeployunitid: null,
         tmpcasetype: null,
         tmpcasename: null,
+        tmpnotexistdeployunitid: null,
+        tmpexistdeployunitid: null,
+        tmpnotexistconditionid: null,
+        tmpexistconditionid: null,
         paraList: [], // paraList参数值列表
         paravaluemap: [], // 参数值map
+        notexistcasemultipleSelection: [], // 查询调试用例未添加条件表格被选中的内容
+        existcasemultipleSelection: [], // 查询调试用例已添加条件表格被选中的内容
         multipleSelection: [], // 用例表格被选中的内容
         apiList: [], // api列表
         enviromentnameList: [], // 环境列表
@@ -868,6 +1029,9 @@
         headerList: [], // Header列表
         requestHeadList: [], // Header列表
         requestParamsList: [], // Params列表
+        conditionList: [], // 条件列表
+        apicasesnotexistList: [], // 未添加条件调试用例列表
+        apicasesexistList: [], // 已添加条件调试用例列表
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
         JmeterClassVisible: false, // JmeterClassVisible显示
@@ -878,12 +1042,16 @@
         TestdialogFormVisible: false,
         HeaderandParamsVisible: false,
         casedataialogFormVisible: false,
+        casedebugconditionnotexistdialogFormVisible: false, // 还未添加前置条件的用例
+        casedebugconditionexistdialogFormVisible: false, // 已经存在前置条件的用例
         BodyVisible: false,
         BodyParamDataVisible: false,
         BodyDataVisible: false,
         caseindex: '',
         total: 0, // 数据总数
         asserttotal: 0, // 数据总数
+        casenotexisttotal: 0, // 未添加条件用例总数
+        caseexisttotal: 0, // 已添加条件用例总数
         apiSearchQuery: {
           deployunitname: '', // 发布单元名
           apiname: '' // api名
@@ -1024,6 +1192,25 @@
           size: 10,
           asserttype: null,
           caseid: null
+        },
+        searchnotexistcase: {
+          page: 1,
+          size: 10,
+          conditionid: null,
+          conditionname: null,
+          deployunitid: null,
+          deployunitname: null
+        },
+        searchexistcase: {
+          page: 1,
+          size: 10,
+          conditionid: null,
+          conditionname: null,
+          deployunitid: null,
+          deployunitname: null
+        },
+        tmpconditionquery: {
+          objecttype: ''
         }
       }
     },
@@ -1032,6 +1219,7 @@
       this.getenviromentallList()
       this.getapicasesList()
       this.getdepunitLists()
+      this.getalltestconditionbytype()
     },
 
     computed: {
@@ -1908,6 +2096,229 @@
           }
         }
         return true
+      },
+      showAddapicasesconditionnotexistDialog() {
+        // 显示新增对话框
+        this.casedebugconditionnotexistdialogFormVisible = true
+        this.casenotexisttotal = 0
+        this.apicasesnotexistList = ''
+        this.searchnotexistcase.conditionname = ''
+        this.searchnotexistcase.deployunitname = ''
+      },
+
+      showdeleteapicasesconditionnotexistDialog() {
+        // 显示取消对话框
+        this.casedebugconditionexistdialogFormVisible = true
+        this.caseexisttotal = 0
+        this.apicasesexistList = ''
+        this.searchexistcase.conditionname = ''
+        this.searchexistcase.deployunitname = ''
+      },
+      casenotexisthandleClickTableRow(row, event, column) {
+        console.log(row)
+      },
+
+      casenotexisthandleSelectionChange(rows) {
+        this.notexistcasemultipleSelection = rows
+      },
+
+      caseexisthandleClickTableRow(row, event, column) {
+        console.log(row)
+      },
+
+      caseexisthandleSelectionChange(rows) {
+        this.existcasemultipleSelection = rows
+      },
+      /**
+       * 装载测试集合的用例
+       */
+      adddebugconditiontestcase() {
+        this.testcaseList = []
+        if (this.notexistcasemultipleSelection.length === 0) {
+          this.$message.error('请选择添加条件的用例')
+        } else {
+          for (let i = 0; i < this.notexistcasemultipleSelection.length; i++) {
+            this.testcaseList.push({
+              'conditionid': this.searchnotexistcase.conditionid,
+              'deployunitid': this.searchnotexistcase.deployunitid,
+              'conditionname': this.searchnotexistcase.conditionname,
+              'deployunitname': this.searchnotexistcase.deployunitname,
+              'casename': this.notexistcasemultipleSelection[i].casename,
+              'caseid': this.notexistcasemultipleSelection[i].id,
+              'creator': this.name
+            })
+          }
+          addcasesdebugcondition(this.testcaseList).then(() => {
+            this.getcasenotexistconditionList()
+            this.$message.success('添加成功')
+          }).catch(res => {
+            this.$message.error('添加失败')
+          })
+        }
+      },
+
+      delatedebugconditiontestcase() {
+        this.testcaseList = []
+        if (this.existcasemultipleSelection.length === 0) {
+          this.$message.error('请选择添加条件的用例')
+        } else {
+          for (let i = 0; i < this.existcasemultipleSelection.length; i++) {
+            this.testcaseList.push({
+              'conditionid': this.searchexistcase.conditionid,
+              'deployunitid': this.searchexistcase.deployunitid,
+              'conditionname': this.searchexistcase.conditionname,
+              'deployunitname': this.searchexistcase.deployunitname,
+              'casename': this.existcasemultipleSelection[i].casename,
+              'caseid': this.existcasemultipleSelection[i].caseid,
+              'creator': this.name
+            })
+          }
+          delatedebugconditiontestcase(this.testcaseList).then(() => {
+            this.getcaseexistconditionList()
+            this.$message.success('取消成功')
+          }).catch(res => {
+            this.$message.error('取消失败')
+          })
+        }
+      },
+
+      getalltestconditionbytype() {
+        this.tmpconditionquery.objecttype = '调试用例'
+        getalltestconditionbytype(this.tmpconditionquery).then(response => {
+          this.conditionList = response.data
+          this.casenotexisttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('加载条件列表失败')
+        })
+      },
+
+      notexistconditionnameselectChanged(e) {
+        for (let i = 0; i < this.conditionList.length; i++) {
+          if (this.conditionList[i].conditionname === e) {
+            this.searchnotexistcase.conditionid = this.conditionList[i].id
+          }
+        }
+      },
+      existconditionnameselectChanged(e) {
+        for (let i = 0; i < this.conditionList.length; i++) {
+          if (this.conditionList[i].conditionname === e) {
+            this.searchexistcase.conditionid = this.conditionList[i].id
+          }
+        }
+      },
+
+      notexistdeployunitnameselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.searchnotexistcase.deployunitid = this.deployunitList[i].id
+          }
+        }
+      },
+      existdeployunitnameselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.searchexistcase.deployunitid = this.deployunitList[i].id
+          }
+        }
+      },
+
+      getcasenotexistconditionList() {
+        this.searchnotexistcase.conditionid = this.tmpnotexistconditionid
+        this.searchnotexistcase.deployunitid = this.tmpnotexistdeployunitid
+        searchnotexist(this.searchnotexistcase).then(response => {
+          this.apicasesnotexistList = response.data.list
+          this.casenotexisttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('获取未添加条件用例失败')
+        })
+      },
+
+      searchnotexistcaseBy() {
+        this.searchnotexistcase.page = 1
+        console.log(this.searchnotexistcase)
+        this.$refs.searchnotexistcase.validate(valid => {
+          if (valid) {
+            searchnotexist(this.searchnotexistcase).then(response => {
+              this.casenotexistKey = Math.random()
+              this.apicasesnotexistList = response.data.list
+              this.casenotexisttotal = response.data.total
+            }).catch(res => {
+              this.$message.error('获取未添加条件用例失败')
+            })
+            this.tmpnotexistdeployunitid = this.searchnotexistcase.deployunitid
+            this.tmpnotexistconditionid = this.searchnotexistcase.conditionid
+          }
+        })
+      },
+
+      /**
+       * 改变每页数量
+       * @param size 页大小
+       */
+      casenotexisthandleSizeChange(size) {
+        this.searchnotexistcase.page = 1
+        this.searchnotexistcase.search.size = size
+        this.getcasenotexistconditionList()
+      },
+
+      caseexisthandleSizeChange(size) {
+        this.searchexistcase.page = 1
+        this.searchexistcase.search.size = size
+        this.getcaseexistconditionList()
+      },
+      caseexisthandleCurrentChange(page) {
+        this.searchexistcase.page = page
+        this.getcaseexistconditionList()
+      },
+      /**
+       * 改变页码
+       * @param page 页号
+       */
+      casenotexisthandleCurrentChange(page) {
+        this.searchnotexistcase.page = page
+        this.getcasenotexistconditionList()
+      },
+      /**
+       * 表格序号
+       * 可参考自定义表格序号
+       * http://element-cn.eleme.io/#/zh-CN/component/table#zi-ding-yi-suo-yin
+       * @param index 数据下标
+       * @returns 表格序号
+       */
+      caseexistgetIndex(index) {
+        return (this.searchexistcase.page - 1) * this.searchexistcase.size + index + 1
+      },
+
+      casenotexistgetIndex(index) {
+        return (this.searchnotexistcase.page - 1) * this.searchnotexistcase.size + index + 1
+      },
+
+      getcaseexistconditionList() {
+        this.searchexistcase.conditionid = this.tmpexistconditionid
+        this.searchexistcase.deployunitid = this.tmpexistdeployunitid
+        searchexist(this.searchexistcase).then(response => {
+          this.apicasesexistList = response.data.list
+          this.caseexisttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('获取未添加条件用例失败')
+        })
+      },
+
+      searchexistcaseBy() {
+        this.searchexistcase.page = 1
+        console.log(this.searchexistcase)
+        this.$refs.searchexistcase.validate(valid => {
+          if (valid) {
+            searchexist(this.searchexistcase).then(response => {
+              this.apicasesexistList = response.data.list
+              this.caseexisttotal = response.data.total
+            }).catch(res => {
+              this.$message.error('获取未添加条件用例失败')
+            })
+            this.tmpexistdeployunitid = this.searchexistcase.deployunitid
+            this.tmpexistconditionid = this.searchexistcase.conditionid
+          }
+        })
       }
     }
   }

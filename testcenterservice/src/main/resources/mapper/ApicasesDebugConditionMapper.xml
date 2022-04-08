@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ApicasesDebugConditionMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ApicasesDebugCondition">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="caseid" jdbcType="BIGINT" property="caseid" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
+    <result column="conditionid" jdbcType="BIGINT" property="conditionid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="finddebugcondition" resultMap="BaseResultMap">
+    SELECT b.casename,a.*
+    FROM apicases_debug_condition a inner join apicases b on a.caseid=b.id
+    where a.deployunitid=#{deployunitid} and a.conditionid =#{conditionid}
+  </select>
+
+  <insert id="saveconditionscase">
+    INSERT INTO apicases_debug_condition (deployunitid,deployunitname,caseid, casename,conditionname,conditionid,create_time,lastmodify_time,creator)
+    VALUES
+    <foreach collection="casedataList" item="item" index="index" separator=",">
+      (#{item.deployunitid}, #{item.deployunitname}, #{item.caseid}, #{item.casename}, #{item.conditionname}, #{item.conditionid},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), #{item.creator})
+    </foreach>
+  </insert>
+
+  <delete id="deletacases">
+    delete  from apicases_debug_condition  where
+    <foreach collection="casedataList" item="item" index="index" separator="or">
+      (deployunitid=#{item.deployunitid} and conditionid =#{item.conditionid}  and caseid=#{item.caseid})
+    </foreach>
+  </delete>
+
+  <select id="findcasebydeployid" resultMap="BaseResultMap">
+    select a.* from apicases a  WHERE a.deployunitid  =#{deployunitid}  and a.id
+      not in(select caseid from apicases_debug_condition   WHERE conditionid=#{conditionid})
+  </select>
+
+  <select id="findcasebyconditionidandcaseid" resultType="java.lang.Integer">
+    select COUNT(*) from apicases_debug_condition a where a.conditionid = #{conditionid} and a.caseid = #{caseid}
+  </select>
+
+</mapper>

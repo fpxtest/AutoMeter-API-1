@@ -39,4 +39,9 @@
   <delete id="deletesubconditionbyconid">
     DELETE from condition_api where conditionid = #{conditionid}
   </delete>
+
+  <update id="updatecasename" >
+    update condition_api set  casename = #{casename}
+    where caseid = #{caseid};
+  </update>
 </mapper>

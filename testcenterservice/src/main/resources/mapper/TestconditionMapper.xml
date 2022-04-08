@@ -47,4 +47,10 @@
   <select id="GetConditionByPlanIDAndConditionType" resultMap="BaseResultMap">
     SELECT * FROM testcondition where objectid = #{objectid} and conditiontype=#{conditiontype} and objecttype = #{objecttype}
   </select>
+
+
+  <update id="updatecasename" >
+    update testcondition set  objectname = #{objectname}
+    where objectid = #{objectid} and objecttype=#{objecttype};
+  </update>
 </mapper>

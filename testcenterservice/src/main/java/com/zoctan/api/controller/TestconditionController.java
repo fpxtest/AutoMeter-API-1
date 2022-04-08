@@ -36,7 +36,7 @@ public class TestconditionController {
     public Result add(@RequestBody Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
         con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
-                .andCondition("objectname = '" + testcondition.getObjectname() + "'")
+                .andCondition("objectid = " + testcondition.getObjectid() )
                 .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
         if(testconditionService.ifexist(con)>0)
         {
@@ -86,7 +86,7 @@ public class TestconditionController {
     public Result updateDeploy(@RequestBody final Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
         con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
-                .andCondition("objectname = '" + testcondition.getObjectname() + "'")
+                .andCondition("objectid = " + testcondition.getObjectid() )
                 .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'")
                 .andCondition("id <> " + testcondition.getId());
         if(testconditionService.ifexist(con)>0)

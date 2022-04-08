@@ -114,7 +114,7 @@ public class ExecuteplanTestcaseController {
             System.out.println("外循环casename...................: "+ac.getCasename());
             ApicasewithStatu et = null;
             for (int i = 0; i < plancaselist.size(); i++) {
-                if (plancaselist.get(i).getTestcaseid() == ac.getId()) {
+                if (plancaselist.get(i).getTestcaseid().equals(ac.getId())) {
                     System.out.println("caseid...................: "+plancaselist.get(i).getTestcaseid());
                     et = new ApicasewithStatu();
                     et.setApiname(ac.getApiname());
