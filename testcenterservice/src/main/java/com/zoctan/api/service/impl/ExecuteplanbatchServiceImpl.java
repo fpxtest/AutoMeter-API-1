@@ -42,4 +42,9 @@ private ExecuteplanbatchMapper executeplanbatchMapper;
         return executeplanbatchMapper.findexplanbatchWithName(params);
     }
 
+    @Override
+    public List<Executeplanbatch> getrecentbatchbyid(Long executeplanid) {
+        return executeplanbatchMapper.getrecentbatchbyid(executeplanid);
+    }
+
 }

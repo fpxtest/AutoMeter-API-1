@@ -43,4 +43,10 @@
     SELECT c.executeplanname,b.casename,a.batchname,a.runtime,a.samples,a.errorcount,a.errorrate,a.average,a.min,a.max,a.median,a.nzpct,a.nfpct,a.nnpct,a.tps,a.receivekbsec,a.sendkbsec,a.create_time
     FROM apicases_performancestatistics a join apicases b join executeplan c  on a.caseid=b.id and a.testplanid=c.id     order by a.create_time  DESC
   </select>
+
+
+  <select id="getresultbyidandname" resultMap="BaseResultMap">
+    SELECT b.executeplanname as executeplanname ,a.*
+    FROM apicases_performancestatistics a inner join executeplan b on a.testplanid =b.id where a.testplanid=#{testplanid} and a.batchname =#{batchname} order by a.create_time desc limit 3
+  </select>
 </mapper>

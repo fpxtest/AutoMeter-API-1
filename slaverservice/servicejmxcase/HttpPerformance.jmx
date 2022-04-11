@@ -162,6 +162,11 @@
             <stringProp name="Argument.value">${__P(postdata,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="creator" elementType="Argument">
+            <stringProp name="Argument.name">creator</stringProp>
+            <stringProp name="Argument.value">${__P(creator,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -375,6 +380,11 @@ log.error(&quot;===starttime-------------------------------------&quot;+starttim
                 <stringProp name="Argument.value">${postdata}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
+              <elementProp name="creator" elementType="Argument">
+                <stringProp name="Argument.name">creator</stringProp>
+                <stringProp name="Argument.value">${creator}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
             </collectionProp>
           </elementProp>
           <stringProp name="classname">com.api.autotest.test.${testdeployunit}.${testclass}</stringProp>
@@ -456,6 +466,11 @@ log.error(&quot;===starttime-------------------------------------&quot;+starttim
               <elementProp name="mysqlpassword" elementType="Argument">
                 <stringProp name="Argument.name">mysqlpassword</stringProp>
                 <stringProp name="Argument.value">${mysqlpassword}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="creator" elementType="Argument">
+                <stringProp name="Argument.name">creator</stringProp>
+                <stringProp name="Argument.value">admin</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>

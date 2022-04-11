@@ -30,4 +30,9 @@ private ApicasesPerformancestatisticsMapper apicasesPerformancestatisticsMapper;
     public List<ApicasesPerformancestatistics> findApicasereportWithName(Map<String, Object> params) {
         return apicasesPerformancestatisticsMapper.findApicasereportWithName(params);
     }
+
+    @Override
+    public List<ApicasesPerformancestatistics> getresultbyidandname(long testplanid, String batchname) {
+        return apicasesPerformancestatisticsMapper.getresultbyidandname(testplanid, batchname);
+    }
 }

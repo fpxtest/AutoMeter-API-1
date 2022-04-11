@@ -40,6 +40,8 @@ public class postcondition extends AbstractJavaSamplerClient {
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "root");
         params.addArgument("mysqlpassword", "root");
+        params.addArgument("creator", "admin");
+
 
         return params;
     }
@@ -65,6 +67,8 @@ public class postcondition extends AbstractJavaSamplerClient {
         String casetype = ctx.getParameter("casetype");
         String casereportfolder = ctx.getParameter("casereportfolder").replace("AM"," ");
         String testclass = ctx.getParameter("testclass");
+        String creator = ctx.getParameter("creator");
+
         String start = ctx.getParameter("start");
 
         getLogger().info( "postcondition teardownTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
@@ -95,7 +99,7 @@ public class postcondition extends AbstractJavaSamplerClient {
                 long end = new Date().getTime();
                 long starttime=Long.parseLong(start);
                 double costtime=(double)(end-starttime)/1000;
-                core.genealperformacestaticsreport(testclass,batchname,testplanid,batchid,slaverid,caseid,casereportfolder,costtime);
+                core.genealperformacestaticsreport(testclass,batchname,testplanid,batchid,slaverid,caseid,casereportfolder,costtime,creator);
                 getLogger().info(TestCaseData.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
             }
         } catch (Exception e) {

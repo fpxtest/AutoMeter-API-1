@@ -20,4 +20,7 @@ public interface ExecuteplanbatchMapper extends MyMapper<Executeplanbatch> {
     List<Executeplanbatch> findexplanbatchWithName(final Map<String, Object> params);
 
     List<Executeplanbatch> getbatchbyexectype(@Param("exectype") String exectype);
+
+    List<Executeplanbatch> getrecentbatchbyid(@Param("executeplanid") Long executeplanid);
+
 }

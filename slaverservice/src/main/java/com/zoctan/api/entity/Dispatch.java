@@ -106,6 +106,17 @@ public class Dispatch {
 
     private String memo;
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
+
 
     /**
      * 用例Id

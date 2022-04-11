@@ -122,6 +122,17 @@ public class Dispatch {
     private String memo;
 
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    private String creator;
+
+
     /**
      * 创建时间
      */

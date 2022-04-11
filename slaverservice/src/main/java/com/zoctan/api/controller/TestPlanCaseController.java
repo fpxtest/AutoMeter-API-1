@@ -256,7 +256,7 @@ public class TestPlanCaseController {
                 jmeterPerformanceObject = GetJmeterPerformance(dispatch);
                 if (jmeterPerformanceObject != null) {
                     // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
-                    tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath, dispatch.getThreadnum(), dispatch.getLoops());
+                    tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath, dispatch.getThreadnum(), dispatch.getLoops(),dispatch.getCreator());
                     // 更新调度表对应用例状态为已分配
                     dispatchMapper.updatedispatchstatus("已分配", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());

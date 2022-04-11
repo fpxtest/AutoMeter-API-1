@@ -54,6 +54,7 @@ public class TestPlanCaseController {
             return ResultGenerator.genOkResult(" 未找到执行批次名： "+batchname);
         }
         Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
+        String Creator=ep.getCreator();
         if(ep==null)
         {
             return ResultGenerator.genOkResult("未找到此测试集合：" + execplanid);
@@ -156,6 +157,7 @@ public class TestPlanCaseController {
         dis.setBatchid(epb.getId());
         dis.setCasejmxname(testcase.getCasejmxname());
         dis.setExecplanname(ep.getExecuteplanname());
+        dis.setCreator(ep.getCreator());
         dis.setSlaverid(slaverid);
         dis.setSlavername(slavername);
         dis.setTestcasename(testcase.getCasename());

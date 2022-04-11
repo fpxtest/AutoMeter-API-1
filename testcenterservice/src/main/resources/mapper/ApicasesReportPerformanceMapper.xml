@@ -39,4 +39,11 @@
     SELECT b.casename,c.apiname,d.deployunitname,a.* FROM apicases_report_performance a inner join apicases b inner join api c inner join deployunit d
         on a.caseid=b.id and b.apiid=c.id and b.deployunitid=d.id  order by a.lastmodify_time  DESC
   </select>
+
+  <select id="listallresultbyplanid" resultMap="BaseResultMap">
+    SELECT * FROM apicases_report_performance where testplanid=#{testplanid}
+  </select>
+
+
+
 </mapper>

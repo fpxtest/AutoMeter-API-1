@@ -79,7 +79,7 @@ public class GeneralPerformancestatisticsScheduleTask {
                     List<Performancereportsource> performancereportsourcelist= performancereportsourceMapper.findperformancereportsource(SlaverId);
                     for (Performancereportsource per:performancereportsourcelist)
                     {
-                        fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime());
+                        fixperformancestatistics(per.getTestclass(),per.getBatchname(),per.getPlanid().toString(),per.getBatchid().toString(),per.getSlaverid().toString(),per.getCaseid().toString(),per.getSource(),per.getRuntime(),per.getCreator());
                         GeneralPerformancestatisticsScheduleTask.log.info("性能报告解析任务-ID："+per.getId()+" 解析完成");
                     }
                 }
@@ -105,7 +105,7 @@ public class GeneralPerformancestatisticsScheduleTask {
     }
 
 
-    public void fixperformancestatistics(String testclass,String batchname,String testplanid,String batchid,String slaverid,String caseid,String casereportfolder,Double costtime)  {
+    public void fixperformancestatistics(String testclass,String batchname,String testplanid,String batchid,String slaverid,String caseid,String casereportfolder,Double costtime,String Creator)  {
         try {
             String casereport=casereportfolder+"/content/js/dashboard.js";
             GeneralPerformancestatisticsScheduleTask.log.info("参数为 is:"+testclass+"，"+batchname+"，"+testplanid+"，"+batchid+","+slaverid+","+caseid+","+casereportfolder+","+costtime);
@@ -202,6 +202,7 @@ public class GeneralPerformancestatisticsScheduleTask {
             apicasesPerformancestatistics.setRuntime(costtime);
             apicasesPerformancestatistics.setSlaverid(Long.parseLong(slaverid));
             apicasesPerformancestatistics.setTps(Double.parseDouble(Throughput));
+            apicasesPerformancestatistics.setCreator(Creator);
             apicasesPerformancestatisticsService.save(apicasesPerformancestatistics);
 
             performancereportsourceMapper.updateperformancereportsourcedone(Long.parseLong(testplanid),Long.parseLong(slaverid),Long.parseLong(batchid),Long.parseLong(caseid));

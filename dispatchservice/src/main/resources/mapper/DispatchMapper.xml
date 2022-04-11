@@ -23,6 +23,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="plantype" jdbcType="VARCHAR" property="plantype" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
   </resultMap>
 
   <select id="findbusythreadnums" resultType="java.lang.Integer">
@@ -51,12 +52,12 @@
 
   <insert id="insertBatchDispatch"  parameterType="com.zoctan.api.entity.Dispatch">
     insert into dispatch (execplanid, execplanname,batchid,batchname,slaverid,slavername,testcaseid,testcasename,casejmxname,
-    deployunitname,expect,status,create_time,lastmodify_time,plantype,threadnum,loops)
+    deployunitname,expect,status,create_time,lastmodify_time,plantype,threadnum,loops,creator)
     values
     <foreach collection="dispatchList" item="dispatch" index="index" separator=",">
       (#{dispatch.execplanid}, #{dispatch.execplanname}, #{dispatch.batchid},#{dispatch.batchname},#{dispatch.slaverid},
       #{dispatch.slavername},#{dispatch.testcaseid},#{dispatch.testcasename},#{dispatch.casejmxname},#{dispatch.deployunitname},#{dispatch.expect},
-      #{dispatch.status},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),#{dispatch.plantype},#{dispatch.threadnum},#{dispatch.loops})
+      #{dispatch.status},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),#{dispatch.plantype},#{dispatch.threadnum},#{dispatch.loops},#{dispatch.creator})
     </foreach>
   </insert>
 

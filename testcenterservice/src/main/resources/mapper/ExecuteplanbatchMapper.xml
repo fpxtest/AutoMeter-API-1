@@ -54,4 +54,11 @@
     </where>
     order by lastmodify_time  DESC
   </select>
+
+
+  <select id="getrecentbatchbyid" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM executeplanbatch a
+    where a.executeplanid=#{executeplanid} order by a.create_time desc limit 2
+  </select>
 </mapper>

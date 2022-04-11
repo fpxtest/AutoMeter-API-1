@@ -15,4 +15,8 @@ public interface ApicasesPerformancestatisticsService extends Service<ApicasesPe
 
     List<ApicasesPerformancestatistics> findApicasereportWithName(final Map<String, Object> params);
 
+    List<ApicasesPerformancestatistics> getresultbyidandname(long testplanid,String batchname);
+
+
+
 }
