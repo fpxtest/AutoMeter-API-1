@@ -35,7 +35,7 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String BatchName=jmeterPerformanceObject.getBatchname();
         String PlanName=jmeterPerformanceObject.getExecuteplanname();
         String CaseName=jmeterPerformanceObject.getCasename();
-        String Expect=jmeterPerformanceObject.getExpect();
+        String Expect=jmeterPerformanceObject.getExpect().replace(" ","Autometer");;
 
         String Protocal=jmeterPerformanceObject.getProtocal();
         String RequestmMthod=jmeterPerformanceObject.getRequestmMthod();

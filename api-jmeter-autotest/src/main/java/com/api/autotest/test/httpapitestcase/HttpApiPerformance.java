@@ -152,13 +152,11 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateNowStr = sdf.format(d);
 
-            stringBuilder.append(requestObject.getCaseid() + "|");
-            stringBuilder.append(requestObject.getTestplanid() + "|");
-            stringBuilder.append(requestObject.getBatchname() + "|");
-            stringBuilder.append(requestObject.getSlaverid() + "|");
-            stringBuilder.append(testAssert.isCaseresult() + "|");
-
-
+            stringBuilder.append(requestObject.getCaseid() + "$$");
+            stringBuilder.append(requestObject.getTestplanid() + "$$");
+            stringBuilder.append(requestObject.getBatchname() + "$$");
+            stringBuilder.append(requestObject.getSlaverid() + "$$");
+            stringBuilder.append(testAssert.isCaseresult() + "$$");
 //            ActualResult=ActualResult.replaceAll(System.getProperty("line.separator"), "");
 //            ActualResult=ActualResult.replace("\\n", "");
 //            ActualResult=ActualResult.replaceAll("\\\\n","");
@@ -166,20 +164,26 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
 //            ActualResult=ActualResult.replaceAll("\\\\r\\\\n", "");
 //            ActualResult=ActualResult.replace("\\r", "");
 //            ActualResult=ActualResult.replaceAll("\\\\r", "");
-            //Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            //Pattern p = Pattern.compile("\\s*$$\t$$\r$$\n");
 
             Pattern p = Pattern.compile("\r|\n");
             Matcher m = p.matcher(ActualResult);
             ActualResult = m.replaceAll("");
-            stringBuilder.append(ActualResult + "|");
+            stringBuilder.append(ActualResult.replace(System.getProperty("line.separator"), "") + "$$");
 
-            stringBuilder.append(assertInfo + "|");
-            stringBuilder.append(time + "|");
-            stringBuilder.append(requestObject.getExpect() + "|");
-            stringBuilder.append(ErrorInfo + "|");
-            stringBuilder.append(dateNowStr + "|");
-            stringBuilder.append(dateNowStr + "|");
-            stringBuilder.append("admin" + "|");
+            Matcher massert = p.matcher(assertInfo);
+            assertInfo = massert.replaceAll("");
+            stringBuilder.append(assertInfo.replace(System.getProperty("line.separator"), "") + "$$");
+
+            stringBuilder.append(time + "$$");
+            stringBuilder.append(requestObject.getExpect() + "$$");
+
+            Matcher merror = p.matcher(ErrorInfo);
+            ErrorInfo = merror.replaceAll("");
+            stringBuilder.append(ErrorInfo.replace(System.getProperty("line.separator"), "") + "$$");
+            stringBuilder.append(dateNowStr + "$$");
+            stringBuilder.append(dateNowStr + "$$");
+            stringBuilder.append("admin" + "$$");
 
             Map<String, Object> headermap = requestObject.getHeader().getParams();
             for (String key : headermap.keySet()) {
@@ -197,9 +201,13 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             }
             PostData = PostData.replace("'", "''");
 
-            stringBuilder.append(header + "|");
-            stringBuilder.append(PostData.replace(System.getProperty("line.separator"), "") + "|");
-            stringBuilder.append(requestObject.getResource() + "|");
+            stringBuilder.append(header + "$$");
+
+
+            Matcher postdatam = p.matcher(PostData);
+            PostData = postdatam.replaceAll("");
+            stringBuilder.append(PostData.replace(System.getProperty("line.separator"), "") + "$$");
+            stringBuilder.append(requestObject.getResource() + "$$");
             stringBuilder.append(requestObject.getRequestmMthod());
 
             String LogFileName = requestObject.getTestplanid() + "-" + requestObject.getBatchid() + "-" + requestObject.getSlaverid();
@@ -227,7 +235,12 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
     public static void main(String[] args) {
 
         String json = "{\"Authorization\":\"BearerAutometereyJhbGciOiJSUzI1NiIsInppcCI6IkRFRiJ9.eNp0lz2OFDEQhe8y8SaMlkWajEuQrtxuo7HUf7Ldza4QIcSQkRKRERJwHzQcA-OqsssuE43fK837Xrs90-r3J78Pp8tJjbNdTncntYdrlK83q5U3_o1yVg2T8Rc1jnfSHc1kgukOgrJTZzBZHzq2N8rpa2ewb6OKBKX1ui8h1aA1wotMSJIJRALjSVLoZiEwflJYWkJQXEJIXFBAXJYvp6qUAKLEkKYs0BQIalNOzb7oQgHdoB71uow22HWpoMxu8NWkKsImVSXmN2XYhNUShXpVeiUkvgfuIGHPiIeqwLJBJDQIg7Iw0GAA496ublaLNs5sqwuZJQYM25nlBmKWy4gJ6yVm3Yo-qBDTrPadmmzYrVrNO3XZvFOZTbu12bxUr7dU7KPYvGbHxDaJvQEjsVnt2sWv16dXHF1xbptDK06sOK7ZWN1oXE0Bq00Gt44Hb14PM67vlp6_b62Ljcahvkau8SprK7XhVqrCjU4yXu1otn2xcG9pTZAsAYASwlFQMEoKtfofQ7lnyC2SoosDcUVTYnFyqN9U0FeMRJEDs4aypDEeVQ5HjdFmOaxbZ4PPKiYxvnISgDkJwTRCmCMwj8p7M8dnZcMrvgDzUdOgjJoqZSA6lVEpNyt9tUvuRLJUKQ41IIfApAuPHMI8Gb0Hs00KDjfXBKosIDELUMwgFrMkbMhHR5gSO_CjJPy2wMCPlvCxStwG_lNjEvGVk8DMSUimEcacgsm3sLl_zc2r7lxz25p75lY8qGmBcbhOWWmdgtIKU9IaI7x2dgv1_1rrYbC0E6O1E641kdzaVGJSB_6j45KQpIAECgCwplxQGBdU_smF-NzMOPa07PnI7I9Sgd7ovxis1htRzzjCy8Ylq1AuG1UGlctGxeKO6hWjdlj40b5a1GZGHe0rRW32wIeadiPpYPcq0ET2gIksA36vEUyw1p-fH2-_vt9-fLt9_vT7y9f4PmaettPlxcP9_fn88Or88sNfAAAA__8.RDgcm6V5dMuHNLCpUe8nzN_2IRqqoNOFJoG6Yk9JDTfYLZ4NaqP2sSsLJaFtUzQ8cu7njnvRwbAYJf2Xv--3Pw\",\"bb\":\"aaaaaaaaa\"}";
-//        DocumentContext documentContext=JsonPath.parse(json);
+
+        String str="109$$39$$testbaidu1000-1$$21$$true$$<!DOCTYPE html><!--STATUS OK--><html> <head><meta http-equiv=content-type content=text/html;charset=utf-8><meta http-equiv=X-UA-Compatible content=IE=Edge><meta content=always name=referrer><link rel=stylesheet type=text/css href=http://s1.bdstatic.com/r/www/cache/bdorz/baidu.min.css><title>百度一下，你就知道</title></head> <body link=#0000cc> <div id=wrapper> <div id=head> <div class=head_wrapper> <div class=s_form> <div class=s_form_wrapper> <div id=lg> <img hidefocus=true src=//www.baidu.com/img/bd_logo1.png width=270 height=129> </div> <form id=form name=f action=//www.baidu.com/s class=fm> <input type=hidden name=bdorz_come value=1> <input type=hidden name=ie value=utf-8> <input type=hidden name=f value=8> <input type=hidden name=rsv_bp value=1> <input type=hidden name=rsv_idx value=1> <input type=hidden name=tn value=baidu><span class=\"bg s_ipt_wr\"><input id=kw name=wd class=s_ipt value maxlength=255 autocomplete=off autofocus></span><span class=\"bg s_btn_wr\"><input type=submit id=su value=百度一下 class=\"bg s_btn\"></span> </form> </div> </div> <div id=u1> <a href=http://news.baidu.com name=tj_trnews class=mnav>新闻</a> <a href=http://www.hao123.com name=tj_trhao123 class=mnav>hao123</a> <a href=http://map.baidu.com name=tj_trmap class=mnav>地图</a> <a href=http://v.baidu.com name=tj_trvideo class=mnav>视频</a> <a href=http://tieba.baidu.com name=tj_trtieba class=mnav>贴吧</a> <noscript> <a href=http://www.baidu.com/bdorz/login.gif?login&amp;tpl=mn&amp;u=http%3A%2F%2Fwww.baidu.com%2f%3fbdorz_come%3d1 name=tj_login class=lb>登录</a> </noscript> <script>document.write('<a href=\"http://www.baidu.com/bdorz/login.gif?login&tpl=mn&u='+ encodeURIComponent(window.location.href+ (window.location.search === \"\" ? \"?\" : \"&\")+ \"bdorz_come=1\")+ '\" name=\"tj_login\" class=\"lb\">登录</a>');</script> <a href=//www.baidu.com/more/ name=tj_briicon class=bri style=\"display: block;\">更多产品</a> </div> </div> </div> <div id=ftCon> <div id=ftConw> <p id=lh> <a href=http://home.baidu.com>关于百度</a> <a href=http://ir.baidu.com>About Baidu</a> </p> <p id=cp>&copy;2017&nbsp;Baidu&nbsp;<a href=http://www.baidu.com/duty/>使用百度前必读</a>&nbsp; <a href=http://jianyi.baidu.com/ class=cp-feedback>意见反馈</a>&nbsp;京ICP证030173号&nbsp; <img src=//www.baidu.com/img/gs.gif> </p> </div> </div> </div> </body> </html>$$【期望值】：!--STATUS OK-- , 【实际值】：<!DOCTYPE html><!--STATUS OK--><html> <head><meta http-equiv=content-type content=text/html;charset=utf-8><meta http-equiv=X-UA-Compatible content=IE=Edge><meta content=always name=referrer><link rel=stylesheet type=text/css href=http://s1.bdstatic.com/r/www/cache/bdorz/baidu.min.css><title>百度一下，你就知道</title></head> <body link=#0000cc> <div id=wrapper> <div id=head> <div class=head_wrapper> <div class=s_form> <div class=s_form_wrapper> <div id=lg> <img hidefocus=true src=//www.baidu.com/img/bd_logo1.png width=270 height=129> </div> <form id=form name=f action=//www.baidu.com/s class=fm> <input type=hidden name=bdorz_come value=1> <input type=hidden name=ie value=utf-8> <input type=hidden name=f value=8> <input type=hidden name=rsv_bp value=1> <input type=hidden name=rsv_idx value=1> <input type=hidden name=tn value=baidu><span class=\"bg s_ipt_wr\"><input id=kw name=wd class=s_ipt value maxlength=255 autocomplete=off autofocus></span><span class=\"bg s_btn_wr\"><input type=submit id=su value=百度一下 class=\"bg s_btn\"></span> </form> </div> </div> <div id=u1> <a href=http://news.baidu.com name=tj_trnews class=mnav>新闻</a> <a href=http://www.hao123.com name=tj_trhao123 class=mnav>hao123</a> <a href=http://map.baidu.com name=tj_trmap class=mnav>地图</a> <a href=http://v.baidu.com name=tj_trvideo class=mnav>视频</a> <a href=http://tieba.baidu.com name=tj_trtieba class=mnav>贴吧</a> <noscript> <a href=http://www.baidu.com/bdorz/login.gif?login&amp;tpl=mn&amp;u=http%3A%2F%2Fwww.baidu.com%2f%3fbdorz_come%3d1 name=tj_login class=lb>登录</a> </noscript> <script>document.write('<a href=\"http://www.baidu.com/bdorz/login.gif?login&tpl=mn&u='+ encodeURIComponent(window.location.href+ (window.location.search === \"\" ? \"?\" : \"&\")+ \"bdorz_come=1\")+ '\" name=\"tj_login\" class=\"lb\">登录</a>');</script> <a href=//www.baidu.com/more/ name=tj_briicon class=bri style=\"display: block;\">更多产品</a> </div> </div> </div> <div id=ftCon> <div id=ftConw> <p id=lh> <a href=http://home.baidu.com>关于百度</a> <a href=http://ir.baidu.com>About Baidu</a> </p> <p id=cp>&copy;2017&nbsp;Baidu&nbsp;<a href=http://www.baidu.com/duty/>使用百度前必读</a>&nbsp; <a href=http://jianyi.baidu.com/ class=cp-feedback>意见反馈</a>&nbsp;京ICP证030173号&nbsp; <img src=//www.baidu.com/img/gs.gif> </p> </div> </div> </div> </body> </html> 【断言结果】: 通过 || $$426$$【断言类型：Respone， 断言子类型：文本， 断言条件：Contain， 断言值：!--STATUS OK--， 断言值类型：String】$$$$2022-04-20 11:34:32$$2022-04-20 11:34:32$$admin$$Content-Type ：application/x-www-form-urlencoded$$$$http://www.baidu.com$$GET";
+
+        String[] array=str.split("\\$\\$");
+
+        // DocumentContext documentContext=JsonPath.parse(json);
 //        documentContext.set("$.code","100");
 //        System.out.println(documentContext.jsonString());
 

@@ -146,7 +146,8 @@ public class FixPerformanceResultFileScheduleTask {
     }
 
     private boolean SavePerformanceReport(String Content, String TableName) throws Exception {
-        String[] array = Content.split("\\|");
+        String[] array = Content.split("\\$\\$");
+        FixPerformanceResultFileScheduleTask.log.info("收集性能报告数据文件每行长度：=======================" + array.length);
         boolean caseresultstatus = true;
         if (array.length == 17) {
             ApicasesReportPerformance apicasesReportPerformance = new ApicasesReportPerformance();

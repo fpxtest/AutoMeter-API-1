@@ -99,7 +99,7 @@ public class TestCaseData {
             newob.setDeployunitvisittype(deployvisitytype);
             newob.setMachineip(machineip);
 
-            String expect = context.getParameter("expect");
+            String expect = context.getParameter("expect").replace("Autometer"," ");;
             //logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
             List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
             if ((!expect.isEmpty())&&(expect!=null)) {
