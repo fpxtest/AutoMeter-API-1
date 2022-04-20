@@ -33,10 +33,10 @@ import java.util.jar.JarFile;
  @DESCRIPTION 
  @create 2020/11/21
 */
-@Slf4j
-@Configuration      //1.主要用于标记配置类，兼备Component的效果。
-@EnableScheduling   // 2.开启定时任务
-@Component
+//@Slf4j
+//@Configuration      //1.主要用于标记配置类，兼备Component的效果。
+//@EnableScheduling   // 2.开启定时任务
+//@Component
 public class PerformanceDispatchScheduleTask {
 //    @Value("${spring.datasource.url}")
 //    private String url;

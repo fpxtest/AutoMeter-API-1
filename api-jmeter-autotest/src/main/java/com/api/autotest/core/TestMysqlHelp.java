@@ -335,18 +335,26 @@ public class TestMysqlHelp {
         String sql = "insert testcondition_report (conditionid,conditiontype,subconditionid,conditionresult,conditionstatus,runtime,create_time,lastmodify_time,creator,batchname,planname,testplanid,subconditiontype,status,subconditionname)" +
                 " values(" + testconditionReport.getConditionid() + ", '" + testconditionReport.getConditiontype() + "', " + testconditionReport.getSubconditionid() + ", '" + testconditionReport.getConditionresult() + "', '" + testconditionReport.getConditionstatus() + "', " + testconditionReport.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testconditionReport.getBatchname().replace("'","''") + "',  '" + testconditionReport.getPlanname().replace("'","''") + "'," + testconditionReport.getTestplanid() + ", '" + testconditionReport.getSubconditiontype() + "', '" + testconditionReport.getStatus() + "', '" + testconditionReport.getSubconditionname().replace("'","''") + "')";
         logger.info(logplannameandcasename + "获取数据库 接口条件报告结果 result sql is...........: " + sql);
-        logger.info(logplannameandcasename + "获取数据库 接口条件报告结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+        try {
+            logger.info(logplannameandcasename + "获取数据库 接口条件报告结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+        } catch (Exception exception) {
+            logger.info(logplannameandcasename + "获取数据库 接口条件报告结果 result 异常...........: " + exception.getMessage());
+        }
     }
 
     //保存变量结果
-    public void testVariablesValueSave(TestvariablesValue testvariablesValue) {
+    public void testVariablesValueSave(TestvariablesValue testvariablesValue)  {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,creator,batchname)" +
                 " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname().replace("'","''") + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename().replace("'","''") + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname().replace("'","''") + "', '" + testvariablesValue.getMemo().replace("'","''") + "' , '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testvariablesValue.getBatchname().replace("'","''") + "')";
         logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + sql);
-        logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+        try {
+            logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+        } catch (Exception exception) {
+            logger.info(logplannameandcasename + "获取数据库 保存变量结果 result 异常...........: " + exception.getMessage());
+        }
     }
 
     //查询用例变量
@@ -498,7 +506,6 @@ public class TestMysqlHelp {
                         " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone.replace("'","''") + "','" + assertvalue.replace("'","''") + "'," + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + PostData + "', '" + Url + "', '" + Method + "')";
             }
             logger.info(logplannameandcasename + "获取数据库 测试结果 result sql is...........: " + sql);
-            System.out.println("case result sql is: " + sql);
             logger.info(logplannameandcasename + "获取数据库 记录用例测试结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
         } catch (Exception ex) {
             logger.info(logplannameandcasename + "获取数据库 记录用例测试结果异常...........: " + ex.getMessage());
@@ -506,14 +513,18 @@ public class TestMysqlHelp {
     }
 
     // 记录用例测试结果
-    public void SaveReportStatics(ApicasesReportstatics apicasesReportstatics) {
+    public void SaveReportStatics(ApicasesReportstatics apicasesReportstatics)  {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "insert apicases_reportstatics (testplanid,deployunitid,batchname,slaverid,totalcases,totalpasscases,totalfailcases,runtime,create_time,lastmodify_time,creator)" +
                 " values(" + apicasesReportstatics.getTestplanid() + "," + apicasesReportstatics.getDeployunitid() + ", '" + apicasesReportstatics.getBatchname().replace("'","''") + "', " + apicasesReportstatics.getSlaverid() + ", " + apicasesReportstatics.getTotalcases() + ", " + apicasesReportstatics.getTotalpasscases() + ", " + apicasesReportstatics.getTotalfailcases() + ", " + apicasesReportstatics.getRuntime() + ", '" + dateNowStr + "', '" + dateNowStr + "','admin')";
         logger.info(logplannameandcasename + "获取数据库 功能测试统计结果 result sql is...........: " + sql);
-        logger.info(logplannameandcasename + "获取数据库 功能测试统计结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+        try {
+            logger.info(logplannameandcasename + "获取数据库 功能测试统计结果 result sql is...........: " + MysqlConnectionUtils.update(sql));
+        } catch (Exception exception) {
+            logger.info(logplannameandcasename + "获取数据库 功能测试统计结果 result 异常...........: " + exception.getMessage());
+        }
     }
 
     //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
@@ -548,15 +559,33 @@ public class TestMysqlHelp {
         return  DispatchNotFinishNums;
     }
 
+    //查询此计划下的批次调度是否有已取消
+    public long PlanBatchAllDipatchCancel(String Testplanid, String batchname) {
+        long DispatchCancelNums = 0;
+        try {
+            String sql = "select count(*) as nums from dispatch where execplanid=" + Testplanid + " and batchname= '" + batchname + "' and status ='"+"已取消'";
+            logger.info(logplannameandcasename + "获取数据库 查询计划下的批次调度是否有已取消 result sql is...........: " + sql);
+            ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
+            DispatchCancelNums = Long.parseLong(getcaseValue("nums", result));
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 查询计划下的批次调度是否有已取消异常...........: " + e.getMessage());
+        }
+        return  DispatchCancelNums;
+    }
+
     // 更新计划批次状态
-    public void UpdateReportStatics(String Planid, String BatchName, String status) {
+    public void UpdateReportStatics(String Planid, String BatchName, String status)  {
         String UpdateSql = "update  executeplanbatch set status='" + status + "' where executeplanid=" + Planid + " and batchname= '" + BatchName + "'";
         logger.info(logplannameandcasename + "获取数据库 更新计划批次状态结果完成  sql is...........: " + UpdateSql);
-        logger.info(logplannameandcasename + "获取数据库 更新计划批次状态结果完成 result sql is...........: " + MysqlConnectionUtils.update(UpdateSql));
+        try {
+            logger.info(logplannameandcasename + "获取数据库 更新计划批次状态结果完成 result sql is...........: " + MysqlConnectionUtils.update(UpdateSql));
+        } catch (Exception exception) {
+            logger.info(logplannameandcasename + "获取数据库 更新计划批次状态结果完成 result 异常...........: " + exception.getMessage());
+        }
     }
 
     // 更新Slaver状态
-    public void UpdateSlaverStatus(String Slaverid, String status) {
+    public void UpdateSlaverStatus(String Slaverid, String status) throws Exception {
         String UpdateSql = "update  slaver set status='" + status + "' where id=" + Slaverid;
         logger.info(logplannameandcasename + "获取数据库 更新Slaver状态结果完成  sql is...........: " + UpdateSql);
         logger.info(logplannameandcasename + "获取数据库 更新Slaver状态结果完成 result sql is...........: " + MysqlConnectionUtils.update(UpdateSql));
@@ -571,10 +600,25 @@ public class TestMysqlHelp {
             String sql = "";
             sql = "update dispatch set status='已完成',lastmodify_time='" + dateNowStr + "' where slaverid=" + slaverid + " and execplanid=" + testplanid + " and batchid=" + batchid + " and testcaseid=" + caseid;
             logger.info(logplannameandcasename + "获取数据库 更新调度用例状态 result sql is...........: " + sql);
-            System.out.println("case result sql is: " + sql);
             logger.info(logplannameandcasename + "获取数据库 更新用例调度结果 is...........: " + MysqlConnectionUtils.update(sql));
         } catch (Exception ex) {
             logger.info(logplannameandcasename + "获取数据库 更新用例调度结果异常...........: " + ex.getMessage());
+        }
+    }
+
+    // 新增性能日志用例记录结果
+    public void generalperformancelogfile(String testplanid, String caseid, String slaverid, String batchid,String filename,String status) {
+        try {
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateNowStr = sdf.format(d);
+            String sql = "";
+            sql = "insert performancereportfilelog (execplanid,batchid,caseid,slaverid,filename,status,create_time,lastmodify_time)" +
+                    " values(" + testplanid + "," + batchid  + " , " + caseid + ", " + slaverid + " , '" + filename + "' , '" + status + "' , '"  + dateNowStr + "', '" + dateNowStr +"' )";
+            logger.info(logplannameandcasename + "获取数据库 新增性能日志用例记录结果 result sql is...........: " + sql);
+            logger.info(logplannameandcasename + "获取数据库 新增性能日志用例记录结果 is...........: " + MysqlConnectionUtils.update(sql));
+        } catch (Exception ex) {
+            logger.info(logplannameandcasename + "获取数据库 新增性能日志用例记录结果...........: " + ex.getMessage());
         }
     }
 
@@ -584,9 +628,9 @@ public class TestMysqlHelp {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
         String sql = "";
-        sql = "insert performancereportsource (planid,batchid,batchname,slaverid,caseid,testclass,runtime,source,status,create_time,lastmodify_time,creator)" +
-                " values(" + testplanid + "," + batchid + ", '" + batchname.replace("'","''") + "', " + slaverid + ", " + caseid + " , '" + testclass + "' ," + costtime + " , '" + casereportfolder + "', '待解析', '" + dateNowStr + "', '" + dateNowStr +"', '" + Creator  + "')";
-        logger.info(logplannameandcasename + "获取数据库 保存性能结果 sql is...........: " + sql);
-        logger.info(logplannameandcasename + "获取数据库 保存性能结果 is...........: " + MysqlConnectionUtils.update(sql));
+        sql = "insert performancereportsource (planid,batchid,batchname,slaverid,caseid,testclass,runtime,source,status,create_time,lastmodify_time,creator,totalcasenums,totalcasepassnums,totalcasefailnums)" +
+                " values(" + testplanid + "," + batchid + ", '" + batchname.replace("'","''") + "', " + slaverid + ", " + caseid + " , '" + testclass + "' ," + costtime + " , '" + casereportfolder + "', '待解析', '" + dateNowStr + "', '" + dateNowStr +"', '" + Creator  + "' , 0,0,0)";
+        logger.info(logplannameandcasename + "获取数据库 保存性能统计结果 sql is...........: " + sql);
+        logger.info(logplannameandcasename + "获取数据库 保存性能统计结果 is...........: " + MysqlConnectionUtils.update(sql));
     }
 }

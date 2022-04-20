@@ -15,12 +15,22 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpApiPerformance extends AbstractJavaSamplerClient {
+    TestCore Core = null;
+
     // 初始化方法，实际运行时每个线程仅执行一次，在测试方法运行前执行，类似于LoadRunner中的init方法
     public void setupTest(JavaSamplerContext context) {
+        Core = new TestCore(context, getLogger());
         super.setupTest(context);
     }
 
@@ -54,12 +64,15 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         params.addArgument("mysqlpassword", "/opt/");
         params.addArgument("machineip", "11");
         params.addArgument("deployvisitytype", "11");
+        params.addArgument("reportlogfolder", "11");
+
 
         return params;
     }
 
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
+        String reportlogfolder = ctx.getParameter("reportlogfolder").replace("Autometer", " ");
         SampleResult results = new SampleResult();
         //Jmeter java实例开始执行
         results.sampleStart();
@@ -67,56 +80,45 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         long Start = new Date().getTime();
         //断言信息汇总
         String AssertInfo = "";
-        String ErrorInfo="";
-        String ActualResult="";
-        TestCore Core = new TestCore(ctx,getLogger());
-        RequestObject requestObject=null;
+        String ErrorInfo = "";
+        String ActualResult = "";
+        RequestObject requestObject = null;
         TestAssert TestAssert = new TestAssert(getLogger());
         try {
             // 初始化用例数据
-            requestObject=InitalTestData(Core,ctx);
+            requestObject = InitalTestData(Core, ctx);
             getLogger().info("Finish InitalTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
-
             // 发送用例请求，并返回结果
-            TestResponeData responeData =Core.request(requestObject);// SendCaseRequest(requestObject, Core);
+            TestResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
             getLogger().info("Finish SendCaseRequest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
-
-            ActualResult=responeData.getResponeContent();
+            ActualResult = responeData.getResponeContent();
             //断言
-            AssertInfo=Core.FixAssert(TestAssert,requestObject.getApicasesAssertList(),responeData);
+            AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
         } catch (Exception ex) {
-            String ExceptionMess=ex.getMessage();
-            if(ExceptionMess.contains("Illegal character in path at"))
-            {
-                ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+ex.getMessage();
+            getLogger().info("Exception 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + ex.getMessage());
+            String ExceptionMess = ex.getMessage();
+            if (ExceptionMess.contains("Illegal character in path at")) {
+                ExceptionMess = "Url不合法，请检查是否有无法替换的变量，或者有相关非法字符：" + ex.getMessage();
             }
-            ErrorInfo=CaseException(results, TestAssert, ExceptionMess);
+            ErrorInfo = CaseException(results, TestAssert, ExceptionMess);
         } finally {
             // 保存用例运行结果，Jmeter的sample运行结果
             long End = new Date().getTime();
-            CaseFinish(Core,results, TestAssert, AssertInfo,End-Start,ErrorInfo,ActualResult,ctx,requestObject);
+            //CaseFinish(Core,results, TestAssert, AssertInfo,End-Start,ErrorInfo,ActualResult,ctx,requestObject);
+            results.setSuccessful(TestAssert.isCaseresult());
+            results.sampleEnd();
+            WriteToFile(TestAssert, AssertInfo, End - Start, ErrorInfo, ActualResult, ctx, requestObject, reportlogfolder);
         }
         //Jmeter事务，表示这是事务的结束点
-        results.sampleEnd();
         return results;
     }
 
     //初始化用例的基础数据
     private RequestObject InitalTestData(TestCore core, JavaSamplerContext ctx) throws Exception {
         getLogger().info("Start InitTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
-        //core = new TestCore(getLogger());
         RequestObject ob = core.InitHttpDatabyJmeter(ctx);
         getLogger().info("Finish InitTestData 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
-        //用例开始运行时间
-        //start = new Date().getTime();
         return ob;
-    }
-
-    //用例发送请求
-    private TestResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
-        getLogger().error("开始请求。。。。。。。。。。。。。。。。"+ob.getResource() );
-        TestResponeData responeData = core.request(ob);
-        return responeData;
     }
 
     //用例运行过程中的异常信息处理
@@ -135,31 +137,86 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
         //jmeter java实例执行完成，记录结果
         results.setSuccessful(testAssert.isCaseresult());
         //性能并发高时考虑先把结果放到redis，再批量放到mysql
-        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo,requestObject,ctx);
+        core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo, requestObject, ctx);
     }
 
-    //获取用例期望值
-//    private String getCaseExpectValue(TestCore core, String expectKey, HashMap<String,String> ExpectMap) throws Exception {
-//        String expectValue = core.GetExpectValue(expectKey,ExpectMap);
-//        getLogger().info(TestCore.logplannameandcasename + "expectValue is:" + expectValue);
-//        return expectValue;
-//    }
+    private void WriteToFile(TestAssert testAssert, String assertInfo, long time, String ErrorInfo, String ActualResult, JavaSamplerContext ctx, RequestObject requestObject, String LogFolder) {
+        FileWriter fw = null;
+        try {
+            StringBuilder stringBuilder = new StringBuilder();
+            String header = "";
+            String Params = "";
+            String PostData = "";
+            Map<String, Object> paramsmap = new HashMap<>();
+            Date d = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateNowStr = sdf.format(d);
 
-    //通过jsonpath获取实际值和期望值比较，返回断言信息
-//    private String ParseJsonResult(TestCore core, String ActualJson, TestAssert Ass, RequestObject ob) throws Exception {
-//        String AssertInfo="";
-//        HashMap<String,String> ExpectMap=core.GetExpectMap(ob.getExpect());
-//        for (String JPath: ExpectMap.keySet()) {
-//            //获取期望值的status结果
-//            String ExpectValue = getCaseExpectValue(core,JPath,ExpectMap);
-//            //获取实际值使用jsonpath解析
-//
-//            String ActualResult=JsonPath.read(ActualJson,JPath).toString();
-//            getLogger().info(TestCore.logplannameandcasename +"ExpectValue is:" + ExpectValue + "  ActualResult is:" + ActualResult);
-//            AssertInfo = Ass.AssertEqual(ExpectValue, ActualResult);
-//        }
-//        return AssertInfo;
-//    }
+            stringBuilder.append(requestObject.getCaseid() + "|");
+            stringBuilder.append(requestObject.getTestplanid() + "|");
+            stringBuilder.append(requestObject.getBatchname() + "|");
+            stringBuilder.append(requestObject.getSlaverid() + "|");
+            stringBuilder.append(testAssert.isCaseresult() + "|");
+
+
+//            ActualResult=ActualResult.replaceAll(System.getProperty("line.separator"), "");
+//            ActualResult=ActualResult.replace("\\n", "");
+//            ActualResult=ActualResult.replaceAll("\\\\n","");
+//            ActualResult=ActualResult.replace("\\r\\n", "");
+//            ActualResult=ActualResult.replaceAll("\\\\r\\\\n", "");
+//            ActualResult=ActualResult.replace("\\r", "");
+//            ActualResult=ActualResult.replaceAll("\\\\r", "");
+            //Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+
+            Pattern p = Pattern.compile("\r|\n");
+            Matcher m = p.matcher(ActualResult);
+            ActualResult = m.replaceAll("");
+            stringBuilder.append(ActualResult + "|");
+
+            stringBuilder.append(assertInfo + "|");
+            stringBuilder.append(time + "|");
+            stringBuilder.append(requestObject.getExpect() + "|");
+            stringBuilder.append(ErrorInfo + "|");
+            stringBuilder.append(dateNowStr + "|");
+            stringBuilder.append(dateNowStr + "|");
+            stringBuilder.append("admin" + "|");
+
+            Map<String, Object> headermap = requestObject.getHeader().getParams();
+            for (String key : headermap.keySet()) {
+                header = header + key + " ：" + headermap.get(key);
+            }
+            header = header.replace("'", "''");
+            paramsmap = requestObject.getParamers().getParams();
+            for (String key : paramsmap.keySet()) {
+                Params = Params + key + " ：" + paramsmap.get(key) + " ";
+            }
+            if (!Params.isEmpty()) {
+                PostData = "参数：" + Params;
+            } else {
+                PostData = requestObject.getPostData();
+            }
+            PostData = PostData.replace("'", "''");
+
+            stringBuilder.append(header + "|");
+            stringBuilder.append(PostData.replace(System.getProperty("line.separator"), "") + "|");
+            stringBuilder.append(requestObject.getResource() + "|");
+            stringBuilder.append(requestObject.getRequestmMthod());
+
+            String LogFileName = requestObject.getTestplanid() + "-" + requestObject.getBatchid() + "-" + requestObject.getSlaverid();
+            fw = new FileWriter(LogFolder + "/" + LogFileName + ".txt", true);
+            fw.write(stringBuilder.toString() + System.getProperty("line.separator"));
+        } catch (Exception ex) {
+            getLogger().error("用例运行结束保存日志发生异常，请检查!" + ex.getMessage());
+        } finally {
+            if (null != fw) {
+                try {
+                    fw.close();
+                } catch (IOException ex) {
+                    getLogger().error("用例运行结束日志文件关闭发生异常，请检查!" + ex.getMessage());
+                }
+            }
+        }
+    }
 
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
@@ -169,7 +226,7 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
 
-        String json="{\"Authorization\":\"BearerAutometereyJhbGciOiJSUzI1NiIsInppcCI6IkRFRiJ9.eNp0lz2OFDEQhe8y8SaMlkWajEuQrtxuo7HUf7Ldza4QIcSQkRKRERJwHzQcA-OqsssuE43fK837Xrs90-r3J78Pp8tJjbNdTncntYdrlK83q5U3_o1yVg2T8Rc1jnfSHc1kgukOgrJTZzBZHzq2N8rpa2ewb6OKBKX1ui8h1aA1wotMSJIJRALjSVLoZiEwflJYWkJQXEJIXFBAXJYvp6qUAKLEkKYs0BQIalNOzb7oQgHdoB71uow22HWpoMxu8NWkKsImVSXmN2XYhNUShXpVeiUkvgfuIGHPiIeqwLJBJDQIg7Iw0GAA496ublaLNs5sqwuZJQYM25nlBmKWy4gJ6yVm3Yo-qBDTrPadmmzYrVrNO3XZvFOZTbu12bxUr7dU7KPYvGbHxDaJvQEjsVnt2sWv16dXHF1xbptDK06sOK7ZWN1oXE0Bq00Gt44Hb14PM67vlp6_b62Ljcahvkau8SprK7XhVqrCjU4yXu1otn2xcG9pTZAsAYASwlFQMEoKtfofQ7lnyC2SoosDcUVTYnFyqN9U0FeMRJEDs4aypDEeVQ5HjdFmOaxbZ4PPKiYxvnISgDkJwTRCmCMwj8p7M8dnZcMrvgDzUdOgjJoqZSA6lVEpNyt9tUvuRLJUKQ41IIfApAuPHMI8Gb0Hs00KDjfXBKosIDELUMwgFrMkbMhHR5gSO_CjJPy2wMCPlvCxStwG_lNjEvGVk8DMSUimEcacgsm3sLl_zc2r7lxz25p75lY8qGmBcbhOWWmdgtIKU9IaI7x2dgv1_1rrYbC0E6O1E641kdzaVGJSB_6j45KQpIAECgCwplxQGBdU_smF-NzMOPa07PnI7I9Sgd7ovxis1htRzzjCy8Ylq1AuG1UGlctGxeKO6hWjdlj40b5a1GZGHe0rRW32wIeadiPpYPcq0ET2gIksA36vEUyw1p-fH2-_vt9-fLt9_vT7y9f4PmaettPlxcP9_fn88Or88sNfAAAA__8.RDgcm6V5dMuHNLCpUe8nzN_2IRqqoNOFJoG6Yk9JDTfYLZ4NaqP2sSsLJaFtUzQ8cu7njnvRwbAYJf2Xv--3Pw\",\"bb\":\"aaaaaaaaa\"}";
+        String json = "{\"Authorization\":\"BearerAutometereyJhbGciOiJSUzI1NiIsInppcCI6IkRFRiJ9.eNp0lz2OFDEQhe8y8SaMlkWajEuQrtxuo7HUf7Ldza4QIcSQkRKRERJwHzQcA-OqsssuE43fK837Xrs90-r3J78Pp8tJjbNdTncntYdrlK83q5U3_o1yVg2T8Rc1jnfSHc1kgukOgrJTZzBZHzq2N8rpa2ewb6OKBKX1ui8h1aA1wotMSJIJRALjSVLoZiEwflJYWkJQXEJIXFBAXJYvp6qUAKLEkKYs0BQIalNOzb7oQgHdoB71uow22HWpoMxu8NWkKsImVSXmN2XYhNUShXpVeiUkvgfuIGHPiIeqwLJBJDQIg7Iw0GAA496ublaLNs5sqwuZJQYM25nlBmKWy4gJ6yVm3Yo-qBDTrPadmmzYrVrNO3XZvFOZTbu12bxUr7dU7KPYvGbHxDaJvQEjsVnt2sWv16dXHF1xbptDK06sOK7ZWN1oXE0Bq00Gt44Hb14PM67vlp6_b62Ljcahvkau8SprK7XhVqrCjU4yXu1otn2xcG9pTZAsAYASwlFQMEoKtfofQ7lnyC2SoosDcUVTYnFyqN9U0FeMRJEDs4aypDEeVQ5HjdFmOaxbZ4PPKiYxvnISgDkJwTRCmCMwj8p7M8dnZcMrvgDzUdOgjJoqZSA6lVEpNyt9tUvuRLJUKQ41IIfApAuPHMI8Gb0Hs00KDjfXBKosIDELUMwgFrMkbMhHR5gSO_CjJPy2wMCPlvCxStwG_lNjEvGVk8DMSUimEcacgsm3sLl_zc2r7lxz25p75lY8qGmBcbhOWWmdgtIKU9IaI7x2dgv1_1rrYbC0E6O1E641kdzaVGJSB_6j45KQpIAECgCwplxQGBdU_smF-NzMOPa07PnI7I9Sgd7ovxis1htRzzjCy8Ylq1AuG1UGlctGxeKO6hWjdlj40b5a1GZGHe0rRW32wIeadiPpYPcq0ET2gIksA36vEUyw1p-fH2-_vt9-fLt9_vT7y9f4PmaettPlxcP9_fn88Or88sNfAAAA__8.RDgcm6V5dMuHNLCpUe8nzN_2IRqqoNOFJoG6Yk9JDTfYLZ4NaqP2sSsLJaFtUzQ8cu7njnvRwbAYJf2Xv--3Pw\",\"bb\":\"aaaaaaaaa\"}";
 //        DocumentContext documentContext=JsonPath.parse(json);
 //        documentContext.set("$.code","100");
 //        System.out.println(documentContext.jsonString());

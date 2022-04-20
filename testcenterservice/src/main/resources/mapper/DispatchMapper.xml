@@ -18,6 +18,8 @@
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="expect" jdbcType="VARCHAR" property="expect" />
     <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="loops" jdbcType="BIGINT" property="loops" />
+    <result column="threadnum" jdbcType="BIGINT" property="threadnum" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />

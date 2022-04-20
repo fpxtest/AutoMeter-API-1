@@ -34,6 +34,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
 
     // 测试执行的循环体，根据线程数和循环次数的不同可执行多次，类似于LoadRunner中的Action方法
     public SampleResult runTest(JavaSamplerContext ctx) {
+
         String SlaverId = ctx.getParameter("SlaverId");
         String DispatchIds = ctx.getParameter("DispatchIds");
         String mysqlurl = ctx.getParameter("mysqlurl");
@@ -142,12 +143,6 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         return GroupObject;
     }
 
-    //用例发送请求
-    private TestResponeData SendCaseRequest(RequestObject ob, TestCore core) throws Exception {
-        TestResponeData Result = core.request(ob);
-        return Result;
-    }
-
     //用例运行过程中的异常信息处理
     private String CaseException(SampleResult results, TestAssert testAssert, String exceptionMessage) {
         // 断言用例运行结果为失败
@@ -173,7 +168,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     //功能用例统计批次发布单元用例执行信息
-    private void CollectionBatchDeployReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId) {
+    private void CollectionBatchDeployReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId)  {
         apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));
         apicasesReportstatics.setTotalpasscases(String.valueOf(TotalPassNums));
@@ -182,8 +177,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         core.SaveReportStatics(apicasesReportstatics);
     }
 
-    private void  FinisBatchCase(TestCore core,String planid, String BatchName, String SlaverId)
-    {
+    private void  FinisBatchCase(TestCore core,String planid, String BatchName, String SlaverId)  {
         getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + SlaverId);
         getLogger().info("功能用例统计收集信息 完成。。。。。。。。。。。。。。。。");
         //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
@@ -203,12 +197,19 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
         String SlaverId = ctx.getParameter("SlaverId");
-        Core.UpdateSlaverStatus(SlaverId, "空闲");
+        try {
+            Core.UpdateSlaverStatus(SlaverId, "空闲");
+        } catch (Exception exception) {
+            getLogger().info("UpdateSlaverStatus 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + exception.getMessage());
+        }
         super.teardownTest(ctx);
     }
 
     // 本地调试
     public static void main(String[] args)  {
+
+        String s=System.getProperty("line.separator");
+        System.out.println(System.getProperty("line.separator"));
 
 
         String teststr=" ";

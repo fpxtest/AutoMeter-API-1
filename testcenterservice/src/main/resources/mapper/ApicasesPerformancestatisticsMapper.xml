@@ -47,6 +47,6 @@
 
   <select id="getresultbyidandname" resultMap="BaseResultMap">
     SELECT b.executeplanname as executeplanname ,a.*
-    FROM apicases_performancestatistics a inner join executeplan b on a.testplanid =b.id where a.testplanid=#{testplanid} and a.batchname =#{batchname} order by a.create_time desc limit 3
+    FROM apicases_performancestatistics a inner join executeplan b on a.testplanid =b.id where a.testplanid=#{testplanid} and a.batchname =#{batchname}
   </select>
 </mapper>

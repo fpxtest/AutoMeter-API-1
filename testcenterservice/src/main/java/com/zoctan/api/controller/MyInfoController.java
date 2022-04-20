@@ -9,6 +9,7 @@ import com.zoctan.api.dto.MyRunInfo;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.ApicasesReportPerformanceMapper;
 import com.zoctan.api.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -21,6 +22,7 @@ import java.util.Map;
  * @author Zoctan
  * @date 2020/04/18
  */
+@Slf4j
 @RestController
 @RequestMapping("/MyInfo")
 public class MyInfoController {
@@ -153,6 +155,7 @@ public class MyInfoController {
         functionexecplancon.createCriteria().andCondition("creator = '" + creator + "'")
                 .andCondition("usetype = '功能" + "'");
         List<Executeplan> functionexecuteplanList= executeplanService.listByCondition(functionexecplancon);
+        MyInfoController.log.info("myruninfo..........功能测试集合数："+functionexecuteplanList.size());
         long functionallruncase=0;
         long functionallrunsuccesscase=0;
         long functionallrunfailcase=0;
@@ -163,17 +166,35 @@ public class MyInfoController {
             Condition execplancon=new Condition(ApicasesReportstatics.class);
             execplancon.createCriteria().andCondition("testplanid = " + execplanid );
             List<ApicasesReportstatics>apicasesReportstaticsList= apicasesReportstaticsService.listByCondition(execplancon);
+            MyInfoController.log.info("测试集合："+ex.getExecuteplanname()+" myruninfo..........功能测试报告统计结果条数："+apicasesReportstaticsList.size());
+
+
             for (ApicasesReportstatics ap:apicasesReportstaticsList) {
                 functionallruncase=functionallruncase+ap.getTotalcases();
+                MyInfoController.log.info("测试集合："+ex.getExecuteplanname()+" myruninfo..........功能测试运行循环用例数："+functionallruncase);
+
                 functionallrunsuccesscase=functionallrunsuccesscase+ap.getTotalpasscases();
+                MyInfoController.log.info("测试集合："+ex.getExecuteplanname()+" myruninfo..........功能测试运行循环成功用例数："+functionallrunsuccesscase);
+
                 functionallrunfailcase=functionallrunfailcase+ap.getTotalfailcases();
+                MyInfoController.log.info("测试集合："+ex.getExecuteplanname()+" myruninfo..........功能测试运行循环失败用例数："+functionallrunfailcase);
+
                 functionallruncasetime=functionallruncasetime+ap.getRuntime();
+                MyInfoController.log.info("测试集合："+ex.getExecuteplanname()+" myruninfo..........功能测试运行循环时间："+functionallruncasetime);
             }
         }
         myRunInfo.setFuntotalcasenums(functionallruncase);
+        MyInfoController.log.info(" myruninfo..........功能测试运行总用例数结果："+functionallruncase);
+
         myRunInfo.setFuntotalpasscasenums(functionallrunsuccesscase);
+        MyInfoController.log.info(" myruninfo..........功能测试运行总用例数结果："+functionallrunsuccesscase);
+
         myRunInfo.setFuntotalfailcasenums(functionallrunfailcase);
+        MyInfoController.log.info(" myruninfo..........功能测试运行总用例数结果："+functionallrunfailcase);
+
         myRunInfo.setFuntotalcosttime(functionallruncasetime/1000);
+        MyInfoController.log.info(" myruninfo..........功能测试运行总用例数结果："+functionallruncasetime);
+
 
         Condition performanceexecplancon=new Condition(Executeplan.class);
         performanceexecplancon.createCriteria().andCondition("creator = '" + creator + "'")

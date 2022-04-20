@@ -17,6 +17,10 @@
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="totalcasenums" jdbcType="BIGINT" property="totalcasenums" />
+    <result column="totalcasepassnums" jdbcType="BIGINT" property="totalcasepassnums" />
+    <result column="totalcasefailnums" jdbcType="BIGINT" property="totalcasefailnums" />
+
   </resultMap>
 
   <select id="findperformancereportsource" resultMap="BaseResultMap">
@@ -28,4 +32,9 @@
     update performancereportsource set status ='已解析'
     where planid = #{planid} and batchid =#{batchid} and slaverid=#{slaverid} and caseid=#{caseid}
   </update>
+
+  <select id="findperformancereportsourcebyids" resultMap="BaseResultMap">
+    select * from performancereportsource
+    WHERE   caseid=#{caseid} and slaverid=#{slaverid} and planid=#{planid} and batchid=#{batchid}
+  </select>
 </mapper>

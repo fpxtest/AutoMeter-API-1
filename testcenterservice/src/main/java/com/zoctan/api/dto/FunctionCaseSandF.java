@@ -22,14 +22,14 @@ public class FunctionCaseSandF {
     }
 
 
-    public int getValue() {
+    public long getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(long value) {
         this.value = value;
     }
 
-    private int  value;
+    private long  value;
 
 }

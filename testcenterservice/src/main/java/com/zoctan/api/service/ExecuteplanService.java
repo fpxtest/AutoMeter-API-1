@@ -45,5 +45,5 @@ public interface ExecuteplanService extends Service<Executeplan> {
 
     List<String> getstaticsplan();
 
-
+    void createNewTable(String tableName);
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ConditionDelayMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ConditionDelay">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="conditionid" jdbcType="BIGINT" property="conditionid" />
+    <result column="conditionname" jdbcType="VARCHAR" property="conditionname" />
+    <result column="subconditionname" jdbcType="VARCHAR" property="subconditionname" />
+    <result column="delaytime" jdbcType="BIGINT" property="delaytime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findtestconditiondelayWithName" resultMap="BaseResultMap">
+    SELECT b.conditionname,a.*
+    FROM condition_delay a inner join testcondition b on a.conditionid=b.id
+    <where>
+      <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updateTestconditiondelay" parameterType="com.zoctan.api.entity.ConditionDelay">
+    update condition_delay set conditionid = #{conditionid},
+     conditionname = #{conditionname},subconditionname=#{subconditionname},delaytime=#{delaytime},
+    creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>

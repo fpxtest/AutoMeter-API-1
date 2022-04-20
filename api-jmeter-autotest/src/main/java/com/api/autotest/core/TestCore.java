@@ -419,7 +419,7 @@ public class TestCore {
     }
 
     // 记录用例测试结果
-    public void SaveReportStatics(ApicasesReportstatics apicasesReportstatics) {
+    public void SaveReportStatics(ApicasesReportstatics apicasesReportstatics)  {
         testMysqlHelp.SaveReportStatics(apicasesReportstatics);
     }
 
@@ -430,19 +430,30 @@ public class TestCore {
         return  DispatchNotFinishNums;
     }
 
+    //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
+    public long PlanBatchAllDipatchCancel(String Testplanid, String batchname) {
+        long DispatchCancel = testMysqlHelp.PlanBatchAllDipatchCancel(Testplanid,batchname);
+        return  DispatchCancel;
+    }
+
     // 更新计划批次状态
-    public void UpdateReportStatics(String Planid, String BatchName, String status) {
+    public void UpdateReportStatics(String Planid, String BatchName, String status)  {
         testMysqlHelp.UpdateReportStatics(Planid,BatchName,status);
     }
 
     // 更新Slaver状态
-    public void UpdateSlaverStatus(String Slaverid, String status) {
+    public void UpdateSlaverStatus(String Slaverid, String status) throws Exception {
         testMysqlHelp.UpdateSlaverStatus(Slaverid,status);
     }
 
     // 更新用例调度结果
     public void updatedispatchcasestatus(String testplanid, String caseid, String slaverid, String batchid) {
         testMysqlHelp.updatedispatchcasestatus(testplanid,caseid,slaverid,batchid);
+    }
+
+    // 更新用例调度结果
+    public void generalperformancelogfile(String testplanid, String caseid, String slaverid, String batchid,String Filename,String status) {
+        testMysqlHelp.generalperformancelogfile(testplanid,caseid,slaverid,batchid,Filename,status);
     }
 
     //生成性能报告目录

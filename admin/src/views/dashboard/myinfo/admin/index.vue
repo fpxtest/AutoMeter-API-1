@@ -1,34 +1,34 @@
 <template>
   <div class="dashboard-editor-container">
-    <el-row :gutter="18">
+    <el-row :gutter="1">
       <div>
         <label>我创建的:</label>
       </div>
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:5px;">
         <mycreateinfo />
       </el-col>
     </el-row>
-    <el-row :gutter="8">
+    <el-row :gutter="1">
       <div>
         <label>我运行的:</label>
       </div>
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:5px;">
         <RunTable />
       </el-col>
     </el-row>
-    <el-row :gutter="8">
+    <el-row :gutter="1">
       <div>
         <label>最近的功能测试:</label>
       </div>
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:5px;">
         <myrecentfunctioninfo />
       </el-col>
     </el-row>
-    <el-row :gutter="8">
+    <el-row :gutter="1">
       <div>
         <label>最近的性能测试:</label>
       </div>
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
+      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 100}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:5px;">
         <myrecentperformanceinfo />
       </el-col>
     </el-row>
@@ -61,7 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-editor-container {
-  padding: 20px;
+  padding: 10px;
   background-color: rgb(240, 242, 245);
   position: relative;
 
@@ -75,7 +75,7 @@ export default {
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 }
 

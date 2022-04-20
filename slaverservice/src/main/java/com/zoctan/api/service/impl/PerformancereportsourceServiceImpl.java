@@ -27,6 +27,11 @@ private PerformancereportsourceMapper performancereportsourceMapper;
     }
 
     @Override
+    public List<Performancereportsource> findperformancereportsourcebyids(long caseid, long slaverid, long planid, Long batchid) {
+        return performancereportsourceMapper.findperformancereportsourcebyids(caseid, slaverid, planid, batchid);
+    }
+
+    @Override
     public void updateperformancereportsourcedone(Long planid, Long slaverid, Long batchid, Long caseid) {
         performancereportsourceMapper.updateperformancereportsourcedone(planid,slaverid,batchid,caseid);
 

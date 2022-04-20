@@ -39,5 +39,6 @@ public interface ExecuteplanMapper extends MyMapper<Executeplan> {
 
     List<String> getstaticsplan();
 
+    void createNewTable(@Param("tableName") String tableName);
 
 }

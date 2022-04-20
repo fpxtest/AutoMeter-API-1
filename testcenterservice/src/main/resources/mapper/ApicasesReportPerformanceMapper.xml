@@ -45,5 +45,22 @@
   </select>
 
 
+  <select id="finddynamicresult" resultMap="BaseResultMap">
+    SELECT b.casename,b.apiname,a.status,a.url,a.requestmethod,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time,a.requestheader,a.requestdatas
+    FROM ${tableName}  a inner join apicases b on a.caseid=b.id
+    <where>
+      <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
+      <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+    </where>
+    order by a.lastmodify_time  DESC
+  </select>
+
+
+  <select id="finddynamicresultbystatus" resultMap="BaseResultMap">
+    SELECT b.casename,b.apiname,a.status,a.url,a.requestmethod,a.batchname,b.deployunitname,a.respone,a.assertvalue,a.runtime,a.expect,a.errorinfo,a.create_time,a.requestheader,a.requestdatas
+    FROM ${tableName}  a inner join apicases b on a.caseid=b.id where a.testplanid =#{testplanid} and  a.batchname =#{batchname}
+    and status =#{status}
+    order by a.lastmodify_time  DESC
+  </select>
 
 </mapper>

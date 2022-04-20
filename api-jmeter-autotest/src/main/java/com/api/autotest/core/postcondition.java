@@ -41,8 +41,6 @@ public class postcondition extends AbstractJavaSamplerClient {
         params.addArgument("mysqlusername", "root");
         params.addArgument("mysqlpassword", "root");
         params.addArgument("creator", "admin");
-
-
         return params;
     }
 
@@ -56,54 +54,69 @@ public class postcondition extends AbstractJavaSamplerClient {
     //结束方法，实际运行时每个线程仅执行一次，在测试方法运行结束后执行，类似于LoadRunner中的end方法
     public void teardownTest(JavaSamplerContext ctx) {
         super.teardownTest(ctx);
-        TestCore core = new TestCore(ctx,getLogger());
-        String errorinfo = "";
-        String status="";
+        TestCore core = new TestCore(ctx, getLogger());
         String caseid = ctx.getParameter("caseid");
         String testplanid = ctx.getParameter("testplanid");
         String batchid = ctx.getParameter("batchid");
         String batchname = ctx.getParameter("batchname");
         String slaverid = ctx.getParameter("slaverid");
         String casetype = ctx.getParameter("casetype");
-        String casereportfolder = ctx.getParameter("casereportfolder").replace("AM"," ");
+        String casereportfolder = ctx.getParameter("casereportfolder").replace("Autometer", " ");
         String testclass = ctx.getParameter("testclass");
         String creator = ctx.getParameter("creator");
 
         String start = ctx.getParameter("start");
+        getLogger().info("postcondition teardownTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:");
 
-        getLogger().info( "postcondition teardownTest 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
-
-        //更新调度表状态已完成
         try {
-            core.updatedispatchcasestatus(testplanid,caseid,slaverid,batchid);
-            core.PlanBatchAllDipatchFinish(testplanid,batchname);
-            core.SendMessageDingDing(testplanid,batchname);
-            core.SendMailByFinishPlanCase(testplanid,batchname);
-            getLogger().info(TestCaseData.logplannameandcasename + "更新调度表状态完成");
-            getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:"+slaverid);
-            core.UpdateSlaverStatus(slaverid,"空闲");
+            long canceldispatch = core.PlanBatchAllDipatchCancel(testplanid, batchname);
+            if (canceldispatch > 0) {
+                core.UpdateReportStatics(testplanid, batchname, "已取消");
+                getLogger().info(TestCaseData.logplannameandcasename + "更新计划批次表状态已取消");
+            } else {
+                //更新调度表状态已完成
+                core.updatedispatchcasestatus(testplanid, caseid, slaverid, batchid);
+                getLogger().info(TestCaseData.logplannameandcasename + "更新调度表状态完成");
+                long runningnums = core.PlanBatchAllDipatchFinish(testplanid, batchname);
+                if (runningnums == 0) {
+                    core.UpdateReportStatics(testplanid, batchname, "已完成");
+                    getLogger().info(TestCaseData.logplannameandcasename + "更新计划批次表状态完成");
+                }
+            }
+            //新增性能日志记录表
+            String FileName = testplanid + "-" + batchid + "-" + slaverid;
+            core.generalperformancelogfile(testplanid, caseid, slaverid, batchid, FileName, "待处理");
+            getLogger().info(TestCaseData.logplannameandcasename + "generalperformancelogfile完成");
+            core.SendMessageDingDing(testplanid, batchname);
+            core.SendMailByFinishPlanCase(testplanid, batchname);
+            getLogger().info(TestCaseData.logplannameandcasename + "发送mail，dingding完成");
+
+        } catch (Exception ex) {
+            getLogger().info(TestCaseData.logplannameandcasename + "性能测试teardownTest异常：" + ex.getMessage());
         }
-        catch (Exception ex)
-        {
-            getLogger().info(TestCaseData.logplannameandcasename + "更新调度表状态异常："+ex.getMessage());
+        finally {
+            try {
+                core.UpdateSlaverStatus(slaverid, "空闲");
+            } catch (Exception ex) {
+                getLogger().info(TestCaseData.logplannameandcasename + "性能测试teardownTest更新Slaver状态空闲异常：" + ex.getMessage());
+            }
         }
         //slaver性能测试解析报告，生成数据入库
         try {
-            if(casetype.equals(new String("性能")))
-            {
-                File file1 = new File(casereportfolder+"/index.html");
-                if(!file1.exists()) {
+            if (casetype.equalsIgnoreCase("性能")) {
+                File file1 = new File(casereportfolder + "/index.html");
+                if (!file1.exists()) {
                     getLogger().info(TestCaseData.logplannameandcasename + "性能报告文件未生成。。。。。。。。。。。。。。。");
                 }
                 getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
                 long end = new Date().getTime();
-                long starttime=Long.parseLong(start);
-                double costtime=(double)(end-starttime)/1000;
-                core.genealperformacestaticsreport(testclass,batchname,testplanid,batchid,slaverid,caseid,casereportfolder,costtime,creator);
+                long starttime = Long.parseLong(start);
+                double costtime = (double) (end - starttime) / 1000;
+                core.genealperformacestaticsreport(testclass, batchname, testplanid, batchid, slaverid, caseid, casereportfolder, costtime, creator);
                 getLogger().info(TestCaseData.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
             }
         } catch (Exception e) {
-            getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告出错：" + e.getMessage());
+            getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告文件出错：" + e.getMessage());
         }
     }
 

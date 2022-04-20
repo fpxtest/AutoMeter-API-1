@@ -30,7 +30,7 @@
     </el-row>
 
     <el-row  style="background:#fff;padding:16px 16px 15px;margin-bottom:15px;">
-      <Chart className="testplanchar" id="testplan" LineName="执行计划用例成功率" :PlanDateData="LineDateData" :StaticsData="PlanStaticsData" height="300%" width="100%" />
+      <Chart className="testplanchar" id="testplan" LineName="测试集合用例成功率" :PlanDateData="LineDateData" :StaticsData="PlanStaticsData" height="300%" width="100%" />
     </el-row>
 
 

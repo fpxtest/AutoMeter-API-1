@@ -16,7 +16,7 @@
         </el-form-item>
 
         <span v-if="hasPermission('apireport:search')">
-          <el-form-item label="测试集合" prop="testplanname" required>
+          <el-form-item label="功能测试集合" prop="testplanname" required>
           <el-select v-model="tmpquery.testplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
             <el-option label="请选择"/>
             <div v-for="(testplan, index) in execplanList" :key="index">
@@ -304,7 +304,7 @@
           ></el-pagination>
         </template>
       </el-tab-pane>
-      <el-tab-pane label="未执行用例" name="three">
+      <el-tab-pane label="异常用例" name="three">
         <template>
           <el-table
             :data="dispatchdata"
@@ -493,7 +493,7 @@
         var option
         option = {
           title: {
-            text: '用例执行结果比例',
+            text: '功能用例执行结果比例',
             // subtext: '纯属虚构',
             left: 'center'
           },

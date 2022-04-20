@@ -90,6 +90,28 @@ public class Dispatch {
      */
     private Long testcaseid;
 
+    private Long threadnum;
+
+    public Long getThreadnum() {
+        return threadnum;
+    }
+
+    public void setThreadnum(Long threadnum) {
+        this.threadnum = threadnum;
+    }
+
+    public Long getLoops() {
+        return loops;
+    }
+
+    public void setLoops(Long loops) {
+        this.loops = loops;
+    }
+
+    private Long loops;
+
+
+
     /**
      * 用例名
      */

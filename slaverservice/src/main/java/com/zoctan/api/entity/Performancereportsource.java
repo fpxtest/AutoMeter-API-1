@@ -34,6 +34,35 @@ public class Performancereportsource {
      */
     private Long caseid;
 
+    public Long getTotalcasenums() {
+        return totalcasenums;
+    }
+
+    public void setTotalcasenums(Long totalcasenums) {
+        this.totalcasenums = totalcasenums;
+    }
+
+    public Long getTotalcasepassnums() {
+        return totalcasepassnums;
+    }
+
+    public void setTotalcasepassnums(Long totalcasepassnums) {
+        this.totalcasepassnums = totalcasepassnums;
+    }
+
+    public Long getTotalcasefailnums() {
+        return totalcasefailnums;
+    }
+
+    public void setTotalcasefailnums(Long totalcasefailnums) {
+        this.totalcasefailnums = totalcasefailnums;
+    }
+
+    private Long totalcasenums;
+    private Long totalcasepassnums;
+    private Long totalcasefailnums;
+
+
     /**
      * 解析文件匹配sample
      */

@@ -32,8 +32,8 @@ public class TestCaseData {
             String casename = context.getParameter("casename");
             String executeplanname = context.getParameter("executeplanname");
             logplannameandcasename = executeplanname + "--" + casename + " :";
-            logger.info(logplannameandcasename + "用例数据casename is :  " + casename);
-            logger.info(logplannameandcasename + "用例数据executeplanname is :  " + executeplanname);
+            //logger.info(logplannameandcasename + "用例数据casename is :  " + casename);
+            //logger.info(logplannameandcasename + "用例数据executeplanname is :  " + executeplanname);
 
             String testplanid = context.getParameter("testplanid");
             String caseid = context.getParameter("caseid");
@@ -43,40 +43,40 @@ public class TestCaseData {
             String machineip = context.getParameter("machineip");
             String deployvisitytype = context.getParameter("deployvisitytype");
             String RequestmMthod = context.getParameter("RequestmMthod");
-            logger.info(logplannameandcasename + "用例数据 RequestmMthod is :  " + RequestmMthod);
+            //logger.info(logplannameandcasename + "用例数据 RequestmMthod is :  " + RequestmMthod);
 
             String resource = context.getParameter("resource");
-            logger.info(logplannameandcasename + "用例数据 resource is :  " + resource);
+            //logger.info(logplannameandcasename + "用例数据 resource is :  " + resource);
 
             String apistyle = context.getParameter("apistyle");
-            logger.info(logplannameandcasename + "用例数据 apistyle is :  " + apistyle);
+            //logger.info(logplannameandcasename + "用例数据 apistyle is :  " + apistyle);
 
             String requestcontenttype = context.getParameter("requestcontenttype");
-            logger.info(logplannameandcasename + "用例数据 requestcontenttype is :  " + requestcontenttype);
+            //logger.info(logplannameandcasename + "用例数据 requestcontenttype is :  " + requestcontenttype);
 
             String responecontenttype = context.getParameter("responecontenttype");
-            logger.info(logplannameandcasename + "用例数据 responecontenttype is :  " + responecontenttype);
+            //logger.info(logplannameandcasename + "用例数据 responecontenttype is :  " + responecontenttype);
 
             String headjson = context.getParameter("headjson").replace("Autometer"," ");
-            logger.info(logplannameandcasename + "用例数据 headjson is :  " + headjson);
+            //logger.info(logplannameandcasename + "用例数据 headjson is :  " + headjson);
 
             String paramsjson = context.getParameter("paramsjson").replace("Autometer"," ");
-            logger.info(logplannameandcasename + "用例数据 paramsjson is :  " + paramsjson);
+            //logger.info(logplannameandcasename + "用例数据 paramsjson is :  " + paramsjson);
 
             String bodyjson = context.getParameter("bodyjson").replace("Autometer"," ");
-            logger.info(logplannameandcasename + "用例数据 bodyjson is :  " + bodyjson);
+            //logger.info(logplannameandcasename + "用例数据 bodyjson is :  " + bodyjson);
 
             String postdata = context.getParameter("postdata").replace("Autometer"," ");
-            logger.info(logplannameandcasename + "用例数据 postdata is :  " + postdata);
+            //logger.info(logplannameandcasename + "用例数据 postdata is :  " + postdata);
 
             String variablesjson = context.getParameter("variablesjson").replace("Autometer"," ");
-            logger.info(logplannameandcasename + "用例数据 variablesjson is :  " + variablesjson);
+            //logger.info(logplannameandcasename + "用例数据 variablesjson is :  " + variablesjson);
 
             String casetype = context.getParameter("casetype");
-            logger.info(logplannameandcasename + "用例数据 casetype is :  " + casetype);
+            //logger.info(logplannameandcasename + "用例数据 casetype is :  " + casetype);
 
             String protocal = context.getParameter("protocal");
-            logger.info(logplannameandcasename + "用例数据 protocal is :  " + protocal);
+            //logger.info(logplannameandcasename + "用例数据 protocal is :  " + protocal);
 
             newob.setCaseid(caseid);
             newob.setCasename(casename);
@@ -100,7 +100,7 @@ public class TestCaseData {
             newob.setMachineip(machineip);
 
             String expect = context.getParameter("expect");
-            logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
+            //logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
             List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
             if ((!expect.isEmpty())&&(expect!=null)) {
                 apicasesAssertList = JSONObject.parseArray(expect, ApicasesAssert.class);

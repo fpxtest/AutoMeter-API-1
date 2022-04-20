@@ -19,7 +19,6 @@ public  class AutoMeter {
         }
         catch (Exception ex)
         {
-            System.out.println(ex.getMessage());
         }
         return Value;
     }
@@ -27,6 +26,9 @@ public  class AutoMeter {
     public static void SetRequestValue(String Param,String Property,String Value)
     {
         String sql = "update api_casedata a set a.apiparamvalue ='"+ Value+"' where a.caseid ="+caseid+" and a.apiparam ='"+ Param+"' and a.propertytype = '"+Property+"'"  ;
-        MysqlConnectionUtils.update(sql);
+        try {
+            MysqlConnectionUtils.update(sql);
+        } catch (Exception exception) {
+        }
     }
 }

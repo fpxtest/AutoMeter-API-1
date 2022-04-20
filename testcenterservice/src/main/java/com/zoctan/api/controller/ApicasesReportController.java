@@ -186,7 +186,7 @@ public class ApicasesReportController {
             Condition dispatchnotexeccon = new Condition(Dispatch.class);
             dispatchnotexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
                     .andCondition("batchid = " + batchid)
-                    .andCondition("status != '" + "已完成" + "'");
+                    .andCondition("status = '" + "待分配" + "'");
             List<Dispatch> dispatchnotexecList = dispatchService.listByCondition(dispatchnotexeccon);
             functionCaseStatis.setNotExecCaseNums(dispatchnotexecList.size());
 

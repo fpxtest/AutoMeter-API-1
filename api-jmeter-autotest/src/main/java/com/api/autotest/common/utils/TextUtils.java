@@ -58,16 +58,16 @@ public class TextUtils {
         Map sParaNew = mapFilter(sArray);
         String prestr = createLinkString(sParaNew); // 把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
         prestr = prestr + key; // 把拼接后的字符串再与安全校验码直接连接起来
-        System.out.println("==" + prestr + "============");
+        //System.out.println("==" + prestr + "============");
         String mysign = Md5Encrypt.md5(prestr);
-        System.out.println("=======sign = " + mysign);
+        //System.out.println("=======sign = " + mysign);
         return mysign;
     }
 
     public static String sign(Map sArray, String key, String signType, String privateKey) {
         String prestr = createLinkString(sArray);
         prestr = prestr + key;
-        System.out.println("=======prestr = " + prestr);
+        //System.out.println("=======prestr = " + prestr);
         String charset = (String) sArray.get("charset");
         if (StringUtils.isBlank(charset)) {
             if (sArray.containsKey("_input_charset")) {
@@ -84,7 +84,7 @@ public class TextUtils {
         } else {
             mysign = Md5Encrypt.md5Charset(prestr, charset);
         }
-        System.out.println("=======sign = " + mysign);
+        //System.out.println("=======sign = " + mysign);
         return mysign;
     }
 

@@ -124,6 +124,6 @@ public class OracleConnectionUtils {
 //        String sql = "DELETE FROM recon_exp WHERE channel_code = '100006' AND trade_day='20170601'";
 //        System.out.println(MysqlConnectionUtils.update(sql));
         String sql = "SELECT * FROM account.ac_transaction t where t.out_trade_no='Detail20171211174746908'";
-        System.out.println(OracleConnectionUtils.query(sql));
+        //System.out.println(OracleConnectionUtils.query(sql));
     }
 }

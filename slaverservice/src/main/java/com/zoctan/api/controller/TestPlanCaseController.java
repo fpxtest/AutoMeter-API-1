@@ -207,19 +207,29 @@ public class TestPlanCaseController {
         String JmeterPath = "";
         String JmxPath = "";
         String JmeterPerformanceReportPath = "";
+        String JmeterPerformanceReportLogFilePath = "";
+
         if (ProjectPath.contains("slaverservice")) {
             JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
             JmxPath = ProjectPath + "/servicejmxcase";
             JmeterPerformanceReportPath = ProjectPath + "/performancereport";
+            JmeterPerformanceReportLogFilePath = ProjectPath + "/performancereportlogfile";
+
         } else {
             JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
             JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
             JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
+            JmeterPerformanceReportLogFilePath = ProjectPath + "/slaverservice/performancereportlogfile";
         }
         File dir = new File(JmeterPerformanceReportPath);
         if (!dir.exists()) {// 判断目录是否存在
             dir.mkdir();
             TestPlanCaseController.log.info("创建性能报告目录performancereport完成 :" + JmeterPerformanceReportPath);
+        }
+        File dirlog = new File(JmeterPerformanceReportLogFilePath);
+        if (!dirlog.exists()) {// 判断目录是否存在
+            dirlog.mkdir();
+            TestPlanCaseController.log.info("创建性能报告日志目录performancereport完成 :" + JmeterPerformanceReportLogFilePath);
         }
         String JmxCaseName = dispatch.getCasejmxname();
         String DeployUnitName = dispatch.getDeployunitname();
@@ -256,11 +266,12 @@ public class TestPlanCaseController {
                 jmeterPerformanceObject = GetJmeterPerformance(dispatch);
                 if (jmeterPerformanceObject != null) {
                     // 增加逻辑 获取计划的当前状态，如果为stop，放弃整个循环执行,return 掉
-                    tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath, dispatch.getThreadnum(), dispatch.getLoops(),dispatch.getCreator());
+                    tpcservice.ExecuteHttpPerformancePlanCase(jmeterPerformanceObject, DeployUnitNameForJmeter, JmeterPath, JmxPath, JmeterClassName, JmeterPerformanceReportPath,JmeterPerformanceReportLogFilePath, dispatch.getThreadnum(), dispatch.getLoops(),dispatch.getCreator());
                     // 更新调度表对应用例状态为已分配
                     dispatchMapper.updatedispatchstatus("已分配", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。更新dispatch状态为已分配.....开始调用jmeter..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
                     slaverMapper.updateSlaverStaus(SlaverId, "运行中");
+                    executeplanbatchMapper.updatebatchstatus(dispatch.getExecplanid(),dispatch.getBatchname(),"运行中");
                     TestPlanCaseController.log.info("性能任务-。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。调用jmeter完成..。。。。。。。。。。。。。。。。。。。。。。。。。" + dispatch.getId());
                 }
             } catch (Exception ex) {

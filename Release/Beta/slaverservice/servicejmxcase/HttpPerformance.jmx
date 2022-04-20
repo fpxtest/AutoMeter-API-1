@@ -167,6 +167,11 @@
             <stringProp name="Argument.value">${__P(creator,)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="reportlogfolder" elementType="Argument">
+            <stringProp name="Argument.name">reportlogfolder</stringProp>
+            <stringProp name="Argument.value">${__P(reportlogfolder,)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
@@ -383,6 +388,11 @@ log.error(&quot;===starttime-------------------------------------&quot;+starttim
               <elementProp name="creator" elementType="Argument">
                 <stringProp name="Argument.name">creator</stringProp>
                 <stringProp name="Argument.value">${creator}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="reportlogfolder" elementType="Argument">
+                <stringProp name="Argument.name">reportlogfolder</stringProp>
+                <stringProp name="Argument.value">${reportlogfolder}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>

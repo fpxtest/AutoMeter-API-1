@@ -17,11 +17,11 @@ public class PgsqlConnectionUtils {
 
     public static void initDbResource(String mysqluel,String mysqlusername,String mysqlpass ) {
         url =mysqluel;// pUtil.getProperty("mysql.host");
-        System.out.println(url);
+        //System.out.println(url);
         user =mysqlusername;// pUtil.getProperty("username");
-        System.out.println(user);
+        //System.out.println(user);
         password = mysqlpass;// pUtil.getProperty("password");
-        System.out.println(password);
+        //System.out.println(password);
 
 
     }

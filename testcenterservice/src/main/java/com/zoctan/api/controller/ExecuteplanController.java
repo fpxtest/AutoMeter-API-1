@@ -8,11 +8,9 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.ExecuteplanTestcase;
+import com.zoctan.api.entity.Routeperformancereport;
 import com.zoctan.api.mapper.ExecuteplanParamsMapper;
-import com.zoctan.api.service.ExecuteplanParamsService;
-import com.zoctan.api.service.ExecuteplanService;
-import com.zoctan.api.service.ExecuteplanTestcaseService;
-import com.zoctan.api.service.MacdepunitService;
+import com.zoctan.api.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +38,8 @@ public class ExecuteplanController {
     private ExecuteplanParamsService executeplanParamsService;
     @Autowired
     private MacdepunitService macdepunitService;
+    @Autowired
+    private RouteperformancereportService routeperformancereportService;
 
     @PostMapping
     public Result add(@RequestBody Executeplan executeplan) {
@@ -52,6 +52,17 @@ public class ExecuteplanController {
         }
         else {
             executeplanService.save(executeplan);
+            if(executeplan.getUsetype().equalsIgnoreCase("性能"))
+            {
+                //增加动态表
+                String TableName="apicases_report_performance"+executeplan.getId();
+                executeplanService.createNewTable(TableName);
+                //如果是性能测试集合，新增路由表
+                Routeperformancereport routeperformancereport=new Routeperformancereport();
+                routeperformancereport.setExecuteplanid(executeplan.getId());
+                routeperformancereport.setTablename(TableName);
+                routeperformancereportService.save(routeperformancereport);
+            }
             return ResultGenerator.genOkResult();
         }
     }

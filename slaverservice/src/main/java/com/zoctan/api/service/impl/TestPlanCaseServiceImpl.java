@@ -26,7 +26,7 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
 
 
     @Override
-    public void ExecuteHttpPerformancePlanCase(JmeterPerformanceObject jmeterPerformanceObject, String DeployName, String JmeterPath, String JmxPath, String JmxCaseName, String JmeterPerformanceReportPath, Long Thread, Long Loop,String Creator) throws IOException {
+    public void ExecuteHttpPerformancePlanCase(JmeterPerformanceObject jmeterPerformanceObject, String DeployName, String JmeterPath, String JmxPath, String JmxCaseName, String JmeterPerformanceReportPath, String JmeterPerformanceReportLogPath, Long Thread, Long Loop,String Creator) throws IOException {
         long SlaverId=jmeterPerformanceObject.getSlaverid();
         long PlanId=jmeterPerformanceObject.getTestplanid();
         long CaseId=jmeterPerformanceObject.getCaseid();
@@ -60,18 +60,35 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String DeployVisityType=jmeterPerformanceObject.getDeployunitvisittype();
 
 
-        String CaseReportFolder = JmeterPerformanceReportPath + "/" + PlanId + "-" + CaseId + "-" + BatchName;
+        String CaseReportFolder = JmeterPerformanceReportPath + "/" +SlaverId + "-" + PlanId + "-" + CaseId + "-" + BatchName;
         File dir = new File(CaseReportFolder);
         if (!dir.exists()) {// 判断目录是否存在
             dir.mkdir();
             TestPlanCaseServiceImpl.log.info("创建性能报告目录完成 :" + CaseReportFolder);
         }
-        CaseReportFolder=CaseReportFolder.replace(" ","AM");
+
+        String ReportSlaverLogFolder = JmeterPerformanceReportLogPath + "/" + SlaverId;
+        File logdir = new File(ReportSlaverLogFolder);
+        if (!logdir.exists()) {// 判断目录是否存在
+            logdir.mkdir();
+            TestPlanCaseServiceImpl.log.info("创建性能报告SlaverId日志目录完成 :" + ReportSlaverLogFolder);
+        }
+
+        String ReportSlaverPlanLogFolder = ReportSlaverLogFolder + "/" + PlanId;
+        File slaverplanlogdir = new File(ReportSlaverPlanLogFolder);
+        if (!slaverplanlogdir.exists()) {// 判断目录是否存在
+            slaverplanlogdir.mkdir();
+            TestPlanCaseServiceImpl.log.info("创建性能报告SlaverId-Planid日志目录完成 :" + slaverplanlogdir);
+        }
+
+        CaseReportFolder=CaseReportFolder.replace(" ","Autometer");
+        ReportSlaverPlanLogFolder=ReportSlaverPlanLogFolder.replace(" ","Autometer");
+
         String JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                 + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                  " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                 " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
-                " -Jtestdeployunit=" + DeployName + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder;
+                " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder;
         TestPlanCaseServiceImpl.log.info("性能JmeterCmd is :" + JmeterCmd);
         ExecShell(JmeterCmd);
         TestPlanCaseServiceImpl.log.info("性能JmeterCmd finish。。。。。。。。。。。。。。。。。。。。。。。。。。。。。 :");

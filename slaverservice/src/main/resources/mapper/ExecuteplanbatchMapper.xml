@@ -7,10 +7,15 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="executeplanname" jdbcType="VARCHAR" property="executeplanname" />
     <result column="batchname" jdbcType="VARCHAR" property="batchname" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="exectype" jdbcType="VARCHAR" property="exectype" />
+    <result column="execdate" jdbcType="VARCHAR" property="execdate" />
   </resultMap>
 
   <select id="getbatchbyplan" resultMap="BaseResultMap">
@@ -24,4 +29,10 @@
     FROM executeplanbatch a
     where a.executeplanid=#{executeplanid} and batchname =#{batchname}
   </select>
+
+  <update id="updatebatchstatus" >
+    update executeplanbatch set status=#{status}
+    where executeplanid=#{executeplanid} and batchname =#{batchname}
+  </update>
+
 </mapper>

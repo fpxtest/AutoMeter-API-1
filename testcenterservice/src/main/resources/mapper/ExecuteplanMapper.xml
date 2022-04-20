@@ -60,6 +60,32 @@
     update  executeplan set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s') where id = #{id}
   </update>
 
+  <update id="createNewTable" parameterType="String">
+    CREATE TABLE ${tableName} (
+        `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Id',
+        `caseid` bigint(20) unsigned NOT NULL COMMENT '用例id',
+        `testplanid` bigint(20) unsigned NOT NULL COMMENT '执行计划id',
+        `batchname` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '批次',
+        `slaverid` bigint(20) unsigned NOT NULL COMMENT '执行机id',
+        `status` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '运行结果，成功，失败，异常',
+        `respone` text CHARACTER SET utf8 COLLATE utf8_bin COMMENT '返回结果',
+        `assertvalue` text CHARACTER SET utf8 COLLATE utf8_bin COMMENT '断言详细经过',
+        `runtime` bigint(20) NOT NULL COMMENT '运行时长',
+        `expect` text CHARACTER SET utf8 COLLATE utf8_bin COMMENT '期望值',
+        `errorinfo` text CHARACTER SET utf8 COLLATE utf8_bin COMMENT '错误信息',
+        `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+        `lastmodify_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上一次修改时间',
+        `creator` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '创建者',
+        `requestheader` text COMMENT '请求头数据',
+        `requestdatas` text COMMENT '请求数据',
+        `url` varchar(200) DEFAULT NULL COMMENT '地址',
+        `requestmethod` varchar(20) DEFAULT NULL COMMENT '请求方式',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='api用例报告表';
+  </update>
+
+
+
   <select id="getstaticsplan" resultType="java.lang.String">
     SELECT a.executeplanname
     FROM executeplan a

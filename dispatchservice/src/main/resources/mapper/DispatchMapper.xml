@@ -24,6 +24,7 @@
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="plantype" jdbcType="VARCHAR" property="plantype" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
   </resultMap>
 
   <select id="findbusythreadnums" resultType="java.lang.Integer">
@@ -42,6 +43,12 @@
   <select id="getfunctiondispatchsbyslaverid" resultMap="BaseResultMap">
     select * from dispatch  where slaverid = #{slaverid} and status =#{status} and plantype=#{plantype} and execplanid=#{execplanid} and batchname=#{batchname} order by id ASC limit 50
   </select>
+
+  <select id="getdispatchsbyslaverid" resultMap="BaseResultMap">
+    select * from dispatch  where slaverid = #{slaverid} and status =#{status} and plantype=#{plantype}
+  </select>
+
+
 
 
 
@@ -105,4 +112,11 @@
     update  dispatch set status=#{status} , lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where
     execplanid = #{execplanid}  and batchname = #{batchname}
   </update>
+
+
+  <update id="updatedispatchcancel">
+    update  dispatch set status=#{status} ,memo=#{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') where
+      execplanid = #{execplanid}  and batchid = #{batchid}
+  </update>
+
 </mapper>

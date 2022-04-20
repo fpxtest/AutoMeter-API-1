@@ -87,7 +87,7 @@ public class HttpParamers {
         this.jsonParamer = JSON.toJSONString(this.params);
     }
 
-    private static boolean isEmpty(CharSequence cs) {
+    private  boolean isEmpty(CharSequence cs) {
         return (cs == null) || (cs.length() == 0);
     }
 }

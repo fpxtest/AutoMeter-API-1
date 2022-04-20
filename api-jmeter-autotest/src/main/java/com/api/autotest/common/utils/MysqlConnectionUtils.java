@@ -21,37 +21,21 @@ public class MysqlConnectionUtils {
     public static void initDbResource(String mysqluel,String mysqlusername,String mysqlpass ) {
         //PropertiesUtil pUtil = PropertiesUtil.getInstance("app.properties");
         url =mysqluel;// pUtil.getProperty("mysql.host");
-        System.out.println(url);
+        //System.out.println(url);
         user =mysqlusername;// pUtil.getProperty("username");
-        System.out.println(user);
+        //System.out.println(user);
         password = mysqlpass;// pUtil.getProperty("password");
-        System.out.println(password);
-
-
-//        if (ctx.getParameter("env").equals("1")) {
-//            // 开发环境
-//        } else if (ctx.getParameter("env").equals("2")) {
-//            // 测试环境
-//            url = "jdbc:mysql://139.224.37.98:3306/recondb";
-//            user = "dba";
-//            password = "dba";
-//        } else if (ctx.getParameter("env").equals("5")){
-//            // 代维环境
-//            url = "jdbc:mysql://106.15.109.134:3306/recondb";
-//            user = "dba";
-//            password = "dba";
-//        }
-
+        //System.out.println(password);
     }
     /**
      * 连接数据库
      */
-    public static void getConnection() {
+    public static void getConnection() throws Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(url, user, password);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -72,26 +56,29 @@ public class MysqlConnectionUtils {
      * 关闭数据库连接
      * @return
      */
-    public static void closeConnection() {
+    public static void closeConnection() throws Exception {
         if (st != null) {
             try {
                 st.close();
+                st=null;
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new Exception(e.getMessage());
             }
         }
         if (rs != null) {
             try {
                 rs.close();
+                rs=null;
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new Exception(e.getMessage());
             }
         }
         if (conn != null) {
             try {
                 conn.close();
+                conn=null;
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new Exception(e.getMessage());
             }
         }
     }
@@ -120,14 +107,18 @@ public class MysqlConnectionUtils {
         return resultArrayList;
     }
 
-    public static String update(String sql) {
-        getConnection();
+    public static String update(String sql) throws Exception {
         String result="";
         try {
+            getConnection();
+            if(conn.isClosed()||conn==null)
+            {
+                getConnection();
+            }
             st = conn.createStatement();
             st.execute(sql);
         }  catch (Exception e) {
-            result=e.getMessage();
+            throw  new Exception(e.getMessage());
         } finally {
             closeConnection();
         }

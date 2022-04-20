@@ -42,6 +42,46 @@ public class ApicasesReportPerformance extends Apicases {
      */
     private String respone;
 
+    public String getRequestheader() {
+        return requestheader;
+    }
+
+    public void setRequestheader(String requestheader) {
+        this.requestheader = requestheader;
+    }
+
+    public String getRequestdatas() {
+        return requestdatas;
+    }
+
+    public void setRequestdatas(String requestdatas) {
+        this.requestdatas = requestdatas;
+    }
+
+    private String requestheader;
+
+    private String requestdatas;
+
+    private String url;
+
+    private String requestmethod;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getRequestmethod() {
+        return requestmethod;
+    }
+
+    public void setRequestmethod(String requestmethod) {
+        this.requestmethod = requestmethod;
+    }
+
     /**
      * 断言详细经过
      */

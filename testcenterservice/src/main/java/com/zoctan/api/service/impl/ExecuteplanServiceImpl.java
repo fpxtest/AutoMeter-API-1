@@ -68,6 +68,11 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
     }
 
     @Override
+    public void createNewTable(String tableName) {
+        executeplanMapper.createNewTable(tableName);
+    }
+
+    @Override
     @Transactional(noRollbackFor = Exception.class)
     public void executeplancase(List<Testplanandbatch> testplanlist,String Exectype) {
         for (Testplanandbatch plan : testplanlist) {
