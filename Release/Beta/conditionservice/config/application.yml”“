@@ -1,0 +1,129 @@
+server:
+  port: 8083
+spring:
+  devtools:
+    restart:
+      # 修改代码后自动重启
+      enabled: true
+    # 数据源（应该全部加密）
+  datasource:
+    # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
+    url: jdbc:mysql://192.168.3.95:3406/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+    # 用户名 root
+    username: MyEnc({k/LqLqGoeBEoMz+MLuB6cg==})
+    # 密码 root
+    password: MyEnc({I6NT3SWbkubdgO2sXBEivg==})
+    # 驱动类
+    driver-class-name: com.mysql.jdbc.Driver
+  cache:
+    # 缓存类型
+    type: redis
+    redis:
+      # key 前缀
+      key-prefix: admin_dev
+      # 过期时间
+      time-to-live: 60s
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    # Redis服务器地址
+    host: 192.168.3.95
+    # Redis服务器连接端口
+    port: 6479
+    # Redis服务器连接密码（默认为空）
+    #password:
+    # 连接池最大连接数（使用负值表示没有限制）
+    jedis.pool:
+      max-active: 50
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: 1000
+      # 连接池中的最大空闲连接
+      max-idle: 10
+      # 连接池中的最小空闲连接
+      min-idle: 10
+    # 连接超时时间（毫秒）
+    timeout: 30000
+    #key过期时间
+    keyExpired: 180
+
+  # 终端彩色输出信息
+  output.ansi.enabled: ALWAYS
+  resources:
+    # 不映射工程中的静态资源文件比如：html、css
+    # 如果某些情况需要映射
+    # 比如 swagger2，可以在 addResourceHandlers 和 addViewControllers 中特别添加，参考 WebMvcConfig
+    add-mappings: false
+  mvc:
+    # 当出现 404 错误时，直接抛出异常（默认是显示一个错误页面）
+    throw-exception-if-no-handler-found: true
+  freemarker:
+    # 关闭模版检查
+    checkTemplateLocation: false
+
+rsa:
+  # 私钥位置
+  # private-key-path: rsa/private-key.pem
+  # 公钥位置
+  # public-key-path: rsa/public-key.pem
+  use-file: false
+  private-key: MIIBVQIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEA2Xjcb+LtTzoPalaHpRDvCGt10f1AOpMGhmNvJKTewhLZb8ChmcLAkCFhh9C1jqpnin2hbAf05ALtn/xLdboznwIDAQABAkEAhc3iO4kxH9UGVRQmY352xARyOqCKWz/I/PjDEpXKZTdWs1oqTM2lpYBlpnV/fJ3Sf2es6Sv6reLCLP7MZP1KGQIhAP0+wZ0c1YBVJvkkHHmhnGyaU1Bsb1alPY4A2sM97Q0lAiEA29Z7rVhw4Fgx201uhnwb0dqiuXfCZM1+fVDyTSg0XHMCIBZencGgE2fjna6yNuWzldquAx/+hBM2Q2qwvqIybScVAiEAlFhnnNHRWZIqEpJtwtJ8819V71GhG+SPNoEpAGfg7YECIHPReHdJdfBehhD1o63xH+gTZqliK4n6XvBhkcyWNYdS
+  public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANl43G/i7U86D2pWh6UQ7whrddH9QDqTBoZjbySk3sIS2W/AoZnCwJAhYYfQtY6qZ4p9oWwH9OQC7Z/8S3W6M58CAwEAAQ==
+
+jasypt.encryptor:
+  # 先 RSA + 后 Base64 加密的密码
+  # 在 JasyptConfig#myStringEncryptor 中先解密后再使用
+  password: VQoiLSHvARy1uHWnZGb8dLwy8Mx9wvanJq1oDT/0fudbF0tjs8LWYkGGPQdIkBjioms1RcQNOoYQRH8gAtphPg==
+  # 自定义的加密器
+  bean: myStringEncryptor
+  # 自定义被加密值的发现器
+  property:
+    detector-bean: myEncryptablePropertyDetector
+
+mybatis:
+  # 存放实体的位置
+  type-aliases-package: com.zoctan.api.entity
+  # 存放 mapper 映射文件的位置
+  mapper-locations: classpath:mapper/*.xml
+
+mapper:
+  # 多个接口时逗号隔开
+  mappers: com.zoctan.api.core.mapper.MyMapper
+  # insert 和 update 中，判断字符串类型 != ''
+  not-empty: false
+  # 取回主键的方式
+  identity: MYSQL
+
+# 分页插件
+# https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md
+pagehelper:
+  # pageSize=0 时查出所有结果，相当于没分页
+  page-size-zero: true
+  # 数据库方言
+  helperDialect: mysql
+  # 分页合理化
+  # pageNum <= 0 时会查询第一页
+  # pageNum > pages（超过总数时），会查询最后一页
+  reasonable: true
+  # 支持通过 Mapper 接口参数来传递分页参数
+  supportMethodsArguments: true
+
+# Json web token
+jwt:
+  # 管理后台过期时间
+  admin-expire-time: 1d
+  # 小程序前台过期时间
+  wechat-expire-time: 30d
+  # claim 权限 key
+  claim-key-auth: auth
+  # 请求头或请求参数的 key
+  header: Authorization
+  # token 类型
+  token-type: Bearer
+
+# 日志
+logging:
+  #  # 以文件方式记录日志
+  level.com.zoctan.api: debug
+  file: conditionservice.log
+  #  # 设置目录
+  path: /opt/conditionservice/log
