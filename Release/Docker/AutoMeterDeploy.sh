@@ -1,9 +1,9 @@
 #!/bin/sh
-getIpAddr(){
+ getIpAddr(){
         # 获取IP命令
         ipaddr=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
-        array=(`echo $ipaddr | tr '\n' ' '` )   # IP地址分割，区分是否多网卡
-        #array=(172.20.32.214 192.168.1.10);
+        array=(`echo $ipaddr | tr '\n' ' '` )  # IP地址分割，区分是否多网卡
+        #array=(172.20.32.214 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2);
         num=${#array[@]}                                                #获取数组元素的个数
  
         # 选择安装的IP地址
@@ -13,8 +13,13 @@ getIpAddr(){
         elif [ $num -gt 1 ];then
                 echo -e "\033[035m******************************\033[0m"
                 echo -e "\033[036m*    请选择安装的IP地址               \033[0m"
-                echo -e "\033[032m*      1 : ${array[0]}                \033[0m"
-                echo -e "\033[034m*      2 : ${array[1]}                \033[0m"
+                for ((i=0; i<=$num-1;i++))
+                do
+                        #echo $num
+                        echo -e "\033[032m*     $i : ${array[$i]}                \033[0m"
+                done    
+                #echo -e "\033[032m*      1 : ${array[0]}               \033[0m"
+                #echo -e "\033[034m*      2 : ${array[1]}               \033[0m"
                 echo -e "\033[035m******************************\033[0m"
                 #选择需要安装的服务类型
                 input=""
@@ -22,14 +27,9 @@ getIpAddr(){
                 do
                         read -r -p "*请选择安装的IP地址(序号): " input
                         case $input in
-                                1)
-                                        local_ip=${array[0]}
+                           [0-9]*)
+                                        local_ip=${array[$input]}
                                         #echo "选择网段1的IP为：${local_ip}"
-                                        break
-                                        ;;
-                                2)
-                                        local_ip=${array[1]}
-                                        #echo "选择网段2的IP为：${local_ip}"
                                         break
                                         ;;
                                 *)
@@ -42,7 +42,7 @@ getIpAddr(){
                 exit 1
         fi
 } 
- 
+
 # 校验IP地址合法性
 function isValidIp() {
         local ip=$1
@@ -64,8 +64,6 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 echo "*选择安装的IP地址为：${local_ip}"
-
-
 
 sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/conditionservice/config/application.yml 
 sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
