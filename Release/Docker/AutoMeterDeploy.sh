@@ -1,11 +1,14 @@
 #!/bin/sh
  getIpAddr(){
         # 获取IP命令
+        echo "开始获取ip"
         ipaddr=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
+        echo "获取ip：$ipaddr"
         array=(`echo $ipaddr | tr '\n' ' '` )  # IP地址分割，区分是否多网卡
         #array=(172.20.32.214 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2);
         num=${#array[@]}                                                #获取数组元素的个数
- 
+        echo "ip数组长度为$num"
+
         # 选择安装的IP地址
         if [ $num -eq 1 ]; then
                 echo "*单网卡"
