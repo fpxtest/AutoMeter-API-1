@@ -1,8 +1,9 @@
 #!/bin/sh
- getIpAddr(){
+ function getIpAddr() 
+ {
         # 获取IP命令
         echo "开始获取ip"
-        ipaddr=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
+        ipaddr=`ifconfig -a|grep inet|grep -v 192.168.3.95|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
         echo "获取ip：$ipaddr"
         array=(`echo $ipaddr | tr '\n' ' '` )  # IP地址分割，区分是否多网卡
         #array=(172.20.32.214 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2);
@@ -47,7 +48,8 @@
 } 
 
 # 校验IP地址合法性
-function isValidIp() {
+function isValidIp() 
+{
         local ip=$1
         local ret=1
  
@@ -60,7 +62,9 @@ function isValidIp() {
 }
  
 local_ip=''
+echo "开始getIpAddr"
 getIpAddr       #自动获取IP
+echo "结束getIpAddr"
 isValidIp ${local_ip}   # IP校验
 if [ $? -ne 0 ]; then
         echo -e "\033[31m*自动获取的IP地址无效，请重试！ \033[0m"
@@ -68,11 +72,11 @@ if [ $? -ne 0 ]; then
 fi
 echo "*选择安装的IP地址为：${local_ip}"
 
-sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/conditionservice/config/application.yml 
-sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
-sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/slaverservice/config/application.yml 
-sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
-sed -i ”“ "s@127.0.0.1@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+sed -i ”“ "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml 
+sed -i ”“ "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+sed -i ”“ "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
+sed -i ”“ "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
+sed -i ”“ "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
 echo "修改IP成功"
 docker-compose -f docker-compose.yaml up -d 
 echo "AutoMeter部署成功，执行完增量sql后，访问入口 http://$local_ip:8084  默认账户密码admin admin123"
