@@ -17,7 +17,7 @@ services:
       - slaverservice2
     networks:
       autometer:
-        ipv4_address: 172.20.1.7
+        ipv4_address: 173.20.1.7
 
   dispatchservice:
     container_name: dispatchservice
@@ -35,7 +35,7 @@ services:
       - conditionservice
     networks:
       autometer:
-        ipv4_address: 172.20.1.6
+        ipv4_address: 173.20.1.6
 
   slaverservice1:
     container_name: slaverservice1
@@ -55,7 +55,7 @@ services:
       - redis
     networks:
       autometer:
-        ipv4_address: 172.20.1.5
+        ipv4_address: 173.20.1.5
 
   slaverservice2:
     container_name: slaverservice2
@@ -75,7 +75,7 @@ services:
       - redis
     networks:
       autometer:
-        ipv4_address: 172.20.1.9
+        ipv4_address: 173.20.1.9
 
   testcenterservice:
     container_name: testcenterservice
@@ -93,7 +93,7 @@ services:
       - dispatchservice
     networks:
       autometer:
-        ipv4_address: 172.20.1.4
+        ipv4_address: 173.20.1.4
 
   testcenterapp:
     container_name: testcenterapp
@@ -109,7 +109,7 @@ services:
       - testcenterservice
     networks:
       autometer:
-        ipv4_address: 172.20.1.3
+        ipv4_address: 173.20.1.3
 
   mysql:
     container_name: mysql
@@ -129,7 +129,7 @@ services:
       - redis
     networks:
       autometer:
-        ipv4_address: 172.20.1.2
+        ipv4_address: 173.20.1.2
     command:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
@@ -146,11 +146,11 @@ services:
       - "../Beta/BackupData/redis/config:/etc/redis/redis.conf"
     networks:
       autometer:
-        ipv4_address: 172.20.1.8
+        ipv4_address: 173.20.1.8
 
 networks:
   autometer:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.1.0/24
+        - subnet: 173.20.1.0/24
