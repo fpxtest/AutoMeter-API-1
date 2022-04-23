@@ -118,6 +118,7 @@ services:
       - "3406:3306"
     restart: always
     environment:
+      LANG: C.UTF-8 # 修改1
       TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: "123456"
       MYSQL_DATABASE: testcenter

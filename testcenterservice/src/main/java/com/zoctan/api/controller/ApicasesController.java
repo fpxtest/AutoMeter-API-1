@@ -183,6 +183,43 @@ public class ApicasesController {
         }
     }
 
+
+    //批量复制发布单元的用例
+    @PostMapping("/copydeployunitcases")
+    public Result copydeployunitcases(@RequestBody final Map<String, Object> param) {
+        Long sourcedeployunitid = Long.parseLong(param.get("sourcedeployunitid").toString());
+        String sourcedeployunitname = param.get("sourcedeployunitname").toString();
+        Long destinationdeployunitid =Long.parseLong(param.get("destinationdeployunitid").toString());
+        String destinationdeployunitname = param.get("destinationdeployunitname").toString();
+
+        Condition apicon = new Condition(Api.class);
+        apicon.createCriteria().andCondition("deployunitid = " + sourcedeployunitid);
+        if (apiService.ifexist(apicon) > 0) {
+            return ResultGenerator.genFailedResult(sourcedeployunitname + "不存在任何API接口");
+        } else {
+            List<Api>SourceapiList=apiService.listByCondition(apicon);
+            for (Api SourceApi:SourceapiList) {
+                Api DestinationApi=new Api();
+                DestinationApi.setCreator(SourceApi.getCreator());
+                DestinationApi.setLastmodifyTime(SourceApi.getLastmodifyTime());
+                DestinationApi.setCreateTime(SourceApi.getCreateTime());
+                DestinationApi.setRequestcontenttype(SourceApi.getRequestcontenttype());
+                DestinationApi.setApiname(SourceApi.getApiname());
+                DestinationApi.setVisittype(SourceApi.getVisittype());
+                DestinationApi.setPath(SourceApi.getPath());
+                DestinationApi.setDeployunitname(destinationdeployunitname);
+                DestinationApi.setDeployunitid(destinationdeployunitid);
+                DestinationApi.setRequesttype(SourceApi.getRequesttype());
+                DestinationApi.setMemo(SourceApi.getMemo());
+                apiService.save(DestinationApi);
+
+                long SourceApiid=SourceApi.getId();
+                long DestinationApiid=DestinationApi.getId();
+            }
+            return ResultGenerator.genOkResult();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
         apicasesService.deleteById(id);

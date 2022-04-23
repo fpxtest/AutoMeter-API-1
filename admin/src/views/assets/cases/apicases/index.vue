@@ -30,6 +30,13 @@
           <el-button
             type="primary"
             size="mini"
+            v-if="hasPermission('apicases:add')"
+            @click.native.prevent="showCopyapicasesDialog"
+          >批量复制用例
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('apicases:add')"
             @click.native.prevent="showAddapicasesconditionnotexistDialog"
