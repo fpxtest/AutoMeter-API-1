@@ -110,7 +110,7 @@
         <el-form-item label="组件名" prop="assemblename" required>
           <el-input
             type="text"
-            maxlength="100"
+            maxlength="60"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpenviroment_assemble.assemblename"

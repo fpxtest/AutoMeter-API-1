@@ -31,7 +31,7 @@
             type="primary"
             size="mini"
             v-if="hasPermission('apicases:add')"
-            @click.native.prevent="showCopyapicasesDialog"
+            @click.native.prevent="showCopyBatchapicasesDialog"
           >批量复制用例
           </el-button>
           <el-button
@@ -517,6 +517,45 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="CopyBatchApiCase" :visible.sync="CopybatchdialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
+        :model="tmpbatchcopycase"
+        ref="tmpbatchcopycase"
+      >
+        <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
+        <el-select v-model="tmpbatchcopycase.sourcedeployunitname" placeholder="发布单元" style="width:100%" @change="CopyBatchCasesSourceDeployselectChanged($event)">
+          <el-option label="请选择" value="''" style="display: none" />
+          <div v-for="(depunitname, index) in deployunitList" :key="index">
+            <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+          </div>
+        </el-select>
+      </el-form-item>
+        <el-form-item label="目标发布单元" prop="destinationdeployunitname" required >
+          <el-select v-model="tmpbatchcopycase.destinationdeployunitname" placeholder="发布单元" style="width:100%" @change="CopyBatchDesiCasesSourceDeployselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(depunitname, index) in deployunitList" :key="index">
+              <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="CopybatchdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="copybatchcases"
+        >保存
+        </el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog :title="loadassert" :visible.sync="AssertdialogFormVisible">
       <div class="filter-container" >
         <el-form :inline="true" :model="searchassert" ref="searchcase" >
@@ -971,6 +1010,7 @@
     updateapicases,
     removeapicases,
     copycases,
+    copybatchcases,
     getcasebydeployunitid
   } from '@/api/assets/apicases'
 
@@ -1049,6 +1089,7 @@
         TestdialogFormVisible: false,
         HeaderandParamsVisible: false,
         casedataialogFormVisible: false,
+        CopybatchdialogFormVisible: false,
         casedebugconditionnotexistdialogFormVisible: false, // 还未添加前置条件的用例
         casedebugconditionexistdialogFormVisible: false, // 已经存在前置条件的用例
         BodyVisible: false,
@@ -1072,6 +1113,7 @@
         paramtitle: '用例参数值',
         AssertTitle: '新增修改断言',
         CopyApiCase: '复制用例',
+        CopyBatchApiCase: '批量复制用例',
         loadassert: '断言',
         dialogFormVisible: false,
         CopydialogFormVisible: false,
@@ -1135,6 +1177,12 @@
           sourcedeployunitname: '',
           sourcecasename: '',
           newcasename: ''
+        },
+        tmpbatchcopycase: {
+          sourcedeployunitid: '',
+          sourcedeployunitname: '',
+          destinationdeployunitid: '',
+          destinationdeployunitname: ''
         },
         tmpassert: {
           id: '',
@@ -1488,6 +1536,27 @@
       },
 
       /**
+       * 批量复制用例发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       */
+      CopyBatchCasesSourceDeployselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpbatchcopycase.sourcedeployunitid = this.deployunitList[i].id
+          }
+        }
+      },
+
+      /**
+       * 批量复制用例发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       */
+      CopyBatchDesiCasesSourceDeployselectChanged(e) {
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === e) {
+            this.tmpbatchcopycase.destinationdeployunitid = this.deployunitList[i].id
+          }
+        }
+      },
+      /**
        * 源用例下拉选择事件获取用例id  e的值为options
        */
       CopySourceCasesChanged(e) {
@@ -1693,6 +1762,17 @@
       },
 
       /**
+       * 显示批量Copy用例对话框
+       */
+      showCopyBatchapicasesDialog() {
+        // 显示新增对话框
+        this.CopybatchdialogFormVisible = true
+        this.tmpbatchcopycase.destinationdeployunitid = ''
+        this.tmpbatchcopycase.sourcedeployunitname = ''
+        this.tmpbatchcopycase.destinationdeployunitname = ''
+        this.tmpbatchcopycase.sourcedeployunitid = ''
+      },
+      /**
        * 复制用例
        */
       copycases() {
@@ -1706,6 +1786,26 @@
               this.btnLoading = false
             }).catch(res => {
               this.$message.error('复制失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+
+      /**
+       * 批量复制用例
+       */
+      copybatchcases() {
+        this.$refs.tmpbatchcopycase.validate(valid => {
+          if (valid) {
+            copybatchcases(this.tmpbatchcopycase).then(() => {
+              this.$message.success('批量复制成功')
+              this.getapicasesList()
+              this.getalltestconditionbytype(this.tmpconditionquery)
+              this.CopybatchdialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.$message.error('批量复制失败')
               this.btnLoading = false
             })
           }

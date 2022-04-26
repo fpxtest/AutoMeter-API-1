@@ -102,7 +102,7 @@
         <el-form-item label="子条件名" prop="subconditionname" required>
           <el-input
             type="text"
-            maxlength="20"
+            maxlength="30"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpdelaycondition.subconditionname"
@@ -156,7 +156,7 @@
 <script>
   import { search, adddelaycondition, updatedelaycondition, removedelaycondition } from '@/api/condition/delaycondition'
   import { unix2CurrentTime } from '@/utils'
-  import { getalltestconditionbytype } from '@/api/condition/condition'
+  import { gettestconditionforscripyanddelay } from '@/api/condition/condition'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -268,7 +268,7 @@
       getalltestconditionbytype() {
         this.listLoading = true
         this.tmpconditionquery.objecttype = '测试用例'
-        getalltestconditionbytype(this.tmpconditionquery).then(response => {
+        gettestconditionforscripyanddelay(this.tmpconditionquery).then(response => {
           this.conditionList = response.data
           this.total = response.data.total
           this.listLoading = false

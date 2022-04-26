@@ -13,5 +13,5 @@ public interface ApicasesDebugConditionMapper extends MyMapper<ApicasesDebugCond
     void saveconditionscase(@Param("casedataList")final List<ApicasesDebugCondition> casedataList);
     void deletacases(@Param("casedataList")final List<ApicasesDebugCondition> casedataList);
     Integer findcasebyconditionidandcaseid(@Param("conditionid") long conditionid,@Param("caseid") long caseid);
-    List<Apicases> findcasebydeployid(final @Param("conditionid") long conditionid, @Param("deployunitid") long deployunitid);
+    List<Apicases> findnotexistcase(final @Param("conditionid") long conditionid, @Param("deployunitid") long deployunitid);
 }

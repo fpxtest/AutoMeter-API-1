@@ -53,6 +53,11 @@ private TestconditionMapper testconditionMapper;
     }
 
     @Override
+    public List<Testcondition> gettestconditionforscripyanddelay(String objecttype) {
+        return testconditionMapper.gettestconditionforscripyanddelay(objecttype);
+    }
+
+    @Override
     public List<Testcondition> GetConditionByPlanIDAndConditionType(Long objectid, String conditiontype, String objecttype) {
         return testconditionMapper.GetConditionByPlanIDAndConditionType(objectid, conditiontype, objecttype);
     }

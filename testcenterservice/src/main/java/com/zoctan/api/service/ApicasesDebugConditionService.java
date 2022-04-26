@@ -22,6 +22,6 @@ public interface ApicasesDebugConditionService extends Service<ApicasesDebugCond
 
     void deletacases(final List<ApicasesDebugCondition> casedataList);
 
-    List<Apicases> findcasebydeployid(long conditionid,  long deployunitid);
+    List<Apicases> findnotexistcase(long conditionid,  long deployunitid);
 
 }

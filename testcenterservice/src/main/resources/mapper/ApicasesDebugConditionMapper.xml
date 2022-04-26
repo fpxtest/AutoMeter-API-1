@@ -38,9 +38,9 @@
     </foreach>
   </delete>
 
-  <select id="findcasebydeployid" resultMap="BaseResultMap">
-    select a.* from apicases a  WHERE a.deployunitid  =#{deployunitid}  and a.id
-      not in(select caseid from apicases_debug_condition   WHERE conditionid=#{conditionid})
+  <select id="findnotexistcase" resultMap="BaseResultMap">
+    select a.* from apicases a  WHERE a.deployunitid=#{deployunitid} and   a.id
+      not in(select caseid from apicases_debug_condition )
   </select>
 
   <select id="findcasebyconditionidandcaseid" resultType="java.lang.Integer">

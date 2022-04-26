@@ -110,7 +110,7 @@
         <el-form-item label="数据库条件名：" prop="subconditionname" required>
           <el-input
             type="text"
-            maxlength="20"
+            maxlength="30"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpdbcondition.subconditionname"

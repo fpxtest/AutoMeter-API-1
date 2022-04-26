@@ -102,7 +102,7 @@
       >
         <el-form-item label="变量名" prop="testvariablesname" required>
           <el-input
-            maxlength="20"
+            maxlength="50"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"

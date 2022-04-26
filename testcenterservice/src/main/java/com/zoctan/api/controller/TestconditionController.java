@@ -34,17 +34,36 @@ public class TestconditionController {
 
     @PostMapping
     public Result add(@RequestBody Testcondition testcondition) {
-        Condition con=new Condition(Testcondition.class);
-        con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
-                .andCondition("objectid = " + testcondition.getObjectid() )
-                .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
-        if(testconditionService.ifexist(con)>0)
+
+        if(testcondition.getObjecttype().equalsIgnoreCase("调试用例"))
         {
-            return ResultGenerator.genFailedResult("该计划或者用例已经存在相同的条件");
+            Condition con=new Condition(Testcondition.class);
+            con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+                    .andCondition("conditionname = '" + testcondition.getConditionname() + "'")
+                    .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
+            if(testconditionService.ifexist(con)>0)
+            {
+                return ResultGenerator.genFailedResult("该计划或者用例已经存在相同的条件");
+            }
+            else {
+                testconditionService.save(testcondition);
+                return ResultGenerator.genOkResult();
+            }
         }
-        else {
-            testconditionService.save(testcondition);
-            return ResultGenerator.genOkResult();
+        else
+        {
+            Condition con=new Condition(Testcondition.class);
+            con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+                    .andCondition("objectid = " + testcondition.getObjectid() )
+                    .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
+            if(testconditionService.ifexist(con)>0)
+            {
+                return ResultGenerator.genFailedResult("该测试集合或者测试用例已经存在前置条件");
+            }
+            else {
+                testconditionService.save(testcondition);
+                return ResultGenerator.genOkResult();
+            }
         }
     }
 
@@ -110,6 +129,12 @@ public class TestconditionController {
     @GetMapping("/getalltestconditionbytype")
     public Result getallconditionbytype(@RequestParam String objecttype) {
         List<Testcondition> list = testconditionService.getallTestconditionByType(objecttype);
+        return ResultGenerator.genOkResult(list);
+    }
+
+    @GetMapping("/gettestconditionforscripyanddelay")
+    public Result gettestconditionforscripyanddelay(@RequestParam String objecttype) {
+        List<Testcondition> list = testconditionService.gettestconditionforscripyanddelay(objecttype);
         return ResultGenerator.genOkResult(list);
     }
 

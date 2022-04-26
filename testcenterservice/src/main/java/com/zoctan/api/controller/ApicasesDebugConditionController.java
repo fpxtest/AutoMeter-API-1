@@ -93,7 +93,7 @@ public class ApicasesDebugConditionController {
         long deployunitid=Long.parseLong(param.get("deployunitid").toString());
         long conditionid=Long.parseLong(param.get("conditionid").toString());
         PageHelper.startPage(page, size);
-        List<Apicases> list = this.apicasesDebugConditionService.findcasebydeployid(conditionid,deployunitid);
+        List<Apicases> list = this.apicasesDebugConditionService.findnotexistcase(conditionid,deployunitid);
         final PageInfo<Apicases> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }

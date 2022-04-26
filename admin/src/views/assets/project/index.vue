@@ -107,7 +107,7 @@
       >
         <el-form-item label="项目迭代名" prop="projectname" required>
           <el-input
-            maxlength="20"
+            maxlength="50"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"

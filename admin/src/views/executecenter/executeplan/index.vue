@@ -130,6 +130,7 @@
         <el-form-item label="集合名" prop="executeplanname" required>
           <el-input
             type="text"
+            maxlength="50"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model.trim="tmpexecuteplan.executeplanname"
@@ -273,6 +274,7 @@
           <el-form-item label="执行计划："  prop="batchname" required>
             <el-input
               type="text"
+              maxlength="50"
               style="width:60%"
               placeholder="例如2020-10-21-tag-101"
               prefix-icon="el-icon-edit"

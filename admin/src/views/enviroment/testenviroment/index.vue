@@ -94,7 +94,7 @@
       >
         <el-form-item label="测试环境名" prop="enviromentname" required>
           <el-input
-            maxlength="20"
+            maxlength="60"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"

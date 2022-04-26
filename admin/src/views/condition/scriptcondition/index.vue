@@ -110,7 +110,7 @@
         <el-form-item label="子条件名" prop="subconditionname" required>
           <el-input
             type="text"
-            maxlength="20"
+            maxlength="30"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpscriptcondition.subconditionname"
@@ -161,7 +161,7 @@
 </template>
 <script>
   import { search, addscriptcondition, updatescriptcondition, removescriptcondition } from '@/api/condition/scriptcondition'
-  import { getalltestconditionbytype } from '@/api/condition/condition'
+  import { gettestconditionforscripyanddelay } from '@/api/condition/condition'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
@@ -260,7 +260,7 @@
       getalltestconditionbytype() {
         this.listLoading = true
         this.tmpconditionquery.objecttype = '测试用例'
-        getalltestconditionbytype(this.tmpconditionquery).then(response => {
+        gettestconditionforscripyanddelay(this.tmpconditionquery).then(response => {
           this.conditionList = response.data
           this.total = response.data.total
           this.listLoading = false

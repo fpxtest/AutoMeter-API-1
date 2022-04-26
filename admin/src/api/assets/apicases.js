@@ -71,6 +71,14 @@ export function copycases(apicasesForm) {
   })
 }
 
+export function copybatchcases(apicasesForm) {
+  return request({
+    url: '/apicases/copydeployunitcases',
+    method: 'post',
+    data: apicasesForm
+  })
+}
+
 export function findcasesbyname(apicasesForm) {
   return request({
     url: '/apicases/searchbyname',

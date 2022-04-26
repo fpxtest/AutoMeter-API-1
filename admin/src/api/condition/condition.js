@@ -45,6 +45,14 @@ export function getalltestconditionbytype(params) {
   })
 }
 
+export function gettestconditionforscripyanddelay(params) {
+  return request({
+    url: '/testcondition/gettestconditionforscripyanddelay',
+    method: 'get',
+    params
+  })
+}
+
 export function addcondition(conditionForm) {
   return request({
     url: '/testcondition',

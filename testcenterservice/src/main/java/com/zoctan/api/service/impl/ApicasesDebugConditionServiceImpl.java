@@ -49,7 +49,7 @@ private ApicasesDebugConditionMapper apicasesDebugConditionMapper;
     }
 
     @Override
-    public List<Apicases> findcasebydeployid(long conditionid, long deployunitid) {
-        return apicasesDebugConditionMapper.findcasebydeployid(conditionid,deployunitid);
+    public List<Apicases> findnotexistcase(long conditionid, long deployunitid) {
+        return apicasesDebugConditionMapper.findnotexistcase(conditionid,deployunitid);
     }
 }
