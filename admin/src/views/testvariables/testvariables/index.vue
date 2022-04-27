@@ -143,7 +143,7 @@
             type="textarea"
             rows="5"
             cols="10"
-            maxlength="400"
+            maxlength="200"
             placeholder="例如 $.store.book[0].title"
             prefix-icon="el-icon-edit"
             auto-complete="off"
@@ -160,6 +160,7 @@
         <el-form-item label="备注" prop="memo">
           <el-input
             type="text"
+            maxlength="60"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmptestvariables.memo"

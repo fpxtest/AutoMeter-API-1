@@ -166,7 +166,7 @@
 
           <div v-if="domianVisible">
             <el-form-item label="访问域名" prop="domain" required>
-              <el-input v-model="tmpmacdepunit.domain"  placeholder="访问域名" required></el-input>
+              <el-input v-model="tmpmacdepunit.domain" maxlength="110" placeholder="访问域名" required></el-input>
             </el-form-item>
           </div>
         </div>

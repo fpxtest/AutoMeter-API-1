@@ -74,9 +74,9 @@ public class ConditionOrderController {
         if(conditionOrderList.size()>0)
         {
             Conditionid=conditionOrderList.get(0).getConditionid();
+            conditionOrderService.deleteconditionorderbyconid(Conditionid);
+            conditionOrderService.saveconditionorder(conditionOrderList);
         }
-        conditionOrderService.deleteconditionorderbyconid(Conditionid);
-        conditionOrderService.saveconditionorder(conditionOrderList);
         return ResultGenerator.genOkResult();
     }
 

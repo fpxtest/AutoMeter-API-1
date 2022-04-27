@@ -130,6 +130,7 @@
         <el-form-item label="变量描述" prop="memo" >
           <el-input
             type="text"
+            maxlength="60"
             placeholder="变量描述"
             prefix-icon="el-icon-message"
             auto-complete="off"

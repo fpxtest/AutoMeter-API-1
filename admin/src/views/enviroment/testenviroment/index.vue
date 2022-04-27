@@ -111,6 +111,7 @@
 
         <el-form-item label="备注" prop="memo">
           <el-input
+            maxlength="60"
             type="text"
             prefix-icon="el-icon-message"
             auto-complete="off"

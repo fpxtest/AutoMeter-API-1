@@ -223,7 +223,9 @@
         <div v-if="threadloopvisible">
         <el-form-item label="线程数" prop="threadnum" required>
           <el-input
-            maxlength="40"
+            oninput="value=value.replace(/[^\d]/g,'')"
+            maxLength='20'
+            type="number"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpapicases.threadnum"
@@ -232,7 +234,9 @@
 
         <el-form-item label="线程循环" prop="loops" required>
           <el-input
-            maxlength="40"
+            oninput="value=value.replace(/[^\d]/g,'')"
+            maxLength='20'
+            type="number"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpapicases.loops"
@@ -263,8 +267,9 @@
         </el-form-item>
         <el-form-item label="优先级" prop="level" required>
           <el-input
-            type="text"
-            maxlength="20"
+            oninput="value=value.replace(/[^\d]/g,'')"
+            maxLength='10'
+            type="number"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpapicases.level"
