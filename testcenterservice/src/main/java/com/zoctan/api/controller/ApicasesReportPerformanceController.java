@@ -125,13 +125,19 @@ public class ApicasesReportPerformanceController {
 
         List<PerformanceCaseStatis> performanceCaseStatisList=new ArrayList<>();
         PerformanceCaseStatis performanceCaseStatis=new PerformanceCaseStatis();
-        List<ExecuteplanTestcase> executeplanTestcaseList = executeplanTestcaseService.getplancasesbyplanid(planid);
-        performanceCaseStatis.setCaseNum(executeplanTestcaseList.size());
+
+        Condition dispatchccon = new Condition(Dispatch.class);
+        dispatchccon.createCriteria().andCondition("execplanid = " + planid)
+                .andCondition("batchid = " + batchid);
+        List<Dispatch> dispatchList = dispatchService.listByCondition(dispatchccon);
+
+//        List<ExecuteplanTestcase> executeplanTestcaseList = executeplanTestcaseService.getplancasesbyplanid(planid);
+        performanceCaseStatis.setCaseNum(dispatchList.size());
 
         long threadnums=0;
         long loopnums=0;
-        for (ExecuteplanTestcase exc:executeplanTestcaseList) {
-            long caseid=exc.getTestcaseid();
+        for (Dispatch dispatch:dispatchList) {
+            long caseid=dispatch.getTestcaseid();
             Apicases apicases= apicasesService.getBy("id",caseid);
             if(apicases!=null)
             {
@@ -142,9 +148,9 @@ public class ApicasesReportPerformanceController {
         performanceCaseStatis.setThreadnums(threadnums);
         performanceCaseStatis.setLoops(loopnums);
 
-        Condition con=new Condition(Dispatch.class);
-        con.createCriteria().andCondition("execplanid = " + planid ).andCondition("batchid = " + batchid);
-        List<Dispatch>dispatchList= dispatchService.listByCondition(con);
+//        Condition con=new Condition(Dispatch.class);
+//        con.createCriteria().andCondition("execplanid = " + planid ).andCondition("batchid = " + batchid);
+//        List<Dispatch>dispatchList= dispatchService.listByCondition(con);
         performanceCaseStatis.setSlavernums(dispatchList.size());
 
         Condition prscon=new Condition(Performancereportsource.class);

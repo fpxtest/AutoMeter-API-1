@@ -173,22 +173,34 @@ public class ApicasesReportController {
 
             FunctionCaseStatis functionCaseStatis = new FunctionCaseStatis();
 
-            List<ExecuteplanTestcase> executeplanTestcaseList = executeplanTestcaseService.getplancasesbyplanid(executeplanid);
-            functionCaseStatis.setCaseNum(executeplanTestcaseList.size());
+            Condition dispatchccon = new Condition(Dispatch.class);
+            dispatchccon.createCriteria().andCondition("execplanid = " + executeplanid)
+                    .andCondition("batchid = " + batchid);
+            List<Dispatch> dispatchList = dispatchService.listByCondition(dispatchccon);
+            functionCaseStatis.setCaseNum(dispatchList.size());
 
-            Condition dispatchexeccon = new Condition(Dispatch.class);
-            dispatchexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
-                    .andCondition("batchid = " + batchid)
-                    .andCondition("status = '" + "已分配" + "'");
-            List<Dispatch> dispatchexecList = dispatchService.listByCondition(dispatchexeccon);
-            functionCaseStatis.setExecCaseNums(dispatchexecList.size());
+            int ExecCaseNums=0;
+            for (Dispatch dis:dispatchList) {
+                if(dis.getStatus().equalsIgnoreCase("已分配"))
+                {
+                    ExecCaseNums=ExecCaseNums+1;
+                }
+            }
+            int NotExecCaseNums=dispatchList.size()-ExecCaseNums;
 
-            Condition dispatchnotexeccon = new Condition(Dispatch.class);
-            dispatchnotexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
-                    .andCondition("batchid = " + batchid)
-                    .andCondition("status = '" + "待分配" + "'");
-            List<Dispatch> dispatchnotexecList = dispatchService.listByCondition(dispatchnotexeccon);
-            functionCaseStatis.setNotExecCaseNums(dispatchnotexecList.size());
+//            Condition dispatchexeccon = new Condition(Dispatch.class);
+//            dispatchexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
+//                    .andCondition("batchid = " + batchid)
+//                    .andCondition("status = '" + "已分配" + "'");
+//            List<Dispatch> dispatchexecList = dispatchService.listByCondition(dispatchexeccon);
+            functionCaseStatis.setExecCaseNums(ExecCaseNums);
+
+//            Condition dispatchnotexeccon = new Condition(Dispatch.class);
+//            dispatchnotexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
+//                    .andCondition("batchid = " + batchid)
+//                    .andCondition("status = '" + "待分配" + "'");
+//            List<Dispatch> dispatchnotexecList = dispatchService.listByCondition(dispatchnotexeccon);
+            functionCaseStatis.setNotExecCaseNums(NotExecCaseNums);
 
             List<ApicasesReport> apicasesReportSuccessList = apicasesReportService.getreportbyplanandbatchstatus(executeplanid, "成功", batchname);
             functionCaseStatis.setSuccessCaseNums(apicasesReportSuccessList.size());
@@ -196,8 +208,8 @@ public class ApicasesReportController {
             List<ApicasesReport> apicasesReportFailList = apicasesReportService.getreportbyplanandbatchstatus(executeplanid, "失败", batchname);
             functionCaseStatis.setFailCaseNums(apicasesReportFailList.size());
 
-            float successrate = Float.valueOf(apicasesReportSuccessList.size()) / Float.valueOf(executeplanTestcaseList.size());
-            float failrate = Float.valueOf(apicasesReportFailList.size()) / Float.valueOf(executeplanTestcaseList.size());
+            float successrate = Float.valueOf(apicasesReportSuccessList.size()) / Float.valueOf(dispatchList.size());
+            float failrate = Float.valueOf(apicasesReportFailList.size()) / Float.valueOf(dispatchList.size());
             String sresultrate="";
             String fresultrate = "";
             DecimalFormat decimalFormat=new DecimalFormat(".00");

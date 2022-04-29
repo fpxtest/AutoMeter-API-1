@@ -17,6 +17,7 @@
   "dependencies": {
     "echarts": "^4.2.1",
     "settings": "^0.1.1",
+    "sortablejs": "^1.8.4",
     "vue": "^2.6.12",
     "vue-count-to": "^1.0.13",
     "vue-file-upload": "^0.1.12",
