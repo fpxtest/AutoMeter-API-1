@@ -597,9 +597,9 @@ public class Httphelp {
         String params = "";// 编码之后的参数
         StringBuffer sb = new StringBuffer();// 存储参数
         if (paramsob.getParams().size() > 0) {
-            if (!requestUrl.endsWith("/")) {
-                requestUrl = url + "/";
-            }
+//            if (!requestUrl.endsWith("/")) {
+//                requestUrl = url + "/";
+//            }
             Map<String, Object> parameters = paramsob.getParams();
             if (apistyle.equalsIgnoreCase("restful")) {
                 //规定restful在url中用{}拼接完整，用parameters中的值替换
@@ -608,6 +608,10 @@ public class Httphelp {
                     if(requestUrl.contains(ReplaceParams))
                     {
                         requestUrl=requestUrl.replace(ReplaceParams,parameters.get(name).toString());
+                    }
+                    else
+                    {
+                        throw new Exception("当前Restful接口的Url中未找到可用匹配的参数："+ReplaceParams+" 此用例的接口为Restful风格，Url填写不符合规范，请修改！");
                     }
                     //sb.append(name).append("/").append(parameters.get(name));
                 }
