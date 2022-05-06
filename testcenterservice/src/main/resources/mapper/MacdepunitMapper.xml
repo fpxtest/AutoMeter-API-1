@@ -21,6 +21,19 @@
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
 
+
+  <select id="findMacAndDepWithid" resultMap="BaseResultMap">
+    select a.enviromentname,b.machinename,c.* from
+    macdepunit c inner join enviroment a inner join machine b
+    on a.id=c.envid and b.id=c.machineid
+    <where>
+      <if test="envid != null and envid != ''"> c.envid=#{envid}</if>
+      <if test="depunitid != null and depunitid != ''">and c.depunitid=#{depunitid}</if>
+    </where>
+    order by c.lastmodify_time  DESC
+  </select>
+
+
   <select id="findMacAndDepWithName" resultMap="BaseResultMap">
     select a.enviromentname,b.machinename,c.* from
         macdepunit c inner join enviroment a inner join machine b

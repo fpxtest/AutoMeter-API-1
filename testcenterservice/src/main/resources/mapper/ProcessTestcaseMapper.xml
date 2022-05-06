@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ProcessTestcaseMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ProcessTestcase">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="apiid" jdbcType="BIGINT" property="apiid" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="testcaseid" jdbcType="BIGINT" property="testcaseid" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="ordernum" jdbcType="BIGINT" property="ordernum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+</mapper>

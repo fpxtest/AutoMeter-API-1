@@ -21,6 +21,9 @@ public interface MacdepunitService extends Service<Macdepunit> {
      */
     List<Macdepunit> findMacAndDepWithName(final Map<String, Object> params);
 
+    List<Macdepunit> findMacAndDepWithid(final Map<String, Object> params);
+
+
     /**
      * 更新服务器发布单元内容
      *

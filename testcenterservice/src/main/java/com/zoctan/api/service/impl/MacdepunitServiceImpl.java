@@ -29,6 +29,11 @@ private MacdepunitMapper macdepunitMapper;
     }
 
     @Override
+    public List<Macdepunit> findMacAndDepWithid(Map<String, Object> params) {
+        return macdepunitMapper.findMacAndDepWithid(params);
+    }
+
+    @Override
     public void updateMacAndDep(Macdepunit params) {
         macdepunitMapper.updateMacAndDep(params);
     }

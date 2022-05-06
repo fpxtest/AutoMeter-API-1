@@ -17,6 +17,7 @@ public interface MacdepunitMapper extends MyMapper<Macdepunit> {
      * @return 环境服务器列表
      */
     List<Macdepunit> findMacAndDepWithName(final Map<String, Object> params);
+    List<Macdepunit> findMacAndDepWithid(final Map<String, Object> params);
 
     /**
      * 更新服务器发布单元内容
