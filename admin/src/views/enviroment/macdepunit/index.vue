@@ -402,7 +402,7 @@
         this.search.enviromentname = this.tmpenviromentname
         this.search.deployunitname = this.tmpdeployunitname
         this.search.envid = this.tmpenviromentid
-        this.search.depunitid = this.tmpenviromentid
+        this.search.depunitid = this.tmpdeployunitid
         search(this.search).then(response => {
           this.macdepunitList = response.data.list
           this.total = response.data.total
