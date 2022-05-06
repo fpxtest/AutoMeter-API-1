@@ -186,20 +186,15 @@ public class ApicasesReportController {
                     ExecCaseNums=ExecCaseNums+1;
                 }
             }
-            int NotExecCaseNums=dispatchList.size()-ExecCaseNums;
-
-//            Condition dispatchexeccon = new Condition(Dispatch.class);
-//            dispatchexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
-//                    .andCondition("batchid = " + batchid)
-//                    .andCondition("status = '" + "已分配" + "'");
-//            List<Dispatch> dispatchexecList = dispatchService.listByCondition(dispatchexeccon);
             functionCaseStatis.setExecCaseNums(ExecCaseNums);
 
-//            Condition dispatchnotexeccon = new Condition(Dispatch.class);
-//            dispatchnotexeccon.createCriteria().andCondition("execplanid = " + executeplanid)
-//                    .andCondition("batchid = " + batchid)
-//                    .andCondition("status = '" + "待分配" + "'");
-//            List<Dispatch> dispatchnotexecList = dispatchService.listByCondition(dispatchnotexeccon);
+            int NotExecCaseNums=0;
+            for (Dispatch dis:dispatchList) {
+                if(dis.getStatus().equalsIgnoreCase("待分配"))
+                {
+                    NotExecCaseNums=NotExecCaseNums+1;
+                }
+            }
             functionCaseStatis.setNotExecCaseNums(NotExecCaseNums);
 
             List<ApicasesReport> apicasesReportSuccessList = apicasesReportService.getreportbyplanandbatchstatus(executeplanid, "成功", batchname);
