@@ -54,7 +54,7 @@ public class TestCaseData {
             String requestcontenttype = context.getParameter("requestcontenttype");
             //logger.info(logplannameandcasename + "用例数据 requestcontenttype is :  " + requestcontenttype);
 
-            String responecontenttype = context.getParameter("responecontenttype");
+            String responecontenttype = "";//context.getParameter("responecontenttype");
             //logger.info(logplannameandcasename + "用例数据 responecontenttype is :  " + responecontenttype);
 
             String headjson = context.getParameter("headjson").replace("Autometer"," ");
@@ -134,9 +134,11 @@ public class TestCaseData {
             if (!path.startsWith("/")) {
                 path = "/" + path;
             }
+            logger.info(logplannameandcasename + "33333333333333333333333" );
+
             //获取请求响应的数据格式
             String requestcontenttype = testMysqlHelp.getcaseValue("requestcontenttype", apilist);
-            String responecontenttype = testMysqlHelp.getcaseValue("responecontenttype", apilist);
+            String responecontenttype = "";//testMysqlHelp.getcaseValue("responecontenttype", apilist);
             // http请求方式 get，post
             String method = testMysqlHelp.getcaseValue("visittype", apilist).toLowerCase();
             // api风格
@@ -146,6 +148,8 @@ public class TestCaseData {
             // 发布单元端口
             String port = testMysqlHelp.getcaseValue("port", deployunitlist);
             String deployunitid = testMysqlHelp.getcaseValue("id", deployunitlist);
+
+            logger.info(logplannameandcasename + "2222222222222222222222" );
 
             // 获取发布单元访问方式，ip或者域名
             String deployunitvisittype = testMysqlHelp.getcaseValue("visittype", deployunitmachineiplist);
@@ -161,6 +165,9 @@ public class TestCaseData {
                 testserver = testMysqlHelp.getcaseValue("domain", deployunitmachineiplist);
                 resource = protocal + "://" + testserver + path;
             }
+
+            logger.info(logplannameandcasename + "1111111111111111111111" );
+
 
             //获取断言记录
             TestAssert testAssert = new TestAssert(logger);
@@ -193,7 +200,7 @@ public class TestCaseData {
         }
         catch (Exception ex)
         {
-            logger.info(logplannameandcasename + "功能用例数据GetCaseRequestData异常 :  " + ex.getMessage());
+            logger.info(logplannameandcasename + "功能用例数据GetCaseRequestData异常 :  " + ex);
         }
         return ro;
     }
