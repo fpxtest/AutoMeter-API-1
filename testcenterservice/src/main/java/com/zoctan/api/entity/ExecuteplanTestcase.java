@@ -37,6 +37,15 @@ public class ExecuteplanTestcase {
 
     private Long deployunitid;
 
+    public Long getCaseorder() {
+        return caseorder;
+    }
+
+    public void setCaseorder(Long caseorder) {
+        this.caseorder = caseorder;
+    }
+
+    private Long caseorder;
 
     /**
      * 发布单元

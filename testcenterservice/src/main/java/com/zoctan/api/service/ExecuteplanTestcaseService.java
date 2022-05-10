@@ -2,6 +2,7 @@ package com.zoctan.api.service;
 
 import com.zoctan.api.core.service.Service;
 import com.zoctan.api.entity.ExecuteplanTestcase;
+import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,10 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> finddeployunitbyplanid(final long executeplanid);
 
+    List<ExecuteplanTestcase> findcaseorderexist(final long executeplanid,long caseorder);
+
+    List<ExecuteplanTestcase> getplancasesbyplanidandorder(final long executeplanid);
+
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
     void removeexecuteplantestcase(final List<ExecuteplanTestcase> testcase);
@@ -28,9 +33,13 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
     void removetestcase(final long testcaseid);
 
     void removeplancase(final long executeplanid);
+    void updatePlanCaseorder(final long id,long caseorder);
 
     Integer findcasenumbyplanid(long executeplanid);
 
     List<ExecuteplanTestcase> getstaticsplancases();
+
+    int ifexist(Condition condition);
+
 
 }

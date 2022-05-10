@@ -9,6 +9,7 @@
     <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
     <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
     <result column="apiid" jdbcType="BIGINT" property="apiid" />
+    <result column="caseorder" jdbcType="BIGINT" property="caseorder" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="testcaseid" jdbcType="BIGINT" property="testcaseid" />
@@ -60,10 +61,10 @@
   </select>
 
   <insert id="savetestplancase">
-    INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time,creator)
+    INSERT INTO executeplan_testcase (executeplanid,apiid,deployunitid,caseorder, deployunitname,apiname,testcaseid,casename,create_time,lastmodify_time,creator)
     VALUES
     <foreach collection="casedataList" item="item" index="index" separator=",">
-    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid}, #{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), #{item.creator})
+    (#{item.executeplanid}, #{item.apiid}, #{item.deployunitid},#{item.caseorder},#{item.deployunitname}, #{item.apiname}, #{item.testcaseid}, #{item.casename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), #{item.creator})
     </foreach>
   </insert>
 
@@ -97,5 +98,22 @@
     FROM executeplan_testcase a
     where executeplanid = #{executeplanid}
 </select>
-  
+
+  <select id="getplancasesbyplanidandorder" resultMap="BaseResultMap">
+    SELECT *
+    FROM executeplan_testcase a
+    where executeplanid = #{executeplanid}
+    order by caseorder asc
+  </select>
+
+  <select id="findcaseorderexist" resultMap="BaseResultMap">
+    SELECT *
+    FROM executeplan_testcase a
+    where executeplanid = #{executeplanid} and caseorder = #{caseorder}
+  </select>
+
+  <update id="updatePlanCaseorder" >
+    update executeplan_testcase set caseorder = #{caseorder},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
 </mapper>

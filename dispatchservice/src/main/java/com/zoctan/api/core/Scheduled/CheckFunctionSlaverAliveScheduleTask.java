@@ -136,7 +136,7 @@ public class CheckFunctionSlaverAliveScheduleTask {
                         }
                         String BatchName = dis.getBatchname();
                         //条件报告，条件变量值
-                        List<Testcondition> testconditionList = testconditionMapper.GetConditionByPlanIDAndConditionType(Caseid, "测试用例");
+                        List<Testcondition> testconditionList = testconditionMapper.GetConditionByPlanIDAndConditionType(Caseid,"前置条件", "测试用例");
                         if (testconditionList.size() > 0) {
                             Long ConditionID = testconditionList.get(0).getId();
                             //删除接口条件报告

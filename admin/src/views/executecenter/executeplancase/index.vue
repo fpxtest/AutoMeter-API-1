@@ -18,6 +18,12 @@
             @click.native.prevent="showTestCaseDialog"
           >装载用例</el-button>
           <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('executeplan:list')"
+            @click.native.prevent="showTestCaseorderDialog"
+          >用例顺序</el-button>
+          <el-button
             type="danger"
             size="mini"
             v-if="hasPermission('executeplan:list')"
@@ -192,13 +198,110 @@
         >装载</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title='测试' :visible.sync="testcasedialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchexistcase" ref="searchexistcase" >
+
+          <el-form-item label="测试集合:"  prop="executeplanname" required>
+            <el-select v-model="searchexistcase.executeplanname" placeholder="测试集合" @change="existtestplanselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(testplan, index) in execplanList" :key="index">
+                <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="SearchExistCases" :loading="casebtnLoading">查询</el-button>
+          </el-form-item>
+        </el-form>
+
+      </div>
+      <el-table
+        ref="caseTable"
+        :data="testcaseexistList"
+        :key="itemexistcaseKey"
+        v-loading.body="existcaselistLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="existcasegetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
+        <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
+        <el-table-column label="用例名" align="center" prop="casename" width="100"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
+        <el-table-column label="API" align="center" prop="apiname" width="100"/>
+        <el-table-column min-width="200px" align="center" label="用例顺序">
+          <template slot-scope="{row}">
+            <template v-if="row.edit">
+              <el-input v-model="row.caseorder" class="edit-input"
+                        oninput="value=value.replace(/[^\d]/g,'')"
+                        maxLength='10'
+                        size="small" />
+              <el-button
+                class="cancel-btn"
+                size="small"
+                icon="el-icon-refresh"
+                type="warning"
+                @click="cancelEdit(row)"
+              >
+                取消
+              </el-button>
+            </template>
+            <span v-else>{{ row.caseorder }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="操作" width="120">
+          <template slot-scope="{row}">
+            <el-button
+              v-if="row.edit"
+              type="success"
+              size="small"
+              icon="el-icon-circle-check-outline"
+              @click="confirmEdit(row)"
+            >
+              保存
+            </el-button>
+            <el-button
+              v-else
+              type="primary"
+              size="small"
+              @click="row.edit=!row.edit"
+            >
+              设置顺序
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <el-pagination
+        @size-change="existcasehandleSizeChange"
+        @current-change="existcasehandleCurrentChange"
+        :current-page="searchexistcase.page"
+        :page-size="searchexistcase.size"
+        :total="existcasetotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+
+    </el-dialog>
+
   </div>
 </template>
 <script>
   import { searchleftcase } from '@/api/assets/apicases'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
-  import { search as searchtestplancases, addexecuteplantestcase, removebatchexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
+  import { search as searchtestplancases, updatePlanCaseorder, getplancasesbyplanidandorder, addexecuteplantestcase, removebatchexecuteplantestcase, removeexecuteplantestcase } from '@/api/executecenter/executeplantestcase'
   import { getallexplan } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
@@ -218,6 +321,7 @@
       return {
         itemplanKey: null,
         itemcaseKey: null,
+        itemexistcaseKey: null,
         tmpplancasedeployunitname: null,
         tmpplancaseexecuteplanname: null,
         tmpplancaseapiname: null,
@@ -225,6 +329,7 @@
         tmpcasedeployunitname: null,
         tmpcaseapiname: null,
         tmpexecuteplanid: null,
+        tmpexistcaseexecuteplanid: null,
         tmploadexecuteplanid: null,
         tmpdeployunitid: null,
         tmploaddeployunitid: null,
@@ -241,10 +346,13 @@
         executeplancaseremovetList: [], // 查询执行计划需要删除存在的用例列表
         testcaseList: [], // 装载用例列表
         testcaselastList: [], // 显示希望装载的用例列表
+        testcaseexistList: [], // 显示已经装载的用例列表
         listLoading: false, // 数据加载等待动画
         caselistLoading: false, // 用例列表页面数据加载等待动画
+        existcaselistLoading: false, // 用例列表页面数据加载等待动画
         total: 0, // 数据总数
         casetotal: 0, // 用例数据总数
+        existcasetotal: 0, // 已经装载用例数据总数
         apiQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
@@ -254,6 +362,7 @@
         dialogStatus: 'add',
         dialogFormVisible: false,
         casedialogFormVisible: false,
+        testcasedialogFormVisible: false,
         loadcase: '装载用例',
         btnLoading: false, // 按钮等待动画
         casebtnLoading: false, // 按钮等待动画
@@ -277,6 +386,12 @@
           apiid: null,
           apiname: null,
           casetype: null
+        },
+        searchexistcase: {
+          page: 1,
+          size: 10,
+          executeplanname: null,
+          executeplanid: null
         }
       }
     },
@@ -297,6 +412,31 @@
 
     methods: {
       unix2CurrentTime,
+
+      cancelEdit(row) {
+        row.caseorder = row.oldcaseorder
+        row.edit = false
+        // this.$message({
+        //   message: 'The title has been restored to the original value',
+        //   type: 'warning'
+        // })
+      },
+      confirmEdit(row) {
+        row.edit = false
+        updatePlanCaseorder(row).then(response => {
+          row.oldcaseorder = row.caseorder
+          this.$message.success('修改顺序成功')
+        }).catch(res => {
+          row.caseorder = row.oldcaseorder
+          this.$message.error('修改顺序失败')
+        })
+        // console.log(22222222222222222)
+        // console.log(row)
+        // this.$message({
+        //   message: 'The title has been edited',
+        //   type: 'success'
+        // })
+      },
 
       handleSelectionChange(rows) {
         // console.log(rows)
@@ -355,9 +495,9 @@
 
       searchBy() {
         this.search.page = 1
-        this.search.executeplanid = this.tmploadexecuteplanid
-        this.search.deployunitid = this.tmploaddeployunitid
-        this.search.apiid = this.tmploadapiid
+        // this.search.executeplanid = this.tmploadexecuteplanid
+        // this.search.deployunitid = this.tmploaddeployunitid
+        // this.search.apiid = this.tmploadapiid
         this.listLoading = true
         console.log(this.search)
         searchtestplancases(this.search).then(response => {
@@ -367,6 +507,9 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
+        this.tmploadexecuteplanid = this.search.executeplanid
+        this.tmploaddeployunitid = this.search.deployunitid
+        this.tmploadapiid = this.search.apiid
         this.listLoading = false
         this.btnLoading = false
       },
@@ -412,6 +555,14 @@
             this.tmpcasecasetype = this.execplanList[i].usetype
             console.log('1111111111111111111111')
             console.log(this.tmpcasecasetype)
+          }
+        }
+      },
+
+      existtestplanselectChanged(e) {
+        for (let i = 0; i < this.execplanList.length; i++) {
+          if (this.execplanList[i].executeplanname === e) {
+            this.searchexistcase.executeplanid = this.execplanList[i].id
           }
         }
       },
@@ -546,10 +697,10 @@
        */
       searchcaseBy() {
         this.searchcase.page = 1
-        this.searchcase.executeplanid = this.tmpexecuteplanid
-        this.searchcase.deployunitid = this.tmpdeployunitid
-        this.searchcase.apiid = this.tmpapiid
-        this.searchcase.casetype = this.tmpcasecasetype
+        // this.searchcase.executeplanid = this.tmpexecuteplanid
+        // this.searchcase.deployunitid = this.tmpdeployunitid
+        // this.searchcase.apiid = this.tmpapiid
+        // this.searchcase.casetype = this.tmpcasecasetype
         console.log(this.searchcase)
         this.caselistLoading = true
         this.$refs.searchcase.validate(valid => {
@@ -562,7 +713,55 @@
             })
           }
         })
+        this.tmpexecuteplanid = this.searchcase.executeplanid
+        this.tmpdeployunitid = this.searchcase.deployunitid
+        this.tmpapiid = this.searchcase.apiid
+        this.tmpcasecasetype = this.searchcase.casetype
         this.caselistLoading = false
+      },
+
+      getplancasesbyplanidandorder() {
+        this.searchexistcase.page = 1
+        this.searchexistcase.executeplanid = this.tmpexistcaseexecuteplanid
+        this.$refs.searchexistcase.validate(valid => {
+          if (valid) {
+            getplancasesbyplanidandorder(this.searchexistcase).then(response => {
+              this.testcaseexistList = response.data.list
+              const items = response.data.list
+              this.testcaseexistList = items.map(v => {
+                this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
+                v.oldcaseorder = v.caseorder //  will be used when user click the cancel botton
+                return v
+              })
+              this.existcasetotal = response.data.total
+            }).catch(res => {
+              this.$message.error('获取已装载的用例失败')
+            })
+          }
+        })
+        this.existcaselistLoading = false
+      },
+
+      SearchExistCases() {
+        this.searchexistcase.page = 1
+        this.$refs.searchexistcase.validate(valid => {
+          if (valid) {
+            getplancasesbyplanidandorder(this.searchexistcase).then(response => {
+              this.testcaseexistList = response.data.list
+              const items = response.data.list
+              this.testcaseexistList = items.map(v => {
+                this.$set(v, 'edit', false) // https://vuejs.org/v2/guide/reactivity.html
+                v.oldcaseorder = v.caseorder //  will be used when user click the cancel botton
+                return v
+              })
+              this.existcasetotal = response.data.total
+            }).catch(res => {
+              this.$message.error('获取已装载的用例失败')
+            })
+          }
+        })
+        this.tmpexistcaseexecuteplanid = this.searchexistcase.executeplanid
+        this.existcaselistLoading = false
       },
 
       /**
@@ -574,6 +773,12 @@
         this.searchcase.size = size
         this.getapicasesList()
       },
+
+      existcasehandleSizeChange(size) {
+        this.searchexistcase.page = 1
+        this.searchexistcase.size = size
+        this.getplancasesbyplanidandorder()
+      },
       /**
        * 改变页码
        * @param page 页号
@@ -581,6 +786,11 @@
       casehandleCurrentChange(page) {
         this.searchcase.page = page
         this.getapicasesList()
+      },
+
+      existcasehandleCurrentChange(page) {
+        this.searchexistcase.page = page
+        this.getplancasesbyplanidandorder()
       },
       /**
        * 表格序号
@@ -591,6 +801,10 @@
        */
       casegetIndex(index) {
         return (this.searchcase.page - 1) * this.searchcase.size + index + 1
+      },
+
+      existcasegetIndex(index) {
+        return (this.searchexistcase.page - 1) * this.searchexistcase.size + index + 1
       },
 
       /**
@@ -639,6 +853,7 @@
               'deployunitname': this.casemultipleSelection[i].deployunitname,
               'apiname': this.casemultipleSelection[i].apiname,
               'testcaseid': this.casemultipleSelection[i].id,
+              'caseorder': this.casemultipleSelection[i].id,
               'casename': this.casemultipleSelection[i].casename,
               'creator': this.name
             })
@@ -702,6 +917,14 @@
         this.testcaselastList = []
         this.casetotal = 0
       },
+
+      showTestCaseorderDialog() {
+        this.testcasedialogFormVisible = true
+        this.searchexistcase.executeplanid = null
+        this.searchexistcase.executeplanname = null
+        this.testcaseexistList = null
+      },
+
       /**
        * 删除用例
        * @param index 测试集合下标
@@ -758,3 +981,14 @@
     }
   }
 </script>
+
+<style scoped>
+.edit-input {
+  padding-right: 100px;
+}
+.cancel-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+</style>

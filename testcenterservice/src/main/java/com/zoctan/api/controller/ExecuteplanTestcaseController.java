@@ -6,12 +6,15 @@ import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.ApicasewithStatu;
 import com.zoctan.api.dto.StaticsDataForPie;
+import com.zoctan.api.dto.TestplanCase;
 import com.zoctan.api.entity.Apicases;
+import com.zoctan.api.entity.Enviroment;
 import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.service.ApicasesService;
 import com.zoctan.api.service.ExecuteplanTestcaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -166,5 +169,35 @@ public class ExecuteplanTestcaseController {
         final PageInfo<ExecuteplanTestcase> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
+
+    @PostMapping("/getplancasesbyplanidandorder")
+    public Result getplancasesbyplanidandorder(@RequestBody final Map<String, Object> param) {
+        Integer page= Integer.parseInt(param.get("page").toString());
+        Integer size= Integer.parseInt(param.get("size").toString());
+        long execplanid= Long.parseLong(param.get("executeplanid").toString());
+        PageHelper.startPage(page, size);
+        final List<ExecuteplanTestcase> list = this.executeplanTestcaseService.getplancasesbyplanidandorder(execplanid);
+        final PageInfo<ExecuteplanTestcase> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @PostMapping("/updatePlanCaseorder")
+    public Result updatePlanCaseorder(@RequestBody final Map<String, Object> param) {
+        long id= Long.parseLong(param.get("id").toString());
+        long caseorder= Long.parseLong(param.get("caseorder").toString());
+        long execplanid= Long.parseLong(param.get("executeplanid").toString());
+        List<ExecuteplanTestcase> executeplanTestcaseList= executeplanTestcaseService.findcaseorderexist(execplanid,caseorder);
+        if(executeplanTestcaseList.size()>0)
+        {
+            return ResultGenerator.genFailedResult("此测试集合中的用例已经存在该顺序，请修改");
+        }
+        else
+        {
+            this.executeplanTestcaseService.updatePlanCaseorder(id,caseorder);
+            return ResultGenerator.genOkResult();
+        }
+    }
+
+
 
 }

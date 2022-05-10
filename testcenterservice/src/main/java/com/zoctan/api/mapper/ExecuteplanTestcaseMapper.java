@@ -21,6 +21,8 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);
 
+    List<ExecuteplanTestcase> getplancasesbyplanidandorder(final @Param("executeplanid") long executeplanidexecuteplanid);
+
     List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);
 
     List<Apicases> findcasebyplanid(final @Param("executeplanid") long executeplanid, @Param("deployunitid") long deployunitid,@Param("casetype") String casetype);
@@ -35,10 +37,15 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     void removeplancase(@Param("executeplanid") long executeplanid);
 
+    void updatePlanCaseorder(@Param("id") long id,@Param("caseorder") long caseorder);
+
     List<ExecuteplanTestcase> finddeployunitbyplanid(final @Param("executeplanid") long executeplanid);
 
     List<ExecuteplanTestcase> getstaticsplancases();
 
     List<ExecuteplanTestcase> getplancasesbyplanid(final long executeplanid);
+
+    List<ExecuteplanTestcase> findcaseorderexist(final @Param("executeplanid")long executeplanid,final @Param("caseorder")long caseorder);
+
 
 }

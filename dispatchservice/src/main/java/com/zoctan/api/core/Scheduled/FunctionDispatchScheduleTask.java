@@ -63,6 +63,9 @@ public class FunctionDispatchScheduleTask {
     private ConditionDbService conditionDbService;
     @Autowired(required = false)
     private ConditionScriptService conditionScriptService;
+
+    @Autowired(required = false)
+    private ConditionDelayService conditionDelayService;
     @Autowired(required = false)
     private TestconditionReportService testconditionReportService;
     @Autowired(required = false)
@@ -189,7 +192,7 @@ public class FunctionDispatchScheduleTask {
 
     private boolean ConditionRequest(Long PlanID, String BatchName, Dispatch dispatch) throws Exception {
         boolean flag = true;
-        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件");
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件","测试集合");
         if (testconditionList.size() > 0) {
             Long ConditionID = testconditionList.get(0).getId();
             List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
@@ -198,7 +201,9 @@ public class FunctionDispatchScheduleTask {
             int DBConditionNUms = conditionDbList.size();
             List<ConditionScript> conditionScriptList = conditionScriptService.getconditionscriptbyid(ConditionID);
             int ScriptConditionNUms = conditionScriptList.size();
-            int SubConditionNums = ApiConditionNums + DBConditionNUms + ScriptConditionNUms;
+            List<ConditionDelay> conditionDelayList = conditionDelayService.GetCaseListByConditionID(ConditionID);
+            int DelayConditionNUms = conditionDelayList.size();
+            int SubConditionNums = ApiConditionNums + DBConditionNUms + ScriptConditionNUms+DelayConditionNUms;
             //表示有子条件需要处理
             if (SubConditionNums > 0) {
                 //获取此计划批次条件报告的结果

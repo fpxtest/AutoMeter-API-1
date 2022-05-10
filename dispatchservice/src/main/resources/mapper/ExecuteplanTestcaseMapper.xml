@@ -7,12 +7,16 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="apiid" jdbcType="BIGINT" property="apiid" />
+    <result column="caseorder" jdbcType="BIGINT" property="caseorder" />
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="apiname" jdbcType="VARCHAR" property="apiname" />
     <result column="testcaseid" jdbcType="BIGINT" property="testcaseid" />
-    <result column="testcasename" jdbcType="VARCHAR" property="testcasename" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
   </resultMap>
 
   <select id="findcasebydeployandapi" resultMap="BaseResultMap">
@@ -42,7 +46,7 @@
   <select id="findcasebytestplanid" resultMap="BaseResultMap">
     select a.testcaseid, c.deployunitname,b.casejmxname,b.casename,b.expect,b.threadnum,b.loops from
     executeplan_testcase a join apicases b join deployunit c on a.testcaseid = b.id and c.id = a.deployunitid
-     where a.executeplanid = #{executeplanid} and b.casetype= #{casetype} order by b.level asc
+     where a.executeplanid = #{executeplanid} and b.casetype= #{casetype} order by a.caseorder asc
   </select>
 
 

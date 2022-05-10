@@ -265,16 +265,16 @@
             v-model="tmpapicases.casecontent"
           />
         </el-form-item>
-        <el-form-item label="优先级" prop="level" required>
-          <el-input
-            oninput="value=value.replace(/[^\d]/g,'')"
-            maxLength='10'
-            type="number"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model="tmpapicases.level"
-          />
-        </el-form-item>
+<!--        <el-form-item label="优先级" prop="level" required>-->
+<!--          <el-input-->
+<!--            oninput="value=value.replace(/[^\d]/g,'')"-->
+<!--            maxLength='10'-->
+<!--            type="number"-->
+<!--            prefix-icon="el-icon-message"-->
+<!--            auto-complete="off"-->
+<!--            v-model="tmpapicases.level"-->
+<!--          />-->
+<!--        </el-form-item>-->
         <el-form-item label="备注" prop="memo" >
           <el-input
             type="text"
@@ -1153,7 +1153,7 @@
           loops: '',
           expect: '',
           middleparam: '',
-          level: '',
+          level: 0,
           memo: '',
           creator: ''
         },
@@ -1730,7 +1730,7 @@
         this.tmpapicases.casecontent = ''
         this.tmpapicases.expect = ''
         this.tmpapicases.middleparam = ''
-        this.tmpapicases.level = ''
+        this.tmpapicases.level = 0
         this.tmpapicases.memo = ''
         this.tmpapicases.creator = this.name
         console.log(this.name)

@@ -362,8 +362,8 @@ public class TestCondition {
                 SaveSubCondition("数据库", requestObject, PlanID, ConditionID, conditionDb, Respone, ConditionResultStatus, CostTime);
             }
             Long planid = Long.parseLong(requestObject.getTestplanid());
-            Rundb(planid, requestObject.getTestplanname(), requestObject.getBatchname(), DBConditionid, DBConditionName, macdepunitlist, machinelist, ConnetcArray, AssembleType, deployunitvisittype, Sql, SqlType);
             Start = new Date().getTime();
+            Rundb(planid, requestObject.getTestplanname(), requestObject.getBatchname(), DBConditionid, DBConditionName, macdepunitlist, machinelist, ConnetcArray, AssembleType, deployunitvisittype, Sql, SqlType);
         } catch (Exception ex) {
             ConditionResultStatus = "失败";
             Respone = ex.getMessage();

@@ -864,6 +864,7 @@ public class TestPlanCaseController {
     }
 
     public HashMap<String, List<Dispatch>> GetProtocolDispatch(List<Dispatch> dispatchList) {
+//    public  List<Dispatch> GetProtocolDispatch(List<Dispatch> dispatchList) {
         List<Dispatch> dispatchResultList = new ArrayList<>();
         HashMap<Long, List<Dispatch>> GroupDispatch = new HashMap<Long, List<Dispatch>>();
 
@@ -883,32 +884,33 @@ public class TestPlanCaseController {
             break;
         }
 
-        //获取发布单元分组列表
-        HashMap<String, List<Dispatch>> DeployUnitGroupDispatch = new HashMap<String, List<Dispatch>>();
-        for (Dispatch dispatch : dispatchResultList) {
-            String DeployUnit = dispatch.getDeployunitname();
-            if (!DeployUnitGroupDispatch.containsKey(DeployUnit)) {
-                List<Dispatch> dispatchListtmp = new ArrayList<>();
-                dispatchListtmp.add(dispatch);
-                DeployUnitGroupDispatch.put(DeployUnit, dispatchListtmp);
-            } else {
-                DeployUnitGroupDispatch.get(DeployUnit).add(dispatch);
-            }
-        }
-
-        //合并协议列表
+//        //获取发布单元分组列表
+//        HashMap<String, List<Dispatch>> DeployUnitGroupDispatch = new HashMap<String, List<Dispatch>>();
+//        for (Dispatch dispatch : dispatchResultList) {
+//            String DeployUnit = dispatch.getDeployunitname();
+//            if (!DeployUnitGroupDispatch.containsKey(DeployUnit)) {
+//                List<Dispatch> dispatchListtmp = new ArrayList<>();
+//                dispatchListtmp.add(dispatch);
+//                DeployUnitGroupDispatch.put(DeployUnit, dispatchListtmp);
+//            } else {
+//                DeployUnitGroupDispatch.get(DeployUnit).add(dispatch);
+//            }
+//        }
+//
+//        //合并协议列表
         HashMap<String, List<Dispatch>> ProtocolGroupDispatch = new HashMap<String, List<Dispatch>>();
-
-        for (String DeployUnit : DeployUnitGroupDispatch.keySet()) {
-            Deployunit deployunit = deployunitService.findDeployNameValueWithCode(DeployUnit);
-            String Protocal = deployunit.getProtocal();
-            if (Protocal.equalsIgnoreCase("http") || Protocal.equalsIgnoreCase("https")) {
-                ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "http");
-            }
-            if (Protocal.equalsIgnoreCase("rpc")) {
-                ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "rpc");
-            }
-        }
+//
+//        for (String DeployUnit : DeployUnitGroupDispatch.keySet()) {
+//            Deployunit deployunit = deployunitService.findDeployNameValueWithCode(DeployUnit);
+//            String Protocal = deployunit.getProtocal();
+//            if (Protocal.equalsIgnoreCase("http") || Protocal.equalsIgnoreCase("https")) {
+//                ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "http");
+//            }
+//            if (Protocal.equalsIgnoreCase("rpc")) {
+//                ProtocolGroupDispatch = MergeCaseList(ProtocolGroupDispatch, DeployUnitGroupDispatch, DeployUnit, "rpc");
+//            }
+//        }
+        ProtocolGroupDispatch.put("http",dispatchResultList);
         return ProtocolGroupDispatch;
     }
 

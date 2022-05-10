@@ -6,6 +6,7 @@ import com.zoctan.api.mapper.ExecuteplanTestcaseMapper;
 import com.zoctan.api.service.ExecuteplanTestcaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -52,6 +53,16 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
         return executeplanTestcaseMapper.finddeployunitbyplanid(executeplanid);
     }
 
+    @Override
+    public List<ExecuteplanTestcase> findcaseorderexist(long executeplanid, long caseorder) {
+        return executeplanTestcaseMapper.findcaseorderexist(executeplanid, caseorder);
+    }
+
+    @Override
+    public List<ExecuteplanTestcase> getplancasesbyplanidandorder(long executeplanid) {
+        return executeplanTestcaseMapper.getplancasesbyplanidandorder(executeplanid);
+    }
+
 
     @Override
     public List<ExecuteplanTestcase> findcasebydeployandapi(Map<String, Object> params) {
@@ -76,9 +87,19 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
     }
 
     @Override
+    public void updatePlanCaseorder(long id, long caseorder) {
+        executeplanTestcaseMapper.updatePlanCaseorder(id, caseorder);
+    }
+
+    @Override
     public Integer findcasenumbyplanid(long executeplanid) {
         return executeplanTestcaseMapper.findcasenumbyplanid(executeplanid);
     }
+    @Override
+    public int ifexist(Condition con) {
+        return countByCondition(con);
+    }
+
 
     @Override
     public List<ExecuteplanTestcase> getstaticsplancases() {

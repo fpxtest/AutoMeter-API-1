@@ -16,6 +16,22 @@ export function search(executeplanForm) {
   })
 }
 
+export function getplancasesbyplanidandorder(executeplanForm) {
+  return request({
+    url: '/executeplan/testcase/getplancasesbyplanidandorder',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
+export function updatePlanCaseorder(executeplanForm) {
+  return request({
+    url: '/executeplan/testcase/updatePlanCaseorder',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function getstaticsplancases() {
   return request({
     url: '/executeplan/testcase/getstaticsplancases',

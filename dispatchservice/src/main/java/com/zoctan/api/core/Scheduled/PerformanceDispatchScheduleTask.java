@@ -57,6 +57,8 @@ public class PerformanceDispatchScheduleTask {
     @Autowired(required = false)
     private ConditionScriptService conditionScriptService;
     @Autowired(required = false)
+    private ConditionDelayService conditionDelayService;
+    @Autowired(required = false)
     private ConditionDbService conditionDbService;
     private String redisKey = "";
 
@@ -142,7 +144,7 @@ public class PerformanceDispatchScheduleTask {
 
     private boolean ConditionRequest(Long PlanID, String BatchName, Dispatch dispatch) throws Exception {
         boolean flag = true;
-        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件");
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件","测试集合");
         if (testconditionList.size() > 0) {
             Long ConditionID = testconditionList.get(0).getId();
             List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
@@ -151,7 +153,9 @@ public class PerformanceDispatchScheduleTask {
             int DBConditionNUms = conditionDbList.size();
             List<ConditionScript> conditionScriptList = conditionScriptService.getconditionscriptbyid(ConditionID);
             int ScriptConditionNUms = conditionScriptList.size();
-            int SubConditionNums = ApiConditionNums + DBConditionNUms + ScriptConditionNUms;
+            List<ConditionDelay> conditionDelayList = conditionDelayService.GetCaseListByConditionID(ConditionID);
+            int DelayConditionNUms = conditionDelayList.size();
+            int SubConditionNums = ApiConditionNums + DBConditionNUms + ScriptConditionNUms+DelayConditionNUms;
             //表示有子条件需要处理
             if (SubConditionNums > 0) {
                 //获取此计划批次条件报告的结果
@@ -189,7 +193,7 @@ public class PerformanceDispatchScheduleTask {
 
     private boolean IsConditionFinish(Long PlanID, String BatchName) {
         boolean flag = true;
-        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件");
+        List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(PlanID, "前置条件","测试集合");
         PerformanceDispatchScheduleTask.log.info("调度服务【性能】测试定时器前置条件数量..................PlanID:" + PlanID + " BatchName:" + BatchName + testconditionList.size());
         if (testconditionList.size() > 0) {
             long ConditionID = testconditionList.get(0).getId();
