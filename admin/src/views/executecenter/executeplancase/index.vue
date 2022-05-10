@@ -199,7 +199,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title='测试' :visible.sync="testcasedialogFormVisible">
+    <el-dialog title='用例顺序' :visible.sync="testcasedialogFormVisible">
       <div class="filter-container" >
         <el-form :inline="true" :model="searchexistcase" ref="searchexistcase" >
 
@@ -579,6 +579,7 @@
         for (let i = 0; i < this.loadexecplanList.length; i++) {
           if (this.loadexecplanList[i].executeplanname === e) {
             this.tmploadexecuteplanid = this.loadexecplanList[i].id
+            this.search.executeplanid = this.loadexecplanList[i].id
             console.log(this.tmploadexecuteplanid)
           }
         }
@@ -721,7 +722,6 @@
       },
 
       getplancasesbyplanidandorder() {
-        this.searchexistcase.page = 1
         this.searchexistcase.executeplanid = this.tmpexistcaseexecuteplanid
         this.$refs.searchexistcase.validate(valid => {
           if (valid) {
