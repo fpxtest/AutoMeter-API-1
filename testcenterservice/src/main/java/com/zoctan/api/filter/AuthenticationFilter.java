@@ -78,6 +78,16 @@ public class AuthenticationFilter implements Filter {
     response.setHeader("Access-Control-Max-Age", "3600");
     response.setHeader("Access-Control-Expose-Headers", "*");
 
+//    if()
+//    {
+//      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//
+//      // 向 security 上下文中注入已认证的账户
+//      // 之后可以直接在控制器 controller 的入参获得 Principal 或 Authentication
+//      SecurityContextHolder.getContext().setAuthentication(authentication);
+//    }
+
+
     // 预请求后，直接返回
     // 返回码必须为 200 否则视为请求失败
     if (HttpMethod.OPTIONS.matches(request.getMethod())) {

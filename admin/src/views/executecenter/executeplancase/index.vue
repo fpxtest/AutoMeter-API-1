@@ -698,10 +698,10 @@
        */
       searchcaseBy() {
         this.searchcase.page = 1
-        // this.searchcase.executeplanid = this.tmpexecuteplanid
-        // this.searchcase.deployunitid = this.tmpdeployunitid
-        // this.searchcase.apiid = this.tmpapiid
-        // this.searchcase.casetype = this.tmpcasecasetype
+        this.searchcase.executeplanid = this.tmpexecuteplanid
+        this.searchcase.deployunitid = this.tmpdeployunitid
+        this.searchcase.apiid = this.tmpapiid
+        this.searchcase.casetype = this.tmpcasecasetype
         console.log(this.searchcase)
         this.caselistLoading = true
         this.$refs.searchcase.validate(valid => {

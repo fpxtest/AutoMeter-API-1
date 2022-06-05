@@ -16,12 +16,12 @@
             icon="el-icon-plus"
             v-if="hasPermission('depunit:add')"
             @click.native.prevent="showAdddepunitDialog"
-          >添加发布单元</el-button>
+          >添加发布单元(服务)</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('depunit:search')">
           <el-form-item>
-            <el-input clearable v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元名"></el-input>
+            <el-input clearable v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元(服务)名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-input clearable v-model="search.protocal" @keyup.enter.native="searchBy" placeholder="协议"></el-input>
@@ -46,7 +46,7 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="发布单元名" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="发布单元(服务)名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="协议" align="center" prop="protocal" width="110"/>
       <el-table-column label="访问端口" align="center" prop="port" width="100"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
@@ -96,7 +96,7 @@
         :model="tmpdepunit"
         ref="tmpdepunit"
       >
-        <el-form-item label="发布单元名" prop="deployunitname" required>
+        <el-form-item label="发布单元(服务)名" prop="deployunitname" required>
           <el-input
             type="text"
             maxlength="40"
@@ -181,15 +181,15 @@
         itemKey: null,
         tmpdeployunitname: null,
         tmpprotocal: null,
-        depunitList: [], // 发布单元列表
+        depunitList: [], // 发布单元(服务)列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         dialogStatus: 'add',
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改发布单元',
-          update: '修改发布单元',
-          add: '添加发布单元'
+          updateRole: '修改发布单元(服务)',
+          update: '修改发布单元(服务)',
+          add: '添加发布单元(服务)'
         },
         btnLoading: false, // 按钮等待动画
         tmpdepunit: {
@@ -224,7 +224,7 @@
       unix2CurrentTime,
 
       /**
-       * 获取发布单元列表
+       * 获取发布单元(服务)列表
        */
       getdepunitList() {
         this.search.deployunitname = this.tmpdeployunitname
@@ -235,7 +235,7 @@
           this.total = response.data.total
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载发布单元(服务)列表失败')
         })
       },
 
@@ -282,7 +282,7 @@
         return (this.search.page - 1) * this.search.size + index + 1
       },
       /**
-       * 显示添加发布单元对话框
+       * 显示添加发布单元(服务)对话框
        */
       showAdddepunitDialog() {
         // 显示新增对话框
@@ -296,7 +296,7 @@
         this.tmpdepunit.creator = this.name
       },
       /**
-       * 添加发布单元
+       * 添加发布单元(服务)
        */
       adddepunit() {
         this.$refs.tmpdepunit.validate(valid => {
@@ -315,8 +315,8 @@
         })
       },
       /**
-       * 显示修改发布单元对话框
-       * @param index 发布单元下标
+       * 显示修改发布单元(服务)对话框
+       * @param index 发布单元(服务)下标
        */
       showUpdatedepunitDialog(index) {
         this.dialogFormVisible = true
@@ -329,7 +329,7 @@
         this.tmpdepunit.creator = this.name
       },
       /**
-       * 更新发布单元
+       * 更新发布单元(服务)
        */
       updatedepunit() {
         this.$refs.tmpdepunit.validate(valid => {
@@ -347,11 +347,11 @@
       },
 
       /**
-       * 删除发布单元
-       * @param index 发布单元下标
+       * 删除发布单元(服务)
+       * @param index 发布单元(服务)下标
        */
       removedepunit(index) {
-        this.$confirm('删除该发布单元？', '警告', {
+        this.$confirm('删除该发布单元(服务)？', '警告', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
@@ -367,14 +367,14 @@
       },
 
       /**
-       * 发布单元资料是否唯一
-       * @param 发布单元
+       * 发布单元(服务)资料是否唯一
+       * @param 发布单元(服务)
        */
       isUniqueDetail(depunit) {
         for (let i = 0; i < this.depunitList.length; i++) {
           if (this.depunitList[i].id !== depunit.id) { // 排除自己
             if (this.depunitList[i].deployunitname === depunit.deployunitname) {
-              this.$message.error('发布单元名已存在')
+              this.$message.error('发布单元(服务)名已存在')
               return false
             }
           }

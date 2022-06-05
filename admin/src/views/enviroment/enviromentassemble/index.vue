@@ -72,7 +72,7 @@
             size="mini"
             v-if="hasPermission('enviroment_assemble:update') && scope.row.id !== id"
             @click.native.prevent="showassembletestDialog(scope.$index)"
-          >测试</el-button>
+          >连接测试</el-button>
           <el-button
             type="warning"
             size="mini"

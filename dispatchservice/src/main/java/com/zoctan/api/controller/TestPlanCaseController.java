@@ -9,10 +9,14 @@ import com.zoctan.api.core.service.Httphelp;
 import com.zoctan.api.dto.Testplanandbatch;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.*;
+import com.zoctan.api.service.ExecuteplanService;
+import com.zoctan.api.service.ExecuteplanbatchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +24,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -41,6 +46,12 @@ public class TestPlanCaseController {
     private SlaverMapper slaverMapper;
     @Autowired
     private DispatchMapper dispatchMapper;
+
+    @Autowired
+    private ExecuteplanService executeplanService;
+
+    @Resource
+    private ExecuteplanbatchService executeplanbatchService;
 
 
     @PostMapping("/exec")
@@ -103,6 +114,85 @@ public class TestPlanCaseController {
         }
         TestPlanCaseController.log.info("完成保存调度用例。。。。。。。。。。。。。。。。。。。。。。。。");
         return ResultGenerator.genOkResult();
+    }
+
+
+    @PostMapping("/TestPlanRun")
+    public Result TestPlanRun(@RequestBody final Map<String, Object> param)  {
+        String TestPlanName=param.get("TestPlanName").toString();
+        String BatchName=param.get("BatchName").toString();
+        String Source=param.get("Source").toString();
+        long PlanID;
+        Executeplan executeplan= executeplanService.getBy("executeplanname",TestPlanName);
+        List<ExecuteplanTestcase> caselist=new ArrayList<>();
+        Executeplanbatch executeplanbatch=new Executeplanbatch();
+        if (executeplan != null)
+        {
+            PlanID=executeplan.getId();
+            caselist = executeplanTestcaseMapper.findcasebytestplanid(PlanID,executeplan.getUsetype());
+            TestPlanCaseController.log.info("测试集合id" + PlanID+" 批次为："+BatchName+" 获取用例数："+caselist.size());
+            Condition con=new Condition(Executeplanbatch.class);
+            con.createCriteria().andCondition("batchname = '" + BatchName + "'")
+                    .andCondition("executeplanid = " + PlanID);
+            if(executeplanbatchService.ifexist(con)>0)
+            {
+                return ResultGenerator.genFailedResult("该测试集合下已经存在此执行计划");
+            }
+            else {
+                executeplanbatch.setStatus("待执行");
+                executeplanbatch.setSource(Source);
+                executeplanbatch.setBatchname(BatchName);
+                executeplanbatch.setExecuteplanid(PlanID);
+                executeplanbatch.setExecuteplanname(TestPlanName);
+                executeplanbatchService.save(executeplanbatch);
+
+                if (caselist.size() == 0) {
+                    return ResultGenerator.genOkResult("此测试集合:" + executeplan.getExecuteplanname()+" 还没用例，请先装载用例");
+                }
+                else
+                {
+                    //获取对应计划类型的所有slaver
+                    List<Slaver> slaverlist = slaverMapper.findslaveralive(executeplan.getUsetype(),"已下线");
+                    //增加检测slaver是否正常，在salver的control做个检测的请求返回
+                    List<List<Dispatch>> dispatchList=new ArrayList<>();
+                    if (slaverlist.size() == 0) {
+                        TestPlanCaseController.log.info("没有类型为"+executeplan.getUsetype()+"的可用的测试执行机，请联系AutoMeter管理员");
+                        return ResultGenerator.genOkResult("没有类型为"+executeplan.getUsetype()+"的可用的测试执行机，请联系AutoMeter管理员");
+                    } else {
+                        if(executeplan.getUsetype().equals("功能"))
+                        {
+                            if(executeplan.getRunmode().equalsIgnoreCase("单机运行"))
+                            {
+                                List<Slaver> singleslaverlist=new ArrayList<>();
+                                singleslaverlist.add(slaverlist.get(0));
+                                dispatchList=FunctionDispatch(singleslaverlist,caselist,executeplan,executeplanbatch);
+                                TestPlanCaseController.log.info("单机运行slaver："+slaverlist.get(0).getSlavername());
+
+                            }
+                            if(executeplan.getRunmode().equalsIgnoreCase("多机并行")||executeplan.getRunmode().equalsIgnoreCase("多机执行"))
+                            {
+                                TestPlanCaseController.log.info("多机并行slaver：");
+                                dispatchList=FunctionDispatch(slaverlist,caselist,executeplan,executeplanbatch);
+                            }
+                        }
+                        if(executeplan.getUsetype().equals("性能"))
+                        {
+                            dispatchList=PerformanceDispatch(slaverlist,caselist,executeplan,executeplanbatch);
+                        }
+                    }
+                    for (List<Dispatch> li:dispatchList) {
+                        dispatchMapper.insertBatchDispatch(li);
+                        TestPlanCaseController.log.info("保存成功调度用例条数：" + li.size());
+                    }
+                    TestPlanCaseController.log.info("完成保存调度用例。。。。。。。。。。。。。。。。。。。。。。。。");
+                    return ResultGenerator.genOkResult();
+                }
+            }
+        }
+        else
+        {
+            return ResultGenerator.genFailedResult("未找到此测试计划："+TestPlanName);
+        }
     }
 
 
