@@ -1079,7 +1079,24 @@ public class TestconditionController {
         if (ConditionResultStatus.equals("失败")) {
             String Subject = testconditionReport.getPlanname() + "|" + testconditionReport.getBatchname() + "前置子条件：" + testconditionReport.getSubconditionname() + "执行失败";
             String Content = "-------------【失败原因：" + Respone + " ,前置子条件执行失败会导致测试集合所有用例停止运行，请及时AutoMeter处理！】";
-            SendMessageDingDing(Subject + Content);
+
+            String DingdingToken="";
+            Executeplan executeplan= executeplanService.getBy("id",testconditionReport.getTestplanid());
+            if(executeplan!=null)
+            {
+                DingdingToken=executeplan.getDingdingtoken();
+                TestconditionController.log.info("测试集合获取钉钉token：-============：" + DingdingToken);
+                if(DingdingToken.isEmpty()||DingdingToken==null)
+                {
+                    List<Dictionary> dictionaryList = dictionaryService.findDicNameValueWithCode("DingDing");
+                    if (dictionaryList.size() > 0) {
+                        Dictionary dictionary = dictionaryList.get(0);
+                        DingdingToken = dictionary.getDicitmevalue();
+                        TestconditionController.log.info("字典表获取钉钉token：-============：" + DingdingToken);
+                    }
+                }
+                SendMessageDingDing(DingdingToken,Subject + Content);
+            }
             SendMail(testconditionReport, Respone, user);
         }
     }
@@ -1124,34 +1141,43 @@ public class TestconditionController {
         }
     }
 
-    private void SendMessageDingDing(String MessageContent) {
-        try {
-            List<Dictionary> dictionaryList = dictionaryService.findDicNameValueWithCode("DingDing");
-            if (dictionaryList.size() > 0) {
-                Dictionary dictionary = dictionaryList.get(0);
-                String Token = dictionary.getDicitmevalue();
-                //消息内容
-                Map<String, String> contentMap = new HashMap<>();
-                contentMap.put("content", MessageContent);
-                //通知人
-                Map<String, Object> atMap = new HashMap<>();
-                ;
-                //1.是否通知所有人
-                atMap.put("isAtAll", true);
+    private void SendMessageDingDing(String token, String MessageContent) {
+        try
+        {
+            //消息内容
+            Map<String, String> contentMap = new HashMap<>();
+            contentMap.put("content", "AutoMeter-"+MessageContent);
+            //通知人
+            Map<String, Object> atMap = new HashMap<>();
+            ;
+            //1.是否通知所有人
+            atMap.put("isAtAll", true);
 
-                Map<String, Object> reqMap = Maps.newHashMap();
-                reqMap.put("msgtype", "text");
-                reqMap.put("text", contentMap);
-                reqMap.put("at", atMap);
-                String RequestContent = JSON.toJSONString(reqMap);
-                String Respone = HttpRequest.post(Token).body(RequestContent).timeout(10000).execute().body();
-                TestconditionController.log.info("发送钉钉信息响应：-============：" + Respone);
-            } else {
-                TestconditionController.log.info("发送钉钉信息未找到字典表配置钉钉信息：-============：");
-            }
-        } catch (Exception ex) {
+            Map<String, Object> reqMap = Maps.newHashMap();
+            reqMap.put("msgtype", "text");
+            reqMap.put("text", contentMap);
+            reqMap.put("at", atMap);
+            String RequestContent = JSON.toJSONString(reqMap);
+            String Respone = HttpRequest.post(token).body(RequestContent).timeout(10000).execute().body();
+            TestconditionController.log.info("发送钉钉信息响应：-============：" + Respone);
+        }
+        catch (Exception ex)
+        {
             TestconditionController.log.info("发送钉钉异常：-============：" + ex.getMessage());
         }
+
+//        try {
+//            List<Dictionary> dictionaryList = dictionaryService.findDicNameValueWithCode("DingDing");
+//            if (dictionaryList.size() > 0) {
+//                Dictionary dictionary = dictionaryList.get(0);
+//                String Token = dictionary.getDicitmevalue();
+//
+//            } else {
+//                TestconditionController.log.info("发送钉钉信息未找到字典表配置钉钉信息：-============：");
+//            }
+//        } catch (Exception ex) {
+//            TestconditionController.log.info("发送钉钉异常：-============：" + ex.getMessage());
+//        }
     }
 
     public void ScriptCondition(Long Caseid, Dispatch dispatch, Long ConditionID) {

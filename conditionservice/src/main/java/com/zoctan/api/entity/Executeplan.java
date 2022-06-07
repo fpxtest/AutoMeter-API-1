@@ -29,6 +29,16 @@ public class Executeplan {
 
     private String businesstype;
 
+    public String getDingdingtoken() {
+        return dingdingtoken;
+    }
+
+    public void setDingdingtoken(String dingdingtoken) {
+        this.dingdingtoken = dingdingtoken;
+    }
+
+    private String dingdingtoken;
+
 
     /**
      * 状态，new，waiting，running，pause，finish
