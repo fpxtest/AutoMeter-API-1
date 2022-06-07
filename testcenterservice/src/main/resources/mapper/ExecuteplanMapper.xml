@@ -16,6 +16,7 @@
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="runmode" jdbcType="VARCHAR" property="runmode" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+      <result column="dingdingtoken" jdbcType="VARCHAR" property="dingdingtoken" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -51,7 +52,7 @@
 
   <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
     update executeplan set executeplanname = #{executeplanname},envid = #{envid},businesstype=#{businesstype},enviromentname=#{enviromentname},
-     usetype=#{usetype}, memo = #{memo},runmode = #{runmode}, creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+     usetype=#{usetype}, memo = #{memo},runmode = #{runmode},dingdingtoken= #{dingdingtoken}, creator = #{creator}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 

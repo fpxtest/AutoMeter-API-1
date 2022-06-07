@@ -74,6 +74,19 @@ public class TestMysqlHelp {
     }
 
     //获取计划批次
+    public ArrayList<HashMap<String, String>> Getplan(String planid) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        try {
+            String sql = "SELECT a.* FROM executeplan a where a.id = " + planid ;
+            logger.info(logplannameandcasename + "获取数据库 获取测试集合 result sql is...........: " + sql);
+            list = MysqlConnectionUtils.query(sql);
+        } catch (Exception e) {
+            logger.info(logplannameandcasename + "获取数据库 获取测试集合异常...........: " + e.getMessage());
+        }
+        return list;
+    }
+
+    //获取计划批次
     public ArrayList<HashMap<String, String>> GetplanBatchCreator(String planid,String BatchName) {
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
         try {

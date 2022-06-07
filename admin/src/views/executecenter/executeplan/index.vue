@@ -73,6 +73,7 @@
       <el-table-column label="执行环境" align="center" prop="enviromentname" width="100"/>
       <el-table-column label="类型" align="center" prop="usetype" width="60"/>
       <el-table-column label="运行模式" align="center" prop="runmode" width="80"/>
+      <el-table-column :show-overflow-tooltip="true" label="通知钉钉" align="center" prop="dingdingtoken" width="90"/>
       <el-table-column label="操作人" align="center" prop="creator" width="60"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
@@ -151,7 +152,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="业务类型" prop="businesstype"  required>
-          <el-select v-model="tmpexecuteplan.businesstype" placeholder="业务类型" style="width:100%">
+          <el-select v-model="tmpexecuteplan.businesstype" placeholder="业务类型" style="width:100%" @change="businesstypeselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(dicitem, index) in planbusinessdiclist" :key="index">
               <el-option :label="dicitem.dicitmevalue" :value="dicitem.dicitmevalue" required/>
@@ -164,6 +165,16 @@
               <el-option label="单机运行" value="单机运行" />
               <el-option label="多机并行" value="多机并行" />
             </el-select>
+          </el-form-item>
+
+          <el-form-item label="钉钉通知token" prop="dingdingtoken">
+            <el-input
+              maxlength="200"
+              type="text"
+              prefix-icon="el-icon-message"
+              auto-complete="off"
+              v-model="tmpexecuteplan.dingdingtoken"
+            />
           </el-form-item>
 
         <el-form-item label="备注" prop="memo">
@@ -559,6 +570,7 @@
           ip: '',
           memo: '',
           creator: '',
+          dingdingtoken: '',
           runmode: ''
         },
         tmpplanbatch: {
@@ -877,7 +889,6 @@
           console.log(this.enviromentnameList[i].id)
         }
       },
-
       /**
        * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
        */
@@ -1079,6 +1090,7 @@
         this.tmpexecuteplan.businesstype = ''
         this.tmpexecuteplan.creator = this.name
         this.tmpexecuteplan.runmode = ''
+        this.tmpexecuteplan.dingdingtoken = ''
       },
 
       showplanparamsDialog(index) {
@@ -1233,7 +1245,7 @@
         this.tmpexecuteplan.businesstype = this.executeplanList[index].businesstype
         this.tmpexecuteplan.creator = this.name
         this.tmpexecuteplan.runmode = this.executeplanList[index].runmode
-        console.log(this.tmpexecuteplan.runmode)
+        this.tmpexecuteplan.dingdingtoken = this.executeplanList[index].dingdingtoken
         for (let i = 0; i < this.enviromentnameList.length; i++) {
           if (this.enviromentnameList[i].enviromentname === this.tmpexecuteplan.enviromentname) {
             this.tmpexecuteplan.envid = this.enviromentnameList[i].id

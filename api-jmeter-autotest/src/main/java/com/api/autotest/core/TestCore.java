@@ -251,7 +251,7 @@ public class TestCore {
                 tpc=Long.parseLong(liststatics.get(0).get("tpc"));
                 tfc=Long.parseLong(liststatics.get(0).get("tfc"));
             }
-            Content=Subject+"---------此测试集合运行完成结果总计用例数："+tc+"， 成功数："+tpc+"， 失败数："+tfc;
+            Content=Subject+"---------此测试集合运行完成,总计用例数："+tc+"， 成功数："+tpc+"， 失败数："+tfc+" ，请登陆AutoMeter-报告中心查看详情";
         }
         return Content;
     }
@@ -261,34 +261,58 @@ public class TestCore {
         try
         {
             String MessageContent= GetSendContent(PlanID,BatchName);
-            ArrayList<HashMap<String, String>> dicNameValueWithCode= findDicNameValueWithCode("DingDing");
-            if(dicNameValueWithCode.size()>0)
+            String Token="";
+            //先获取测试集合是否配置了钉钉token
+            ArrayList<HashMap<String, String>> list=Getplan(PlanID);
+            if(list.size()>0)
             {
-                String Token=dicNameValueWithCode.get(0).get("dicitmevalue");
-                //消息内容
-                Map<String, String> contentMap = new HashMap<>();
-                contentMap.put("content", MessageContent);
-                //通知人
-                Map<String, Object> atMap = new HashMap<>();;
-                //1.是否通知所有人
-                atMap.put("isAtAll", true);
-                Map<String, Object> reqMap =new HashMap<>(); //Maps.newHashMap();
-                reqMap.put("msgtype", "text");
-                reqMap.put("text", contentMap);
-                reqMap.put("at", atMap);
-                String RequestContent= JSON.toJSONString(reqMap);
-                String Respone = HttpRequest.post(Token).body(RequestContent).timeout(10000).execute().body();
-                logger.info("发送钉钉信息响应：-============：" + Respone);
-            }
-            else
-            {
-                logger.info("发送钉钉信息未找到字典表钉钉配置信息：-============：" );
+                 Token=list.get(0).get("dingdingtoken");
+                logger.info("测试集合中的token：-============：" +Token);
+                //如果计划中的token位空，则找字典表中的token
+                 if(Token.isEmpty()||Token==null)
+                 {
+                     ArrayList<HashMap<String, String>> dicNameValueWithCode= findDicNameValueWithCode("DingDing");
+                     if(dicNameValueWithCode.size()>0)
+                     {
+                         Token=dicNameValueWithCode.get(0).get("dicitmevalue");
+                         logger.info("字典中的钉钉的token：-============：" +Token);
+                         DingdingPost(MessageContent,Token);
+                         logger.info("字典中的钉钉的token：-============：发送完成");
+                     }
+                     else
+                     {
+                         logger.info("发送钉钉信息未找到字典表钉钉配置token,取消发送钉钉：-============：" );
+                     }
+                 }
+                 else
+                 {
+                     DingdingPost(MessageContent,Token);
+                     logger.info("测试集合中的钉钉的token：-============：发送完成");
+                 }
             }
         }
         catch (Exception ex)
         {
             logger.info("发送钉钉信息异常：-============：" + ex.getMessage());
         }
+    }
+
+    private void DingdingPost(String Content,String Token)
+    {
+        //消息内容
+        Map<String, String> contentMap = new HashMap<>();
+        contentMap.put("content", "AutoMeter-"+Content);
+        //通知人
+        Map<String, Object> atMap = new HashMap<>();;
+        //1.是否通知所有人
+        atMap.put("isAtAll", true);
+        Map<String, Object> reqMap =new HashMap<>(); //Maps.newHashMap();
+        reqMap.put("msgtype", "text");
+        reqMap.put("text", contentMap);
+        reqMap.put("at", atMap);
+        String RequestContent= JSON.toJSONString(reqMap);
+        String Respone = HttpRequest.post(Token).body(RequestContent).timeout(10000).execute().body();
+        logger.info("发送钉钉信息响应：-============：" + Respone);
     }
 
     //获取计划批次的数据统计
@@ -308,6 +332,12 @@ public class TestCore {
     //获取数据库用例相关数据
     public ArrayList<HashMap<String, String>> findDicNameValueWithCode(String DicCode) {
         ArrayList<HashMap<String, String>> list=testMysqlHelp.findDicNameValueWithCode(DicCode);
+        return list;
+    }
+
+    //获取测试集合
+    public ArrayList<HashMap<String, String>> Getplan(String planid) {
+        ArrayList<HashMap<String, String>> list=testMysqlHelp.Getplan(planid);
         return list;
     }
 
