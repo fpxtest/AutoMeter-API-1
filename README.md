@@ -56,6 +56,8 @@
 ## 部署
  [服务器部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2?sort_id=4960162)
 
+[服务器简易部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2%EF%BC%8C%E6%9B%B4%E6%96%B0/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%93%E9%83%A8%E7%BD%B2?sort_id=5701353)
+
  [Docker部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2%EF%BC%8C%E6%9B%B4%E6%96%B0/%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2%EF%BC%88DockerFile%EF%BC%89)
 
 [docker-compose部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2%EF%BC%8C%E6%9B%B4%E6%96%B0/%E5%AE%B9%E5%99%A8%E9%83%A8%E7%BD%B2%EF%BC%88Docker-Compose%EF%BC%89?sort_id=5387446)
