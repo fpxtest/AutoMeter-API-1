@@ -3,6 +3,7 @@ package com.zoctan.api.core.Scheduled;
 import com.zoctan.api.core.config.RedisUtils;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.SlaverMapper;
+import com.zoctan.api.service.impl.InitSlaver;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.KeyFactorySpi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -41,63 +40,63 @@ public class AutoFixSlaverScheduleTask {
     //@Scheduled(fixedRate=5000)
     private void configureTasks() {
         String ip = null;
-        InetAddress address = null;
-        try {
-            address = InetAddress.getLocalHost();
-            ip = address.getHostAddress();
-            String redisKey = "AutoFixSlaver-RedisLock" + new Date() + ip ;
-            long redis_default_expire_time = 2000;
-            //默认上锁时间为五小时
-            //此key存放的值为任务执行的ip，
-            // redis_default_expire_time 不能设置为永久，避免死锁
-            boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
-            if (lock) {
-                //TODO 执行任务结束后需要释放锁
-                try {
-//                    String MacAddress=getMacByIP(ip);
-                    List<String>list= getMACAddress();
-                    String MacAddress=list.get(0);
-                    AutoFixSlaverScheduleTask.log.info("自动修复Slaver更新MacAddress为======================="+MacAddress);
-                    List<Slaver> slaverList= slaverMapper.findslaverbymac(MacAddress);
-                    if(slaverList.size()>0)
-                    {
-                        Slaver slaver=slaverList.get(0);
-                        if(!slaver.getIp().equalsIgnoreCase(ip))
-                        {
-                            slaver.setIp(ip);
-                            slaver.setSlavername("执行机"+ip);
-                            slaverMapper.updateSlaver(slaver);
-                            AutoFixSlaverScheduleTask.log.info("自动修复Slaver更新IP为======================="+ip);
-                        }
-                        else
-                        {
-                            if(slaver.getStatus().equals("已下线"))
-                            {
-                                slaver.setStatus("空闲");
-                                slaverMapper.updateSlaver(slaver);
-                                AutoFixSlaverScheduleTask.log.info("自动修复Slaver为空闲状态完成=======================");
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AutoFixSlaverScheduleTask.log.info("自动修复Slaver任务-异常======================="+ex.getMessage());
-                }
-                finally {
-                    //释放锁
-                    redisUtils.deletekey(redisKey);
-                }
-                AutoFixSlaverScheduleTask.log.info("自动修复Slaver任务-============释放分布式锁成功=======================");
-            } else {
-                AutoFixSlaverScheduleTask.log.info("自动修复Slaver-============获得分布式锁失败=======================");
-                ip = redisUtils.getkey(redisKey);
-                AutoFixSlaverScheduleTask.log.info("自动修复Slaver-============{}机器上占用分布式锁，正在执行中======================="+redisKey +" ip :" +ip);
-                return;
-            }
-        } catch (Exception ex) {
-            AutoFixSlaverScheduleTask.log.info("自动修复Slaver-调度定时器异常: " + ex.getMessage());
-        }
+        //InetAddress address = null;
+//        try {
+//            //address = InetAddress.getLocalHost();
+//            ip = getInet4Address();//address.getHostAddress();
+//            String redisKey = "AutoFixSlaver-RedisLock" + new Date() + ip ;
+//            long redis_default_expire_time = 2000;
+//            //默认上锁时间为五小时
+//            //此key存放的值为任务执行的ip，
+//            // redis_default_expire_time 不能设置为永久，避免死锁
+//            boolean lock = redisUtils.tryLock(redisKey, ip, redis_default_expire_time);
+//            if (lock) {
+//                //TODO 执行任务结束后需要释放锁
+//                try {
+////                    String MacAddress=getMacByIP(ip);
+//                    List<String>list= getMACAddress();
+//                    String MacAddress=list.get(0);
+//                    AutoFixSlaverScheduleTask.log.info("自动修复Slaver更新MacAddress为======================="+MacAddress);
+//                    List<Slaver> slaverList= slaverMapper.findslaverbymac(MacAddress);
+//                    if(slaverList.size()>0)
+//                    {
+//                        Slaver slaver=slaverList.get(0);
+//                        if(!slaver.getIp().equalsIgnoreCase(ip))
+//                        {
+//                            slaver.setIp(ip);
+//                            slaver.setSlavername("执行机"+ip);
+//                            slaverMapper.updateSlaver(slaver);
+//                            AutoFixSlaverScheduleTask.log.info("自动修复Slaver更新IP为======================="+ip);
+//                        }
+//                        else
+//                        {
+//                            if(slaver.getStatus().equals("已下线"))
+//                            {
+//                                slaver.setStatus("空闲");
+//                                slaverMapper.updateSlaver(slaver);
+//                                AutoFixSlaverScheduleTask.log.info("自动修复Slaver为空闲状态完成=======================");
+//                            }
+//                        }
+//                    }
+//                }
+//                catch (Exception ex)
+//                {
+//                    AutoFixSlaverScheduleTask.log.info("自动修复Slaver任务-异常======================="+ex.getMessage());
+//                }
+//                finally {
+//                    //释放锁
+//                    redisUtils.deletekey(redisKey);
+//                }
+//                AutoFixSlaverScheduleTask.log.info("自动修复Slaver任务-============释放分布式锁成功=======================");
+//            } else {
+//                AutoFixSlaverScheduleTask.log.info("自动修复Slaver-============获得分布式锁失败=======================");
+//                ip = redisUtils.getkey(redisKey);
+//                AutoFixSlaverScheduleTask.log.info("自动修复Slaver-============{}机器上占用分布式锁，正在执行中======================="+redisKey +" ip :" +ip);
+//                return;
+//            }
+//        } catch (Exception ex) {
+//            AutoFixSlaverScheduleTask.log.info("自动修复Slaver-调度定时器异常: " + ex.getMessage());
+//        }
 
     }
 
@@ -140,5 +139,27 @@ public class AutoFixSlaverScheduleTask {
             }
         }
         return list;
+    }
+
+    public static String getInet4Address() {
+        Enumeration<NetworkInterface> nis;
+        String ip = null;
+        try {
+            nis = NetworkInterface.getNetworkInterfaces();
+            for (; nis.hasMoreElements();) {
+                NetworkInterface ni = nis.nextElement();
+                Enumeration<InetAddress> ias = ni.getInetAddresses();
+                for (; ias.hasMoreElements();) {
+                    InetAddress ia = ias.nextElement();
+                    //ia instanceof Inet6Address && !ia.equals("")
+                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
+                        ip = ia.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            AutoFixSlaverScheduleTask.log.info("slaver-getInet4Address......................................................."+e.getMessage());
+        }
+        return ip;
     }
 }

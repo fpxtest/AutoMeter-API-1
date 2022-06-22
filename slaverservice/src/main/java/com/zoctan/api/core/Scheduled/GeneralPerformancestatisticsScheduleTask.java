@@ -23,8 +23,7 @@ import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -221,12 +220,35 @@ public class GeneralPerformancestatisticsScheduleTask {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            ip = address.getHostAddress();
+            ip = getInet4Address();//address.getHostAddress();
         } catch (UnknownHostException e) {
             GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-UnknownHostException is:" + e.getMessage());
         }
         redisKey = "Performancestatistics"+ip+"GeneralPerformancestatistics"+ new Date();
         GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-redisKey is:" + redisKey);
     }
+
+    public static String getInet4Address() {
+        Enumeration<NetworkInterface> nis;
+        String ip = null;
+        try {
+            nis = NetworkInterface.getNetworkInterfaces();
+            for (; nis.hasMoreElements();) {
+                NetworkInterface ni = nis.nextElement();
+                Enumeration<InetAddress> ias = ni.getInetAddresses();
+                for (; ias.hasMoreElements();) {
+                    InetAddress ia = ias.nextElement();
+                    //ia instanceof Inet6Address && !ia.equals("")
+                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
+                        ip = ia.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            GeneralPerformancestatisticsScheduleTask.log.info("slaver-getInet4Address......................................................."+e.getMessage());
+        }
+        return ip;
+    }
+
 
 }

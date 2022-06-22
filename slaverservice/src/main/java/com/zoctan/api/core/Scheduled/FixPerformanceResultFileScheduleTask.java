@@ -20,10 +20,7 @@ import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -205,9 +202,31 @@ public class FixPerformanceResultFileScheduleTask {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            ip = address.getHostAddress();
+            ip = getInet4Address();//address.getHostAddress();
         } catch (UnknownHostException e) {
             FixPerformanceResultFileScheduleTask.log.info("收集性能报告数据-UnknownHostException is:" + e.getMessage());
         }
+    }
+
+    public static String getInet4Address() {
+        Enumeration<NetworkInterface> nis;
+        String ip = null;
+        try {
+            nis = NetworkInterface.getNetworkInterfaces();
+            for (; nis.hasMoreElements();) {
+                NetworkInterface ni = nis.nextElement();
+                Enumeration<InetAddress> ias = ni.getInetAddresses();
+                for (; ias.hasMoreElements();) {
+                    InetAddress ia = ias.nextElement();
+                    //ia instanceof Inet6Address && !ia.equals("")
+                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
+                        ip = ia.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            FixPerformanceResultFileScheduleTask.log.info("slaver-getInet4Address......................................................."+e.getMessage());
+        }
+        return ip;
     }
 }

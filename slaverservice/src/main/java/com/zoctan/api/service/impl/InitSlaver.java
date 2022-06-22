@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -38,10 +38,10 @@ public class InitSlaver {
     @PostConstruct
     public void Init() {
         InitSlaver.log.info("启动开始注册测试执行机。。。。。。。。。。。。。。");
-        InetAddress address = null;
+        //InetAddress address = null;
         try {
-            address = InetAddress.getLocalHost();
-            String ip = address.getHostAddress();
+            //address = InetAddress.getLocalHost();
+            String ip = getInet4Address();//address.getHostAddress();
             String MacAddredss = "";
             try {
                 //MacAddredss = getMacByIP(ip);
@@ -58,30 +58,48 @@ public class InitSlaver {
             sa.setPort(port);
             sa.setStatus("空闲");
             sa.setMemo("执行机" + ip);
-            List<Slaver> slaverList = slaverMapper.findslaverbymac(MacAddredss);
-            if (slaverList.size() == 0) {
-                slaverMapper.addslaver(sa);
-                InitSlaver.log.info("启动注册slaver完成.......................................................");
-            } else {
-                Slaver slaver = slaverList.get(0);
-                if(!slaver.getIp().equalsIgnoreCase(ip))
+
+            if(ip!=null)
+            {
+                List<Slaver> slaverList= slaverMapper.findslaverbyip(ip);
+                if(slaverList.size()>0)
                 {
-                    //如果已存在此mac地址，并且ip不一样，更新为新的IP，服务器可能改过host的ip
-                    slaverMapper.updateSlaver(slaver);
-                    InitSlaver.log.info("slaver已存在此mac地址，并且ip不一样，更新为新的IP，服务器可能改过host的ip.......................................................");
-                }
-                else
-                {
-                    //如果IP也相同，如果是下线状态则更新为上线空闲
+                    Slaver slaver=slaverList.get(0);
                     if (slaver.getStatus().equals("已下线")) {
                         slaver.setStatus("空闲");
                         slaverMapper.updateSlaver(slaver);
                         InitSlaver.log.info("slaver的mac和IP相同，如果是下线状态则更新为上线空闲.......................................................");
                     }
                 }
-                InitSlaver.log.info("slaver已注册.......................................................");
+                else
+                {
+                    slaverMapper.addslaver(sa);
+                }
             }
-        } catch (UnknownHostException e) {
+//            List<Slaver> slaverList = slaverMapper.findslaverbymac(MacAddredss);
+//            if (slaverList.size() == 0) {
+//                slaverMapper.addslaver(sa);
+//                InitSlaver.log.info("启动注册slaver完成.......................................................");
+//            } else {
+//                Slaver slaver = slaverList.get(0);
+//                if(!slaver.getIp().equalsIgnoreCase(ip))
+//                {
+//                    //如果已存在此mac地址，并且ip不一样，更新为新的IP，服务器可能改过host的ip
+//                    slaverMapper.updateSlaver(slaver);
+//                    InitSlaver.log.info("slaver已存在此mac地址，并且ip不一样，更新为新的IP，服务器可能改过host的ip.......................................................");
+//                }
+//                else
+//                {
+//                    //如果IP也相同，如果是下线状态则更新为上线空闲
+//                    if (slaver.getStatus().equals("已下线")) {
+//                        slaver.setStatus("空闲");
+//                        slaverMapper.updateSlaver(slaver);
+//                        InitSlaver.log.info("slaver的mac和IP相同，如果是下线状态则更新为上线空闲.......................................................");
+//                    }
+//                }
+//                InitSlaver.log.info("slaver已注册.......................................................");
+//            }
+        } catch (Exception e) {
             InitSlaver.log.info("启动注册测试执行机异常，请检查当前服务器host文件是否正常配置本机IP：" + e.getMessage());
         }
 
@@ -126,12 +144,75 @@ public class InitSlaver {
         return list;
     }
 
+
+    public static String getInet4Address() {
+        Enumeration<NetworkInterface> nis;
+        String ip = null;
+        try {
+            nis = NetworkInterface.getNetworkInterfaces();
+            for (; nis.hasMoreElements();) {
+                NetworkInterface ni = nis.nextElement();
+                Enumeration<InetAddress> ias = ni.getInetAddresses();
+                for (; ias.hasMoreElements();) {
+                    InetAddress ia = ias.nextElement();
+                    //ia instanceof Inet6Address && !ia.equals("")
+                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
+                        ip = ia.getHostAddress();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            InitSlaver.log.info("slaver-getInet4Address......................................................."+e.getMessage());
+        }
+        return ip;
+    }
+
+
+    public static String getUnixMACAddress() {
+        String mac = null;
+        BufferedReader bufferedReader = null;
+        Process process = null;
+        try {
+            // linux下的命令，一般取eth0作为本地主网卡
+            process = Runtime.getRuntime().exec("ifconfig eth0");
+            // 显示信息中包含有mac地址信息
+            bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = null;
+            int index = -1;
+            while ((line = bufferedReader.readLine()) != null) {
+                // 寻找标示字符串[hwaddr]
+                index = line.toLowerCase().indexOf("hwaddr");
+                if (index >= 0) {// 找到了
+                    // 取出mac地址并去除2边空格
+                    mac = line.substring(index + "hwaddr".length() + 1).trim();
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("unix/linux方式未获取到网卡地址");
+        } finally {
+            try {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            bufferedReader = null;
+            process = null;
+        }
+        return mac;
+    }
+
+
     public static void main(String[] args) {
 
         try {
-            List<String>list= getMACAddress();
-            System.out.println(list);
-        } catch (SocketException e) {
+            //List<String>list= getMACAddress();
+            String macAddress= getUnixMACAddress();
+            String ip= getInet4Address();
+            System.out.println(ip);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
