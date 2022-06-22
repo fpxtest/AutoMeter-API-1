@@ -197,8 +197,8 @@ public class CheckFunctionSlaverAliveScheduleTask {
                                         .andCondition("testplanid = " + Planid)
                                         .andCondition("batchname = '" + BatchName + " '")
                                         .andCondition("subconditionid = " + DelaySubConditionID);
-                                if (conditionDelayService.ifexist(delaycon) > 0) {
-                                    conditionDelayService.deleteByCondition(delaycon);
+                                if (testconditionReportService.ifexist(delaycon) > 0) {
+                                    testconditionReportService.deleteByCondition(delaycon);
                                 }
                             }
                         }
