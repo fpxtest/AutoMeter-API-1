@@ -85,7 +85,7 @@
 ## GitHub
 [GitHub](https://github.com/AutoMeter/AutoMeter-API)
 
- 欢迎联系一起讨论
+ 欢迎一起讨论
 ![输入图片说明](img/fanfanxiao.png)
 ## License
 MIT
