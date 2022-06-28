@@ -52,7 +52,7 @@ public class ApiController {
 
     @PostMapping("/exportpostman")
     public Result exportpostman(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator) {
-        File file=null;
+        File file = null;
         try {
             if (multipartFile.isEmpty()) {
                 return ResultGenerator.genFailedResult("上传的文件为空，请检查");
@@ -67,38 +67,37 @@ public class ApiController {
                 Gson gson = new Gson();
                 Map<String, Object> jsonmap = gson.fromJson(jsonString, Map.class);
                 String GroupJson = gson.toJson(jsonmap.get("item"));
-                if (GroupJson.equalsIgnoreCase("null"))
-                {
+                if (GroupJson.equalsIgnoreCase("null")) {
                     return ResultGenerator.genFailedResult("导入异常,请导入PostMan2.X版本的json文件");
                 }
-                HashMap<String,ApiInfo>apiInfoHashMap=new HashMap<>();
-                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator,apiInfoHashMap);
+                HashMap<String, ApiInfo> apiInfoHashMap = new HashMap<>();
+                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap);
             }
         } catch (Exception e) {
-            return ResultGenerator.genFailedResult("导入异常："+e.getMessage());
-        }
-        finally {
+            return ResultGenerator.genFailedResult("导入异常：" + e.getMessage());
+        } finally {
             file.delete();
         }
         return ResultGenerator.genOkResult();
     }
 
-    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator,HashMap<String,ApiInfo>apiInfoHashMap) throws Exception {
+    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap) throws Exception {
         List<String> resu = GetJson(GroupJson);
         for (String apiinfojson : resu) {
             Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
             System.out.println("GroupName:" + apiinfomap.get("name"));
             String apiJson = gson.toJson(apiinfomap.get("item"));
             if (!apiJson.equalsIgnoreCase("null")) {
-                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator,apiInfoHashMap);
+                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap);
             } else {
-                Type apiinfoType = new TypeToken<ApiInfo>() {}.getType();
+                Type apiinfoType = new TypeToken<ApiInfo>() {
+                }.getType();
+                System.out.println("apiinfojson-------:" + apiinfojson);
                 ApiInfo apiInfo = gson.fromJson(apiinfojson, apiinfoType);
-                if(!apiInfoHashMap.containsKey(apiInfo.getName()))
-                {
+                if (!apiInfoHashMap.containsKey(apiInfo.getName())) {
                     ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator);
                 }
-                apiInfoHashMap.put(apiInfo.getName(),apiInfo);
+                apiInfoHashMap.put(apiInfo.getName(), apiInfo);
             }
         }
     }
@@ -147,7 +146,7 @@ public class ApiController {
         api.setPath(AllPath);
 
         List<Header> headerList = apiInfo.getRequest().getHeader();
-        List<Query> queryList=new ArrayList<>();
+        List<Query> queryList = new ArrayList<>();
         if (apiInfo.getRequest().getUrl() != null) {
             if (apiInfo.getRequest().getUrl().getQuery() != null) {
                 queryList = apiInfo.getRequest().getUrl().getQuery();
@@ -217,15 +216,13 @@ public class ApiController {
                 }
             }
             //4.保存用例，用例值
-            SaveCaseData(ApiName,Apiid,deployunitid,deployunitname,creator,headerList,queryList);
-        }
-        else {
+            SaveCaseData(ApiName, Apiid, deployunitid, deployunitname, creator, headerList, queryList);
+        } else {
             //API已经存在，只保存用例，用例值
-            Api existApi= apiService.getapibydvap(deployunitid,VisitType,AllPath);
-            if(existApi!=null)
-            {
-                Long ExcistApiid=existApi.getId();
-                SaveCaseData(ApiName,ExcistApiid,deployunitid,deployunitname,creator,headerList,queryList);
+            Api existApi = apiService.getapibydvap(deployunitid, VisitType, AllPath);
+            if (existApi != null) {
+                Long ExcistApiid = existApi.getId();
+                SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, headerList, queryList);
             }
         }
         // }
@@ -234,8 +231,7 @@ public class ApiController {
 
     private List<String> GetJson(String itemJson) throws Exception {
         List<String> result = new ArrayList<>();
-        try
-        {
+        try {
             JsonParser parser = new JsonParser();
             JsonElement el = parser.parse(itemJson);
 
@@ -249,9 +245,7 @@ public class ApiController {
                 JsonElement element = (JsonElement) it.next();
                 result.add(element.toString());
             }
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             throw new Exception("PostMan导入的json文件内容不是合法的json，请检查！");
         }
 
@@ -274,9 +268,8 @@ public class ApiController {
         return apiParams;
     }
 
-    private Apicases GetApiCase(String ApiName,Long Apiid,Long deployunitid,String deployunitname,String creator)
-    {
-        Apicases apicases=new Apicases();
+    private Apicases GetApiCase(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator) {
+        Apicases apicases = new Apicases();
         apicases.setApiname(ApiName);
         apicases.setApiid(Apiid);
         apicases.setCasename(ApiName);
@@ -297,9 +290,9 @@ public class ApiController {
         apicases.setCasecontent(ApiName);
         return apicases;
     }
-    private ApiCasedata GetApicaseData(String ApiName,Long Apicaseid,String ProperTy,String Key,String Value,String ParamType )
-    {
-        ApiCasedata apiCasedata=new ApiCasedata();
+
+    private ApiCasedata GetApicaseData(String ApiName, Long Apicaseid, String ProperTy, String Key, String Value, String ParamType) {
+        ApiCasedata apiCasedata = new ApiCasedata();
         apiCasedata.setCasename(ApiName);
         apiCasedata.setCaseid(Apicaseid);
         apiCasedata.setPropertytype(ProperTy);
@@ -312,54 +305,47 @@ public class ApiController {
         return apiCasedata;
     }
 
-    private void SaveCaseData(String ApiName,Long Apiid,Long deployunitid,String deployunitname,String creator,List<Header> headerList,List<Query> queryList )
-    {
+    private void SaveCaseData(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator, List<Header> headerList, List<Query> queryList) {
         //4.保存用例
-        Apicases apicases=GetApiCase(ApiName,Apiid,deployunitid,deployunitname,creator);
+        Apicases apicases = GetApiCase(ApiName, Apiid, deployunitid, deployunitname, creator);
         Condition con = new Condition(Apicases.class);
         con.createCriteria().andCondition("apiid = " + apicases.getApiid())
-                .andCondition("casename = '"+apicases.getCasename()+" '")
+                .andCondition("casename = '" + apicases.getCasename() + " '")
                 .andCondition("deployunitid = " + apicases.getDeployunitid());
         if (apicasesService.ifexist(con) == 0) {
             apicasesService.save(apicases);
-            Long Apicaseid=apicases.getId();
+            Long Apicaseid = apicases.getId();
             //5.保存用例Header数据
-            List<ApiCasedata>Headercasedata=new ArrayList<>();
-            for (Header header:headerList) {
-                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Header",header.getKey(),header.getValue(),"");
+            List<ApiCasedata> Headercasedata = new ArrayList<>();
+            for (Header header : headerList) {
+                ApiCasedata apiCasedata = GetApicaseData(ApiName, Apicaseid, "Header", header.getKey(), header.getValue(), "");
                 Headercasedata.add(apiCasedata);
             }
-            if(Headercasedata.size()>0)
-            {
+            if (Headercasedata.size() > 0) {
                 apiCasedataService.save(Headercasedata);
             }
             //6.保存用例Params数据
-            List<ApiCasedata>Paramscasedata=new ArrayList<>();
-            for (Query query:queryList) {
-                ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Params",query.getKey(),query.getValue(),"String");
+            List<ApiCasedata> Paramscasedata = new ArrayList<>();
+            for (Query query : queryList) {
+                ApiCasedata apiCasedata = GetApicaseData(ApiName, Apicaseid, "Params", query.getKey(), query.getValue(), "String");
                 Paramscasedata.add(apiCasedata);
             }
-            if(Paramscasedata.size()>0)
-            {
+            if (Paramscasedata.size() > 0) {
                 apiCasedataService.save(Paramscasedata);
             }
             //7.保存用例Body数据
-            List<ApiCasedata>BodyParamscasedata=new ArrayList<>();
-            List<ApiParams> BodyParamsList=apiParamsService.findApiParamsbypropertytype(Apiid,"Body");
-            for (ApiParams params: BodyParamsList) {
-                if(params.getKeydefaultvalue().equalsIgnoreCase("NoForm"))
-                {
-                    ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body","Body",params.getKeyname(),params.getKeytype());
+            List<ApiCasedata> BodyParamscasedata = new ArrayList<>();
+            List<ApiParams> BodyParamsList = apiParamsService.findApiParamsbypropertytype(Apiid, "Body");
+            for (ApiParams params : BodyParamsList) {
+                if (params.getKeydefaultvalue().equalsIgnoreCase("NoForm")) {
+                    ApiCasedata apiCasedata = GetApicaseData(ApiName, Apicaseid, "Body", "Body", params.getKeyname(), params.getKeytype());
                     BodyParamscasedata.add(apiCasedata);
-                }
-                else
-                {
-                    ApiCasedata apiCasedata=GetApicaseData(ApiName,Apicaseid,"Body",params.getKeyname(),params.getKeydefaultvalue(),params.getKeytype());
+                } else {
+                    ApiCasedata apiCasedata = GetApicaseData(ApiName, Apicaseid, "Body", params.getKeyname(), params.getKeydefaultvalue(), params.getKeytype());
                     BodyParamscasedata.add(apiCasedata);
                 }
             }
-            if(BodyParamscasedata.size()>0)
-            {
+            if (BodyParamscasedata.size() > 0) {
                 apiCasedataService.save(BodyParamscasedata);
             }
         }
@@ -381,13 +367,10 @@ public class ApiController {
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
 
-        List<Apicases>apicasesList= apicasesService.getcasebyapiid(id);
-        if(apicasesList.size()>0)
-        {
+        List<Apicases> apicasesList = apicasesService.getcasebyapiid(id);
+        if (apicasesList.size() > 0) {
             return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除！");
-        }
-        else
-        {
+        } else {
             apiService.deleteById(id);
             apiParamsService.deletebyApiid(id);
             return ResultGenerator.genOkResult();

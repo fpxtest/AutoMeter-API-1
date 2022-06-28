@@ -14,5 +14,5 @@ import java.util.ArrayList;
 public class ApiInfo {
     private String name;
     private RequestInfo request;
-    private ArrayList<String> response;
+    private ArrayList<ResponeInfo> responeInfos;
 }

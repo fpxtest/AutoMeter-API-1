@@ -42,18 +42,23 @@ public class TestHttpRequestData {
             ArrayList<HashMap<String, String>> casedatalist = testMysqlHelp.getcaseData("select * from api_casedata where caseid=" + TestCaseId);
             ArrayList<HashMap<String, String>> caseptlist = testMysqlHelp.getcaseData("select DISTINCT propertytype  from api_casedata where caseid=" + TestCaseId);
             ArrayList<HashMap<String, String>> planparamslist = testMysqlHelp.getcaseData("select * from executeplan_params where executeplanid=" + PlanId);
-
             List<String> PropertyList = GetCaseDataPropertyType(caseptlist);
 
             ArrayList<HashMap<String, String>> Interfacevariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "接口" + "'");
-            ArrayList<HashMap<String, String>> DBvariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "数据库" + "'");
-
             logger.info(logplannameandcasename + "TestHttpRequestData 获取接口变量值。。。。 ");
+            ArrayList<HashMap<String, String>> DBvariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "数据库" + "'");
+            logger.info(logplannameandcasename + "TestHttpRequestData 获取数据库变量值。。。。 ");
+            //文件变量
+            ArrayList<HashMap<String, String>> Filevariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "数据库" + "'");
+            logger.info(logplannameandcasename + "TestHttpRequestData 获取文件变量值。。。。 ");
             ArrayList<HashMap<String, String>> radomvariableslist = testMysqlHelp.getcaseData("select variablesname,variablestype   from variables ");
             logger.info(logplannameandcasename + "TestHttpRequestData 获取随机变量值。。。。 ");
             HashMap<String, String> InterfaceMap = GetMap(Interfacevariableslist, "variablesname", "variablesvalue");
             HashMap<String, String> DBMap = GetMap(DBvariableslist, "variablesname", "variablesvalue");
             HashMap<String, String> RadomMap = GetMap(radomvariableslist, "variablesname", "variablestype");
+
+            //文件变量Map
+            HashMap<String, String> FileMap = GetMap(radomvariableslist, "variablesname", "variablestype");
 
             //Url替换变量
             String RequestUrl = requestObject.getResource();
@@ -90,6 +95,9 @@ public class TestHttpRequestData {
             HttpParamers paramers = new HttpParamers();
             //Body参数
             HttpParamers Bodyparamers = new HttpParamers();
+            //Body文件map
+            HashMap<String,Object>FileHasMap=new HashMap<>();
+
             String PostData = "";
             for (String property : PropertyList) {
                 if (property.equalsIgnoreCase("Header")) {
@@ -119,6 +127,8 @@ public class TestHttpRequestData {
                                 logger.info(logplannameandcasename + "TestHttpRequestData Bodyparamers表单编码异常 :  " + e.getMessage());
                             }
                         }
+                        //值支持文件
+
                     } else {
                         HashMap<String, String> bodymap = testMysqlHelp.fixhttprequestdatas("Body", casedatalist);
                         for (String Key : bodymap.keySet()) {
@@ -419,6 +429,8 @@ public class TestHttpRequestData {
                 }
             }
         }
+
+        //
         if(!exist)
         {
             throw new Exception("当前用例参数值中存在变量："+Value+" 未找到对应值，请检查是否有配置对应变量的子条件获取此变量值");
@@ -444,6 +456,34 @@ public class TestHttpRequestData {
         }
         return ObjectValue;
     }
+
+    // 设置参数params文件
+    private HashMap<String,Object> GetHttpParamsFile(ArrayList<HashMap<String, String>> casedatalist,String Property) {
+        HashMap<String,Object>FileMap=new HashMap<>();
+        for (HashMap<String, String> data : casedatalist) {
+            String propertytype = data.get("propertytype");
+            if (propertytype.equals(Property)) {
+                String Key = data.get("apiparam").trim();
+                String Value = data.get("apiparamvalue").trim();
+                String DataType = data.get("paramstype").trim();
+                Object ObjectValue = Value;
+                try {
+                    if ((Value.contains("(") && Value.contains(")"))) {
+                        if (Value.contains("(" + Value + ")")) {
+                            //数据库中获取文件实体
+                            ObjectValue = GetDataByType(ObjectValue.toString(), DataType);
+                        }
+                    }
+                } catch (Exception exception) {
+                    logger.info(logplannameandcasename + "TestHttpRequestData 处理Params参数变量替换异常" + exception.getMessage());
+                }
+                FileMap.put(Key, ObjectValue);
+                logger.info(logplannameandcasename + "TestHttpRequestData -" + Property + "-中添加Key is :  " + Key + "   Value  is:   " + ObjectValue + " 类型：" + DataType);
+            }
+        }
+        return FileMap;
+    }
+
 
     // 设置参数params
     private HttpParamers GetHttpParams(ArrayList<HashMap<String, String>> casedatalist, HttpParamers paramers, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap, String Property,ArrayList<HashMap<String, String>> radomvariableslist) {

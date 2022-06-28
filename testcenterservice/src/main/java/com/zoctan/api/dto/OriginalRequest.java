@@ -11,11 +11,8 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class RequestInfo {
+public class OriginalRequest {
     private String method;
-    private List<Header> header;
-    private  Body body;
-    private  Auth auth;
+    private List<ResponeHeader> header;
     private  Url url;
-    private String description;
 }

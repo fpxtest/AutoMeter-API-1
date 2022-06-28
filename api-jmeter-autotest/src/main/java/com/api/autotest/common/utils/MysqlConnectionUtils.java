@@ -2,6 +2,7 @@ package com.api.autotest.common.utils;
 
 import org.apache.jmeter.config.Arguments;
 
+import java.io.FileOutputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,6 +125,33 @@ public class MysqlConnectionUtils {
         }
         return result;
     }
+
+
+//    public static String querybytes(String sql) throws Exception {
+//        try {
+//            PreparedStatement ps = conn
+//                    .prepareStatement("select text from bankVoice where name=?");
+//            ps.setString(1, file);
+//            Blob blob = null;
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//                blob = (Blob) rs.getBlob("text");
+//            }
+//            FileOutputStream fos = new FileOutputStream("D:\\test1.mp3");
+//            fos.write(blob.getBytes(1, (int) blob.length()));
+//            System.out.println("二进制文件获得成功");
+//            ps.clearParameters();
+//            ps.close();
+//            fos.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println("二进制文件读取时出现异常");
+//        }
+//    }
+    //}
+
+
+
 
 
     public static void execsql(String sql) throws Exception {

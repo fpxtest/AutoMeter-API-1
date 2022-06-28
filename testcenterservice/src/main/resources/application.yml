@@ -10,6 +10,13 @@ spring:
   conditionserver:
     serverurl: http://192.168.3.95:8083
     # 数据源（应该全部加密）
+    # 文件上传
+  servlet:
+    multipart:
+    # 单个文件大小
+      max-file-size: 100MB
+    # 设置总上传的文件大小
+      max-request-size: 200MB
   datasource:
     # 连接，注意各个配置，尤其是要一次性执行多条 SQL 时，要 allowMultiQueries=true
     url: jdbc:mysql://192.168.3.95:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
