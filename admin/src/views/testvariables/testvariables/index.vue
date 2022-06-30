@@ -636,7 +636,10 @@
         this.tmpApicasesVariables.caseid = this.ApicasesVariablesList[index].caseid
         this.tmpApicasesVariables.variablesid = this.VariablescaseQuery.variablesid
         this.tmpApicasesVariables.deployunitname = this.ApicasesVariablesList[index].deployunitname
+        this.tmpApicasesVariables.deployunitid = this.ApicasesVariablesList[index].deployunitid
+        this.tmpApicasesVariables.apiid = this.ApicasesVariablesList[index].apiid
         this.deployunitQuery.deployunitname = this.tmpApicasesVariables.deployunitname
+        this.deployunitQuery.deployunitid = this.ApicasesVariablesList[index].deployunitid
         getapiListbydeploy(this.deployunitQuery).then(response => {
           this.apiList = response.data
         }).catch(res => {
@@ -645,6 +648,8 @@
         this.tmpApicasesVariables.apiname = this.ApicasesVariablesList[index].apiname
         this.apiquery.caseapiname = this.tmpApicasesVariables.apiname
         this.apiquery.casedeployunitname = this.tmpApicasesVariables.deployunitname
+        this.apiquery.deployunitid = this.deployunitQuery.deployunitid
+        this.apiquery.apiid = this.ApicasesVariablesList[index].apiid
         findcasesbyname(this.apiquery).then(response => {
           this.caseList = response.data
         }).catch(res => {

@@ -604,6 +604,9 @@ public class TestconditionController {
                 Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
                 if (testvariables != null) {
                     try {
+                        TestconditionController.log.info("调试接口子条件响应ResponeContentType-============：" + requestObject.getResponecontenttype());
+                        TestconditionController.log.info("调试接口子条件响应Respone-============：" + Respone);
+                        TestconditionController.log.info("调试接口子条件响应变量表达式-============：" + testvariables.getVariablesexpress());
                         String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
                         VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
                     } catch (Exception ex) {

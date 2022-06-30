@@ -896,7 +896,6 @@
             <el-button type="primary" @click="searchnotexistcaseBy" :loading="btnLoading">查询</el-button>
           </el-form-item>
         </el-form>
-
       </div>
       <el-table
         ref="caseTable"
@@ -1061,10 +1060,10 @@
         tmpdeployunitid: null,
         tmpcasetype: null,
         tmpcasename: null,
-        tmpnotexistdeployunitid: null,
-        tmpexistdeployunitid: null,
-        tmpnotexistconditionid: null,
-        tmpexistconditionid: null,
+        tmpnotexistdeployunitid: 0,
+        tmpexistdeployunitid: 0,
+        tmpnotexistconditionid: 0,
+        tmpexistconditionid: 0,
         paraList: [], // paraList参数值列表
         paravaluemap: [], // 参数值map
         notexistcasemultipleSelection: [], // 查询调试用例未添加条件表格被选中的内容
@@ -1256,18 +1255,18 @@
         searchnotexistcase: {
           page: 1,
           size: 10,
-          conditionid: null,
-          conditionname: null,
-          deployunitid: null,
-          deployunitname: null
+          conditionid: 0,
+          conditionname: '',
+          deployunitid: 0,
+          deployunitname: ''
         },
         searchexistcase: {
           page: 1,
           size: 10,
-          conditionid: null,
-          conditionname: null,
-          deployunitid: null,
-          deployunitname: null
+          conditionid: 0,
+          conditionname: '',
+          deployunitid: 0,
+          deployunitname: ''
         },
         tmpconditionquery: {
           objecttype: ''
@@ -2368,8 +2367,9 @@
        * @param size 页大小
        */
       casenotexisthandleSizeChange(size) {
+        console.log(size)
         this.searchnotexistcase.page = 1
-        this.searchnotexistcase.search.size = size
+        this.searchnotexistcase.size = size
         this.getcasenotexistconditionList()
       },
 

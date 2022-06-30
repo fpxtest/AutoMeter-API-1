@@ -570,7 +570,7 @@
         await getfunctionCaseSandF(this.tmpquery).then(response => {
           this.seriesData = response.data
         }).catch(res => {
-          this.$message.error('加载用例结果比例列表失败')
+          // this.$message.error('加载用例结果比例列表失败')
         })
       },
 
@@ -580,16 +580,16 @@
           if (valid) {
             getfunctioncasestatics(this.tmpquery).then(response => {
               this.casestaticsList = response.data
+              this.getfunctionconditionstatics()
+              this.drawLine()
+              this.getapireportList()
+              this.findconditionreport()
+              this.getDispatchWithstatus()
             }).catch(res => {
             })
           }
         })
-        this.getfunctionconditionstatics()
         await this.getfunctionCaseSandF()
-        this.drawLine()
-        this.getapireportList()
-        this.findconditionreport()
-        this.getDispatchWithstatus()
       },
 
       getfunctionconditionstatics() {

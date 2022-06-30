@@ -483,15 +483,15 @@
         tmpconditionquery: {
           page: 1,
           size: 10,
-          executeplanid: '',
-          batchid: '',
+          executeplanid: 0,
+          batchid: 0,
           batchname: ''
         },
         tmpdispatchquery: {
           page: 1,
           size: 10,
-          executeplanid: '',
-          batchid: '',
+          executeplanid: 0,
+          batchid: 0,
           batchname: ''
         },
         tmpexecplantype: {
@@ -622,7 +622,7 @@
         await getperformanceCaseSandF(this.tmpquery).then(response => {
           this.seriesData = response.data
         }).catch(res => {
-          this.$message.error('加载用例结果比例列表失败')
+          // this.$message.error('加载用例结果比例列表失败')
         })
       },
 

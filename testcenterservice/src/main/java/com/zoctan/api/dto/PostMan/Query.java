@@ -1,22 +1,16 @@
-package com.zoctan.api.dto;
+package com.zoctan.api.dto.PostMan;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 /**
  * @author hacker li
- * @since 08/02/2022 11:16
+ * @since 08/02/2022 12:02
  */
 @Setter
 @Getter
-public class Formdata {
+public class Query {
     private String key;
     private String value;
-    private String type;
     private String description;
-    private List<String> src;
-
-
 }

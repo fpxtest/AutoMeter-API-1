@@ -58,10 +58,10 @@ public class TestAssert {
     public String ParseRespone(String ResponeResultType,String Respone,String Path)
     {
         String Result="";
-        if (ResponeResultType.equalsIgnoreCase("json")||ResponeResultType.equalsIgnoreCase("application/json;charset=utf-8")) {
+        if (ResponeResultType.equalsIgnoreCase("json")||ResponeResultType.equalsIgnoreCase("application/json;charset=utf-8")||ResponeResultType.equalsIgnoreCase("application/json")) {
             Result = ParseJson(Path, Respone);
         }
-        if (ResponeResultType.equalsIgnoreCase("xml")||ResponeResultType.equalsIgnoreCase("application/xml;charset=utf-8")) {
+        if (ResponeResultType.equalsIgnoreCase("xml")||ResponeResultType.equalsIgnoreCase("application/xml;charset=utf-8")||ResponeResultType.equalsIgnoreCase("application/xml")) {
             Result = ParseXml(Path, Respone);
             //处理xml
         }

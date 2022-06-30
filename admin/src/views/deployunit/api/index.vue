@@ -35,11 +35,21 @@
             @click.native.prevent="showPostManDialog"
           >导入PostMan
           </el-button>
-
-          <!--          <el-upload ref="upload" action="" :http-request="uploadSectionFile">-->
-          <!--            <el-button size="small" type="primary" @click="uploadSectionFile">点击上传</el-button>-->
-          <!--          </el-upload>-->
-          <!--          <el-progress v-show="showProgress" :text-inside="true" :stroke-width="18" :percentage="uploadPercent"></el-progress>-->
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            v-if="hasPermission('api:add')"
+            @click.native.prevent="showSwaggerDialog"
+          >导入Swagger
+          </el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            v-if="hasPermission('api:add')"
+            @click.native.prevent="showPostManDialog"
+          >批量删除
+          </el-button>
         </el-form-item>
 
         <span v-if="hasPermission('api:search')">
@@ -568,7 +578,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title='导入PostMan' :visible.sync="dialogAddFile">
+    <el-dialog title='导入PostMan(V2.1)' :visible.sync="dialogAddFile">
       <el-form
         :model="uploadData"
         ref="uploadData"
@@ -607,6 +617,46 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog title='导入Swagger(V2.0)' :visible.sync="SwaggerdialogAddFile">
+      <el-form
+        :model="uploadData"
+        ref="uploadData"
+      >
+        <el-form-item label="导入到发布单元:" prop="deptname" required>
+          <el-select v-model="uploadData.deptname" placeholder="发布单元" style="width:100%"
+                     @change="uploadselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none"/>
+            <div v-for="(depunitname, index) in deployunitList" :key="index">
+              <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="API风格:" prop="apistyle" required>
+          <el-select v-model="uploadData.apistyle" placeholder="api风格" style="width:100%">
+            <el-option label="传统方式" value="传统方式"></el-option>
+            <el-option label="Restful" value="restful"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-upload
+            style="display: inline"
+            :auto-upload="false"
+            :on-change="handleChange"
+            :on-remove="removehandleChange"
+            :file-list="this.SwfileList"
+            accept=".json"
+            limit="1"
+            action="#">
+            <el-button  type="success">选择文件</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <el-button  type="success" @click="uploadsw">点击上传</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -642,6 +692,7 @@ export default {
     return {
       fileName: '',
       fileList: [],
+      SwfileList: [],
       dialogAddFile: false, // 导入Postman对话框显示
       Headertabledatas: [],
       Paramstabledatas: [],
@@ -649,6 +700,7 @@ export default {
       multipleSelection: [],
       activeName: 'zero',
       fileurl: window.g.SERVER_URL + '/api/exportpostman',
+      swfileurl: window.g.SERVER_URL + '/api/exportswagger',
       paramsplaceholder: '',
       itemKey: null,
       tmpapiname: '',
@@ -697,6 +749,7 @@ export default {
       ParamsdialogFormVisible: false,
       NewParamsdialogFormVisible: false,
       ModifydialogFormVisible: false,
+      SwaggerdialogAddFile: false,
       textMap: {
         updateRole: '修改API',
         update: '修改API',
@@ -1057,7 +1110,7 @@ export default {
       this.$refs.uploadData.validate(valid => {
         if (valid) {
           if (this.fileList.length === 0) {
-            this.$message.warning('请选择PostMan导出的json文件！')
+            this.$message.warning('请选择导入的json文件！')
             return false
           }
           const fd = new FormData()
@@ -1069,6 +1122,39 @@ export default {
             fd.append('file', item.raw)
           })
           axios.post(this.fileurl, fd, {
+            headers: {
+              Authorization: store.getters.token,
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(res => {
+            if (res.data.code === 200) {
+              this.dialogAddFile = false
+              this.getapiList()
+              this.$message.success('上传完成')
+            } else {
+              this.$message.error(res.data.message)
+            }
+          })
+        }
+      })
+    },
+
+    uploadsw() {
+      this.$refs.uploadData.validate(valid => {
+        if (valid) {
+          if (this.fileList.length === 0) {
+            this.$message.warning('请选择导入的json文件！')
+            return false
+          }
+          const fd = new FormData()
+          fd.append('deployid', this.uploadData.deployid)
+          fd.append('deployunitname', this.uploadData.deptname)
+          fd.append('apistyle', this.uploadData.apistyle)
+          fd.append('creator', this.name)
+          this.fileList.forEach(item => {
+            fd.append('file', item.raw)
+          })
+          axios.post(this.swfileurl, fd, {
             headers: {
               Authorization: store.getters.token,
               'Content-Type': 'multipart/form-data'
@@ -1459,6 +1545,15 @@ export default {
     showPostManDialog() {
       // 显示新增对话框
       this.dialogAddFile = true
+      this.uploadData.deployid = ''
+      this.uploadData.deptname = ''
+      this.uploadData.apistyle = ''
+      this.fileList = []
+    },
+
+    showSwaggerDialog() {
+      // 显示新增对话框
+      this.SwaggerdialogAddFile = true
       this.uploadData.deployid = ''
       this.uploadData.deptname = ''
       this.uploadData.apistyle = ''

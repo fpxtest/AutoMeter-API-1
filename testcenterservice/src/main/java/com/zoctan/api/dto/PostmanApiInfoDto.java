@@ -1,10 +1,8 @@
 package com.zoctan.api.dto;
 
-import com.google.gson.reflect.TypeToken;
-import lombok.Getter;
-import lombok.Setter;
+import com.zoctan.api.dto.PostMan.InfoDto;
+import com.zoctan.api.dto.PostMan.Items;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**

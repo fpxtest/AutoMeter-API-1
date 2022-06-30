@@ -1,9 +1,7 @@
-package com.zoctan.api.dto;
+package com.zoctan.api.dto.PostMan;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 /**
  * @author hacker li
@@ -11,12 +9,8 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class Formdata {
+public class Urlencoder {
     private String key;
     private String value;
     private String type;
-    private String description;
-    private List<String> src;
-
-
 }

@@ -1,17 +1,18 @@
 package com.zoctan.api.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.*;
+import com.zoctan.api.dto.PostMan.ApiInfo;
+import com.zoctan.api.dto.PostMan.Header;
+import com.zoctan.api.dto.PostMan.Query;
+import com.zoctan.api.dto.PostMan.Urlencoder;
+import com.zoctan.api.dto.Swagger.DeleteInfo;
+import com.zoctan.api.dto.Swagger.PostInfo;
 import com.zoctan.api.entity.Api;
 import com.zoctan.api.entity.ApiCasedata;
 import com.zoctan.api.entity.ApiParams;
@@ -21,16 +22,13 @@ import com.zoctan.api.service.ApiParamsService;
 import com.zoctan.api.service.ApiService;
 import com.zoctan.api.service.ApicasesService;
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -49,6 +47,68 @@ public class ApiController {
     @Resource
     private ApiCasedataService apiCasedataService;
 
+
+    @PostMapping("/exportswagger")
+    public Result exportswagger(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator) {
+        File file = null;
+        try {
+            if (multipartFile.isEmpty()) {
+                return ResultGenerator.genFailedResult("上传的文件为空，请检查");
+            }
+            Long deployunitid = Long.parseLong(deployid);
+            String fileName = multipartFile.getOriginalFilename();
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            file = new File(fileName);
+            FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
+            String jsonString = FileUtils.readFileToString(file, "UTF-8");
+            if (".json".equals(suffixName)) {
+                Gson gson = new Gson();
+                String basePath="";
+                Map<String, Object> jsonmap = gson.fromJson(jsonString, Map.class);
+
+                JsonElement jsonElement= JsonParser.parseString(jsonString);
+                JsonObject jsonObj = JsonParser.parseString(jsonString).getAsJsonObject();
+
+                JsonElement pathonject= jsonObj.get("paths");
+                JsonObject postobjct= pathonject.getAsJsonObject();
+
+                HashMap<String,Object>ddd=new HashMap<>();
+                for (Object e : postobjct.entrySet()) {
+                    Map.Entry entry = (Map.Entry) e;
+                    ddd.put(String.valueOf(entry.getKey()), entry.getValue());
+                    JsonObject jsonObject=(JsonObject) entry.getValue();
+                    String jsonstr=entry.getValue().toString();
+                    int index= jsonstr.indexOf(":");
+                    String Method=jsonstr.substring(0,index);
+                    Type postType =null;
+                    if(Method.contains("post"))
+                    {
+                        postType = new TypeToken<PostInfo>() {}.getType();
+                        PostInfo pathsob = gson.fromJson(jsonstr, postType);
+                        System.out.println("getDescription-------:"+pathsob.getPost().getDescription());
+                    }
+                    if(Method.contains("delete"))
+                    {
+                        postType = new TypeToken<DeleteInfo>() {}.getType();
+                        DeleteInfo deleteInfo=gson.fromJson(jsonstr, postType);
+                        System.out.println("getDescription-------:"+deleteInfo.getDelete().getDescription());
+
+                    }
+                    System.out.println("path is-------:"+String.valueOf(entry.getKey()));
+                }
+            }
+            else
+            {
+                return ResultGenerator.genFailedResult("导入异常,请导入Swagger的json文件");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailedResult("导入异常：" + e.getMessage());
+        } finally {
+            file.delete();
+        }
+        return ResultGenerator.genOkResult();
+    }
 
     @PostMapping("/exportpostman")
     public Result exportpostman(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator) {
@@ -74,6 +134,7 @@ public class ApiController {
                 recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return ResultGenerator.genFailedResult("导入异常：" + e.getMessage());
         } finally {
             file.delete();
@@ -92,7 +153,7 @@ public class ApiController {
             } else {
                 Type apiinfoType = new TypeToken<ApiInfo>() {
                 }.getType();
-                System.out.println("apiinfojson-------:" + apiinfojson);
+                //System.out.println("apiinfojson-------:" + apiinfojson);
                 ApiInfo apiInfo = gson.fromJson(apiinfojson, apiinfoType);
                 if (!apiInfoHashMap.containsKey(apiInfo.getName())) {
                     ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator);
@@ -207,6 +268,10 @@ public class ApiController {
                     List<ApiParams> apiBodyParamsformdataList = new ArrayList<>();
                     List<Formdata> formdataList = apiInfo.getRequest().getBody().getFormdata();
                     for (Formdata query : formdataList) {
+                        if(query.getKey().equalsIgnoreCase("file"))
+                        {
+                            query.setValue("file");
+                        }
                         ApiParams apiParams = GetApiParam(Apiid, ApiName, creator, deployunitid, deployunitname, query.getKey(), query.getValue(), "String", "Body");
                         apiBodyParamsformdataList.add(apiParams);
                     }
