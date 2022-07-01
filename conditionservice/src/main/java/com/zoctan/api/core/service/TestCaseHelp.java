@@ -30,14 +30,12 @@ import java.util.HashMap;
 import java.util.List;
 
 
-
-
 /**
  * 用例数据
  */
 @Component
 @Slf4j
-public class TestCaseHelp  {
+public class TestCaseHelp {
 
     public static TestCaseHelp tch;
 
@@ -67,44 +65,39 @@ public class TestCaseHelp  {
     private DbvariablesService dbvariablesService;
 
 
-
-    public RequestObject GetCaseRequestDataForDebug(HashMap<String, String>  DBValueMap,HashMap<String, String>  InterfaceValueMap,List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
-        RequestObject ro=new RequestObject();
-        try
-        {
+    public RequestObject GetCaseRequestDataForDebug(HashMap<String, String> DBValueMap, HashMap<String, String> InterfaceValueMap, List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
+        RequestObject ro = new RequestObject();
+        try {
             // url请求资源路径
             String path = api.getPath();
             if (!path.startsWith("/")) {
                 path = "/" + path;
             }
-            String casetype=apicases.getCasetype();
-            String expect=apicases.getExpect();
+            String casetype = apicases.getCasetype();
+            String expect = apicases.getExpect();
 
             //获取请求响应的数据格式
-            String requestcontenttype =api.getRequestcontenttype();
-            String responecontenttype =api.getResponecontenttype();
+            String requestcontenttype = api.getRequestcontenttype();
+            String responecontenttype = api.getResponecontenttype();
             // http请求方式 get，post
             String method = api.getVisittype();
             // api风格
-            String apistyle =api.getApistyle();
+            String apistyle = api.getApistyle();
             // 协议 http,https,rpc
             String protocal = deployunit.getProtocal().toLowerCase();
             // 发布单元端口
             String port = deployunit.getPort();
             // 获取发布单元访问方式，ip或者域名
-            String deployunitvisittype =macdepunit.getVisittype();
+            String deployunitvisittype = macdepunit.getVisittype();
             // 根据访问方式来确定ip还是域名
             String testserver = "";
             String resource = "";
-            if(deployunitvisittype.equals(new String("ip")))
-            {
-                testserver =machine.getIp();
+            if (deployunitvisittype.equals(new String("ip"))) {
+                testserver = machine.getIp();
                 resource = protocal + "://" + testserver + ":" + port + path;
-            }
-            else
-            {
-                testserver= macdepunit.getDomain();
-                resource = protocal + "://" + testserver  + path;
+            } else {
+                testserver = macdepunit.getDomain();
+                resource = protocal + "://" + testserver + path;
             }
 
             HashMap<String, String> InterfaceMap = InterfaceValueMap;
@@ -144,37 +137,33 @@ public class TestCaseHelp  {
                 }
             }
 
-            HashMap<String, ApiCasedata> headmap=fixhttprequestdatas("Header",apiCasedataList);
-            HashMap<String, ApiCasedata> bodymap=fixhttprequestdatas("Body",apiCasedataList);
-            HashMap<String, ApiCasedata> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
+            HashMap<String, ApiCasedata> headmap = fixhttprequestdatas("Header", apiCasedataList);
+            HashMap<String, ApiCasedata> bodymap = fixhttprequestdatas("Body", apiCasedataList);
+            HashMap<String, ApiCasedata> paramsmap = fixhttprequestdatas("Params", apiCasedataList);
 
             //Header
             HttpHeader header = new HttpHeader();
             header = AddHeaderByRequestContentType(header, requestcontenttype);
-            if(headmap.size()>0)
-            {
+            if (headmap.size() > 0) {
                 for (String key : headmap.keySet()) {
                     String Value = headmap.get(key).getApiparamvalue().trim();
                     Object ObjectValue = Value;
-                    if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
-                    {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
                     }
                     header.addParam(key, ObjectValue);
                 }
             }
             //url参数
-            HttpParamers paramers = new  HttpParamers();
+            HttpParamers paramers = new HttpParamers();
             // 设置参数
-            if(paramsmap.size()>0)
-            {
+            if (paramsmap.size() > 0) {
                 for (String key : paramsmap.keySet()) {
                     String Value = paramsmap.get(key).getApiparamvalue().trim();
                     String DataType = paramsmap.get(key).getParamstype();
                     Object ObjectValue = Value;
-                    if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
-                    {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
                     }
                     Object Result = GetDataByType(ObjectValue.toString(), DataType);
                     paramers.addParam(key, Result);
@@ -185,29 +174,25 @@ public class TestCaseHelp  {
             //Body内容
             String PostData = "";
             // 设置Body
-            if(bodymap.size()>0)
-            {
+            if (bodymap.size() > 0) {
                 if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                     for (String key : bodymap.keySet()) {
                         String DataType = bodymap.get(key).getParamstype();
                         String Value = bodymap.get(key).getApiparamvalue().trim();
                         Object ObjectValue = Value;
-                        if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
-                        {
-                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
+                        if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
                         }
                         Object Result = GetDataByType(ObjectValue.toString(), DataType);
                         Bodyparamers.addParam(key, Result);
                     }
                     try {
-                        PostData=GetParasPostData(requestcontenttype,Bodyparamers);
+                        PostData = GetParasPostData(requestcontenttype, Bodyparamers);
                     } catch (IOException e) {
-                        TestCaseHelp.log.info("处理Body参数数据异常："+e.getMessage());
-                        throw new Exception("处理Body参数数据异常："+e.getMessage());
+                        TestCaseHelp.log.info("处理Body参数数据异常：" + e.getMessage());
+                        throw new Exception("处理Body参数数据异常：" + e.getMessage());
                     }
-                }
-                else
-                {
+                } else {
                     for (String Key : bodymap.keySet()) {
                         PostData = bodymap.get(Key).getApiparamvalue();
                         //1.替换随机变量
@@ -237,7 +222,7 @@ public class TestCaseHelp  {
                     }
                 }
             }
-            TestCaseHelp.log.info("处理Body完后，PostData："+PostData);
+            TestCaseHelp.log.info("处理Body完后，PostData：" + PostData);
             ro.setPostData(PostData);
             ro.setExpect(expect);
             ro.setCasetype(casetype);
@@ -250,11 +235,9 @@ public class TestCaseHelp  {
             ro.setRequestmMthod(method);
             ro.setResource(resource);
             ro.setResponecontenttype(responecontenttype);
-        }
-        catch (Exception ex)
-        {
-            TestCaseHelp.log.info("GetCaseRequestData异常："+ex.getMessage());
-            throw new Exception("接口子条件用例："+apicases.getCasename()+" 准备数据异常："+ex.getMessage());
+        } catch (Exception ex) {
+            TestCaseHelp.log.info("GetCaseRequestData异常：" + ex.getMessage());
+            throw new Exception("接口子条件用例：" + apicases.getCasename() + " 准备数据异常：" + ex.getMessage());
         }
         return ro;
     }
@@ -262,213 +245,216 @@ public class TestCaseHelp  {
 
     // 拼装请求需要的用例数据
     public RequestObject GetCaseRequestData(Dispatch dispatch, List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
-        RequestObject ro=new RequestObject();
-        try
-       {
-           // url请求资源路径
-           String path = api.getPath();
-           if (!path.startsWith("/")) {
-               path = "/" + path;
-           }
-           String casetype=apicases.getCasetype();
-           String expect=apicases.getExpect();
+        RequestObject ro = new RequestObject();
+        try {
+            // url请求资源路径
+            String path = api.getPath();
+            if (!path.startsWith("/")) {
+                path = "/" + path;
+            }
+            String casetype = apicases.getCasetype();
+            String expect = apicases.getExpect();
 
-           //获取请求响应的数据格式
-           String requestcontenttype =api.getRequestcontenttype();
-           String responecontenttype =api.getResponecontenttype();
-           // http请求方式 get，post
-           String method = api.getVisittype();
-           // api风格
-           String apistyle =api.getApistyle();
-           // 协议 http,https,rpc
-           String protocal = deployunit.getProtocal().toLowerCase();
-           // 发布单元端口
-           String port = deployunit.getPort();
-           // 获取发布单元访问方式，ip或者域名
-           String deployunitvisittype =macdepunit.getVisittype();
-           // 根据访问方式来确定ip还是域名
-           String testserver = "";
-           String resource = "";
-           if(deployunitvisittype.equals(new String("ip")))
-           {
-               testserver =machine.getIp();
-               resource = protocal + "://" + testserver + ":" + port + path;
-           }
-           else
-           {
-               testserver= macdepunit.getDomain();
-               resource = protocal + "://" + testserver  + path;
-           }
+            //获取请求响应的数据格式
+            String requestcontenttype = api.getRequestcontenttype();
+            String responecontenttype = api.getResponecontenttype();
+            // http请求方式 get，post
+            String method = api.getVisittype();
+            // api风格
+            String apistyle = api.getApistyle();
+            // 协议 http,https,rpc
+            String protocal = deployunit.getProtocal().toLowerCase();
+            // 发布单元端口
+            String port = deployunit.getPort();
+            String BaseUrl = deployunit.getBaseurl();
+            // 获取发布单元访问方式，ip或者域名
+            String deployunitvisittype = macdepunit.getVisittype();
+            // 根据访问方式来确定ip还是域名
+            String testserver = "";
+            String resource = "";
+            if (deployunitvisittype.equals(new String("ip"))) {
+                testserver = machine.getIp();
+                if (BaseUrl.isEmpty()) {
+                    resource = protocal + "://" + testserver + ":" + port + path;
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = protocal + "://" + testserver + ":" + port + BaseUrl + path;
+                    } else {
+                        resource = protocal + "://" + testserver + ":" + port + "/" + BaseUrl + path;
+                    }
+                }
+            } else {
+                testserver = macdepunit.getDomain();
+                if (BaseUrl.isEmpty()) {
+                    resource = protocal + "://" + testserver + path;
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = protocal + "://" + testserver + BaseUrl + path;
+                    } else {
+                        resource = protocal + "://" + testserver + "/" + BaseUrl + path;
+                    }
+                }
+            }
 
-           Condition interfacecon = new Condition(TestvariablesValue.class);
-           interfacecon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
-           .andCondition("batchname = '" + dispatch.getBatchname()+"'")
-           .andCondition("variablestype = '"+"接口"+"'");
-           List<TestvariablesValue> interfaceValueList = tch.testvariablesValueService.listByCondition(interfacecon);
+            Condition interfacecon = new Condition(TestvariablesValue.class);
+            interfacecon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
+                    .andCondition("batchname = '" + dispatch.getBatchname() + "'")
+                    .andCondition("variablestype = '" + "接口" + "'");
+            List<TestvariablesValue> interfaceValueList = tch.testvariablesValueService.listByCondition(interfacecon);
 
-           Condition dbcon = new Condition(TestvariablesValue.class);
-           dbcon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
-                   .andCondition("batchname = '" + dispatch.getBatchname()+"'")
-                   .andCondition("variablestype = '"+"数据库"+"'");
-           List<TestvariablesValue> dbValueList = tch.testvariablesValueService.listByCondition(dbcon);
+            Condition dbcon = new Condition(TestvariablesValue.class);
+            dbcon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
+                    .andCondition("batchname = '" + dispatch.getBatchname() + "'")
+                    .andCondition("variablestype = '" + "数据库" + "'");
+            List<TestvariablesValue> dbValueList = tch.testvariablesValueService.listByCondition(dbcon);
 
-           Condition scriptcon = new Condition(TestvariablesValue.class);
-           scriptcon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
-                   .andCondition("batchname = '" + dispatch.getBatchname()+"'")
-                   .andCondition("variablestype = '"+"脚本"+"'");
-           List<TestvariablesValue> scriptValueList = tch.testvariablesValueService.listByCondition(scriptcon);
-
-
-           HashMap<String, String> InterfaceMap = GetMap(interfaceValueList);
-           HashMap<String, String> DBMap = GetMap(dbValueList);
-           HashMap<String, String> ScriptMap = GetMap(scriptValueList);
+            Condition scriptcon = new Condition(TestvariablesValue.class);
+            scriptcon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
+                    .andCondition("batchname = '" + dispatch.getBatchname() + "'")
+                    .andCondition("variablestype = '" + "脚本" + "'");
+            List<TestvariablesValue> scriptValueList = tch.testvariablesValueService.listByCondition(scriptcon);
 
 
-           List<Variables> variablesList = tch.variablesService.listAll();
-           HashMap<String, String> RadomMap = new HashMap<>();
-           for (Variables va : variablesList) {
-               RadomMap.put(va.getVariablesname(), va.getVariablestype());
-           }
+            HashMap<String, String> InterfaceMap = GetMap(interfaceValueList);
+            HashMap<String, String> DBMap = GetMap(dbValueList);
+            HashMap<String, String> ScriptMap = GetMap(scriptValueList);
 
-           //url中的变量替换
-           //1.随机变量替换
-           for (Variables variables : variablesList) {
-               String VariableName = "[" + variables.getVariablesname() + "]";
-               if (resource.contains(VariableName)) {
-                   Object VariableValue = GetRadomValue(variables.getVariablesname());
-                   resource = resource.replace(VariableName, VariableValue.toString());
-               }
-           }
-           //2.接口变量替换
-           for (String Interfacevariables : InterfaceMap.keySet()) {
-               String UseInterfacevariables = "<" + Interfacevariables + ">";
-               if (resource.contains(UseInterfacevariables)) {
-                   Object VariableValue = InterfaceMap.get(Interfacevariables);// GetVariablesObjectValues("$" +Interfacevariables, ParamsValuesMap);
-                   resource = resource.replace(UseInterfacevariables, VariableValue.toString());
-               }
-           }
 
-           //3.数据库变量替换
-           for (String DBvariables : DBMap.keySet()) {
-               String UseDBvariables = "<<" + DBvariables + ">>";
-               if (resource.contains(UseDBvariables)) {
-                   Object VariableValue = DBMap.get(DBvariables);
-                   resource = resource.replace(UseDBvariables, VariableValue.toString());
-               }
-           }
+            List<Variables> variablesList = tch.variablesService.listAll();
+            HashMap<String, String> RadomMap = new HashMap<>();
+            for (Variables va : variablesList) {
+                RadomMap.put(va.getVariablesname(), va.getVariablestype());
+            }
 
-           HashMap<String, ApiCasedata> headmap=fixhttprequestdatas("Header",apiCasedataList);
-           HashMap<String, ApiCasedata> bodymap=fixhttprequestdatas("Body",apiCasedataList);
-           HashMap<String, ApiCasedata> paramsmap=fixhttprequestdatas("Params",apiCasedataList);
+            //url中的变量替换
+            //1.随机变量替换
+            for (Variables variables : variablesList) {
+                String VariableName = "[" + variables.getVariablesname() + "]";
+                if (resource.contains(VariableName)) {
+                    Object VariableValue = GetRadomValue(variables.getVariablesname());
+                    resource = resource.replace(VariableName, VariableValue.toString());
+                }
+            }
+            //2.接口变量替换
+            for (String Interfacevariables : InterfaceMap.keySet()) {
+                String UseInterfacevariables = "<" + Interfacevariables + ">";
+                if (resource.contains(UseInterfacevariables)) {
+                    Object VariableValue = InterfaceMap.get(Interfacevariables);// GetVariablesObjectValues("$" +Interfacevariables, ParamsValuesMap);
+                    resource = resource.replace(UseInterfacevariables, VariableValue.toString());
+                }
+            }
 
-           //Header
-           HttpHeader header = new HttpHeader();
-           header = AddHeaderByRequestContentType(header, requestcontenttype);
-           if(headmap.size()>0)
-           {
-               for (String key : headmap.keySet()) {
-                   String Value = headmap.get(key).getApiparamvalue().trim();
-                   Object ObjectValue = Value;
-                   if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
-                   {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                   }
-                   header.addParam(key, ObjectValue);
-               }
-           }
-           //url参数
-           HttpParamers paramers = new  HttpParamers();
-           // 设置参数
-           if(paramsmap.size()>0)
-           {
-               for (String key : paramsmap.keySet()) {
-                   String Value = paramsmap.get(key).getApiparamvalue().trim();
-                   String DataType = paramsmap.get(key).getParamstype().trim();
-                   Object ObjectValue =Value ;
-                   if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
-                   {
-                       ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                   }
-                   Object Result = GetDataByType(ObjectValue.toString(), DataType);
-                   paramers.addParam(key, Result);
-               }
-           }
-           //Body参数
-           HttpParamers Bodyparamers = new HttpParamers();
-           //Body内容
-           String PostData = "";
-           // 设置Body
-           if(bodymap.size()>0)
-           {
-               if (requestcontenttype.equalsIgnoreCase("Form表单")) {
-                   for (String key : bodymap.keySet()) {
-                       String Value = bodymap.get(key).getApiparamvalue().trim();
-                       String DataType = bodymap.get(key).getParamstype();
-                       Object ObjectValue = Value;
-                       if((Value.contains("<")&&Value.contains(">"))||(Value.contains("<<")&&Value.contains(">>"))||(Value.contains("[")&&Value.contains("]")))
-                       {
-                           ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap,DBMap);
-                       }
-                       Object Result = GetDataByType(ObjectValue.toString(), DataType);
-                       Bodyparamers.addParam(key, Result);
-                   }
-                   try {
-                       PostData=GetParasPostData(requestcontenttype,Bodyparamers);
-                   } catch (IOException e) {
-                       TestCaseHelp.log.info("处理Body参数数据异常："+e.getMessage());
-                       throw new Exception("处理Body参数数据异常："+e.getMessage());
-                   }
-               }
-               else
-               {
-                   for (String Key : bodymap.keySet()) {
-                       PostData = bodymap.get(Key).getApiparamvalue();
+            //3.数据库变量替换
+            for (String DBvariables : DBMap.keySet()) {
+                String UseDBvariables = "<<" + DBvariables + ">>";
+                if (resource.contains(UseDBvariables)) {
+                    Object VariableValue = DBMap.get(DBvariables);
+                    resource = resource.replace(UseDBvariables, VariableValue.toString());
+                }
+            }
 
-                       //1.替换随机变量
-                       for (String VaraibaleName : RadomMap.keySet()) {
-                           String UseVariableName = "[" + VaraibaleName + "]";
-                           if (PostData.contains(UseVariableName)) {
-                               Object VariableValue = GetRadomValue(VaraibaleName);
-                               PostData = PostData.replace(UseVariableName, VariableValue.toString());
-                           }
-                       }
-                       //2.替换接口变量
-                       for (String VariableName : InterfaceMap.keySet()) {
-                           String UseVariableName = "<" + VariableName + ">";
-                           if (PostData.contains(UseVariableName)) {
-                               String VariableValue = InterfaceMap.get(VariableName);
-                               PostData = PostData.replace(UseVariableName, VariableValue);
-                           }
-                       }
-                       //3.替换数据库变量
-                       for (String VariableName : DBMap.keySet()) {
-                           String UseVariableName = "<<" + VariableName + ">>";
-                           if (PostData.contains(UseVariableName)) {
-                               String VariableValue = DBMap.get(VariableName);
-                               PostData = PostData.replace(UseVariableName, VariableValue);
-                           }
-                       }
-                   }
-               }
-           }
-           TestCaseHelp.log.info("处理Body完后，PostData："+PostData);
-           ro.setPostData(PostData);
-           ro.setExpect(expect);
-           ro.setCasetype(casetype);
-           ro.setHeader(header);
-           ro.setProtocal(protocal);
-           ro.setApistyle(apistyle);
-           ro.setParamers(paramers);
-           ro.setBodyparamers(Bodyparamers);
-           ro.setRequestcontenttype(requestcontenttype);
-           ro.setRequestmMthod(method);
-           ro.setResource(resource);
-           ro.setResponecontenttype(responecontenttype);
-       }
-       catch (Exception ex)
-       {
-           TestCaseHelp.log.info("GetCaseRequestData异常："+ex.getMessage());
-       }
+            HashMap<String, ApiCasedata> headmap = fixhttprequestdatas("Header", apiCasedataList);
+            HashMap<String, ApiCasedata> bodymap = fixhttprequestdatas("Body", apiCasedataList);
+            HashMap<String, ApiCasedata> paramsmap = fixhttprequestdatas("Params", apiCasedataList);
+
+            //Header
+            HttpHeader header = new HttpHeader();
+            header = AddHeaderByRequestContentType(header, requestcontenttype);
+            if (headmap.size() > 0) {
+                for (String key : headmap.keySet()) {
+                    String Value = headmap.get(key).getApiparamvalue().trim();
+                    Object ObjectValue = Value;
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                    }
+                    header.addParam(key, ObjectValue);
+                }
+            }
+            //url参数
+            HttpParamers paramers = new HttpParamers();
+            // 设置参数
+            if (paramsmap.size() > 0) {
+                for (String key : paramsmap.keySet()) {
+                    String Value = paramsmap.get(key).getApiparamvalue().trim();
+                    String DataType = paramsmap.get(key).getParamstype().trim();
+                    Object ObjectValue = Value;
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                    }
+                    Object Result = GetDataByType(ObjectValue.toString(), DataType);
+                    paramers.addParam(key, Result);
+                }
+            }
+            //Body参数
+            HttpParamers Bodyparamers = new HttpParamers();
+            //Body内容
+            String PostData = "";
+            // 设置Body
+            if (bodymap.size() > 0) {
+                if (requestcontenttype.equalsIgnoreCase("Form表单")) {
+                    for (String key : bodymap.keySet()) {
+                        String Value = bodymap.get(key).getApiparamvalue().trim();
+                        String DataType = bodymap.get(key).getParamstype();
+                        Object ObjectValue = Value;
+                        if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                        }
+                        Object Result = GetDataByType(ObjectValue.toString(), DataType);
+                        Bodyparamers.addParam(key, Result);
+                    }
+                    try {
+                        PostData = GetParasPostData(requestcontenttype, Bodyparamers);
+                    } catch (IOException e) {
+                        TestCaseHelp.log.info("处理Body参数数据异常：" + e.getMessage());
+                        throw new Exception("处理Body参数数据异常：" + e.getMessage());
+                    }
+                } else {
+                    for (String Key : bodymap.keySet()) {
+                        PostData = bodymap.get(Key).getApiparamvalue();
+
+                        //1.替换随机变量
+                        for (String VaraibaleName : RadomMap.keySet()) {
+                            String UseVariableName = "[" + VaraibaleName + "]";
+                            if (PostData.contains(UseVariableName)) {
+                                Object VariableValue = GetRadomValue(VaraibaleName);
+                                PostData = PostData.replace(UseVariableName, VariableValue.toString());
+                            }
+                        }
+                        //2.替换接口变量
+                        for (String VariableName : InterfaceMap.keySet()) {
+                            String UseVariableName = "<" + VariableName + ">";
+                            if (PostData.contains(UseVariableName)) {
+                                String VariableValue = InterfaceMap.get(VariableName);
+                                PostData = PostData.replace(UseVariableName, VariableValue);
+                            }
+                        }
+                        //3.替换数据库变量
+                        for (String VariableName : DBMap.keySet()) {
+                            String UseVariableName = "<<" + VariableName + ">>";
+                            if (PostData.contains(UseVariableName)) {
+                                String VariableValue = DBMap.get(VariableName);
+                                PostData = PostData.replace(UseVariableName, VariableValue);
+                            }
+                        }
+                    }
+                }
+            }
+            TestCaseHelp.log.info("处理Body完后，PostData：" + PostData);
+            ro.setPostData(PostData);
+            ro.setExpect(expect);
+            ro.setCasetype(casetype);
+            ro.setHeader(header);
+            ro.setProtocal(protocal);
+            ro.setApistyle(apistyle);
+            ro.setParamers(paramers);
+            ro.setBodyparamers(Bodyparamers);
+            ro.setRequestcontenttype(requestcontenttype);
+            ro.setRequestmMthod(method);
+            ro.setResource(resource);
+            ro.setResponecontenttype(responecontenttype);
+        } catch (Exception ex) {
+            TestCaseHelp.log.info("GetCaseRequestData异常：" + ex.getMessage());
+        }
         return ro;
     }
 
@@ -482,12 +468,12 @@ public class TestCaseHelp  {
 
     private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
         Object ObjectValue = Value;
-        boolean exist=false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
+        boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
         for (String interfacevariablesName : InterfaceMap.keySet()) {
             boolean flag = GetSubOrNot(InterfaceMap, Value, "<", ">");
             if (Value.contains("<" + interfacevariablesName + ">")) {
-                exist=true;
+                exist = true;
                 String ActualValue = InterfaceMap.get(interfacevariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -508,7 +494,7 @@ public class TestCaseHelp  {
         for (String DBvariablesName : DBMap.keySet()) {
             boolean flag = GetSubOrNot(DBMap, Value, "<<", ">>");
             if (Value.contains("<<" + DBvariablesName + ">>")) {
-                exist=true;
+                exist = true;
                 String ActualValue = DBMap.get(DBvariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -529,7 +515,7 @@ public class TestCaseHelp  {
         for (String variables : RadomMap.keySet()) {
             boolean flag = GetSubOrNot(RadomMap, Value, "[", "]");
             if (Value.contains("[" + variables + "]")) {
-                exist=true;
+                exist = true;
                 if (flag) {
                     Object RadomValue = GetRadomValue(variables);
                     Value = Value.replace("[" + variables + "]", RadomValue.toString());
@@ -539,9 +525,8 @@ public class TestCaseHelp  {
                 }
             }
         }
-        if(!exist)
-        {
-            throw new Exception("当前接口子条件参数值中存在变量："+Value+" 未找到对应值，请检查是否有配置变量对应的子条件获取此变量值");
+        if (!exist) {
+            throw new Exception("当前接口子条件参数值中存在变量：" + Value + " 未找到对应值，请检查是否有配置变量对应的子条件获取此变量值");
         }
 
         return ObjectValue;
@@ -632,10 +617,10 @@ public class TestCaseHelp  {
     }
 
     // 获取用例Header，params，Body，Dubbo数据
-    public HashMap<String, ApiCasedata> fixhttprequestdatas(String MapType,List<ApiCasedata> casedatalist) {
-        HashMap<String, ApiCasedata> DataMap=new HashMap<>();
+    public HashMap<String, ApiCasedata> fixhttprequestdatas(String MapType, List<ApiCasedata> casedatalist) {
+        HashMap<String, ApiCasedata> DataMap = new HashMap<>();
         for (ApiCasedata data : casedatalist) {
-            String propertytype= data.getPropertytype();
+            String propertytype = data.getPropertytype();
             if (propertytype.equals(MapType)) {
                 DataMap.put(data.getApiparam().trim(), data);
             }
@@ -681,18 +666,15 @@ public class TestCaseHelp  {
             if (Value.trim().length() == 1) {
                 Result = Value;
             } else {
-                String Prix[]=Value.split("\\+");
-                for (String PrixStr: Prix) {
-                    if(PrixStr.contains("$"))
-                    {
-                        TestCaseHelp.log.info("TestHttpRequestData $PrixStr :  " + PrixStr );
-                        Result=Result.toString()+GetVariablesDataType(PrixStr,PlanId,BatchName);
-                        TestCaseHelp.log.info("TestHttpRequestData $PrixStr Result :  " + Result );
-                    }
-                    else
-                    {
-                        TestCaseHelp.log.info("TestHttpRequestData PrixStr :  " + PrixStr );
-                        Result=Result+PrixStr;
+                String Prix[] = Value.split("\\+");
+                for (String PrixStr : Prix) {
+                    if (PrixStr.contains("$")) {
+                        TestCaseHelp.log.info("TestHttpRequestData $PrixStr :  " + PrixStr);
+                        Result = Result.toString() + GetVariablesDataType(PrixStr, PlanId, BatchName);
+                        TestCaseHelp.log.info("TestHttpRequestData $PrixStr Result :  " + Result);
+                    } else {
+                        TestCaseHelp.log.info("TestHttpRequestData PrixStr :  " + PrixStr);
+                        Result = Result + PrixStr;
                     }
                 }
 //                Value = Value.substring(1);
@@ -727,46 +709,39 @@ public class TestCaseHelp  {
     }
 
 
-    private Object GetVariablesDataType(String Value,String PlanId, String BatchName)
-    {
-        Object Result="";
+    private Object GetVariablesDataType(String Value, String PlanId, String BatchName) {
+        Object Result = "";
         Value = Value.substring(1);
-        TestCaseHelp.log.info( "TestHttpRequestData GetVariablesDataType Value :  " + Value );
+        TestCaseHelp.log.info("TestHttpRequestData GetVariablesDataType Value :  " + Value);
 
-        ApicasesVariables apicasesVariables = tch.apicasesVariablesService.getBy("variablesname",Value);// testMysqlHelp.GetCaseIdByVariablesName(Value);
-        if(apicasesVariables==null)
-        {
-            Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
+        ApicasesVariables apicasesVariables = tch.apicasesVariablesService.getBy("variablesname", Value);// testMysqlHelp.GetCaseIdByVariablesName(Value);
+        if (apicasesVariables == null) {
+            Result = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-变量管理中是否存在此变量";
             return Result;
         }
 
-        Testvariables testvariables = tch.testvariablesService.getBy("testvariablesname",Value); //testMysqlHelp.GetVariablesDataType(Value);
-        if(testvariables==null)
-        {
-            Result="未找到变量："+Value+"绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
+        Testvariables testvariables = tch.testvariablesService.getBy("testvariablesname", Value); //testMysqlHelp.GetVariablesDataType(Value);
+        if (testvariables == null) {
+            Result = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
             return Result;
         }
         //根据用例参数值是否以$开头，如果是则认为是变量通过变量表取到变量值
-        String Caseid=apicasesVariables.getCaseid().toString();
-        TestvariablesValue testvariablesValue = tch.testvariablesValueService.findtestvariablesvalue(Long.parseLong(PlanId),Long.parseLong(Caseid),BatchName,Value);//.fi   testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
-        if(testvariablesValue==null)
-        {
-            Result="未找到变量："+Value+"的值，请检查变量管理-变量结果中是否存在此变量值";
+        String Caseid = apicasesVariables.getCaseid().toString();
+        TestvariablesValue testvariablesValue = tch.testvariablesValueService.findtestvariablesvalue(Long.parseLong(PlanId), Long.parseLong(Caseid), BatchName, Value);//.fi   testMysqlHelp.GetVariablesValues(PlanId, Caseid, BatchName, Value);
+        if (testvariablesValue == null) {
+            Result = "未找到变量：" + Value + "的值，请检查变量管理-变量结果中是否存在此变量值";
             return Result;
-        }
-        else
-        {
-            String ValueType=testvariables.getTestvariablestype();
-            String VariablesNameValue =testvariablesValue.getVariablesvalue();
-            Result=GetDataByType(VariablesNameValue,ValueType);
+        } else {
+            String ValueType = testvariables.getTestvariablestype();
+            String VariablesNameValue = testvariablesValue.getVariablesvalue();
+            Result = GetDataByType(VariablesNameValue, ValueType);
         }
         return Result;
     }
 
     //根据数据类型转换
-    private Object GetDataByType(String Data,String ValueType)
-    {
-        Object Result=new Object();
+    private Object GetDataByType(String Data, String ValueType) {
+        Object Result = new Object();
         if (ValueType.equalsIgnoreCase("Number")) {
             try {
                 Result = Long.parseLong(Data);
@@ -781,7 +756,7 @@ public class TestCaseHelp  {
                 Result = "变量值：" + Data + " 不是数字类型，请检查！";
             }
         }
-        if (ValueType.equalsIgnoreCase("String")||ValueType.isEmpty()) {
+        if (ValueType.equalsIgnoreCase("String") || ValueType.isEmpty()) {
             Result = Data;
         }
         if (ValueType.equalsIgnoreCase("Array")) {
@@ -800,10 +775,10 @@ public class TestCaseHelp  {
 
     // 发送http请求
     public TestResponeData request(RequestObject requestObject) throws Exception {
-        TestResponeData result=new TestResponeData();
-        TestHttp testHttp=new TestHttp();
-        if (requestObject.getProtocal().equals("http")||requestObject.getProtocal().equals("https")) {
-            result = testHttp.doService(requestObject,30000);
+        TestResponeData result = new TestResponeData();
+        TestHttp testHttp = new TestHttp();
+        if (requestObject.getProtocal().equals("http") || requestObject.getProtocal().equals("https")) {
+            result = testHttp.doService(requestObject, 30000);
         }
         return result;
     }

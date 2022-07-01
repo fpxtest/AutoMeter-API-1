@@ -77,8 +77,6 @@ public class ApicasesController {
     private ApicasesDebugConditionService apicasesDebugConditionService;
 
 
-
-
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
         Condition con = new Condition(Apicases.class);
@@ -152,9 +150,8 @@ public class ApicasesController {
             return ResultGenerator.genFailedResult(sourcedeployunitname + "已存在存在此用例名");
         } else {
             Apicases Sourcecase = apicasesService.getBy("id", Long.parseLong(sourcecaseid));
-            if(Sourcecase!=null)
-            {
-                long Apiid=Sourcecase.getApiid();
+            if (Sourcecase != null) {
+                long Apiid = Sourcecase.getApiid();
                 Condition apcasedatacon = new Condition(Apicases.class);
                 apcasedatacon.createCriteria().andCondition("caseid = " + Long.parseLong(sourcecaseid));
                 List<ApiCasedata> SourceApicasedataList = apiCasedataService.listByCondition(apcasedatacon);
@@ -189,11 +186,11 @@ public class ApicasesController {
                 //复制前置条件
                 Condition ParentCondition = new Condition(Testcondition.class);
                 ParentCondition.createCriteria().andCondition("objectid = " + sourcecaseid)
-                        .andCondition("objecttype='"+"测试用例'");
-                List<Testcondition>testconditionList=testconditionService.listByCondition(ParentCondition);
-                for (Testcondition SourceParentCondition:testconditionList) {
-                    long SourceConditionID=SourceParentCondition.getId();
-                    String DestinationConditionName=SourceParentCondition.getConditionname()+"-用例复制";
+                        .andCondition("objecttype='" + "测试用例'");
+                List<Testcondition> testconditionList = testconditionService.listByCondition(ParentCondition);
+                for (Testcondition SourceParentCondition : testconditionList) {
+                    long SourceConditionID = SourceParentCondition.getId();
+                    String DestinationConditionName = SourceParentCondition.getConditionname() + "-用例复制";
                     SourceParentCondition.setObjectid(NewCaseId);
                     SourceParentCondition.setConditionname(DestinationConditionName);
                     SourceParentCondition.setObjectname(newcasename);
@@ -202,13 +199,12 @@ public class ApicasesController {
                     SourceParentCondition.setDeployunitname(sourcedeployunitname);
                     SourceParentCondition.setId(null);
                     testconditionService.save(SourceParentCondition);
-                    long DestinationConditionID=SourceParentCondition.getId();
-                    SubCondition(SourceConditionID,DestinationConditionID,DestinationConditionName,"case");
+                    long DestinationConditionID = SourceParentCondition.getId();
+                    SubCondition(SourceConditionID, DestinationConditionID, DestinationConditionName, "case");
                 }
                 //复制前置调试条件
-                ApicasesDebugCondition apicasesDebugCondition=apicasesDebugConditionService.getBy("caseid",Long.parseLong(sourcecaseid));
-                if(apicasesDebugCondition!=null)
-                {
+                ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", Long.parseLong(sourcecaseid));
+                if (apicasesDebugCondition != null) {
                     apicasesDebugCondition.setId(null);
                     apicasesDebugCondition.setCaseid(NewCaseId);
                     apicasesDebugCondition.setCasename(newcasename);
@@ -225,34 +221,29 @@ public class ApicasesController {
     public Result copydeployunitcases(@RequestBody final Map<String, Object> param) {
         Long sourcedeployunitid = Long.parseLong(param.get("sourcedeployunitid").toString());
         String sourcedeployunitname = param.get("sourcedeployunitname").toString();
-        Long destinationdeployunitid =Long.parseLong(param.get("destinationdeployunitid").toString());
+        Long destinationdeployunitid = Long.parseLong(param.get("destinationdeployunitid").toString());
         String destinationdeployunitname = param.get("destinationdeployunitname").toString();
 
-        if(sourcedeployunitid.equals(destinationdeployunitid))
-        {
+        if (sourcedeployunitid.equals(destinationdeployunitid)) {
             return ResultGenerator.genFailedResult("源发布单元和目标发布单元相同，请选择不同的发布单元进行批量复制用例");
-        }
-        else
-        {
+        } else {
             //复制调试父条件
-            long DebugDesConditionID=0;
-            String DestiConditionName="";
+            long DebugDesConditionID = 0;
+            String DestiConditionName = "";
             Condition apicasedebugcon = new Condition(ApicasesDebugCondition.class);
             apicasedebugcon.createCriteria().andCondition("deployunitid = " + sourcedeployunitid);
-            List<ApicasesDebugCondition> apicasesDebugConditionList=apicasesDebugConditionService.listByCondition(apicasedebugcon);
-            if (apicasesDebugConditionList.size()>0)
-            {
-                long SourceConditionID=apicasesDebugConditionList.get(0).getConditionid();
-                Testcondition testcondition=testconditionService.getBy("id",SourceConditionID);
-                if(testcondition!=null)
-                {
-                    Testcondition NewCondition=testcondition;
-                    DestiConditionName=testcondition.getConditionname()+"-发布单元复制";
+            List<ApicasesDebugCondition> apicasesDebugConditionList = apicasesDebugConditionService.listByCondition(apicasedebugcon);
+            if (apicasesDebugConditionList.size() > 0) {
+                long SourceConditionID = apicasesDebugConditionList.get(0).getConditionid();
+                Testcondition testcondition = testconditionService.getBy("id", SourceConditionID);
+                if (testcondition != null) {
+                    Testcondition NewCondition = testcondition;
+                    DestiConditionName = testcondition.getConditionname() + "-发布单元复制";
                     NewCondition.setConditionname(DestiConditionName);
                     NewCondition.setId(null);
                     testconditionService.save(NewCondition);
-                    DebugDesConditionID=NewCondition.getId();
-                    SubCondition(SourceConditionID,DebugDesConditionID,DestiConditionName,"deployunit");
+                    DebugDesConditionID = NewCondition.getId();
+                    SubCondition(SourceConditionID, DebugDesConditionID, DestiConditionName, "deployunit");
                 }
             }
 
@@ -261,23 +252,23 @@ public class ApicasesController {
             if (apiService.ifexist(apicon) == 0) {
                 return ResultGenerator.genFailedResult(sourcedeployunitname + "不存在任何API接口，未能正常复制，请先完善API");
             } else {
-                List<Api>SourceapiList=apiService.listByCondition(apicon);
-                for (Api SourceApi:SourceapiList) {
-                    long SourceApiid=SourceApi.getId();
+                List<Api> SourceapiList = apiService.listByCondition(apicon);
+                for (Api SourceApi : SourceapiList) {
+                    long SourceApiid = SourceApi.getId();
                     //1.复制api
-                    Api DestinationApi=SourceApi;
+                    Api DestinationApi = SourceApi;
                     DestinationApi.setDeployunitname(destinationdeployunitname);
                     DestinationApi.setDeployunitid(destinationdeployunitid);
                     DestinationApi.setId(null);
                     apiService.save(DestinationApi);
-                    long DestinationApiid=DestinationApi.getId();
+                    long DestinationApiid = DestinationApi.getId();
 
                     //2.复制api参数
                     Condition apiparamcon = new Condition(ApiParams.class);
                     apiparamcon.createCriteria().andCondition("apiid = " + SourceApiid);
-                    List<ApiParams> apiParamsList =apiParamsService.listByCondition(apiparamcon);
-                    for (ApiParams SourceParam :apiParamsList) {
-                        ApiParams DestinationParam=SourceParam;
+                    List<ApiParams> apiParamsList = apiParamsService.listByCondition(apiparamcon);
+                    for (ApiParams SourceParam : apiParamsList) {
+                        ApiParams DestinationParam = SourceParam;
                         DestinationParam.setApiid(DestinationApiid);
                         DestinationParam.setDeployunitname(destinationdeployunitname);
                         DestinationParam.setDeployunitid(destinationdeployunitid);
@@ -288,23 +279,22 @@ public class ApicasesController {
                     //3.复制api用例
                     Condition apicasecon = new Condition(Apicases.class);
                     apicasecon.createCriteria().andCondition("apiid = " + SourceApiid);
-                    List<Apicases>apicasesList=apicasesService.listByCondition(apicasecon);
-                    for (Apicases SourceCase: apicasesList) {
-                        long SourceCaseID=SourceCase.getId();
-                        Apicases DesitionApicase=SourceCase;
+                    List<Apicases> apicasesList = apicasesService.listByCondition(apicasecon);
+                    for (Apicases SourceCase : apicasesList) {
+                        long SourceCaseID = SourceCase.getId();
+                        Apicases DesitionApicase = SourceCase;
                         DesitionApicase.setDeployunitname(destinationdeployunitname);
                         DesitionApicase.setDeployunitid(destinationdeployunitid);
                         DesitionApicase.setId(null);
                         apicasesService.save(DesitionApicase);
-                        long DestinationCaseID=DesitionApicase.getId();
+                        long DestinationCaseID = DesitionApicase.getId();
 
                         //复制用例调试条件
                         Condition casedebugcon = new Condition(ApicasesDebugCondition.class);
                         casedebugcon.createCriteria().andCondition("caseid = " + SourceCaseID);
-                        ApicasesDebugCondition apicasesDebugCondition=apicasesDebugConditionService.getBy("caseid",SourceCaseID);
-                        if(apicasesDebugCondition!=null)
-                        {
-                            ApicasesDebugCondition DestiapicasesDebugCondition=apicasesDebugCondition;
+                        ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", SourceCaseID);
+                        if (apicasesDebugCondition != null) {
+                            ApicasesDebugCondition DestiapicasesDebugCondition = apicasesDebugCondition;
                             DestiapicasesDebugCondition.setId(null);
                             DestiapicasesDebugCondition.setCaseid(DestinationCaseID);
                             DestiapicasesDebugCondition.setDeployunitid(destinationdeployunitid);
@@ -318,9 +308,9 @@ public class ApicasesController {
                         //4.复制用例数据
                         Condition apicasedatacon = new Condition(ApiCasedata.class);
                         apicasedatacon.createCriteria().andCondition("caseid = " + SourceCaseID);
-                        List<ApiCasedata>apiCasedataList=apiCasedataService.listByCondition(apicasedatacon);
-                        for (ApiCasedata SourceCaseData: apiCasedataList) {
-                            ApiCasedata DestinationData=SourceCaseData;
+                        List<ApiCasedata> apiCasedataList = apiCasedataService.listByCondition(apicasedatacon);
+                        for (ApiCasedata SourceCaseData : apiCasedataList) {
+                            ApiCasedata DestinationData = SourceCaseData;
                             DestinationData.setCaseid(DestinationCaseID);
                             DestinationData.setId(null);
                             apiCasedataService.save(DestinationData);
@@ -339,11 +329,11 @@ public class ApicasesController {
                         //6.复制前置父条件
                         Condition ParentSubCondition = new Condition(Testcondition.class);
                         ParentSubCondition.createCriteria().andCondition("objectid = " + SourceCaseID)
-                        .andCondition("objecttype='"+"测试用例'");
-                        List<Testcondition>testconditionList=testconditionService.listByCondition(ParentSubCondition);
-                        for (Testcondition SourceParentCondition:testconditionList) {
-                            long SourceConditionID=SourceParentCondition.getId();
-                            String DestinationConditionName=SourceParentCondition.getConditionname()+"-发布单元复制";
+                                .andCondition("objecttype='" + "测试用例'");
+                        List<Testcondition> testconditionList = testconditionService.listByCondition(ParentSubCondition);
+                        for (Testcondition SourceParentCondition : testconditionList) {
+                            long SourceConditionID = SourceParentCondition.getId();
+                            String DestinationConditionName = SourceParentCondition.getConditionname() + "-发布单元复制";
                             SourceParentCondition.setObjectid(DestinationCaseID);
                             SourceParentCondition.setConditionname(DestinationConditionName);
                             SourceParentCondition.setApiid(DestinationApiid);
@@ -351,8 +341,8 @@ public class ApicasesController {
                             SourceParentCondition.setDeployunitname(destinationdeployunitname);
                             SourceParentCondition.setId(null);
                             testconditionService.save(SourceParentCondition);
-                            long DestinationConditionID=SourceParentCondition.getId();
-                            SubCondition(SourceConditionID,DestinationConditionID,DestinationConditionName,"deployunit");
+                            long DestinationConditionID = SourceParentCondition.getId();
+                            SubCondition(SourceConditionID, DestinationConditionID, DestinationConditionName, "deployunit");
                         }
                     }
                 }
@@ -361,95 +351,87 @@ public class ApicasesController {
         }
     }
 
-    private void SubCondition(long SourceConditionID,long DestinationConditionID,String DestinationConditionName,String CopyType)
-    {
-        long subconditionapiid=0;
-        long subconditiondbid=0;
-        long subconditionscriptid=0;
-        long subconditiondelayid=0;
+    private void SubCondition(long SourceConditionID, long DestinationConditionID, String DestinationConditionName, String CopyType) {
+        long subconditionapiid = 0;
+        long subconditiondbid = 0;
+        long subconditionscriptid = 0;
+        long subconditiondelayid = 0;
 
         //复制前置接口子条件
         Condition APISubCondition = new Condition(ConditionApi.class);
         APISubCondition.createCriteria().andCondition("conditionid = " + SourceConditionID);
-        List<ConditionApi>conditionApiList=conditionApiService.listByCondition(APISubCondition);
-        for (ConditionApi SourceConditionApi:conditionApiList) {
+        List<ConditionApi> conditionApiList = conditionApiService.listByCondition(APISubCondition);
+        for (ConditionApi SourceConditionApi : conditionApiList) {
             SourceConditionApi.setId(null);
-            SourceConditionApi.setSubconditionname(SourceConditionApi.getSubconditionname()+"-复制");
+            SourceConditionApi.setSubconditionname(SourceConditionApi.getSubconditionname() + "-复制");
             SourceConditionApi.setConditionname(DestinationConditionName);
             SourceConditionApi.setConditionid(DestinationConditionID);
             conditionApiService.save(SourceConditionApi);
-            subconditionapiid=SourceConditionApi.getId();
+            subconditionapiid = SourceConditionApi.getId();
         }
 
         //复制前置数据库子条件
         Condition DBSubCondition = new Condition(ConditionDb.class);
         DBSubCondition.createCriteria().andCondition("conditionid = " + SourceConditionID);
-        List<ConditionDb>conditionDbList=conditionDbService.listByCondition(DBSubCondition);
-        for (ConditionDb SourceConditionDB:conditionDbList) {
+        List<ConditionDb> conditionDbList = conditionDbService.listByCondition(DBSubCondition);
+        for (ConditionDb SourceConditionDB : conditionDbList) {
             SourceConditionDB.setId(null);
             SourceConditionDB.setConditionid(DestinationConditionID);
             SourceConditionDB.setConditionname(DestinationConditionName);
-            SourceConditionDB.setSubconditionname(SourceConditionDB.getSubconditionname()+"-复制");
+            SourceConditionDB.setSubconditionname(SourceConditionDB.getSubconditionname() + "-复制");
             conditionDbService.save(SourceConditionDB);
-            subconditiondbid=SourceConditionDB.getId();
+            subconditiondbid = SourceConditionDB.getId();
         }
 
         //复制前置脚本子条件
         Condition ScriptSubCondition = new Condition(ConditionScript.class);
         ScriptSubCondition.createCriteria().andCondition("conditionid = " + SourceConditionID);
-        List<ConditionScript>conditionScriptList=conditionScriptService.listByCondition(ScriptSubCondition);
-        for (ConditionScript SourceConditionScript:conditionScriptList) {
+        List<ConditionScript> conditionScriptList = conditionScriptService.listByCondition(ScriptSubCondition);
+        for (ConditionScript SourceConditionScript : conditionScriptList) {
             SourceConditionScript.setId(null);
             SourceConditionScript.setConditionid(DestinationConditionID);
             SourceConditionScript.setConditionname(DestinationConditionName);
-            SourceConditionScript.setSubconditionname(SourceConditionScript.getSubconditionname()+"-复制");
+            SourceConditionScript.setSubconditionname(SourceConditionScript.getSubconditionname() + "-复制");
             conditionScriptService.save(SourceConditionScript);
-            subconditionscriptid=SourceConditionScript.getId();
+            subconditionscriptid = SourceConditionScript.getId();
         }
 
         //复制前置延时子条件
         Condition DelaySubCondition = new Condition(ConditionDelay.class);
         DelaySubCondition.createCriteria().andCondition("conditionid = " + SourceConditionID);
-        List<ConditionDelay>conditionDelayList=conditionDelayService.listByCondition(DelaySubCondition);
-        for (ConditionDelay SourceConditionDelay:conditionDelayList) {
+        List<ConditionDelay> conditionDelayList = conditionDelayService.listByCondition(DelaySubCondition);
+        for (ConditionDelay SourceConditionDelay : conditionDelayList) {
             SourceConditionDelay.setId(null);
             SourceConditionDelay.setConditionid(DestinationConditionID);
             SourceConditionDelay.setConditionname(DestinationConditionName);
-            SourceConditionDelay.setSubconditionname(SourceConditionDelay.getSubconditionname()+"-复制");
+            SourceConditionDelay.setSubconditionname(SourceConditionDelay.getSubconditionname() + "-复制");
             conditionDelayService.save(SourceConditionDelay);
-            subconditiondelayid=SourceConditionDelay.getId();
+            subconditiondelayid = SourceConditionDelay.getId();
         }
 
         Condition OrderCondition = new Condition(ConditionOrder.class);
         OrderCondition.createCriteria().andCondition("conditionid = " + SourceConditionID);
-        List<ConditionOrder>conditionOrderList= conditionOrderService.listByCondition(OrderCondition);
-        for (ConditionOrder SourceConditionOrder:conditionOrderList) {
+        List<ConditionOrder> conditionOrderList = conditionOrderService.listByCondition(OrderCondition);
+        for (ConditionOrder SourceConditionOrder : conditionOrderList) {
             SourceConditionOrder.setId(null);
             SourceConditionOrder.setConditionname(DestinationConditionName);
             SourceConditionOrder.setConditionid(DestinationConditionID);
-            if(SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("接口"))
-            {
+            if (SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("接口")) {
                 SourceConditionOrder.setSubconditionid(subconditionapiid);
             }
-            if(SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("数据库"))
-            {
+            if (SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("数据库")) {
                 SourceConditionOrder.setSubconditionid(subconditiondbid);
             }
-            if(SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("脚本"))
-            {
+            if (SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("脚本")) {
                 SourceConditionOrder.setSubconditionid(subconditionscriptid);
             }
-            if(SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("延时"))
-            {
+            if (SourceConditionOrder.getSubconditiontype().equalsIgnoreCase("延时")) {
                 SourceConditionOrder.setSubconditionid(subconditiondelayid);
             }
-            if(CopyType.equalsIgnoreCase("case"))
-            {
-                SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname()+"-用例复制");
-            }
-            else
-            {
-                SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname()+"-发布单元复制");
+            if (CopyType.equalsIgnoreCase("case")) {
+                SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname() + "-用例复制");
+            } else {
+                SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname() + "-发布单元复制");
             }
             conditionOrderService.save(SourceConditionOrder);
         }
@@ -474,25 +456,23 @@ public class ApicasesController {
             conditionDbService.deleteBy("conditionid", ConditionID);
             conditionScriptService.deleteBy("conditionid", ConditionID);
             conditionDelayService.deleteBy("conditionid", ConditionID);
-            conditionOrderService.deleteBy("conditionid",ConditionID);
+            conditionOrderService.deleteBy("conditionid", ConditionID);
             testconditionService.deleteByCondition(con);
         }
         //删除测试集合中的用例
         executeplanTestcaseService.removetestcase(id);
         //删除调试集合中的用例
-        long ConditionID=0;
-        ApicasesDebugCondition apicasesDebugCondition=apicasesDebugConditionService.getBy("caseid",id);
-        if(apicasesDebugCondition!=null)
-        {
-            ConditionID=apicasesDebugCondition.getConditionid();
+        long ConditionID = 0;
+        ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", id);
+        if (apicasesDebugCondition != null) {
+            ConditionID = apicasesDebugCondition.getConditionid();
         }
-        apicasesDebugConditionService.deleteBy("caseid",id);
+        apicasesDebugConditionService.deleteBy("caseid", id);
         Condition ApicasesDebugCondition = new Condition(ApicasesDebugCondition.class);
         ApicasesDebugCondition.createCriteria().andCondition("conditionid = " + ConditionID);
-        List<ApicasesDebugCondition>apicasesDebugConditionList= apicasesDebugConditionService.listByCondition(ApicasesDebugCondition);
-        if(apicasesDebugConditionList.size()==0)
-        {
-            testconditionService.deleteBy("id",ConditionID);
+        List<ApicasesDebugCondition> apicasesDebugConditionList = apicasesDebugConditionService.listByCondition(ApicasesDebugCondition);
+        if (apicasesDebugConditionList.size() == 0) {
+            testconditionService.deleteBy("id", ConditionID);
         }
         return ResultGenerator.genOkResult();
     }
@@ -553,8 +533,8 @@ public class ApicasesController {
         } else {
             this.apicasesService.updateApicase(apicases);
             //增加更新条件管理，子条件管理中的用例名
-            testconditionService.updatecasename(apicases.getId(),"测试用例",apicases.getCasename());
-            conditionApiService.updatecasename(apicases.getId(),apicases.getCasename());
+            testconditionService.updatecasename(apicases.getId(), "测试用例", apicases.getCasename());
+            conditionApiService.updatecasename(apicases.getId(), apicases.getCasename());
             return ResultGenerator.genOkResult();
         }
     }
@@ -620,11 +600,11 @@ public class ApicasesController {
     }
 
 
-    private ConditionResult FixCondition(List<Testcondition> testconditionList,Map<String, Object> param,long Caseid,String objecttype) throws Exception {
+    private ConditionResult FixCondition(List<Testcondition> testconditionList, Map<String, Object> param, long Caseid, String objecttype) throws Exception {
         //List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Caseid, "前置条件", objecttype);
-        ConditionResult conditionResult=new ConditionResult();
+        ConditionResult conditionResult = new ConditionResult();
         String APIRespone = "";
-        String DBRespone="";
+        String DBRespone = "";
         conditionResult.setAPIRespone(APIRespone);
         conditionResult.setDBRespone(DBRespone);
         if (testconditionList.size() > 0) {
@@ -645,11 +625,11 @@ public class ApicasesController {
                         param.put("dbvariablesvalue", DBRespone);
                         String params = JSON.toJSONString(param);
                         if (conditionOrder.getSubconditiontype().equals("接口")) {
-                            ApicasesController.log.info("。。。。。。。。接口前置子条件请求数据："+params);
+                            ApicasesController.log.info("。。。。。。。。接口前置子条件请求数据：" + params);
                             APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                         }
                         if (conditionOrder.getSubconditiontype().equals("数据库")) {
-                            DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                            DBRespone = getSubConditionRespone(DBConditionServerurl, params, header);
                             param.put("dbvariablesvalue", DBRespone);
                         }
                         if (conditionOrder.getSubconditiontype().equals("脚本")) {
@@ -658,33 +638,30 @@ public class ApicasesController {
                     }
                 } else {
                     String params = JSON.toJSONString(param);
-                    Condition dbcon=new Condition(ConditionDb.class);
-                    dbcon.createCriteria().andCondition("conditionid="+ConditionID);
-                    List<ConditionDb> conditionDbList= conditionDbService.listByCondition(dbcon);
-                    if(conditionDbList.size()>0)
-                    {
-                        ApicasesController.log.info("。。。。。。。。数据库前置子条件非顺序请求数据："+params);
-                        DBRespone=getSubConditionRespone(DBConditionServerurl, params, header);
+                    Condition dbcon = new Condition(ConditionDb.class);
+                    dbcon.createCriteria().andCondition("conditionid=" + ConditionID);
+                    List<ConditionDb> conditionDbList = conditionDbService.listByCondition(dbcon);
+                    if (conditionDbList.size() > 0) {
+                        ApicasesController.log.info("。。。。。。。。数据库前置子条件非顺序请求数据：" + params);
+                        DBRespone = getSubConditionRespone(DBConditionServerurl, params, header);
                     }
                     param.put("dbvariablesvalue", DBRespone);
-                    ApicasesController.log.info("。。。。。。。。数据库前置子条件非顺序结果："+DBRespone);
-                    Condition apicon=new Condition(ConditionApi.class);
-                    apicon.createCriteria().andCondition("conditionid="+ConditionID);
-                    List<ConditionApi> conditionApiList= conditionApiService.listByCondition(apicon);
-                    if(conditionApiList.size()>0)
-                    {
+                    ApicasesController.log.info("。。。。。。。。数据库前置子条件非顺序结果：" + DBRespone);
+                    Condition apicon = new Condition(ConditionApi.class);
+                    apicon.createCriteria().andCondition("conditionid=" + ConditionID);
+                    List<ConditionApi> conditionApiList = conditionApiService.listByCondition(apicon);
+                    if (conditionApiList.size() > 0) {
                         params = JSON.toJSONString(param);
-                        ApicasesController.log.info("。。。。。。。。接口前置子条件非顺序请求数据："+params);
+                        ApicasesController.log.info("。。。。。。。。接口前置子条件非顺序请求数据：" + params);
                         APIRespone = getSubConditionRespone(APIConditionServerurl, params, header);
                     }
 
-                    Condition scriptcon=new Condition(ConditionScript.class);
-                    scriptcon.createCriteria().andCondition("conditionid="+ConditionID);
-                    List<ConditionScript> conditionScriptList= conditionScriptService.listByCondition(scriptcon);
+                    Condition scriptcon = new Condition(ConditionScript.class);
+                    scriptcon.createCriteria().andCondition("conditionid=" + ConditionID);
+                    List<ConditionScript> conditionScriptList = conditionScriptService.listByCondition(scriptcon);
 
-                    if(conditionScriptList.size()>0)
-                    {
-                        ApicasesController.log.info("。。。。。。。。脚本前置子条件非顺序请求数据："+params);
+                    if (conditionScriptList.size() > 0) {
+                        ApicasesController.log.info("。。。。。。。。脚本前置子条件非顺序请求数据：" + params);
                         getSubConditionRespone(ScriptConditionServerurl, params, header);
                     }
                 }
@@ -701,7 +678,7 @@ public class ApicasesController {
         return conditionResult;
     }
 
-    private HashMap<String,String> GetResponeMap(String Respone,HashMap<String,String> ResponeMap) throws Exception {
+    private HashMap<String, String> GetResponeMap(String Respone, HashMap<String, String> ResponeMap) throws Exception {
         if (!Respone.isEmpty()) {
             try {
                 JSONObject jsonObject = JSON.parseObject(Respone);
@@ -730,22 +707,21 @@ public class ApicasesController {
 
         if (prixflag) {
             //先查看是否有前置调试父条件
-            ConditionResult conditionResult=new ConditionResult();
-            String APIRespone ="";
-            String DBRespone="";
-            ApicasesDebugCondition apicasesDebugCondition= apicasesDebugConditionService.getBy("caseid",Caseid);
-            if(apicasesDebugCondition!=null)
-            {
+            ConditionResult conditionResult = new ConditionResult();
+            String APIRespone = "";
+            String DBRespone = "";
+            ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", Caseid);
+            if (apicasesDebugCondition != null) {
                 try {
-                    long conditionid=apicasesDebugCondition.getConditionid();
+                    long conditionid = apicasesDebugCondition.getConditionid();
                     Condition con = new Condition(Testcondition.class);
                     con.createCriteria().andCondition("id = " + conditionid);
-                    List<Testcondition>testconditionList= testconditionService.listByCondition(con);
-                     conditionResult=FixCondition(testconditionList,param,Caseid,"调试用例");
+                    List<Testcondition> testconditionList = testconditionService.listByCondition(con);
+                    conditionResult = FixCondition(testconditionList, param, Caseid, "调试用例");
                     APIRespone = conditionResult.getAPIRespone();
-                    ParamsValuesMap=GetResponeMap(APIRespone,ParamsValuesMap);
-                    DBRespone= conditionResult.getDBRespone();
-                    DBParamsValuesMap=GetResponeMap(DBRespone,DBParamsValuesMap);
+                    ParamsValuesMap = GetResponeMap(APIRespone, ParamsValuesMap);
+                    DBRespone = conditionResult.getDBRespone();
+                    DBParamsValuesMap = GetResponeMap(DBRespone, DBParamsValuesMap);
                 } catch (Exception exception) {
                     return ResultGenerator.genFailedResult(exception.getMessage());
                 }
@@ -753,11 +729,11 @@ public class ApicasesController {
             //请求条件服务处理前置条件
             try {
                 List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Caseid, "前置条件", "测试用例");
-                conditionResult=FixCondition(testconditionList,param,Caseid,"测试用例");
+                conditionResult = FixCondition(testconditionList, param, Caseid, "测试用例");
                 APIRespone = conditionResult.getAPIRespone();
-                ParamsValuesMap=GetResponeMap(APIRespone,ParamsValuesMap);
-                DBRespone= conditionResult.getDBRespone();
-                DBParamsValuesMap=GetResponeMap(DBRespone,DBParamsValuesMap);
+                ParamsValuesMap = GetResponeMap(APIRespone, ParamsValuesMap);
+                DBRespone = conditionResult.getDBRespone();
+                DBParamsValuesMap = GetResponeMap(DBRespone, DBParamsValuesMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -832,8 +808,8 @@ public class ApicasesController {
 //                    }
 //                }
 //            }
-            ApicasesController.log.info("。。。。。。。。接口前置子条件响应数据："+APIRespone);
-            ApicasesController.log.info("。。。。。。。。数据库前置子条件响应数据："+DBRespone);
+            ApicasesController.log.info("。。。。。。。。接口前置子条件响应数据：" + APIRespone);
+            ApicasesController.log.info("。。。。。。。。数据库前置子条件响应数据：" + DBRespone);
 //            if (!APIRespone.isEmpty()) {
 //                try {
 //                    JSONObject jsonObject = JSON.parseObject(APIRespone);
@@ -876,6 +852,7 @@ public class ApicasesController {
             return ResultGenerator.genFailedResult("当前用例的API所在的发布单元不存在，请检查是否被删除！");
         }
         String Protocal = deployunit.getProtocal();
+        String BaseUrl = deployunit.getBaseurl();
         Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(Long.parseLong(enviromentid), deployunit.getId());
         if (macdepunit != null) {
             String testserver = "";
@@ -891,19 +868,34 @@ public class ApicasesController {
                     return ResultGenerator.genFailedResult("当前用例调试的环境不存在，请检查是否被删除！");
                 }
                 testserver = machine.getIp();
-                resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
+                if (BaseUrl.isEmpty()) {
+                    resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + api.getPath();
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + BaseUrl + api.getPath();
+                    } else {
+                        resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + "/" + BaseUrl + api.getPath();
+                    }
+                }
             } else {
                 testserver = macdepunit.getDomain();
-                resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
+                if (BaseUrl.isEmpty()) {
+                    resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = deployunit.getProtocal() + "://" + testserver + BaseUrl + api.getPath();
+                    } else {
+                        resource = deployunit.getProtocal() + "://" + testserver + "/" + BaseUrl + api.getPath();
+                    }
+                }
             }
-
             List<Variables> variablesList = variablesService.listAll();
             HashMap<String, String> RadomHashMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomHashMap.put(va.getVariablesname(), va.getVariablestype());
             }
 
-            ApicasesController.log.info("。。。。。。。。处理前的resource Url："+resource);
+            ApicasesController.log.info("。。。。。。。。处理前的resource Url：" + resource);
 
             //url中的变量替换
             //1.随机变量替换
@@ -932,7 +924,7 @@ public class ApicasesController {
                 }
             }
 
-            ApicasesController.log.info("。。。。。。。。处理后的resource Url："+resource);
+            ApicasesController.log.info("。。。。。。。。处理后的resource Url：" + resource);
 
 
             List<ApiCasedata> HeaderApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Header");
@@ -943,7 +935,7 @@ public class ApicasesController {
             //Header用例值
             HttpHeader header = new HttpHeader();
             try {
-                header = GetHttpHeader(HeaderApiCasedataList, ParamsValuesMap, RadomHashMap,DBParamsValuesMap);
+                header = GetHttpHeader(HeaderApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -952,7 +944,7 @@ public class ApicasesController {
             //参数用例值
             HttpParamers paramers = new HttpParamers();
             try {
-                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap,DBParamsValuesMap);
+                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -962,7 +954,7 @@ public class ApicasesController {
             HttpParamers Bodyparamers = new HttpParamers();
             if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                 try {
-                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap,DBParamsValuesMap);
+                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap);
                 } catch (Exception exception) {
                     return ResultGenerator.genFailedResult(exception.getMessage());
                 }
@@ -1033,10 +1025,9 @@ public class ApicasesController {
                 return ResultGenerator.genOkResult(respon);
 
             } catch (Exception exception) {
-                String ExceptionMess=exception.getMessage();
-                if(ExceptionMess.contains("Illegal character in path at"))
-                {
-                    ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+exception.getMessage();
+                String ExceptionMess = exception.getMessage();
+                if (ExceptionMess.contains("Illegal character in path at")) {
+                    ExceptionMess = "Url不合法，请检查是否有无法替换的变量，或者有相关非法字符：" + exception.getMessage();
                 }
                 return ResultGenerator.genFailedResult(ExceptionMess);
             }
@@ -1053,9 +1044,8 @@ public class ApicasesController {
             String HeaderName = Headdata.getApiparam();
             String HeaderValue = Headdata.getApiparamvalue();
             Object Result = HeaderValue;
-            if((HeaderValue.contains("<")&&HeaderValue.contains(">"))||(HeaderValue.contains("<<")&&HeaderValue.contains(">>"))||(HeaderValue.contains("[")&&HeaderValue.contains("]")))
-            {
-                Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap,DBMap);
+            if ((HeaderValue.contains("<") && HeaderValue.contains(">")) || (HeaderValue.contains("<<") && HeaderValue.contains(">>")) || (HeaderValue.contains("[") && HeaderValue.contains("]"))) {
+                Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap, DBMap);
             }
             header.addParam(HeaderName, Result);
         }
@@ -1070,8 +1060,8 @@ public class ApicasesController {
             String ParamValue = Paramdata.getApiparamvalue();
             String DataType = Paramdata.getParamstype();
             Object ObjectResult = ParamValue;
-            if((ParamValue.contains("<")&&ParamValue.contains(">"))||(ParamValue.contains("<<")&&ParamValue.contains(">>"))||(ParamValue.contains("[")&&ParamValue.contains("]"))) {
-                ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap,DBMap);
+            if ((ParamValue.contains("<") && ParamValue.contains(">")) || (ParamValue.contains("<<") && ParamValue.contains(">>")) || (ParamValue.contains("[") && ParamValue.contains("]"))) {
+                ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap, DBMap);
             }
             Object Result = GetDataByType(ObjectResult.toString(), DataType);
             paramers.addParam(ParamName, Result);
@@ -1081,12 +1071,12 @@ public class ApicasesController {
 
     private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
         Object ObjectValue = Value;
-        boolean exist=false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
+        boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
         for (String interfacevariablesName : InterfaceMap.keySet()) {
             boolean flag = GetSubOrNot(InterfaceMap, Value, "<", ">");
             if (Value.contains("<" + interfacevariablesName + ">")) {
-                exist=true;
+                exist = true;
                 String ActualValue = InterfaceMap.get(interfacevariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -1107,7 +1097,7 @@ public class ApicasesController {
         for (String DBvariablesName : DBMap.keySet()) {
             boolean flag = GetSubOrNot(DBMap, Value, "<<", ">>");
             if (Value.contains("<<" + DBvariablesName + ">>")) {
-                exist=true;
+                exist = true;
                 String ActualValue = DBMap.get(DBvariablesName);
                 if (flag) {
                     //有拼接认为是字符串
@@ -1128,7 +1118,7 @@ public class ApicasesController {
         for (String variables : RadomMap.keySet()) {
             boolean flag = GetSubOrNot(RadomMap, Value, "[", "]");
             if (Value.contains("[" + variables + "]")) {
-                exist=true;
+                exist = true;
                 if (flag) {
                     Object RadomValue = GetRadomValue(variables);
                     Value = Value.replace("[" + variables + "]", RadomValue.toString());
@@ -1138,9 +1128,8 @@ public class ApicasesController {
                 }
             }
         }
-        if(!exist)
-        {
-            throw new Exception("当前用例参数值中存在变量："+Value+" 未找到对应值，请检查是否执行前置条件，或者是否有配置变量对应的前置子条件获取此变量值");
+        if (!exist) {
+            throw new Exception("当前用例参数值中存在变量：" + Value + " 未找到对应值，请检查是否执行前置条件，或者是否有配置变量对应的前置子条件获取此变量值");
         }
         return ObjectValue;
     }

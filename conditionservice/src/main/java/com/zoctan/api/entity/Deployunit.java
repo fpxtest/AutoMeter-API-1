@@ -26,6 +26,18 @@ public class Deployunit {
      */
     private String port;
 
+    public String getBaseurl() {
+        return baseurl;
+    }
+
+    public void setBaseurl(String baseurl) {
+        this.baseurl = baseurl;
+    }
+
+    private String baseurl;
+
+
+
     /**
      * 描述
      */

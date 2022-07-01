@@ -9,6 +9,7 @@
     <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
     <result column="protocal" jdbcType="VARCHAR" property="protocal" />
     <result column="port" jdbcType="VARCHAR" property="port" />
+    <result column="baseurl" jdbcType="VARCHAR" property="baseurl" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -46,7 +47,7 @@
   </select>
 
   <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">
-    update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},
+    update deployunit set deployunitname = #{deployunitname}, protocal = #{protocal}, port = #{port},baseurl=#{baseurl},
     memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>

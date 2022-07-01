@@ -17,18 +17,17 @@ import java.util.List;
 public class TestCaseData {
     public static String logplannameandcasename = "";
     private Logger logger = null;
-    TestMysqlHelp testMysqlHelp=null;
-    public TestCaseData(Logger log,TestMysqlHelp mysqlHelp)
-    {
-        testMysqlHelp=mysqlHelp;
-        logger=log;
+    TestMysqlHelp testMysqlHelp = null;
+
+    public TestCaseData(Logger log, TestMysqlHelp mysqlHelp) {
+        testMysqlHelp = mysqlHelp;
+        logger = log;
     }
 
     //性能初始化数据根据jmeter传递下来的数据拼装用例请求的数据
     public RequestObject InitHttpDatabyJmeter(JavaSamplerContext context) throws Exception {
         RequestObject newob = new RequestObject();
-        try
-        {
+        try {
             String casename = context.getParameter("casename");
             String executeplanname = context.getParameter("executeplanname");
             logplannameandcasename = executeplanname + "--" + casename + " :";
@@ -57,19 +56,19 @@ public class TestCaseData {
             String responecontenttype = "";//context.getParameter("responecontenttype");
             //logger.info(logplannameandcasename + "用例数据 responecontenttype is :  " + responecontenttype);
 
-            String headjson = context.getParameter("headjson").replace("Autometer"," ");
+            String headjson = context.getParameter("headjson").replace("Autometer", " ");
             //logger.info(logplannameandcasename + "用例数据 headjson is :  " + headjson);
 
-            String paramsjson = context.getParameter("paramsjson").replace("Autometer"," ");
+            String paramsjson = context.getParameter("paramsjson").replace("Autometer", " ");
             //logger.info(logplannameandcasename + "用例数据 paramsjson is :  " + paramsjson);
 
-            String bodyjson = context.getParameter("bodyjson").replace("Autometer"," ");
+            String bodyjson = context.getParameter("bodyjson").replace("Autometer", " ");
             //logger.info(logplannameandcasename + "用例数据 bodyjson is :  " + bodyjson);
 
-            String postdata = context.getParameter("postdata").replace("Autometer"," ");
+            String postdata = context.getParameter("postdata").replace("Autometer", " ");
             //logger.info(logplannameandcasename + "用例数据 postdata is :  " + postdata);
 
-            String variablesjson = context.getParameter("variablesjson").replace("Autometer"," ");
+            String variablesjson = context.getParameter("variablesjson").replace("Autometer", " ");
             //logger.info(logplannameandcasename + "用例数据 variablesjson is :  " + variablesjson);
 
             String casetype = context.getParameter("casetype");
@@ -99,20 +98,19 @@ public class TestCaseData {
             newob.setDeployunitvisittype(deployvisitytype);
             newob.setMachineip(machineip);
 
-            String expect = context.getParameter("expect").replace("Autometer"," ");;
+            String expect = context.getParameter("expect").replace("Autometer", " ");
+            ;
             //logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
             List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
-            if ((!expect.isEmpty())&&(expect!=null)) {
+            if ((!expect.isEmpty()) && (expect != null)) {
                 apicasesAssertList = JSONObject.parseArray(expect, ApicasesAssert.class);
             }
             newob.setApicasesAssertList(apicasesAssertList);
             expect = GetAssertInfo(apicasesAssertList);
             newob.setExpect(expect);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             logger.info(logplannameandcasename + "性能用例数据 InitHttpDatabyJmeter 异常 :  " + ex.getMessage());
-            throw new Exception("性能用例数据获取异常："+ex.getMessage());
+            throw new Exception("性能用例数据获取异常：" + ex.getMessage());
         }
         return newob;
     }
@@ -120,10 +118,9 @@ public class TestCaseData {
     // 功能用例拼装请求需要的用例数据
     public RequestObject GetCaseRequestData(String PlanId, String TestCaseId, String SlaverId, String BatchId, String BatchName, String ExecPlanName) {
         RequestObject ro = new RequestObject();
-        try
-        {
+        try {
             //ArrayList<HashMap<String, String>> planlist = getcaseData("select * from executeplan where id=" + PlanId);
-            ArrayList<HashMap<String, String>> deployunitlist = testMysqlHelp.getcaseData("select b.protocal,b.port,b.id from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=" + TestCaseId);
+            ArrayList<HashMap<String, String>> deployunitlist = testMysqlHelp.getcaseData("select b.protocal,b.port,b.id,b.baseurl from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=" + TestCaseId);
             ArrayList<HashMap<String, String>> apilist = testMysqlHelp.getcaseData("select b.visittype,b.apistyle,b.path,b.requestcontenttype,b.responecontenttype from apicases a inner join api b on a.apiid=b.id where a.id=" + TestCaseId);
             ArrayList<HashMap<String, String>> deployunitmachineiplist = testMysqlHelp.getcaseData("select m.ip,a.domain,a.visittype from macdepunit a INNER JOIN apicases b INNER JOIN executeplan c JOIN machine m on a.depunitid=b.deployunitid and  a.envid=c.envid and  m.id=a.machineid where b.id=" + TestCaseId + " and c.id=" + PlanId);
             ArrayList<HashMap<String, String>> caselist = testMysqlHelp.getcaseData("select * from apicases where id=" + TestCaseId);
@@ -134,8 +131,6 @@ public class TestCaseData {
             if (!path.startsWith("/")) {
                 path = "/" + path;
             }
-            logger.info(logplannameandcasename + "33333333333333333333333" );
-
             //获取请求响应的数据格式
             String requestcontenttype = testMysqlHelp.getcaseValue("requestcontenttype", apilist);
             String responecontenttype = "";//testMysqlHelp.getcaseValue("responecontenttype", apilist);
@@ -147,26 +142,42 @@ public class TestCaseData {
             String protocal = testMysqlHelp.getcaseValue("protocal", deployunitlist).toLowerCase();
             // 发布单元端口
             String port = testMysqlHelp.getcaseValue("port", deployunitlist);
-            String deployunitid = testMysqlHelp.getcaseValue("id", deployunitlist);
 
-            logger.info(logplannameandcasename + "2222222222222222222222" );
+            String BaseUrl = testMysqlHelp.getcaseValue("baseurl", deployunitlist);
+            String deployunitid = testMysqlHelp.getcaseValue("id", deployunitlist);
 
             // 获取发布单元访问方式，ip或者域名
             String deployunitvisittype = testMysqlHelp.getcaseValue("visittype", deployunitmachineiplist);
 
-            String IP=testMysqlHelp.getcaseValue("ip", deployunitmachineiplist);
+            String IP = testMysqlHelp.getcaseValue("ip", deployunitmachineiplist);
             // 根据访问方式来确定ip还是域名
             String testserver = "";
             String resource = "";
             if (deployunitvisittype.equalsIgnoreCase("ip")) {
                 testserver = IP;
-                resource = protocal + "://" + testserver + ":" + port + path;
+                if (BaseUrl.isEmpty()) {
+                    resource = protocal + "://" + testserver + ":" + port + path;
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = protocal + "://" + testserver + ":" + port + BaseUrl + path;
+                    } else {
+                        resource = protocal + "://" + testserver + ":" + port + "/" + BaseUrl + path;
+                    }
+                }
+                logger.info(logplannameandcasename + "resource ip is "+resource);
             } else {
                 testserver = testMysqlHelp.getcaseValue("domain", deployunitmachineiplist);
-                resource = protocal + "://" + testserver + path;
+                if (BaseUrl.isEmpty()) {
+                    resource = protocal + "://" + testserver + path;
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = protocal + "://" + testserver + BaseUrl + path;
+                    } else {
+                        resource = protocal + "://" + testserver + "/" + BaseUrl + path;
+                    }
+                }
+                logger.info(logplannameandcasename + "resource domain is "+resource);
             }
-
-            logger.info(logplannameandcasename + "1111111111111111111111" );
 
 
             //获取断言记录
@@ -197,9 +208,7 @@ public class TestCaseData {
             ro.setResponecontenttype(responecontenttype);
             ro.setDeployunitvisittype(deployunitvisittype);
             ro.setMachineip(IP);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             logger.info(logplannameandcasename + "功能用例数据GetCaseRequestData异常 :  " + ex);
         }
         return ro;

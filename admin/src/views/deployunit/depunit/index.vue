@@ -49,6 +49,7 @@
       <el-table-column label="发布单元(服务)名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="协议" align="center" prop="protocal" width="110"/>
       <el-table-column label="访问端口" align="center" prop="port" width="100"/>
+      <el-table-column label="基础路径" align="center" prop="baseurl" width="100"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
@@ -91,12 +92,12 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="100px"
+        label-width="120px"
         style="width: 400px; margin-left:50px;"
         :model="tmpdepunit"
         ref="tmpdepunit"
       >
-        <el-form-item label="发布单元(服务)名" prop="deployunitname" required>
+        <el-form-item label="发布单元名" prop="deployunitname" required>
           <el-input
             type="text"
             maxlength="40"
@@ -118,6 +119,16 @@
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpdepunit.port"
+          />
+        </el-form-item>
+
+        <el-form-item label="基础路径" prop="baseurl" >
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-message"
+            auto-complete="off"
+            v-model="tmpdepunit.baseurl"
           />
         </el-form-item>
         <el-form-item label="备注" prop="memo">
@@ -197,6 +208,7 @@
           deployunitname: '',
           protocal: '',
           port: '',
+          baseurl: '',
           memo: '',
           creator: ''
         },
@@ -292,6 +304,7 @@
         this.tmpdepunit.deployunitname = ''
         this.tmpdepunit.protocal = ''
         this.tmpdepunit.port = ''
+        this.tmpdepunit.baseurl = ''
         this.tmpdepunit.memo = ''
         this.tmpdepunit.creator = this.name
       },
@@ -325,6 +338,7 @@
         this.tmpdepunit.deployunitname = this.depunitList[index].deployunitname
         this.tmpdepunit.protocal = this.depunitList[index].protocal
         this.tmpdepunit.port = this.depunitList[index].port
+        this.tmpdepunit.baseurl = this.depunitList[index].baseurl
         this.tmpdepunit.memo = this.depunitList[index].memo
         this.tmpdepunit.creator = this.name
       },
