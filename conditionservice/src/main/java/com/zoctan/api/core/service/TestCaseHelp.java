@@ -87,6 +87,8 @@ public class TestCaseHelp {
             String protocal = deployunit.getProtocal().toLowerCase();
             // 发布单元端口
             String port = deployunit.getPort();
+            String BaseUrl = deployunit.getBaseurl();
+
             // 获取发布单元访问方式，ip或者域名
             String deployunitvisittype = macdepunit.getVisittype();
             // 根据访问方式来确定ip还是域名
@@ -94,11 +96,36 @@ public class TestCaseHelp {
             String resource = "";
             if (deployunitvisittype.equals(new String("ip"))) {
                 testserver = machine.getIp();
-                resource = protocal + "://" + testserver + ":" + port + path;
+                if (BaseUrl.isEmpty()) {
+                    resource = protocal + "://" + testserver + ":" + port + path;
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = protocal + "://" + testserver + ":" + port + BaseUrl + path;
+                    } else {
+                        resource = protocal + "://" + testserver + ":" + port + "/" + BaseUrl + path;
+                    }
+                }
             } else {
                 testserver = macdepunit.getDomain();
-                resource = protocal + "://" + testserver + path;
+                if (BaseUrl.isEmpty()) {
+                    resource = protocal + "://" + testserver + path;
+                } else {
+                    if (BaseUrl.startsWith("/")) {
+                        resource = protocal + "://" + testserver + BaseUrl + path;
+                    } else {
+                        resource = protocal + "://" + testserver + "/" + BaseUrl + path;
+                    }
+                }
             }
+            TestCaseHelp.log.info("GetCaseRequestDataForDebug resource is ：" + resource);
+
+//            if (deployunitvisittype.equals(new String("ip"))) {
+//                testserver = machine.getIp();
+//                resource = protocal + "://" + testserver + ":" + port + path;
+//            } else {
+//                testserver = macdepunit.getDomain();
+//                resource = protocal + "://" + testserver + path;
+//            }
 
             HashMap<String, String> InterfaceMap = InterfaceValueMap;
             HashMap<String, String> DBMap = DBValueMap;
@@ -295,6 +322,8 @@ public class TestCaseHelp {
                     }
                 }
             }
+            TestCaseHelp.log.info("GetCaseRequestData resource is ：" + resource);
+
 
             Condition interfacecon = new Condition(TestvariablesValue.class);
             interfacecon.createCriteria().andCondition("planid = " + dispatch.getExecplanid())
