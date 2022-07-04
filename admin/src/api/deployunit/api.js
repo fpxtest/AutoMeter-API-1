@@ -24,6 +24,14 @@ export function copyapi(apiForm) {
   })
 }
 
+export function removebatchapi(executeplanForm) {
+  return request({
+    url: '/api/removebatchapi',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function getstaticsdeployapi() {
   return request({
     url: '/api/getstaticsdeployapi',

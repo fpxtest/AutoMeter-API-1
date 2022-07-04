@@ -47,7 +47,7 @@
             type="danger"
             size="mini"
             v-if="hasPermission('api:add')"
-            @click.native.prevent="showPostManDialog"
+            @click.native.prevent="removebatchapi"
           >批量删除
           </el-button>
         </el-form-item>
@@ -68,12 +68,17 @@
     <el-table
       :data="apiList"
       :key="itemKey"
+      @selection-change="handleSelectionChange"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
       fit
       highlight-current-row
     >
+      <el-table-column
+        type="selection"
+        width="40">
+      </el-table-column>
       <el-table-column label="编号" align="center" width="45">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
@@ -661,7 +666,7 @@
 </template>
 <script>
 import axios from 'axios'
-import { search, addapi, updateapi, removeapi, getapisbydeployunitid, copyapi } from '@/api/deployunit/api'
+import { search, addapi, updateapi, removeapi, getapisbydeployunitid, copyapi, removebatchapi } from '@/api/deployunit/api'
 import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
 import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
 import {
@@ -1098,6 +1103,42 @@ export default {
     //   this.fileList = fileList
     //   console.log(fileList)
     // },
+
+    handleSelectionChange(rows) {
+      // console.log(rows)
+      this.multipleSelection = rows
+      console.log('00000000000000000000000000')
+      console.log(this.multipleSelection)
+    },
+
+    removebatchapi() {
+      this.$confirm('删除所选的API？', '警告', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        if (this.multipleSelection.length === 0) {
+          this.$message.error('请选择需要删除的api')
+        } else {
+          this.apiremovetList = []
+          console.log(this.multipleSelection)
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            this.apiremovetList.push({
+              'id': this.multipleSelection[i].id
+            })
+          }
+          removebatchapi(this.multipleSelection).then(() => {
+            this.$message.success('批量删除成功')
+            this.getapiList()
+          }).catch(res => {
+            this.$message.error('批量删除失败')
+          })
+        }
+      }).catch(() => {
+        this.$message.info('批量删除异常')
+      })
+    },
+
     handleChange(file, fileList) {
       this.fileList = fileList
       console.log(fileList)

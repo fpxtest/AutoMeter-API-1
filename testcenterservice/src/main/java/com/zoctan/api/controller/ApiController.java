@@ -434,12 +434,28 @@ public class ApiController {
 
         List<Apicases> apicasesList = apicasesService.getcasebyapiid(id);
         if (apicasesList.size() > 0) {
-            return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除！");
+            return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除,请先删除对应的测试用例");
         } else {
             apiService.deleteById(id);
             apiParamsService.deletebyApiid(id);
             return ResultGenerator.genOkResult();
         }
+    }
+
+    @PostMapping("/removebatchapi")
+    public Result removebatchapi(@RequestBody List<Api> apiList) {
+        for (Api api:apiList) {
+            long id=api.getId();
+            List<Apicases> apicasesList = apicasesService.getcasebyapiid(id);
+            if (apicasesList.size() > 0) {
+                return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除,请先删除对应的测试用例");
+            } else {
+                apiService.deleteById(id);
+                apiParamsService.deletebyApiid(id);
+                return ResultGenerator.genOkResult();
+            }
+        }
+        return ResultGenerator.genOkResult();
     }
 
     @PatchMapping
