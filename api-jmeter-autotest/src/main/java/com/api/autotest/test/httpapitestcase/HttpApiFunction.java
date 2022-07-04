@@ -208,6 +208,12 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args)  {
 
+        String nnnn="{\t\"captcha\":Autometer\"\",\t\"checkKey\":Autometer\"\",\t\"password\":Autometer\"Cctd@2015\",\t\"username\":Autometer\"admin\"}";
+        String Bodyjson=nnnn.replace(" ","Autometer");
+         Bodyjson=Bodyjson.replace("\t","Autometer");
+
+
+
         String s=System.getProperty("line.separator");
         System.out.println(System.getProperty("line.separator"));
 

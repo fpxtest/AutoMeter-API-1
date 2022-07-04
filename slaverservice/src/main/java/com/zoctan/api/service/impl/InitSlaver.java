@@ -65,7 +65,7 @@ public class InitSlaver {
                 if(slaverList.size()>0)
                 {
                     Slaver slaver=slaverList.get(0);
-                    if (slaver.getStatus().equals("已下线")) {
+                    if (slaver.getStatus().equals("已下线")||slaver.getStatus().equals("运行中")) {
                         slaver.setStatus("空闲");
                         slaverMapper.updateSlaver(slaver);
                         InitSlaver.log.info("slaver的mac和IP相同，如果是下线状态则更新为上线空闲.......................................................");

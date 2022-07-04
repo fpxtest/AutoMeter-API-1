@@ -49,7 +49,7 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String Paramsjson=jmeterPerformanceObject.getParamsjson().replace(" ","Autometer");
         String Bodyjson=jmeterPerformanceObject.getBodyjson().replace(" ","Autometer");
 
-        String PostData=jmeterPerformanceObject.getPostdata().replace("\n","").replace(" ","Autometer");
+        String PostData=jmeterPerformanceObject.getPostdata().replace("\t","").replace("\n","").replace(" ","Autometer");
         String VariablesJson=jmeterPerformanceObject.getRadomvariablejson().replace(" ","Autometer");
 
         String MysqlUrl=jmeterPerformanceObject.getMysqlurl();
