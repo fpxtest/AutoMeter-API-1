@@ -23,6 +23,14 @@ export function getcasenum(params) {
   })
 }
 
+export function removebatchapicase(executeplanForm) {
+  return request({
+    url: '/apicases/removebatchapicase',
+    method: 'post',
+    data: executeplanForm
+  })
+}
+
 export function getperformancecasenum(params) {
   return request({
     url: '/apicases/getperformancecasenum',

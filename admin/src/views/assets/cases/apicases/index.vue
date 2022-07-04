@@ -35,6 +35,13 @@
           >批量复制用例
           </el-button>
           <el-button
+            type="danger"
+            size="mini"
+            v-if="hasPermission('apicases:add')"
+            @click.native.prevent="removebatchapicase"
+          >批量删除
+          </el-button>
+          <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
@@ -93,12 +100,17 @@
     <el-table
       :data="apicasesList"
       :key="itemKey"
+      @selection-change="handleSelectionChange"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
       fit
       highlight-current-row
     >
+      <el-table-column
+        type="selection"
+        width="40">
+      </el-table-column>
       <el-table-column label="编号" align="center" width="45">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
@@ -1015,9 +1027,9 @@
     removeapicases,
     copycases,
     copybatchcases,
-    getcasebydeployunitid
+    getcasebydeployunitid,
+    removebatchapicase
   } from '@/api/assets/apicases'
-
   import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
   import { addapicasesdata as addapicasesdata, getparamvaluebycaseidandtype as getparamvaluebycaseidandtype, casevalueforbody as casevalueforbody, updatepropertydata, updateapicasesdata } from '@/api/assets/apicasesdata'
   import { getapiListbydeploy as getapiListbydeploy, getapi } from '@/api/deployunit/api'
@@ -1295,6 +1307,27 @@
         this.$forceUpdate()
       },
 
+      removebatchapicase() {
+        this.$confirm('删除所选的用例？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          if (this.multipleSelection.length === 0) {
+            this.$message.error('请选择需要删除的用例')
+          } else {
+            console.log(this.multipleSelection)
+            removebatchapicase(this.multipleSelection).then(() => {
+              this.$message.success('批量删除成功')
+              this.getapicasesList()
+            }).catch(res => {
+              this.$message.error('批量删除失败')
+            })
+          }
+        }).catch(() => {
+          this.$message.info('批量删除异常')
+        })
+      },
       /**
        * 获取Header参数
        */
@@ -1353,6 +1386,7 @@
       },
       handleSelectionChange(rows) {
         this.multipleSelection = rows
+        console.log(this.multipleSelection)
       },
       runprexchange(e) {
         this.checked = e

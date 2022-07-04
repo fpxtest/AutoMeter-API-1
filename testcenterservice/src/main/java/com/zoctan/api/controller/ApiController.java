@@ -452,7 +452,6 @@ public class ApiController {
             } else {
                 apiService.deleteById(id);
                 apiParamsService.deletebyApiid(id);
-                return ResultGenerator.genOkResult();
             }
         }
         return ResultGenerator.genOkResult();
