@@ -27,8 +27,9 @@ public interface ApiMapper extends MyMapper<Api> {
 
     List<Api> listAllbydeploy(@Param("deployunitid") long deployunitid);
 
-    Api getresponetypebydeployandapiname(@Param("deployunitname")String deployunitname,@Param("apiname")String apiname);
-    Api getapibydvap(@Param("deployunitid") Long deployunitid,@Param("visittype")String visittype,@Param("path")String path);
+    Api getresponetypebydeployandapiname(@Param("deployunitname") String deployunitname, @Param("apiname") String apiname);
+
+    Api getapibydvap(@Param("deployunitid") Long deployunitid, @Param("visittype") String visittype, @Param("path") String path);
 
     int ifexist(Condition condition);
 
@@ -36,5 +37,5 @@ public interface ApiMapper extends MyMapper<Api> {
 
     List<Api> getstaticsdeployapi();
 
-    List<Api> getapibydeployunitid(Long deployunitid);
+    List<Api> getapibydeployunitid(@Param("deployunitid")Long deployunitid);
 }

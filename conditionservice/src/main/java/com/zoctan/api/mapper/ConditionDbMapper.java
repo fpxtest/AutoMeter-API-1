@@ -9,6 +9,8 @@ import java.util.Map;
 
 public interface ConditionDbMapper extends MyMapper<ConditionDb> {
     List<ConditionDb> finddbconditionWithName(final Map<String, Object> params);
+
     void updateTestconditiondb(ConditionDb params);
+
     List<ConditionDb> GetDBConditionByConditionID(@Param("conditionid") long conditionid);
 }

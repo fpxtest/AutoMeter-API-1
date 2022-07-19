@@ -22,10 +22,12 @@ public interface DispatchMapper extends MyMapper<Dispatch> {
     Integer findbusyslavernums(@Param("slaverlist") final List<Slaver> slaverlist, @Param("status") String status);
 
     Dispatch getrecentdispatch(@Param("status") String status);
-    Dispatch getrecentdispatchbyusetype(@Param("status") String status,@Param("plantype") String plantype);
 
-    List<Dispatch> getdistinctslaverid(@Param("status") String status,@Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
-    List<Dispatch> getdistinctslaveridandcaaseid(@Param("status") String status,@Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname, @Param("testcaseid") Long testcaseid);
+    Dispatch getrecentdispatchbyusetype(@Param("status") String status, @Param("plantype") String plantype);
+
+    List<Dispatch> getdistinctslaverid(@Param("status") String status, @Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
+
+    List<Dispatch> getdistinctslaveridandcaaseid(@Param("status") String status, @Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname, @Param("testcaseid") Long testcaseid);
 
     List<Dispatch> getfunctiondispatchsbyslaverid(@Param("slaverid") Long slaverid, @Param("status") String status, @Param("plantype") String plantype, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
 
@@ -33,15 +35,14 @@ public interface DispatchMapper extends MyMapper<Dispatch> {
     List<Dispatch> getdispatchsbyslaverid(@Param("slaverid") Long slaverid, @Param("status") String status, @Param("plantype") String plantype);
 
 
-    void updatedispatchstatusandmemo(@Param("status") String status,@Param("memo") String memo,@Param("slaverid")Long slaverid,@Param("execplanid")Long execplanid,@Param("batchid")Long batchid,@Param("testcaseid")Long testcaseid);
+    void updatedispatchstatusandmemo(@Param("status") String status, @Param("memo") String memo, @Param("slaverid") Long slaverid, @Param("execplanid") Long execplanid, @Param("batchid") Long batchid, @Param("testcaseid") Long testcaseid);
 
-    void updatedispatchfail(@Param("status") String status,@Param("memo") String memo,@Param("slaverid")Long slaverid,@Param("execplanid")Long execplanid,@Param("batchid")Long batchid);
+    void updatedispatchfail(@Param("status") String status, @Param("memo") String memo, @Param("slaverid") Long slaverid, @Param("execplanid") Long execplanid, @Param("batchid") Long batchid);
 
 
+    void updatedispatchstatusbyplanandbatch(@Param("status") String status, @Param("execplanid") Long execplanid, @Param("batchname") String batchname);
 
-    void updatedispatchstatusbyplanandbatch(@Param("status") String status,@Param("execplanid")Long execplanid,@Param("batchname")String batchname);
-
-    void updatedispatchcancel(@Param("status") String status,@Param("execplanid")Long execplanid,@Param("batchid")Long batchid,@Param("memo")String memo);
+    void updatedispatchcancel(@Param("status") String status, @Param("execplanid") Long execplanid, @Param("batchid") Long batchid, @Param("memo") String memo);
 
 
     List<Dispatch> findnotfinishdis(@Param("slaverid") Long slaverid, @Param("status") String status);

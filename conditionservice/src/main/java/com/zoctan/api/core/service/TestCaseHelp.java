@@ -96,7 +96,7 @@ public class TestCaseHelp {
             String resource = "";
             if (deployunitvisittype.equals(new String("ip"))) {
                 testserver = machine.getIp();
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl==null || BaseUrl.isEmpty()) {
                     resource = protocal + "://" + testserver + ":" + port + path;
                 } else {
                     if (BaseUrl.startsWith("/")) {
@@ -301,7 +301,7 @@ public class TestCaseHelp {
             String resource = "";
             if (deployunitvisittype.equals(new String("ip"))) {
                 testserver = machine.getIp();
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = protocal + "://" + testserver + ":" + port + path;
                 } else {
                     if (BaseUrl.startsWith("/")) {

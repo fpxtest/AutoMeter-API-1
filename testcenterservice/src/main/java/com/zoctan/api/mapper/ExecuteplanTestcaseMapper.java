@@ -11,8 +11,6 @@ import java.util.Map;
 public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase> {
 
     /**
-     *
-     *
      * @param testcase 用例参数数据
      */
     void savetestplancase(@Param("casedataList") final List<ExecuteplanTestcase> testcase);
@@ -25,19 +23,19 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> findcasebytestplanid(final @Param("executeplanid") long executeplanid);
 
-    List<Apicases> findcasebyplanid(final @Param("executeplanid") long executeplanid, @Param("deployunitid") long deployunitid,@Param("casetype") String casetype);
+    List<Apicases> findcasebyplanid(final @Param("executeplanid") long executeplanid, @Param("deployunitid") long deployunitid, @Param("casetype") String casetype);
 
-    Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
+    Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid, @Param("testcaseid") long testcaseid);
 
     Integer findcasenumbyplanid(@Param("executeplanid") long executeplanid);
 
-    void removeexecuteplantestcase(@Param("executeplanid") long executeplanid,@Param("testcaseid") long testcaseid);
+    void removeexecuteplantestcase(@Param("executeplanid") long executeplanid, @Param("testcaseid") long testcaseid);
 
     void removetestcase(@Param("testcaseid") long testcaseid);
 
     void removeplancase(@Param("executeplanid") long executeplanid);
 
-    void updatePlanCaseorder(@Param("id") long id,@Param("caseorder") long caseorder);
+    void updatePlanCaseorder(@Param("id") long id, @Param("caseorder") long caseorder);
 
     List<ExecuteplanTestcase> finddeployunitbyplanid(final @Param("executeplanid") long executeplanid);
 
@@ -45,7 +43,7 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> getplancasesbyplanid(final long executeplanid);
 
-    List<ExecuteplanTestcase> findcaseorderexist(final @Param("executeplanid")long executeplanid,final @Param("caseorder")long caseorder);
+    List<ExecuteplanTestcase> findcaseorderexist(final @Param("executeplanid") long executeplanid, final @Param("caseorder") long caseorder);
 
 
 }

@@ -32,7 +32,7 @@
             size="mini"
             v-if="hasPermission('apicases:add')"
             @click.native.prevent="showCopyBatchapicasesDialog"
-          >批量复制用例
+          >批量复制
           </el-button>
           <el-button
             type="danger"
@@ -41,21 +41,36 @@
             @click.native.prevent="removebatchapicase"
           >批量删除
           </el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('apicases:add')"
-            @click.native.prevent="showAddapicasesconditionnotexistDialog"
-          >调试前置条件
-          </el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            v-if="hasPermission('apicases:add')"
-            @click.native.prevent="showdeleteapicasesconditionnotexistDialog"
-          >取消调试前置
-          </el-button>
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            size="mini"-->
+<!--            icon="el-icon-plus"-->
+<!--            v-if="hasPermission('apicases:add')"-->
+<!--            @click.native.prevent="showAddapicasesconditionnotexistDialog"-->
+<!--          >调试前置条件-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            size="mini"-->
+<!--            v-if="hasPermission('apicases:add')"-->
+<!--            @click.native.prevent="showdeleteapicasesconditionnotexistDialog"-->
+<!--          >取消调试前置-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            size="mini"-->
+<!--            icon="el-icon-plus"-->
+<!--            v-if="hasPermission('apicases:add')"-->
+<!--            @click.native.prevent="showGlobalHeadernotexistDialog"-->
+<!--          >调试全局Header-->
+<!--          </el-button>-->
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            size="mini"-->
+<!--            v-if="hasPermission('apicases:add')"-->
+<!--            @click.native.prevent="showGlobalHeaderexistDialog"-->
+<!--          >取消全局Header-->
+<!--          </el-button>-->
         </el-form-item>
         </el-form>
       <el-form :inline="true">
@@ -534,7 +549,6 @@
         </el-button>
       </div>
     </el-dialog>
-
     <el-dialog :title="CopyBatchApiCase" :visible.sync="CopybatchdialogFormVisible">
       <el-form
         status-icon
@@ -572,7 +586,6 @@
         </el-button>
       </div>
     </el-dialog>
-
     <el-dialog :title="loadassert" :visible.sync="AssertdialogFormVisible">
       <div class="filter-container" >
         <el-form :inline="true" :model="searchassert" ref="searchcase" >
@@ -742,7 +755,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="调试" :visible.sync="TestdialogFormVisible">
+    <el-dialog title="用例调试" :visible.sync="TestdialogFormVisible">
       <el-form
         status-icon
         class="small-space"
@@ -756,14 +769,32 @@
               <el-input style="width:500px" readonly="true" v-model="tmpapicases.casename"/>
             </el-form-item>
 
-            <el-form-item label="环境 ：" prop="enviromentname"  required>
-              <el-select style="width:330px" v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
-                <el-option label="请选择"  />
+            <el-form-item label="环境：" prop="enviromentname"  required>
+              <el-select style="width:500px" v-model="tmptest.enviromentname"  placeholder="环境" @change="EnviromentselectChanged($event)" >
+                <el-option label="请选择"  value=""  />
                 <div v-for="(enviroment, index) in enviromentnameList" :key="index">
                   <el-option :label="enviroment.enviromentname" :value="enviroment.enviromentname" required />
                 </div>
               </el-select>
-              <el-checkbox v-model="checked" @change="runprexchange">执行前置条件</el-checkbox>
+            </el-form-item>
+
+            <el-form-item label="前置条件:"  prop="conditionname" >
+              <el-select style="width:490px" v-model="tmptest.conditionname" placeholder="前置父条件" @change="notexistconditionnameselectChanged($event)">
+                <el-option label="请选择" value="请选择" />
+                <div v-for="(testcase, index) in conditionList" :key="index">
+                  <el-option :label="testcase.conditionname" :value="testcase.conditionname" />
+                </div>
+              </el-select>
+            </el-form-item>
+
+
+            <el-form-item label="全局Header:"  prop="globalheadername" >
+              <el-select style="width:415px" v-model="tmptest.globalheadername" placeholder="全局Header" @change="notexistheaderselectChanged($event)">
+                <el-option label="请选择" value="请选择" />
+                <div v-for="(globalheader, index) in globalheaderallList" :key="index">
+                  <el-option :label="globalheader.globalheadername" :value="globalheader.globalheadername" />
+                </div>
+              </el-select>
               <el-button type="primary" :loading="btnLoading" @click.native.prevent="runtest">调试</el-button>
             </el-form-item>
 
@@ -1016,6 +1047,138 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="添加全局Header用例" :visible.sync="caseglobalheadernotexistdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchglobalnotexistheadercase" ref="searchglobalnotexistheadercase" >
+
+          <el-form-item label="全局Header:"  prop="globalheadername" required>
+            <el-select v-model="searchglobalnotexistheadercase.globalheadername" placeholder="全局Header" @change="notexistheaderselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(globalheader, index) in globalheaderallList" :key="index">
+                <el-option :label="globalheader.globalheadername" :value="globalheader.globalheadername" />
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="发布单元:" prop="deployunitname" required>
+            <el-select v-model="searchglobalnotexistheadercase.deployunitname" placeholder="发布单元" @change="notexistdeployunitnameselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(depname, index) in deployunitList" :key="index">
+                <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
+              </div>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchheadernotexist" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table
+        ref="caseTable"
+        :data="apicasesheadernotexistList"
+        :key="headercasenotexistKey"
+        @row-click="casenotexisthandleClickTableRow"
+        @selection-change="headercasenotexisthandleSelectionChange"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="headercasenotexistgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column type="selection" prop="status" width="50"/>
+        <el-table-column label="用例名" align="center" prop="testcasename" width="350"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+      </el-table>
+      <el-pagination
+        @size-change="headercasenotexisthandleSizeChange"
+        @current-change="headercasenotexisthandleCurrentChange"
+        :current-page="searchglobalnotexistheadercase.page"
+        :page-size="searchglobalnotexistheadercase.size"
+        :total="headercasenotexisttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="caseglobalheadernotexistdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="addheadercasesdebug"
+        >添加Header</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="取消全局Header用例" :visible.sync="caseglobalheaderexistdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchglobalheadercase" ref="searchglobalheadercase" >
+
+          <el-form-item label="全局Header:"  prop="globalheadername" required>
+            <el-select v-model="searchglobalheadercase.globalheadername" placeholder="全局Header" @change="existheaderselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(globalheader, index) in globalheaderallList" :key="index">
+                <el-option :label="globalheader.globalheadername" :value="globalheader.globalheadername" />
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="发布单元:" prop="deployunitname" required>
+            <el-select v-model="searchglobalheadercase.deployunitname" placeholder="发布单元" @change="existdeployunitnameselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(depname, index) in deployunitList" :key="index">
+                <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
+              </div>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchheaderexist" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table
+        ref="caseTable"
+        :data="apicasesheaderexistList"
+        :key="headercaseexistKey"
+        @row-click="casenotexisthandleClickTableRow"
+        @selection-change="headercaseexisthandleSelectionChange"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="headercaseexistgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column type="selection" prop="status" width="50"/>
+        <el-table-column label="用例名" align="center" prop="testcasename" width="350"/>
+        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+      </el-table>
+      <el-pagination
+        @size-change="headercaseexisthandleSizeChange"
+        @current-change="headercaseexisthandleCurrentChange"
+        :current-page="searchglobalheadercase.page"
+        :page-size="searchglobalheadercase.size"
+        :total="headercaseexisttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="caseglobalheaderexistdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="deleteheadercase"
+        >取消Header</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -1038,8 +1201,10 @@
   import { unix2CurrentTime } from '@/utils'
   import { addapicasesassert, getassertbycaseid as getassertbycaseid, searchassert as searchassert, removeapicasesassert, updateapicasesassert } from '@/api/assets/apicasesassert'
   import { mapGetters } from 'vuex'
+  import { searchheadernotexist, searchheaderexist, addheadercasesdebug, deleteheadercase } from '@/api/assets/globalheaderuse'
   import { searchnotexist, searchexist, addcasesdebugcondition, delatedebugconditiontestcase } from '@/api/assets/apicasesdebugcondition'
   import { getalltestconditionbytype } from '@/api/condition/condition'
+  import { getglobalheaderallList } from '@/api/testvariables/globalheader'
 
   export default {
     filters: {
@@ -1061,6 +1226,8 @@
         checked: 'false',
         activeName: 'zero',
         itemKey: null,
+        headercasenotexistKey: null,
+        headercaseexistKey: null,
         casenotexistKey: null,
         caseexistKey: null,
         assertitemKey: null,
@@ -1076,10 +1243,17 @@
         tmpexistdeployunitid: 0,
         tmpnotexistconditionid: 0,
         tmpexistconditionid: 0,
+        tmpnotexistglobalheaderid: 0,
+        tmpnotexistheaderdeployunitid: 0,
+        tmpexistglobalheaderid: 0,
+        tmpexistheaderdeployunitid: 0,
+        globalheaderallList: [],
         paraList: [], // paraList参数值列表
         paravaluemap: [], // 参数值map
         notexistcasemultipleSelection: [], // 查询调试用例未添加条件表格被选中的内容
         existcasemultipleSelection: [], // 查询调试用例已添加条件表格被选中的内容
+        headernotexistcasemultipleSelection: [], // 查询调试用例未添加条件表格被选中的内容
+        headerexistcasemultipleSelection: [], // 查询调试用例已添加条件表格被选中的内容
         multipleSelection: [], // 用例表格被选中的内容
         apiList: [], // api列表
         enviromentnameList: [], // 环境列表
@@ -1094,6 +1268,8 @@
         requestParamsList: [], // Params列表
         conditionList: [], // 条件列表
         apicasesnotexistList: [], // 未添加条件调试用例列表
+        apicasesheadernotexistList: [], // 未添加条件调试用例列表
+        apicasesheaderexistList: [], // 已添加条件调试用例列表
         apicasesexistList: [], // 已添加条件调试用例列表
         listLoading: false, // 数据加载等待动画
         threadloopvisible: false, // 线程，循环显示
@@ -1111,10 +1287,15 @@
         BodyVisible: false,
         BodyParamDataVisible: false,
         BodyDataVisible: false,
+        caseglobalheadernotexistdialogFormVisible: false,
+        caseglobalheaderexistdialogFormVisible: false,
         caseindex: '',
         total: 0, // 数据总数
         asserttotal: 0, // 数据总数
         casenotexisttotal: 0, // 未添加条件用例总数
+        headercasenotexisttotal: 0, // 未添加条件用例总数
+        headercaseexisttotal: 0, // 已添加条件用例总数
+        globalheaderctotal: 0,
         caseexisttotal: 0, // 已添加条件用例总数
         apiSearchQuery: {
           deployunitname: '', // 发布单元名
@@ -1212,6 +1393,10 @@
           creator: ''
         },
         tmptest: {
+          globalheadername: '',
+          globalheaderid: 0,
+          conditionname: '',
+          conditionid: 0,
           enviromentname: '',
           respone: '',
           code: '',
@@ -1225,6 +1410,8 @@
           value: ''
         },
         tmptestdata: {
+          conditionid: 0,
+          globalheaderid: 0,
           caseid: '',
           enviromentid: '',
           prixflag: ''
@@ -1280,6 +1467,22 @@
           deployunitid: 0,
           deployunitname: ''
         },
+        searchglobalnotexistheadercase: {
+          page: 1,
+          size: 10,
+          globalheaderid: 0,
+          globalheadername: '',
+          deployunitid: 0,
+          deployunitname: ''
+        },
+        searchglobalheadercase: {
+          page: 1,
+          size: 10,
+          globalheaderid: 0,
+          globalheadername: '',
+          deployunitid: 0,
+          deployunitname: ''
+        },
         tmpconditionquery: {
           objecttype: ''
         }
@@ -1291,6 +1494,7 @@
       this.getapicasesList()
       this.getdepunitLists()
       this.getalltestconditionbytype()
+      this.getglobalheaderallList()
     },
 
     computed: {
@@ -1496,6 +1700,13 @@
           this.enviromentnameList = response.data
         }).catch(res => {
           this.$message.error('加载环境列表失败')
+        })
+      },
+      getglobalheaderallList() {
+        getglobalheaderallList().then(response => {
+          this.globalheaderallList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载全局Header列表失败')
         })
       },
       /**
@@ -2118,10 +2329,16 @@
        */
       showTestDialog(index) {
         this.tmptestdata.caseid = this.apicasesList[index].id
+        this.tmptestdata.conditionid = this.tmptest.conditionid
+        this.tmptestdata.globalheaderid = this.tmptest.globalheaderid
         this.checked = false
         this.tmptestdata.prixflag = this.checked
         this.tmpapicases.casename = this.apicasesList[index].casename
         this.activeName = 'zero'
+        this.tmptest.globalheaderid = 0
+        this.tmptest.conditionid = 0
+        this.tmptest.globalheadername = ''
+        this.tmptest.conditionname = ''
         this.tmptest.general = ''
         this.headerList = null
         this.requestHeadList = null
@@ -2250,6 +2467,23 @@
         this.searchnotexistcase.conditionname = ''
         this.searchnotexistcase.deployunitname = ''
       },
+      showGlobalHeadernotexistDialog() {
+        // 显示新增对话框
+        this.caseglobalheadernotexistdialogFormVisible = true
+        this.apicasesheadernotexistList = ''
+        this.headercasenotexisttotal = 0
+        this.searchglobalnotexistheadercase.globalheadername = ''
+        this.searchglobalnotexistheadercase.deployunitname = ''
+      },
+
+      showGlobalHeaderexistDialog() {
+        // 显示新增对话框
+        this.caseglobalheaderexistdialogFormVisible = true
+        this.apicasesheaderexistList = ''
+        this.headercaseexisttotal = 0
+        this.searchglobalheadercase.globalheadername = ''
+        this.searchglobalheadercase.deployunitname = ''
+      },
 
       showdeleteapicasesconditionnotexistDialog() {
         // 显示取消对话框
@@ -2266,7 +2500,12 @@
       casenotexisthandleSelectionChange(rows) {
         this.notexistcasemultipleSelection = rows
       },
-
+      headercasenotexisthandleSelectionChange(rows) {
+        this.headernotexistcasemultipleSelection = rows
+      },
+      headercaseexisthandleSelectionChange(rows) {
+        this.headerexistcasemultipleSelection = rows
+      },
       caseexisthandleClickTableRow(row, event, column) {
         console.log(row)
       },
@@ -2276,6 +2515,34 @@
       },
       /**
        * 装载测试集合的用例
+       */
+      addheadercasesdebug() {
+        this.testcaseList = []
+        if (this.headernotexistcasemultipleSelection.length === 0) {
+          this.$message.error('请选择添加的用例')
+        } else {
+          for (let i = 0; i < this.headernotexistcasemultipleSelection.length; i++) {
+            this.testcaseList.push({
+              'globalheaderid': this.searchglobalnotexistheadercase.globalheaderid,
+              'globalheadername': this.searchglobalnotexistheadercase.globalheadername,
+              'deployunitname': this.searchglobalnotexistheadercase.deployunitname,
+              'deployunitid': this.searchglobalnotexistheadercase.deployunitid,
+              'testcasename': this.headernotexistcasemultipleSelection[i].testcasename,
+              'testcaseid': this.headernotexistcasemultipleSelection[i].id,
+              'execplanid': 0
+            })
+          }
+          addheadercasesdebug(this.testcaseList).then(() => {
+            this.getheadercasenotexistList()
+            this.$message.success('添加成功')
+          }).catch(res => {
+            this.$message.error('添加失败')
+          })
+        }
+      },
+
+      /**
+       * 装载header的用例
        */
       adddebugconditiontestcase() {
         this.testcaseList = []
@@ -2327,8 +2594,32 @@
         }
       },
 
+      deleteheadercase() {
+        this.testcaseList = []
+        if (this.headerexistcasemultipleSelection.length === 0) {
+          this.$message.error('请选择取消的用例')
+        } else {
+          for (let i = 0; i < this.headerexistcasemultipleSelection.length; i++) {
+            this.testcaseList.push({
+              'globalheaderid': this.searchglobalheadercase.globalheaderid,
+              'globalheadername': this.searchglobalheadercase.globalheadername,
+              'deployunitname': this.searchglobalheadercase.deployunitname,
+              'deployunitid': this.searchglobalheadercase.deployunitid,
+              'testcasename': this.headerexistcasemultipleSelection[i].testcasename,
+              'testcaseid': this.headerexistcasemultipleSelection[i].testcaseid,
+              'execplanid': 0
+            })
+          }
+          deleteheadercase(this.testcaseList).then(() => {
+            this.getheadercaseexistList()
+            this.$message.success('取消成功')
+          }).catch(res => {
+            this.$message.error('取消失败')
+          })
+        }
+      },
       getalltestconditionbytype() {
-        this.tmpconditionquery.objecttype = '调试用例'
+        this.tmpconditionquery.objecttype = '测试集合'
         getalltestconditionbytype(this.tmpconditionquery).then(response => {
           this.conditionList = response.data
           this.casenotexisttotal = response.data.total
@@ -2338,9 +2629,14 @@
       },
 
       notexistconditionnameselectChanged(e) {
-        for (let i = 0; i < this.conditionList.length; i++) {
-          if (this.conditionList[i].conditionname === e) {
-            this.searchnotexistcase.conditionid = this.conditionList[i].id
+        if (e === '请选择') {
+          this.tmptestdata.conditionid = 0
+        } else {
+          for (let i = 0; i < this.conditionList.length; i++) {
+            if (this.conditionList[i].conditionname === e) {
+              this.searchnotexistcase.conditionid = this.conditionList[i].id
+              this.tmptestdata.conditionid = this.conditionList[i].id
+            }
           }
         }
       },
@@ -2352,10 +2648,32 @@
         }
       },
 
+      notexistheaderselectChanged(e) {
+        if (e === '请选择') {
+          this.tmptestdata.globalheaderid = 0
+        } else {
+          for (let i = 0; i < this.globalheaderallList.length; i++) {
+            if (this.globalheaderallList[i].globalheadername === e) {
+              this.searchglobalnotexistheadercase.globalheaderid = this.globalheaderallList[i].id
+              this.tmptestdata.globalheaderid = this.globalheaderallList[i].id
+            }
+          }
+        }
+      },
+
+      existheaderselectChanged(e) {
+        for (let i = 0; i < this.globalheaderallList.length; i++) {
+          if (this.globalheaderallList[i].globalheadername === e) {
+            this.searchglobalheadercase.globalheaderid = this.globalheaderallList[i].id
+          }
+        }
+      },
+
       notexistdeployunitnameselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.searchnotexistcase.deployunitid = this.deployunitList[i].id
+            this.searchglobalnotexistheadercase.deployunitid = this.deployunitList[i].id
           }
         }
       },
@@ -2363,6 +2681,8 @@
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.searchexistcase.deployunitid = this.deployunitList[i].id
+            this.searchglobalheadercase.deployunitid = this.deployunitList[i].id
+            console.log(this.searchglobalheadercase)
           }
         }
       },
@@ -2396,6 +2716,59 @@
         })
       },
 
+      searchheadernotexist() {
+        this.searchglobalnotexistheadercase.page = 1
+        this.$refs.searchglobalnotexistheadercase.validate(valid => {
+          if (valid) {
+            searchheadernotexist(this.searchglobalnotexistheadercase).then(response => {
+              this.headercasenotexistKey = Math.random()
+              this.apicasesheadernotexistList = response.data.list
+              this.headercasenotexisttotal = response.data.total
+            }).catch(res => {
+              this.$message.error('获取未添加header用例失败')
+            })
+            this.tmpnotexistglobalheaderid = this.searchglobalnotexistheadercase.globalheaderid
+            this.tmpnotexistheaderdeployunitid = this.searchglobalnotexistheadercase.deployunitid
+          }
+        })
+      },
+      searchheaderexist() {
+        this.searchglobalheadercase.page = 1
+        this.$refs.searchglobalheadercase.validate(valid => {
+          if (valid) {
+            searchheaderexist(this.searchglobalheadercase).then(response => {
+              this.headercaseexistKey = Math.random()
+              this.apicasesheaderexistList = response.data.list
+              this.headercaseexisttotal = response.data.total
+            }).catch(res => {
+              this.$message.error('获取添加header用例失败')
+            })
+            this.tmpexistglobalheaderid = this.searchglobalheadercase.globalheaderid
+            this.tmpexistheaderdeployunitid = this.searchglobalheadercase.deployunitid
+          }
+        })
+      },
+      getheadercaseexistList() {
+        this.searchglobalheadercase.globalheaderid = this.tmpexistglobalheaderid
+        this.searchglobalheadercase.deployunitid = this.tmpexistheaderdeployunitid
+        searchheaderexist(this.searchglobalheadercase).then(response => {
+          this.apicasesheaderexistList = response.data.list
+          this.headercaseexisttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('获取添加header用例失败')
+        })
+      },
+
+      getheadercasenotexistList() {
+        this.searchglobalnotexistheadercase.globalheaderid = this.tmpnotexistglobalheaderid
+        this.searchglobalnotexistheadercase.deployunitid = this.tmpnotexistheaderdeployunitid
+        searchheadernotexist(this.searchglobalnotexistheadercase).then(response => {
+          this.apicasesheadernotexistList = response.data.list
+          this.headercasenotexisttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('获取未添加header用例失败')
+        })
+      },
       /**
        * 改变每页数量
        * @param size 页大小
@@ -2406,23 +2779,40 @@
         this.searchnotexistcase.size = size
         this.getcasenotexistconditionList()
       },
-
       caseexisthandleSizeChange(size) {
         this.searchexistcase.page = 1
         this.searchexistcase.search.size = size
         this.getcaseexistconditionList()
       },
-      caseexisthandleCurrentChange(page) {
-        this.searchexistcase.page = page
-        this.getcaseexistconditionList()
+      headercasenotexisthandleSizeChange(size) {
+        this.searchglobalnotexistheadercase.page = 1
+        this.searchglobalnotexistheadercase.size = size
+        this.getheadercasenotexistList()
+      },
+      headercaseexisthandleSizeChange(size) {
+        this.searchglobalheadercase.page = 1
+        this.searchglobalheadercase.size = size
+        this.getheadercaseexistList()
       },
       /**
        * 改变页码
        * @param page 页号
        */
+      caseexisthandleCurrentChange(page) {
+        this.searchexistcase.page = page
+        this.getcaseexistconditionList()
+      },
       casenotexisthandleCurrentChange(page) {
         this.searchnotexistcase.page = page
         this.getcasenotexistconditionList()
+      },
+      headercasenotexisthandleCurrentChange(page) {
+        this.searchglobalnotexistheadercase.page = page
+        this.getheadercasenotexistList()
+      },
+      headercaseexisthandleCurrentChange(page) {
+        this.searchglobalheadercase.page = page
+        this.getheadercaseexistList()
       },
       /**
        * 表格序号
@@ -2434,9 +2824,14 @@
       caseexistgetIndex(index) {
         return (this.searchexistcase.page - 1) * this.searchexistcase.size + index + 1
       },
-
       casenotexistgetIndex(index) {
         return (this.searchnotexistcase.page - 1) * this.searchnotexistcase.size + index + 1
+      },
+      headercasenotexistgetIndex(index) {
+        return (this.searchglobalnotexistheadercase.page - 1) * this.searchglobalnotexistheadercase.size + index + 1
+      },
+      headercaseexistgetIndex(index) {
+        return (this.searchglobalheadercase.page - 1) * this.searchglobalheadercase.size + index + 1
       },
 
       getcaseexistconditionList() {

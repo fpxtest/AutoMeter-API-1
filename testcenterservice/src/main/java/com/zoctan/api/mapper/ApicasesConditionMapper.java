@@ -8,5 +8,4 @@ import java.util.Map;
 
 public interface ApicasesConditionMapper extends MyMapper<ApicasesCondition> {
     List<ApicasesCondition> findconditionWithName(final Map<String, Object> params);
-
 }

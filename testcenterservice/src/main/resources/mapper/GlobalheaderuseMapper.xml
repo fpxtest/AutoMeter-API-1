@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.GlobalheaderuseMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Globalheaderuse">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="globalheaderid" jdbcType="BIGINT" property="globalheaderid" />
+    <result column="executeplanid" jdbcType="BIGINT" property="executeplanid" />
+    <result column="globalheadername" jdbcType="VARCHAR" property="globalheadername" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="searchheaderbyepid" resultMap="BaseResultMap">
+    SELECT *
+    FROM globalheaderuse a where a.executeplanid=#{executeplanid}
+  </select>
+
+  <select id="findnotexistcase" resultMap="BaseResultMap">
+    select a.*,a.casename as testcasename from apicases a  WHERE a.deployunitid=#{deployunitid} and   a.id
+      not in(select testcaseid from globalheaderuse where globalheaderid=#{globalheaderid} )
+  </select>
+
+  <select id="findexistcaseglobalheader" resultMap="BaseResultMap">
+    SELECT b.casename,a.*
+    FROM globalheaderuse a inner join apicases b on a.testcaseid=b.id
+    where a.deployunitid=#{deployunitid} and a.globalheaderid =#{globalheaderid}
+  </select>
+
+  <insert id="saveconditionscase">
+    INSERT INTO globalheaderuse (globalheaderid,deployunitid,deployunitname,execplanid,testcaseid, testcasename,create_time,lastmodify_time)
+    VALUES
+    <foreach collection="casedataList" item="item" index="index" separator=",">
+      (#{item.globalheaderid},#{item.deployunitid}, #{item.deployunitname}, #{item.execplanid}, #{item.testcaseid}, #{item.testcasename},DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'))
+    </foreach>
+  </insert>
+
+  <delete id="deletacases">
+    delete  from globalheaderuse  where
+    <foreach collection="casedataList" item="item" index="index" separator="or">
+      (deployunitid=#{item.deployunitid} and globalheaderid =#{item.globalheaderid}  and testcaseid=#{item.testcaseid})
+    </foreach>
+  </delete>
+</mapper>

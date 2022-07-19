@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface ApicasesAssertMapper extends MyMapper<ApicasesAssert> {
     List<ApicasesAssert> findAssertWithName(final Map<String, Object> params);
+
     List<ApicasesAssert> findAssertbycaseid(@Param("caseid") String caseid);
 
     /**

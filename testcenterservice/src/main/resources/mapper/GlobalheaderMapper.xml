@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.GlobalheaderMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Globalheader">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="globalheadername" jdbcType="VARCHAR" property="globalheadername" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findGlobalheaderWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM globalheader a
+    <where>
+      <if test="globalheadername != null and globalheadername != ''">a.globalheadername like CONCAT('%',#{globalheadername},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+
+  <update id="updateGlobalheader" parameterType="com.zoctan.api.entity.Globalheader">
+    update globalheader set globalheadername = #{globalheadername}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>

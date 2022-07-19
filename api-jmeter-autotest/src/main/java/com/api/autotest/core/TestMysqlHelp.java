@@ -122,7 +122,12 @@ public class TestMysqlHelp {
         if(list.size()>0)
         {
             HashMap<String, String> hs = list.get(0);
-            return hs.get(key).trim();
+            String value=hs.get(key);
+            if(value!=null)
+            {
+                value=value.trim();
+            }
+            return value;
         }
         else
         {

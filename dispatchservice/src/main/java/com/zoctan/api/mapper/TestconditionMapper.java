@@ -9,7 +9,10 @@ import java.util.Map;
 
 public interface TestconditionMapper extends MyMapper<Testcondition> {
     List<Testcondition> findtestconditionWithName(final Map<String, Object> params);
+
     void updateTestcondition(Testcondition params);
+
     List<Testcondition> getallTestcondition();
-    List<Testcondition> GetConditionByPlanIDAndConditionType(@Param("objectid") Long objectid, @Param("conditiontype")String conditiontype, @Param("objecttype")String objecttype);
+
+    List<Testcondition> GetConditionByPlanIDAndConditionType(@Param("objectid") Long objectid, @Param("conditiontype") String conditiontype, @Param("objecttype") String objecttype);
 }

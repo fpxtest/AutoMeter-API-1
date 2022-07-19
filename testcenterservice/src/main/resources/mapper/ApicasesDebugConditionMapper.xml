@@ -40,7 +40,7 @@
 
   <select id="findnotexistcase" resultMap="BaseResultMap">
     select a.* from apicases a  WHERE a.deployunitid=#{deployunitid} and   a.id
-      not in(select caseid from apicases_debug_condition )
+      not in(select caseid from apicases_debug_condition where conditionid=#{conditionid} )
   </select>
 
   <select id="findcasebyconditionidandcaseid" resultType="java.lang.Integer">

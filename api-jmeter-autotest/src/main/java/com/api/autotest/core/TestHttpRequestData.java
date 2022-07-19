@@ -41,17 +41,15 @@ public class TestHttpRequestData {
 
             ArrayList<HashMap<String, String>> casedatalist = testMysqlHelp.getcaseData("select * from api_casedata where caseid=" + TestCaseId);
             ArrayList<HashMap<String, String>> caseptlist = testMysqlHelp.getcaseData("select DISTINCT propertytype  from api_casedata where caseid=" + TestCaseId);
-            ArrayList<HashMap<String, String>> planparamslist = testMysqlHelp.getcaseData("select * from executeplan_params where executeplanid=" + PlanId);
             List<String> PropertyList = GetCaseDataPropertyType(caseptlist);
-
             ArrayList<HashMap<String, String>> Interfacevariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "接口" + "'");
             logger.info(logplannameandcasename + "TestHttpRequestData 获取接口变量值。。。。 ");
             ArrayList<HashMap<String, String>> DBvariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "数据库" + "'");
             logger.info(logplannameandcasename + "TestHttpRequestData 获取数据库变量值。。。。 ");
             //文件变量
-            ArrayList<HashMap<String, String>> Filevariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "数据库" + "'");
+            ArrayList<HashMap<String, String>> Filevariableslist = testMysqlHelp.getcaseData("select variablesname,variablesvalue   from testvariables_value where planid= " + PlanId + " and batchname = '" + BatchName + "' and variablestype='" + "文件" + "'");
             logger.info(logplannameandcasename + "TestHttpRequestData 获取文件变量值。。。。 ");
-            ArrayList<HashMap<String, String>> radomvariableslist = testMysqlHelp.getcaseData("select variablesname,variablestype   from variables ");
+            ArrayList<HashMap<String, String>> radomvariableslist = testMysqlHelp.getcaseData("select variablesname,variablestype,variablecondition   from variables ");
             logger.info(logplannameandcasename + "TestHttpRequestData 获取随机变量值。。。。 ");
             HashMap<String, String> InterfaceMap = GetMap(Interfacevariableslist, "variablesname", "variablesvalue");
             HashMap<String, String> DBMap = GetMap(DBvariableslist, "variablesname", "variablesvalue");
@@ -162,13 +160,22 @@ public class TestHttpRequestData {
                     }
                 }
             }
+            //全局header
+            ArrayList<HashMap<String, String>> planheaderlist = testMysqlHelp.getcaseData("select * from globalheaderuse where executeplanid=" + PlanId);
+            long globalheaderid = 0;
+            ArrayList<HashMap<String, String>> planparamslist =new ArrayList<>();
+            if(planheaderlist.size()>0)
+            {
+                globalheaderid = Long.parseLong(testMysqlHelp.getcaseValue("globalheaderid", planheaderlist));
+                planparamslist = testMysqlHelp.getcaseData("select * from globalheader_params where globalheaderid=" + globalheaderid);
+            }
+
             //处理全局Header参数
             header = GetHeaderFromTestPlanParam(header, planparamslist, RadomMap, InterfaceMap,DBMap,radomvariableslist);
             for (String Key : header.getParams().keySet()) {
                 logger.info(logplannameandcasename + "TestHttpRequestData 全局参数Header Key :  " + Key + " Value: " + header.getParams().get(Key));
             }
-//        PostData = GetBodyFromTestPlanParam(PostData, planparamslist);
-//        logger.info(logplannameandcasename + "TestHttpRequestData 全局参数Body :  " + PostData);
+
             //处理全局参数
             Result.setHeader(header);
             Result.setParamers(paramers);
@@ -613,7 +620,11 @@ public class TestHttpRequestData {
 
     //获取全局Header
     private HttpHeader GetHeaderFromTestPlanParam(HttpHeader header, ArrayList<HashMap<String, String>> planparamslist, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,ArrayList<HashMap<String, String>> radomvariableslist) {
-        HashMap<String, String> headmapfromparam = testMysqlHelp.getparamsdatabytype("Header", planparamslist);
+        //HashMap<String, String> headmapfromparam = testMysqlHelp.getparamsdatabytype("Header", planparamslist);
+        HashMap<String, String> headmapfromparam = new HashMap<>();
+        for (HashMap<String, String> data : planparamslist) {
+            headmapfromparam.put(data.get("keyname").trim(), data.get("keyvalue").trim());
+        }
         for (String key : headmapfromparam.keySet()) {
             String Value = headmapfromparam.get(key);
             Object ObjectValue = Value;

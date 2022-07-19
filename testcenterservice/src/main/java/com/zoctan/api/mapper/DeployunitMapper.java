@@ -41,7 +41,7 @@ public interface DeployunitMapper extends MyMapper<Deployunit> {
 
     List<String> getstaticsdeploynames();
 
-    Deployunit findDeployUnitWithid(@Param("id")Long id);
+    Deployunit findDeployUnitWithid(@Param("id") Long id);
 
 
 }

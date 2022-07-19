@@ -14,6 +14,7 @@ public interface ConditionScriptMapper extends MyMapper<ConditionScript> {
     void updateTestconditionScript(ConditionScript params);
 
     int ifexist(Condition condition);
+
     List<ConditionScript> getconditionscriptbyid(@Param("conditionid") final Long conditionid);
 
 }

@@ -9,7 +9,9 @@ import java.util.Map;
 
 public interface DbconditionVariablesMapper extends MyMapper<DbconditionVariables> {
     List<DbconditionVariables> getbyvariablesid(final Map<String, Object> params);
+
     List<DbconditionVariables> getbyconditionid(@Param("dbconditionid") long dbconditionid);
+
     void updatedbconditionvariables(DbconditionVariables params);
 
 }

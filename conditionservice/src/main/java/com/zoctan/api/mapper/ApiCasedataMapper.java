@@ -9,7 +9,9 @@ import java.util.Map;
 
 public interface ApiCasedataMapper extends MyMapper<ApiCasedata> {
 
-    List<ApiCasedata>  GetCaseDatasByCaseID(@Param("caseid") Long caseid);
-    ApiCasedata  GetCaseDatasByCaseIDAndApiparamAndType(@Param("caseid") Long caseid,@Param("apiparam") String apiparam,@Param("propertytype")String propertytype);
-    void UpdateByCaseIDAndApiparam(@Param("caseid") Long caseid,@Param("apiparam") String apiparam,@Param("propertytype")String propertytype,@Param("apiparamvalue")String apiparamvalue);
+    List<ApiCasedata> GetCaseDatasByCaseID(@Param("caseid") Long caseid);
+
+    ApiCasedata GetCaseDatasByCaseIDAndApiparamAndType(@Param("caseid") Long caseid, @Param("apiparam") String apiparam, @Param("propertytype") String propertytype);
+
+    void UpdateByCaseIDAndApiparam(@Param("caseid") Long caseid, @Param("apiparam") String apiparam, @Param("propertytype") String propertytype, @Param("apiparamvalue") String apiparamvalue);
 }

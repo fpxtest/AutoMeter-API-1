@@ -99,7 +99,6 @@ public class TestCaseData {
             newob.setMachineip(machineip);
 
             String expect = context.getParameter("expect").replace("Autometer", " ");
-            ;
             //logger.info(logplannameandcasename + "用例数据 expect is :  " + expect);
             List<ApicasesAssert> apicasesAssertList = new ArrayList<>();
             if ((!expect.isEmpty()) && (expect != null)) {
@@ -144,6 +143,8 @@ public class TestCaseData {
             String port = testMysqlHelp.getcaseValue("port", deployunitlist);
 
             String BaseUrl = testMysqlHelp.getcaseValue("baseurl", deployunitlist);
+            logger.info(logplannameandcasename + "BaseUrl  is " + BaseUrl);
+
             String deployunitid = testMysqlHelp.getcaseValue("id", deployunitlist);
 
             // 获取发布单元访问方式，ip或者域名
@@ -155,7 +156,7 @@ public class TestCaseData {
             String resource = "";
             if (deployunitvisittype.equalsIgnoreCase("ip")) {
                 testserver = IP;
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = protocal + "://" + testserver + ":" + port + path;
                 } else {
                     if (BaseUrl.startsWith("/")) {
@@ -164,10 +165,10 @@ public class TestCaseData {
                         resource = protocal + "://" + testserver + ":" + port + "/" + BaseUrl + path;
                     }
                 }
-                logger.info(logplannameandcasename + "resource ip is "+resource);
+                logger.info(logplannameandcasename + "resource ip is " + resource);
             } else {
                 testserver = testMysqlHelp.getcaseValue("domain", deployunitmachineiplist);
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = protocal + "://" + testserver + path;
                 } else {
                     if (BaseUrl.startsWith("/")) {
@@ -176,7 +177,7 @@ public class TestCaseData {
                         resource = protocal + "://" + testserver + "/" + BaseUrl + path;
                     }
                 }
-                logger.info(logplannameandcasename + "resource domain is "+resource);
+                logger.info(logplannameandcasename + "resource domain is " + resource);
             }
 
 

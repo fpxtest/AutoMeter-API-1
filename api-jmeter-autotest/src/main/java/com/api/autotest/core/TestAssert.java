@@ -55,7 +55,7 @@ public class TestAssert {
     }
 
 
-    public String ParseRespone(String ResponeResultType,String Respone,String Path)
+    public String ParseRespone(String ResponeResultType,String Path ,String Respone)
     {
         String Result="";
         if (ResponeResultType.equalsIgnoreCase("json")||ResponeResultType.equalsIgnoreCase("application/json;charset=utf-8")||ResponeResultType.equalsIgnoreCase("application/json")) {

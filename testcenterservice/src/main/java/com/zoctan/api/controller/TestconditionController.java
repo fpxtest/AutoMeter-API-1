@@ -105,6 +105,7 @@ public class TestconditionController {
     public Result updateDeploy(@RequestBody final Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
         con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+                .andCondition("conditionname = '" + testcondition.getConditionname() + "'")
                 .andCondition("objectid = " + testcondition.getObjectid() )
                 .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'")
                 .andCondition("id <> " + testcondition.getId());

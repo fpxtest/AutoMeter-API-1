@@ -19,10 +19,10 @@ public interface TestvariablesValueMapper extends MyMapper<TestvariablesValue> {
      */
     void updatetestvariablesvalue(TestvariablesValue params);
 
-    TestvariablesValue gettestvariablesvalue(Long planid,Long caseid,String variablesname,String batchname);
+    TestvariablesValue gettestvariablesvalue(@Param("planid") Long planid, @Param("caseid") Long caseid, @Param("variablesname") String variablesname, @Param("batchname") String batchname);
 
     int ifexist(Condition condition);
 
-    List<TestvariablesValue> gettvlist(@Param("planid") Long planid, @Param("batchname")String batchname,@Param("variablestype")String variablestype);
+    List<TestvariablesValue> gettvlist(@Param("planid") Long planid, @Param("batchname") String batchname, @Param("variablestype") String variablestype);
 
 }

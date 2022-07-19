@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface TestconditionReportMapper extends MyMapper<TestconditionReport> {
     List<TestconditionReport> findTestconditionReportWithName(final Map<String, Object> params);
-    List<TestconditionReport> findconditionreport(@Param("testplanid")long planid, @Param("batchname")String batchname);
+
+    List<TestconditionReport> findconditionreport(@Param("testplanid") long planid, @Param("batchname") String batchname);
 
 }

@@ -17,6 +17,7 @@ public interface MacdepunitMapper extends MyMapper<Macdepunit> {
      * @return 环境服务器列表
      */
     List<Macdepunit> findMacAndDepWithName(final Map<String, Object> params);
+
     List<Macdepunit> findMacAndDepWithid(final Map<String, Object> params);
 
     /**
@@ -29,13 +30,16 @@ public interface MacdepunitMapper extends MyMapper<Macdepunit> {
 
     int ifexist(Condition condition);
 
-    Integer findmachinenumbyenvidanddeployid(@Param("envid") long envid, @Param("depunitid")long depunitid);
-    Macdepunit getmacdepbyenvidanddepid(long envid,long depunitid);
+    Integer findmachinenumbyenvidanddeployid(@Param("envid") long envid, @Param("depunitid") long depunitid);
 
-    List<Macdepunit> getenvassemblelistbyenvidandtype(@Param("envid")long envid, @Param("assembletype") String  assembletype);
+    Macdepunit getmacdepbyenvidanddepid(@Param("envid")long envid, @Param("depunitid")long depunitid);
 
-    List<Macdepunit> findmachinebyid(@Param("machineid")long machineid);
-    List<Macdepunit> findenviromentbyenvid(@Param("envid")long envid);
-    List<Macdepunit> findassemblebyassid(@Param("assembleid")long assid);
+    List<Macdepunit> getenvassemblelistbyenvidandtype(@Param("envid") long envid, @Param("assembletype") String assembletype);
+
+    List<Macdepunit> findmachinebyid(@Param("machineid") long machineid);
+
+    List<Macdepunit> findenviromentbyenvid(@Param("envid") long envid);
+
+    List<Macdepunit> findassemblebyassid(@Param("assembleid") long assid);
 
 }

@@ -81,56 +81,19 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/assets',
+    path: '/testvariables',
     component: Layout,
-    name: '测试管理',
-    alwaysShow: true,
-    activeMenu: '/assets',
-    icon: 'testmanager',
+    name: '变量管理',
+    icon: 'paras',
     children: [
-      { path: 'apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }, icon: 'testmanager' },
-      { path: 'project/list', name: '项目/迭代', component: _import('assets/project/index'), meta: { title: '项目/迭代', permission: ['project:list'] }, icon: 'testmanager' }
-      // { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
-    ]
-  },
-  // nestedRouterTestManager,
-  // nestedRouterSubCondition,
-
-  {
-    path: '/executecenter',
-    component: Layout,
-    name: '执行中心',
-    icon: 'execute',
-    children: [
-      { path: 'executeplan/list', name: '测试集合', component: _import('executecenter/executeplan/index'), meta: { title: '测试集合', permission: ['executeplan:list'] }},
-      { path: 'executeplancase/list', name: '集合用例', component: _import('executecenter/executeplancase/index'), meta: { title: '集合用例', permission: ['executeplan:list'] }},
-      // { path: 'processtestcase/list', name: '流程用例', component: _import('executecenter/processtestcase/index'), meta: { title: '流程用例', permission: ['processtestcase:list'] }},
-      { path: 'executeplanbatch/list', name: '计划执行', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划执行', permission: ['executeplanbatch:list'] }}
-    ]
-  },
-  {
-    path: '/dispatch',
-    component: Layout,
-    name: '调度中心',
-    icon: 'dispatch',
-    children: [
-      { path: 'slaver/list', name: '测试执行机', component: _import('dispatch/slaver/index'), meta: { title: '测试执行机', permission: ['slaver:list'] }},
-      { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { title: '调度管理', permission: ['dispatch:list'] }}
-    ]
-  },
-  {
-    path: '/reportcenter',
-    component: Layout,
-    name: '报告中心',
-    icon: 'report',
-    children: [
-      // { path: 'testconditionreport/list', name: '条件执行报告', component: _import('reportcenter/testconditionreport/index'), meta: { title: '条件执行报告', permission: ['testconditionreport:list'] }},
-      { path: 'apinewreport/list', name: '集合功能报告', component: _import('reportcenter/apinewreport/index'), meta: { title: '集合功能报告', permission: ['apireport:list'] }},
-      { path: 'apireport/list', name: '功能报告明细', component: _import('reportcenter/apireport/index'), meta: { title: '功能报告明细', permission: ['apireport:list'] }},
-      { path: 'apinewperreport/list', name: '集合性能报告', component: _import('reportcenter/apinewperreport/index'), meta: { title: '集合性能报告', permission: ['apireport:list'] }},
-      // { path: 'apireportstatics/list', name: '功能统计报告', component: _import('reportcenter/apireportstatics/index'), meta: { title: '功能统计报告', permission: ['apireportstatics:list'] }},
-      // { path: 'apiperformancereport/list', name: '性能明细报告', component: _import('reportcenter/apiperformancereport/index'), meta: { title: '性能明细报告', permission: ['apiperformancereport:list'] }},
-      { path: 'apiperformancestatistics/list', name: '性能统计报告', component: _import('reportcenter/apiperformancestatistics/index'), meta: { title: '性能统计报告', permission: ['apiperformancestatistics:list'] }}
+      { path: 'globalvariables/list', name: '全局变量', component: _import('testvariables/globalvariables/index'), meta: { title: '全局变量', permission: ['globalvariables:list'] }},
+      { path: 'globalheader/list', name: '全局Header', component: _import('testvariables/globalheader/index'), meta: { title: '全局Header', permission: ['globalheader:list'] }},
+      { path: 'variables/list', name: '随机变量', component: _import('testvariables/variables/index'), meta: { title: '随机变量', permission: ['variables:list'] }},
+      { path: 'testvariables/list', name: '接口变量', component: _import('testvariables/testvariables/index'), meta: { title: '接口变量', permission: ['testvariables:list'] }},
+      { path: 'dbvariables/list', name: '数据库变量', component: _import('testvariables/dbvariables/index'), meta: { title: '数据库变量', permission: ['dbvariables:list'] }},
+      { path: 'scriptvariables/list', name: '脚本变量', component: _import('testvariables/scriptvariables/index'), meta: { title: '脚本变量', permission: ['scriptvariables:list'] }}
+      // { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }}
+      // { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
     ]
   },
   {
@@ -146,19 +109,56 @@ export const asyncRouterMap = [
       { path: 'delaycondition/list', name: '延时子条件', component: _import('condition/delaycondition/index'), meta: { title: '延时子条件', permission: ['delaycondition:list'] }}
     ]
   },
-
   {
-    path: '/testvariables',
+    path: '/assets',
     component: Layout,
-    name: '变量管理',
-    icon: 'paras',
+    name: '测试管理',
+    alwaysShow: true,
+    activeMenu: '/assets',
+    icon: 'testmanager',
     children: [
-      { path: 'variables/list', name: '随机变量', component: _import('testvariables/variables/index'), meta: { title: '随机变量', permission: ['variables:list'] }},
-      { path: 'testvariables/list', name: '接口变量', component: _import('testvariables/testvariables/index'), meta: { title: '接口变量', permission: ['testvariables:list'] }},
-      { path: 'scriptvariables/list', name: '脚本变量', component: _import('testvariables/scriptvariables/index'), meta: { title: '脚本变量', permission: ['scriptvariables:list'] }},
-      { path: 'dbvariables/list', name: '数据库变量', component: _import('testvariables/dbvariables/index'), meta: { title: '数据库变量', permission: ['dbvariables:list'] }}
-      // { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }}
-      // { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
+      { path: 'apicases/list', name: '用例库', component: _import('assets/cases/apicases/index'), meta: { title: '用例库', permission: ['apicases:list'] }, icon: 'testmanager' },
+      { path: 'project/list', name: '项目/迭代', component: _import('assets/project/index'), meta: { title: '项目/迭代', permission: ['project:list'] }, icon: 'testmanager' }
+      // { path: 'apiparams/list', name: 'API参数', component: _import('deployunit/apiparams/index'), meta: { title: 'API参数', permission: ['apiparams:list'] }}
+    ]
+  },
+  // nestedRouterTestManager,
+  // nestedRouterSubCondition,
+  {
+    path: '/dispatch',
+    component: Layout,
+    name: '调度中心',
+    icon: 'dispatch',
+    children: [
+      { path: 'slaver/list', name: '测试执行机', component: _import('dispatch/slaver/index'), meta: { title: '测试执行机', permission: ['slaver:list'] }},
+      { path: 'dispatch/list', name: '调度管理', component: _import('dispatch/dispatch/index'), meta: { title: '调度管理', permission: ['dispatch:list'] }}
+    ]
+  },
+  {
+    path: '/executecenter',
+    component: Layout,
+    name: '执行中心',
+    icon: 'execute',
+    children: [
+      { path: 'executeplan/list', name: '测试集合', component: _import('executecenter/executeplan/index'), meta: { title: '测试集合', permission: ['executeplan:list'] }},
+      { path: 'executeplancase/list', name: '集合用例', component: _import('executecenter/executeplancase/index'), meta: { title: '集合用例', permission: ['executeplan:list'] }},
+      // { path: 'processtestcase/list', name: '流程用例', component: _import('executecenter/processtestcase/index'), meta: { title: '流程用例', permission: ['processtestcase:list'] }},
+      { path: 'executeplanbatch/list', name: '计划执行', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划执行', permission: ['executeplanbatch:list'] }}
+    ]
+  },
+  {
+    path: '/reportcenter',
+    component: Layout,
+    name: '报告中心',
+    icon: 'report',
+    children: [
+      // { path: 'testconditionreport/list', name: '条件执行报告', component: _import('reportcenter/testconditionreport/index'), meta: { title: '条件执行报告', permission: ['testconditionreport:list'] }},
+      { path: 'apinewreport/list', name: '集合功能报告', component: _import('reportcenter/apinewreport/index'), meta: { title: '集合功能报告', permission: ['apireport:list'] }},
+      { path: 'apireport/list', name: '功能报告明细', component: _import('reportcenter/apireport/index'), meta: { title: '功能报告明细', permission: ['apireport:list'] }},
+      { path: 'apinewperreport/list', name: '集合性能报告', component: _import('reportcenter/apinewperreport/index'), meta: { title: '集合性能报告', permission: ['apireport:list'] }},
+      // { path: 'apireportstatics/list', name: '功能统计报告', component: _import('reportcenter/apireportstatics/index'), meta: { title: '功能统计报告', permission: ['apireportstatics:list'] }},
+      // { path: 'apiperformancereport/list', name: '性能明细报告', component: _import('reportcenter/apiperformancereport/index'), meta: { title: '性能明细报告', permission: ['apiperformancereport:list'] }},
+      { path: 'apiperformancestatistics/list', name: '性能统计报告', component: _import('reportcenter/apiperformancestatistics/index'), meta: { title: '性能统计报告', permission: ['apiperformancestatistics:list'] }}
     ]
   },
   // {

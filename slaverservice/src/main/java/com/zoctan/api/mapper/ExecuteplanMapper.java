@@ -35,7 +35,7 @@ public interface ExecuteplanMapper extends MyMapper<Executeplan> {
 
     List<Executeplan> getallexplan();
 
-    List<Executeplan> getallexplanbytype(String usetype);
+    List<Executeplan> getallexplanbytype(@Param("usetype")String usetype);
 
     Integer getexecuteplannum();
 }

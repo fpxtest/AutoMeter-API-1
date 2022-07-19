@@ -13,7 +13,7 @@ spring:
     url: jdbc:mysql://192.168.3.95:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC
     # 用户名 root
     username: MyEnc({Qjn8FaKnAiApiz6g3RM5Ow==})
-    # 密码 root
+    # 密码 123456
     password: MyEnc({w5CeK9tnNUROTUGdRRmd1Q==})
     # 驱动类
     driver-class-name: com.mysql.cj.jdbc.Driver

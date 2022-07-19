@@ -10,7 +10,9 @@ import java.util.Map;
 
 public interface ConditionDbMapper extends MyMapper<ConditionDb> {
     List<ConditionDb> finddbconditionWithName(final Map<String, Object> params);
+
     void updateTestconditiondb(ConditionDb params);
+
     void deletesubconditionbyconid(@Param("conditionid") Long conditionid);
 
 }

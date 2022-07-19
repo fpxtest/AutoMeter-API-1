@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.ApiParams;
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
@@ -26,7 +27,8 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
      */
     List<ApiParams> getApiParamsbyname(final Map<String, Object> params);
 
-    void deletebyApiid(Long apiid);
+    void deletebyApiid(@Param("apiid") Long apiid);
+
     /**
      * 更新Api内容
      *
@@ -39,9 +41,10 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
 
     void SaveApiParams(ApiParams apiParams);
 
-    List<ApiParams> getApiParamsbypropertytype(Long apiid,String propertytype);
-    List<ApiParams> findApiParamsbypropertytype(Long apiid,String propertytype);
+    List<ApiParams> getApiParamsbypropertytype(@Param("apiid")Long apiid, @Param("propertytype")String propertytype);
 
-    ApiParams getBodyNoFormbyapiid(Long apiid,String propertytype,String keydefaultvalue,String keytype);
+    List<ApiParams> findApiParamsbypropertytype(@Param("apiid")Long apiid, @Param("propertytype")String propertytype);
+
+    ApiParams getBodyNoFormbyapiid(@Param("apiid")Long apiid, @Param("propertytype")String propertytype, @Param("keydefaultvalue")String keydefaultvalue, @Param("keytype")String keytype);
 
 }

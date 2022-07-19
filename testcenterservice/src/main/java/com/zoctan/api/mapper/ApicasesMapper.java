@@ -31,12 +31,13 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
 
     List<Apicases> forupdateifexist(Apicases apicase);
 
-    List<Apicases> getapicasebyName(@Param("deployunitid")long deployunitid,@Param("apiid") long apiid);
+    List<Apicases> getapicasebyName(@Param("deployunitid") long deployunitid, @Param("apiid") long apiid);
 
-    Integer getcasenum(@Param("casetype")String casetype);
+    Integer getcasenum(@Param("casetype") String casetype);
 
 
     List<Apicases> getstaticsdeployunitcases();
+
     List<Apicases> getcasebydeployunitid(Long deployunitid);
 
     List<Apicases> getcasebyapiid(@Param("apiid") Long apiid);

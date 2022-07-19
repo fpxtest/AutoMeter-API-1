@@ -10,12 +10,15 @@ import java.util.Map;
 
 public interface TestconditionReportMapper extends MyMapper<TestconditionReport> {
     List<TestconditionReport> findTestconditionReportWithName(final Map<String, Object> params);
+
     int ifexist(Condition condition);
-    List<TestconditionReport> getunfinishapiconditionnumsbytype(@Param("testplanid") Long testplanid, @Param("batchname") String batchname,@Param("subconditiontype")String subconditiontype);
-    List<TestconditionReport> getunfinishapiconditionnumswithstatus(@Param("testplanid") Long testplanid, @Param("batchname") String batchname, @Param("status") String status,@Param("subconditiontype")String subconditiontype);
+
+    List<TestconditionReport> getunfinishapiconditionnumsbytype(@Param("testplanid") Long testplanid, @Param("batchname") String batchname, @Param("subconditiontype") String subconditiontype);
+
+    List<TestconditionReport> getunfinishapiconditionnumswithstatus(@Param("testplanid") Long testplanid, @Param("batchname") String batchname, @Param("status") String status, @Param("subconditiontype") String subconditiontype);
 
     List<TestconditionReport> getunfinishapiconditionnums(@Param("testplanid") Long testplanid, @Param("batchname") String batchname);
 
-    List<TestconditionReport> getsubconditionnumswithstatus(@Param("testplanid") Long testplanid, @Param("batchname") String batchname, @Param("status") String status,@Param("conditionstatus")String conditionstatus);
+    List<TestconditionReport> getsubconditionnumswithstatus(@Param("testplanid") Long testplanid, @Param("batchname") String batchname, @Param("status") String status, @Param("conditionstatus") String conditionstatus);
 
 }

@@ -12,7 +12,7 @@ public interface ExecuteplanParamsMapper extends MyMapper<ExecuteplanParams> {
 
     void updateParams(ExecuteplanParams params);
 
-    List<ExecuteplanParams> getParamsbyepid(@Param("executeplanid") Long executeplanid,@Param("paramstype") String paramstype);
+    List<ExecuteplanParams> getParamsbyepid(@Param("executeplanid") Long executeplanid, @Param("paramstype") String paramstype);
 
 
     int ifexist(Condition condition);

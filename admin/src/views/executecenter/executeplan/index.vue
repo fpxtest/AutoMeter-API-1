@@ -71,15 +71,15 @@
       <el-table-column label="状态" align="center" prop="status" v-if="show" width="50"/>
       <el-table-column label="业务类型" align="center" prop="businesstype" width="100"/>
       <el-table-column label="执行环境" align="center" prop="enviromentname" width="100"/>
-      <el-table-column label="类型" align="center" prop="usetype" width="60"/>
-      <el-table-column label="运行模式" align="center" prop="runmode" width="80"/>
+      <el-table-column label="类型" align="center" prop="usetype" width="50"/>
+      <el-table-column label="运行模式" align="center" prop="runmode" width="70"/>
       <el-table-column :show-overflow-tooltip="true" label="通知钉钉" align="center" prop="dingdingtoken" width="90"/>
       <el-table-column label="操作人" align="center" prop="creator" width="60"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="130">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="130">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -104,7 +104,7 @@
             size="mini"
             v-if="hasPermission('executeplan:update') && scope.row.id !== id"
             @click.native.prevent="showplanparamsDialog(scope.$index)"
-          >全局参数</el-button>
+          >全局Header</el-button>
 
         </template>
       </el-table-column>
@@ -337,7 +337,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="全局参数" :visible.sync="CollectionParamsFormVisible">
+    <el-dialog title="全局Header" :visible.sync="CollectionParamsFormVisible">
       <div class="filter-container">
         <el-form :inline="true">
           <el-form-item>
@@ -347,7 +347,7 @@
               icon="el-icon-plus"
               v-if="hasPermission('executeplan:add')"
               @click.native.prevent="showAddapiparamsDialog"
-            >添加全局参数</el-button>
+            >添加全局Header</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -366,18 +366,7 @@
             <span v-text="paramgetIndex(scope.$index)"></span>
           </template>
         </el-table-column>
-        <el-table-column label="参数类型" align="center" prop="paramstype" width="80"/>
-        <el-table-column label="参数名" align="center" prop="keyname" width="180"/>
-        <el-table-column label="参数值" align="center" prop="keyvalue" width="140">
-          <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.keyvalue }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">...</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
+        <el-table-column label="Header" align="center" prop="globalheadername" width="280"/>
         <el-table-column label="管理" align="center"
                          v-if="hasPermission('executeplan:update')  || hasPermission('executeplan:delete')">
           <template slot-scope="scope">
@@ -408,29 +397,12 @@
         :model="tmpparam"
         ref="tmpparam"
       >
-        <el-form-item label="参数类型" prop="paramstype" required>
-          <el-select v-model="tmpparam.paramstype" placeholder="参数类型" style="width:100%" @change="paramstypeselectChanged($event)">
-            <el-option label="请选择" value="''" style="display: none" />
-            <el-option label="全局Header" value="Header" />
+        <el-form-item label="全局Header:"  prop="globalheadername" required >
+          <el-select style="width:415px" v-model="tmpparam.globalheadername" placeholder="全局Header" @change="notexistheaderselectChanged($event)">
+            <div v-for="(globalheader, index) in globalheaderallList" :key="index">
+              <el-option :label="globalheader.globalheadername" :value="globalheader.globalheadername" />
+            </div>
           </el-select>
-        </el-form-item>
-        <el-form-item label="参数名：" prop="keyname" required>
-          <el-input
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model.trim="tmpparam.keyname"
-            :placeholder="keyholder"
-          />
-        </el-form-item>
-        <el-form-item label="参数值：" prop="keyvalue" required>
-          <el-input
-            type="textarea"
-            rows="15" cols="50"
-            prefix-icon="el-icon-message"
-            auto-complete="off"
-            v-model.trim="tmpparam.keyvalue"
-            :placeholder="keyholder"
-          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -466,10 +438,9 @@
   import { unix2CurrentTime } from '@/utils'
   import { getenviromentallList as getenviromentallList } from '@/api/enviroment/testenviroment'
   import { getdatabydiccodeList as getdatabydiccodeList } from '@/api/system/dictionary'
-  import { searchparamsbyepid, addexecuteplanparam, updateexecuteplanparams, removeexecuteplanparam } from '@/api/executecenter/executeplanparam'
-
+  import { getglobalheaderallList } from '@/api/testvariables/globalheader'
   import { mapGetters } from 'vuex'
-
+  import { addapicasesdebug, removeapicasesdebug, updateapicasesdebug, searchheaderbyepid } from '@/api/assets/globalheaderuse'
   export default {
     filters: {
       statusFilter(status) {
@@ -500,6 +471,7 @@
         deployunitList: [], // 发布单元列表
         multipleSelection: [], // 执行计划表格被选中的内容
         casemultipleSelection: [], // 用例表格被选中的内容
+        globalheaderallList: [], // 全局header列表
         executeplanList: [], // 执行计划列表
         testcaseList: [], // 用例列表
         testcaselastList: [], // 经过用例列表和已装载的用例组合出的结果列表
@@ -605,7 +577,9 @@
           executeplanid: '',
           paramstype: '',
           keyname: '',
-          keyvalue: ''
+          keyvalue: '',
+          globalheadername: '',
+          globalheaderid: 0
         },
         tmpep: {
           executeplanid: ''
@@ -641,6 +615,7 @@
       this.getdepunitList()
       this.getenviromentallList()
       this.getdatabydiccodeList()
+      this.getglobalheaderallList()
     },
 
     methods: {
@@ -657,15 +632,23 @@
 
       unix2CurrentTime,
 
+      getglobalheaderallList() {
+        getglobalheaderallList().then(response => {
+          this.globalheaderallList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载全局Header列表失败')
+        })
+      },
+
       /**
-       * 获取params列表
+       * 获取header列表
        */
-      searchparamsbyepid() {
+      searchheaderbyepid() {
         console.log(this.tmpep)
-        searchparamsbyepid(this.tmpep).then(response => {
+        searchheaderbyepid(this.tmpep).then(response => {
           this.paramsList = response.data.list
         }).catch(res => {
-          this.$message.error('加载params列表失败')
+          this.$message.error('加载header列表失败')
         })
       },
       /**
@@ -1098,7 +1081,7 @@
         this.CollectionParamsFormVisible = true
         this.tmpparam.executeplanid = this.executeplanList[index].id
         this.tmpep.executeplanid = this.executeplanList[index].id
-        this.searchparamsbyepid()
+        this.searchheaderbyepid()
       },
 
       // 显示新增对话框
@@ -1106,18 +1089,15 @@
         this.modifyparamdialogFormVisible = true
         this.ParamsdialogStatus = 'add'
         this.tmpparam.id = ''
-        this.tmpparam.paramstype = ''
-        this.tmpparam.keyname = ''
-        this.tmpparam.keyvalue = ''
+        this.tmpparam.globalheaderid = ''
+        this.tmpparam.globalheadername = ''
       },
 
       showUpdateparamsDialog(index) {
         this.modifyparamdialogFormVisible = true
         this.ParamsdialogStatus = 'update'
         this.tmpparam.id = this.paramsList[index].id
-        this.tmpparam.paramstype = this.paramsList[index].paramstype
-        this.tmpparam.keyname = this.paramsList[index].keyname
-        this.tmpparam.keyvalue = this.paramsList[index].keyvalue
+        this.tmpparam.globalheadername = this.paramsList[index].globalheadername
       },
       /**
        * 显示添加执行计划批次对话框
@@ -1181,10 +1161,10 @@
       addparams() {
         this.$refs.tmpparam.validate(valid => {
           if (valid) {
-            addexecuteplanparam(this.tmpparam).then(() => {
+            addapicasesdebug(this.tmpparam).then(() => {
               this.$message.success('添加成功')
               this.modifyparamdialogFormVisible = false
-              this.searchparamsbyepid()
+              this.searchheaderbyepid()
             }).catch(res => {
               this.$message.error('添加失败')
             })
@@ -1198,9 +1178,9 @@
       updatparam() {
         this.$refs.tmpparam.validate(valid => {
           if (valid) {
-            updateexecuteplanparams(this.tmpparam).then(() => {
+            updateapicasesdebug(this.tmpparam).then(() => {
               this.$message.success('更新成功')
-              this.searchparamsbyepid()
+              this.searchheaderbyepid()
               this.modifyparamdialogFormVisible = false
             }).catch(res => {
               this.$message.error('添加失败')
@@ -1220,9 +1200,9 @@
           type: 'warning'
         }).then(() => {
           const id = this.paramsList[index].id
-          removeexecuteplanparam(id).then(() => {
+          removeapicasesdebug(id).then(() => {
             this.$message.success('删除成功')
-            this.searchparamsbyepid()
+            this.searchheaderbyepid()
           })
         }).catch(() => {
           this.$message.info('已取消删除')
@@ -1383,6 +1363,13 @@
           }
         }
         return true
+      },
+      notexistheaderselectChanged(e) {
+        for (let i = 0; i < this.globalheaderallList.length; i++) {
+          if (this.globalheaderallList[i].globalheadername === e) {
+            this.tmpparam.globalheaderid = this.globalheaderallList[i].id
+          }
+        }
       }
     }
   }

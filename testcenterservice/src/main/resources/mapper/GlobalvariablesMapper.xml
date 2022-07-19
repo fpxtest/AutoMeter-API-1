@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.GlobalvariablesMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Globalvariables">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="keyname" jdbcType="VARCHAR" property="keyname" />
+    <result column="keyvalue" jdbcType="VARCHAR" property="keyvalue" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findGlobalvariablesWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM globalvariables a
+    <where>
+      <if test="keyname != null and keyname != ''">a.keyname like CONCAT('%',#{keyname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+
+  <update id="updateGlobalvariables" parameterType="com.zoctan.api.entity.Globalvariables">
+    update globalvariables set keyname = #{keyname},keyvalue = #{keyvalue}, memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>

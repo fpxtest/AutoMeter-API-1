@@ -62,6 +62,7 @@ public class TestCondition {
                 }
             }
             requestObject.setResponecontenttype(ResponeContentType);
+            re.setResponecontenttype(ResponeContentType);
             CostTime = End - Start;
             SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
         } catch (Exception ex) {

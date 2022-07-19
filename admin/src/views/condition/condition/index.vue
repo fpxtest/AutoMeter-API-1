@@ -115,7 +115,7 @@
           <el-select v-model="tmpcondition.objecttype" placeholder="目标类型" style="width:100%" @change="targetChanged($event)">
             <el-option label="测试用例" value="测试用例"/>
             <el-option label="测试集合" value="测试集合"></el-option>
-            <el-option label="调试用例" value="调试用例"></el-option>
+<!--            <el-option label="调试用例" value="调试用例"></el-option>-->
           </el-select>
         </el-form-item>
 

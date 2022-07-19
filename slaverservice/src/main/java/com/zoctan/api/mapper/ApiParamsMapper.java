@@ -17,7 +17,7 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
      */
     List<ApiParams> findApiParamsWithName(final Map<String, Object> params);
 
-    List<ApiParams> getDistinctApiParamsbyid(Long apiid);
+    List<ApiParams> getDistinctApiParamsbyid(@Param("apiid")Long apiid);
 
     /**
      * 按条件查询Api内容
@@ -25,7 +25,7 @@ public interface ApiParamsMapper extends MyMapper<ApiParams> {
      * @return 用户列表
      */
 
-    List<ApiParams> getApiParamsbypropertytype(@Param("apiid") Long apiid, @Param("propertytype")String propertytype);
+    List<ApiParams> getApiParamsbypropertytype(@Param("apiid") Long apiid, @Param("propertytype") String propertytype);
 
 
     /**

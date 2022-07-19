@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface VariablesMapper extends MyMapper<Variables> {
     List<Variables> findvariablesWithName(final Map<String, Object> params);
+
     void updatevariables(Variables params);
 
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface TestconditionReportMapper extends MyMapper<TestconditionReport> {
     List<TestconditionReport> findTestconditionReportWithName(final Map<String, Object> params);
+
     int ifexist(Condition condition);
 
 }
