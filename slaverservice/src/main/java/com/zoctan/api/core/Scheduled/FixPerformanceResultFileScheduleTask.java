@@ -8,6 +8,7 @@ import com.zoctan.api.service.ApicasesReportPerformanceService;
 import com.zoctan.api.service.PerformancereportfilelogService;
 import com.zoctan.api.service.PerformancereportsourceService;
 import com.zoctan.api.service.RouteperformancereportService;
+import com.zoctan.api.util.IPHelpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -202,31 +203,9 @@ public class FixPerformanceResultFileScheduleTask {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            ip = getInet4Address();//address.getHostAddress();
+            ip = IPHelpUtils.getInet4Address();//address.getHostAddress();
         } catch (UnknownHostException e) {
             FixPerformanceResultFileScheduleTask.log.info("收集性能报告数据-UnknownHostException is:" + e.getMessage());
         }
-    }
-
-    public static String getInet4Address() {
-        Enumeration<NetworkInterface> nis;
-        String ip = null;
-        try {
-            nis = NetworkInterface.getNetworkInterfaces();
-            for (; nis.hasMoreElements();) {
-                NetworkInterface ni = nis.nextElement();
-                Enumeration<InetAddress> ias = ni.getInetAddresses();
-                for (; ias.hasMoreElements();) {
-                    InetAddress ia = ias.nextElement();
-                    //ia instanceof Inet6Address && !ia.equals("")
-                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
-                        ip = ia.getHostAddress();
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            FixPerformanceResultFileScheduleTask.log.info("slaver-getInet4Address......................................................."+e.getMessage());
-        }
-        return ip;
     }
 }

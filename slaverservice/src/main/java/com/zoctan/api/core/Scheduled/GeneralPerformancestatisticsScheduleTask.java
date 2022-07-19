@@ -11,6 +11,7 @@ import com.zoctan.api.mapper.PerformancereportsourceMapper;
 import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ApicasesPerformancestatisticsService;
 import com.zoctan.api.service.ExecuteplanService;
+import com.zoctan.api.util.IPHelpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.client.Origin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,7 +221,7 @@ public class GeneralPerformancestatisticsScheduleTask {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            ip = getInet4Address();//address.getHostAddress();
+            ip = IPHelpUtils.getInet4Address();//address.getHostAddress();
         } catch (UnknownHostException e) {
             GeneralPerformancestatisticsScheduleTask.log.info("性能统计报告-UnknownHostException is:" + e.getMessage());
         }

@@ -107,7 +107,7 @@ public class TestCaseHelp {
                 }
             } else {
                 testserver = macdepunit.getDomain();
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = protocal + "://" + testserver + path;
                 } else {
                     if (BaseUrl.startsWith("/")) {
@@ -312,7 +312,7 @@ public class TestCaseHelp {
                 }
             } else {
                 testserver = macdepunit.getDomain();
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = protocal + "://" + testserver + path;
                 } else {
                     if (BaseUrl.startsWith("/")) {

@@ -3,6 +3,7 @@ package com.zoctan.api.service.impl;
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.SlaverMapper;
+import com.zoctan.api.util.IPHelpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,7 +42,8 @@ public class InitSlaver {
         //InetAddress address = null;
         try {
             //address = InetAddress.getLocalHost();
-            String ip = getInet4Address();//address.getHostAddress();
+            String ip = IPHelpUtils.getInet4Address();//address.getHostAddress();
+            InitSlaver.log.info("启动注册slaver获取ip地址......................................................." + ip);
             String MacAddredss = "";
             try {
                 //MacAddredss = getMacByIP(ip);
@@ -145,27 +147,27 @@ public class InitSlaver {
     }
 
 
-    public static String getInet4Address() {
-        Enumeration<NetworkInterface> nis;
-        String ip = null;
-        try {
-            nis = NetworkInterface.getNetworkInterfaces();
-            for (; nis.hasMoreElements();) {
-                NetworkInterface ni = nis.nextElement();
-                Enumeration<InetAddress> ias = ni.getInetAddresses();
-                for (; ias.hasMoreElements();) {
-                    InetAddress ia = ias.nextElement();
-                    //ia instanceof Inet6Address && !ia.equals("")
-                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
-                        ip = ia.getHostAddress();
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            InitSlaver.log.info("slaver-getInet4Address......................................................."+e.getMessage());
-        }
-        return ip;
-    }
+//    public static String getInet4Address() {
+//        Enumeration<NetworkInterface> nis;
+//        String ip = null;
+//        try {
+//            nis = NetworkInterface.getNetworkInterfaces();
+//            for (; nis.hasMoreElements();) {
+//                NetworkInterface ni = nis.nextElement();
+//                Enumeration<InetAddress> ias = ni.getInetAddresses();
+//                for (; ias.hasMoreElements();) {
+//                    InetAddress ia = ias.nextElement();
+//                    //ia instanceof Inet6Address && !ia.equals("")
+//                    if (ia instanceof Inet4Address && !ia.getHostAddress().equals("127.0.0.1")) {
+//                        ip = ia.getHostAddress();
+//                    }
+//                }
+//            }
+//        } catch (SocketException e) {
+//            InitSlaver.log.info("slaver-getInet4Address......................................................."+e.getMessage());
+//        }
+//        return ip;
+//    }
 
 
     public static String getUnixMACAddress() {
@@ -209,9 +211,9 @@ public class InitSlaver {
 
         try {
             //List<String>list= getMACAddress();
-            String macAddress= getUnixMACAddress();
-            String ip= getInet4Address();
-            System.out.println(ip);
+//            String macAddress= getUnixMACAddress();
+//            String ip= getInet4Address();
+//            System.out.println(ip);
         } catch (Exception e) {
             e.printStackTrace();
         }

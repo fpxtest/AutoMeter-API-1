@@ -35,7 +35,7 @@
   </select>
 
   <select id="getmacdepbyenvidanddepid" resultMap="BaseResultMap">
-    select * from macdepunit a where a.envid = #{envid} and depunitid =#{depunitid}
+    select * from macdepunit a where a.envid = #{envid} and a.depunitid =#{depunitid}
   </select>
 
   <update id="updateMacAndDep" parameterType="com.zoctan.api.entity.Envmachine">

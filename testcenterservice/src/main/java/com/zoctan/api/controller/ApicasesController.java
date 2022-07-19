@@ -846,7 +846,7 @@ public class ApicasesController {
                 }
             } else {
                 testserver = macdepunit.getDomain();
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
                 } else {
                     if (BaseUrl.startsWith("/")) {

@@ -11,6 +11,7 @@ import com.zoctan.api.mapper.*;
 import com.zoctan.api.service.*;
 import com.zoctan.api.service.TestPlanCaseService;
 import com.zoctan.api.service.impl.TestPlanCaseServiceImpl;
+import com.zoctan.api.util.IPHelpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.io.ResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,8 +116,9 @@ public class TestPlanCaseController {
         Executeplan ep = executeplanMapper.findexplanWithid(execplanid);
         List<ExecuteplanTestcase> caselist = executeplanTestcaseMapper.findcasebytestplanid(execplanid);
         TestPlanCaseController.log.info("计划id" + execplanid + " 批次为：" + batchname + " 获取用例数：" + caselist.size());
-        InetAddress address = InetAddress.getLocalHost();
-        String ip = address.getHostAddress();
+//        InetAddress address = InetAddress.getLocalHost();
+//        String ip = address.getHostAddress();
+        String ip = IPHelpUtils.getInet4Address();
         TestPlanCaseController.log.info("当前机器的IP为：" + ip);
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         List<Dispatch> dispatchList = new ArrayList<>();
@@ -199,9 +201,10 @@ public class TestPlanCaseController {
     @PostMapping("/execperformancetest")
     public Result execperformancetest(@RequestBody Dispatch dispatch) throws Exception {
         String ip = null;
-        InetAddress address = null;
-        address = InetAddress.getLocalHost();
-        ip = address.getHostAddress();
+//        InetAddress address = null;
+//        address = InetAddress.getLocalHost();
+//        ip = address.getHostAddress();
+        ip = IPHelpUtils.getInet4Address();
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.error("性能任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
@@ -290,9 +293,10 @@ public class TestPlanCaseController {
     @PostMapping("/execfunctiontest")
     public Result execfunctiontest(@RequestBody List<Dispatch> dispatchList) throws Exception {
         String ip = null;
-        InetAddress address = null;
-        address = InetAddress.getLocalHost();
-        ip = address.getHostAddress();
+//        InetAddress address = null;
+//        address = InetAddress.getLocalHost();
+//        address.getHostAddress();
+        ip = IPHelpUtils.getInet4Address();
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         if (slaverlist.size() == 0) {
             TestPlanCaseController.log.error("功能任务-没有找到slaver。。。。。。。。" + "未找到ip为：" + ip + "的slaver，请检查调度中心-执行节点");
@@ -414,10 +418,11 @@ public class TestPlanCaseController {
                     } else {
                         resource = deployunit.getProtocal() + "://" + testserver + ":" + deployunit.getPort() + "/" + BaseUrl + api.getPath();
                     }
+                    TestPlanCaseController.log.info("GetJmeterPerformanceCaseData resource ip is:"+resource);
                 }
             } else {
                 testserver = macdepunit.getDomain();
-                if (BaseUrl.isEmpty()) {
+                if (BaseUrl == null || BaseUrl.isEmpty()) {
                     resource = deployunit.getProtocal() + "://" + testserver + api.getPath();
                 } else {
                     if (BaseUrl.startsWith("/")) {
@@ -427,6 +432,7 @@ public class TestPlanCaseController {
                         resource = deployunit.getProtocal() + "://" + testserver + "/" + BaseUrl + api.getPath();
                     }
                 }
+                TestPlanCaseController.log.info("GetJmeterPerformanceCaseData resource domain is:"+resource);
             }
             jmeterPerformanceObject.setDeployunitvisittype(macdepunit.getVisittype());
             jmeterPerformanceObject.setResource(resource.trim());
