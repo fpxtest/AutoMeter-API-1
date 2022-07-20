@@ -20,9 +20,18 @@
         </el-form-item>
 
         <span v-if="hasPermission('condition:search')">
-          <el-form-item>
+          <el-form-item label="父条件名：">
             <el-input clearable v-model="search.conditionname" @keyup.enter.native="searchBy" placeholder="条件名"></el-input>
           </el-form-item>
+
+          <el-form-item label="目标类型：">
+          <el-select v-model="search.objecttype" placeholder="目标类型" clearable>
+            <el-option label="请选择" value />
+            <el-option label="测试集合" value="测试集合"></el-option>
+            <el-option label="测试用例" value="测试用例"></el-option>
+          </el-select>
+         </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
           </el-form-item>
@@ -46,14 +55,14 @@
 
       <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
       <el-table-column label="条件目标" align="center" prop="objectname" width="120"/>
-      <el-table-column label="目标类型" align="center" prop="objecttype" width="120"/>
-      <el-table-column label="条件类型" align="center" prop="conditiontype" width="120"/>
-      <el-table-column label="备注" align="center" prop="memo" width="120"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="目标类型" align="center" prop="objecttype" width="100"/>
+      <el-table-column label="条件类型" align="center" prop="conditiontype" width="100"/>
+      <el-table-column :show-overflow-tooltip="true" label="备注" align="center" prop="memo" width="50"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="70"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -270,6 +279,7 @@
       return {
         itemKey: null,
         tmpconditionname: '',
+        tmpobjecttype: '',
         execplanList: [], // 计划列表
         conditionList: [], // 条件服务器列表
         conditionorderList: [], // 条件顺序显示列表
@@ -335,7 +345,8 @@
         search: {
           page: 1,
           size: 10,
-          conditionname: null
+          conditionname: null,
+          objecttype: null
         }
       }
     },
@@ -501,6 +512,7 @@
       getconditionList() {
         this.listLoading = true
         this.search.enviromentname = this.tmpenviromentname
+        this.search.objecttype = this.tmpobjecttype
         search(this.search).then(response => {
           this.conditionList = response.data.list
           this.total = response.data.total
@@ -521,6 +533,7 @@
           this.$message.error('搜索失败')
         })
         this.tmpconditionname = this.search.conditionname
+        this.tmpobjecttype = this.search.objecttype
         this.listLoading = false
         this.btnLoading = false
       },

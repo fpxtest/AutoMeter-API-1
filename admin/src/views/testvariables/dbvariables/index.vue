@@ -44,10 +44,10 @@
         </template>
       </el-table-column>
       <el-table-column label="数据库变量名" align="center" prop="dbvariablesname" width="180"/>
-      <el-table-column label="变量描述" align="center" prop="variablesdes" width="100"/>
-      <el-table-column label="变量值类型" align="center" prop="valuetype" width="100"/>
-      <el-table-column label="备注" align="center" prop="memo" width="100"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
+      <el-table-column :show-overflow-tooltip="true" label="变量描述" align="center" prop="variablesdes" width="100"/>
+      <el-table-column label="变量值类型" align="center" prop="valuetype" width="85"/>
+      <el-table-column :show-overflow-tooltip="true" label="备注" align="center" prop="memo" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="70"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="150">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

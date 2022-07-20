@@ -51,10 +51,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="组件名" align="center" prop="assemblename" width="120"/>
+      <el-table-column label="组件名" align="center" prop="assemblename" width="100"/>
       <el-table-column label="组件类型" align="center" prop="assembletype" width="80"/>
-      <el-table-column label="连接字" align="center" prop="connectstr" width="200"/>
-      <el-table-column label="备注" align="center" prop="memo" width="150"/>
+        <el-table-column :show-overflow-tooltip="true" label="连接字" align="center" prop="connectstr" width="200"/>
+      <el-table-column :show-overflow-tooltip="true" label="备注" align="center" prop="memo" width="150"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
@@ -64,7 +64,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
+      <el-table-column label="管理" align="center" width="240"
                        v-if="hasPermission('enviroment_assemble:update')  || hasPermission('enviroment_assemble:delete')">
         <template slot-scope="scope">
           <el-button

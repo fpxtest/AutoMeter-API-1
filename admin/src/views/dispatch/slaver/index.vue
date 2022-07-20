@@ -13,10 +13,10 @@
         </el-form-item>
 
         <span v-if="hasPermission('slaver:search')">
-          <el-form-item>
+          <el-form-item label="执行机名:">
             <el-input clearable v-model="search.slavername" @keyup.enter.native="searchBy" placeholder="执行机名"></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item label="IP:">
             <el-input clearable v-model="search.ip" @keyup.enter.native="searchBy" placeholder="ip"></el-input>
           </el-form-item>
           <el-form-item>

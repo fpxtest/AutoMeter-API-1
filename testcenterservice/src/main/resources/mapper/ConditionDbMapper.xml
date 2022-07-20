@@ -28,7 +28,7 @@
     FROM condition_db  a inner join testcondition b on a.conditionid=b.id
     <where>
       <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
-      <if test="subconditionname != null and subconditionname != ''">a.subconditionname like CONCAT('%',#{subconditionname},'%')</if>
+      <if test="subconditionname != null and subconditionname != ''">and a.subconditionname like CONCAT('%',#{subconditionname},'%')</if>
     </where>
     order by lastmodify_time  DESC
   </select>

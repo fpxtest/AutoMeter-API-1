@@ -26,12 +26,19 @@ public class ApicasesVariablesController {
 
     @PostMapping
     public Result add(@RequestBody ApicasesVariables apicasesVariables) {
+//        Condition caseidcon=new Condition(ApicasesVariables.class);
+//        caseidcon.createCriteria().andCondition("caseid = " + apicasesVariables.getCaseid());
+//        if(apicasesVariablesService.ifexist(caseidcon)>0)
+//        {
+//            ApicasesVariables apicasesVariables1= apicasesVariablesService.getBy("caseid",apicasesVariables.getCaseid());
+//            return ResultGenerator.genFailedResult("该接口已经存在绑定的变量:"+apicasesVariables1.getVariablesname()+"，可以直接使用");
+//        }
 
         Condition con=new Condition(ApicasesVariables.class);
         con.createCriteria().andCondition("variablesname = '" + apicasesVariables.getVariablesname().replace("'","''") + "'");
         if(apicasesVariablesService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("该变量已经绑定了接口");
+            return ResultGenerator.genFailedResult("该接口变量已存在，请修改");
         }
         else {
             apicasesVariablesService.save(apicasesVariables);

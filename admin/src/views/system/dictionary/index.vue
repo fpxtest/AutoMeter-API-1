@@ -45,10 +45,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="字典名" align="center" prop="dicname" width="100"/>
-      <el-table-column label="字典编码" align="center" prop="diccode" width="110"/>
-      <el-table-column label="字典项名" align="center" prop="dicitemname" width="100"/>
-      <el-table-column label="字典项值" align="center" prop="dicitmevalue" width="100"/>
+      <el-table-column label="字典名" align="center" prop="dicname" width="140"/>
+      <el-table-column label="字典编码" align="center" prop="diccode" width="140"/>
+      <el-table-column :show-overflow-tooltip="true" label="字典项名" align="center" prop="dicitemname" width="140"/>
+      <el-table-column :show-overflow-tooltip="true" label="字典项值" align="center" prop="dicitmevalue" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>

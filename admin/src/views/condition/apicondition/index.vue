@@ -20,8 +20,8 @@
         </el-form-item>
 
         <span v-if="hasPermission('apicondition:search')">
-          <el-form-item>
-            <el-select v-model="search.conditionname" placeholder="条件名">
+          <el-form-item label="父条件名：">
+            <el-select v-model="search.conditionname" placeholder="父条件名">
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
                 <el-option :label="condition.conditionname" :value="condition.conditionname"/>
@@ -48,21 +48,21 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
-      <el-table-column label="子条件名" align="center" prop="subconditionname" width="120"/>
+      <el-table-column  label="父条件名" align="center" prop="conditionname" width="180"/>
+      <el-table-column  label="子条件名" align="center" prop="subconditionname" width="170"/>
       <el-table-column label="发布单元名" align="center" prop="deployunitname" width="120"/>
-      <el-table-column label="api名" align="center" prop="apiname" width="120"/>
-      <el-table-column label="接口名" align="center" prop="casename" width="120"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="API名" align="center" prop="apiname" width="100"/>
+      <el-table-column label="接口名" align="center" prop="casename" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="70"/>
+      <el-table-column :show-overflow-tooltip="true" label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column :show-overflow-tooltip="true" label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
+      <el-table-column label="管理" align="center" width="150"
                        v-if="hasPermission('apicondition:update')  || hasPermission('apicondition:delete')">
         <template slot-scope="scope">
           <el-button

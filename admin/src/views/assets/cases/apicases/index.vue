@@ -72,10 +72,10 @@
 <!--          >取消全局Header-->
 <!--          </el-button>-->
         </el-form-item>
-        </el-form>
-      <el-form :inline="true">
+<!--        </el-form>-->
+<!--      <el-form :inline="true">-->
         <span v-if="hasPermission('apicases:search')" >
-          <el-form-item>
+          <el-form-item label="发布单元：">
             <el-select v-model="search.deployunitname" placeholder="发布单元" clearable @change="deployunitselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(depname, index) in deployunitList" :key="index">
@@ -84,7 +84,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item label="api名：">
             <el-select v-model="search.apiname" placeholder="api名" clearable @change="searchapiselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(api, index) in apiList" :key="index">
@@ -93,7 +93,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item >
+          <el-form-item label="用例类型：">
           <el-select v-model="search.casetype" placeholder="用例类型" clearable>
             <el-option label="请选择" value />
             <el-option label="功能" value="功能"></el-option>
@@ -101,12 +101,12 @@
           </el-select>
          </el-form-item>
 
-          <el-form-item>
+          <el-form-item label="用例：">
             <el-input clearable v-model="search.casename" clearable @keyup.enter.native="searchBy" placeholder="用例" style="width:150px">
             </el-input>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item >
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
           </el-form-item>
         </span>
@@ -132,19 +132,19 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="用例名" align="center" prop="casename" width="120"/>
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
-      <el-table-column label="API" align="center" prop="apiname" width="120"/>
+      <el-table-column label="用例名" align="center" prop="casename" width="100"/>
+      <el-table-column :show-overflow-tooltip="true" label="发布单元" align="center" prop="deployunitname" width="120"/>
+      <el-table-column :show-overflow-tooltip="true" label="API" align="center" prop="apiname" width="100"/>
 <!--      <el-table-column label="Jmeter-Class" align="center" prop="casejmxname" width="100"/>-->
       <el-table-column label="类型" align="center" prop="casetype" width="50"/>
       <el-table-column label="线程" align="center" prop="threadnum" width="50"/>
       <el-table-column label="循环" align="center" prop="loops" width="50"/>
-      <el-table-column label="用例描述" align="center" prop="casecontent" width="120"/>
+      <el-table-column :show-overflow-tooltip="true" label="用例描述" align="center" prop="casecontent" width="80"/>
       <el-table-column label="操作人" align="center" prop="creator" width="60"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
+      <el-table-column :show-overflow-tooltip="true" label="创建时间" align="center" prop="createTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
+      <el-table-column :show-overflow-tooltip="true" label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>

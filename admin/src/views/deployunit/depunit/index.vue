@@ -20,10 +20,10 @@
         </el-form-item>
 
         <span v-if="hasPermission('depunit:search')">
-          <el-form-item>
+          <el-form-item label="发布单元(服务)名:">
             <el-input clearable v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="发布单元(服务)名"></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item label="协议:">
             <el-input clearable v-model="search.protocal" @keyup.enter.native="searchBy" placeholder="协议"></el-input>
           </el-form-item>
           <el-form-item>

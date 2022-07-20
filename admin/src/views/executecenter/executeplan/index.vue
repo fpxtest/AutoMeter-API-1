@@ -26,11 +26,11 @@
         </el-form-item>
 
         <span v-if="hasPermission('executeplan:search')">
-          <el-form-item>
+          <el-form-item label="测试集合:">
             <el-input v-model="search.executeplanname" @keyup.enter.native="searchBy" placeholder="测试集合"></el-input>
           </el-form-item>
 
-          <el-form-item>
+          <el-form-item  label="业务类型:">
             <el-select v-model="search.businesstype" placeholder="业务类型">
               <el-option label="请选择" value />
               <div v-for="(businessdicitem, index) in planbusinessdiclist" :key="index">
@@ -70,21 +70,21 @@
       <el-table-column label="envid" align="center" v-if="show" prop="envid" width="50"/>
       <el-table-column label="状态" align="center" prop="status" v-if="show" width="50"/>
       <el-table-column label="业务类型" align="center" prop="businesstype" width="100"/>
-      <el-table-column label="执行环境" align="center" prop="enviromentname" width="100"/>
+      <el-table-column :show-overflow-tooltip="true" label="执行环境" align="center" prop="enviromentname" width="100"/>
       <el-table-column label="类型" align="center" prop="usetype" width="50"/>
       <el-table-column label="运行模式" align="center" prop="runmode" width="70"/>
       <el-table-column :show-overflow-tooltip="true" label="通知钉钉" align="center" prop="dingdingtoken" width="90"/>
       <el-table-column label="操作人" align="center" prop="creator" width="60"/>
-      <el-table-column label="描述" align="center" prop="memo" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="130">
+      <el-table-column :show-overflow-tooltip="true" label="描述" align="center" prop="memo" width="100"/>
+      <el-table-column :show-overflow-tooltip="true" label="创建时间" align="center" prop="createTime" width="130">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="130">
+      <el-table-column :show-overflow-tooltip="true" label="最后修改时间" align="center" prop="lastmodifyTime" width="130">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
+      <el-table-column label="管理" align="center" width="290"
                        v-if="hasPermission('executeplan:update')  || hasPermission('executeplan:delete')">
         <template slot-scope="scope">
           <el-button

@@ -108,7 +108,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
+      <el-table-column label="管理" align="center" width="240"
                        v-if="hasPermission('api:update')  || hasPermission('api:delete')">
         <template slot-scope="scope">
           <el-button

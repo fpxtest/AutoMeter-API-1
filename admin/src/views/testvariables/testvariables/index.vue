@@ -43,21 +43,21 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="变量名" align="center" prop="testvariablesname" width="100"/>
-      <el-table-column label="变量描述" align="center" prop="variablesdes" width="150"/>
-      <el-table-column label="变量值类型" align="center" prop="valuetype" width="100"/>
+      <el-table-column label="变量名" align="center" prop="testvariablesname" width="80"/>
+      <el-table-column :show-overflow-tooltip="true" label="变量描述" align="center" prop="variablesdes" width="150"/>
+      <el-table-column label="变量值类型" align="center" prop="valuetype" width="80"/>
       <el-table-column label="变量值提取表达" align="center" prop="variablesexpress" width="120"/>
-      <el-table-column label="备注" align="center" prop="memo" width="100"/>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="150">
+      <el-table-column :show-overflow-tooltip="true" label="备注" align="center" prop="memo" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="80"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="150">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
+      <el-table-column label="管理" align="center" width="240"
                        v-if="hasPermission('testvariables:update')  || hasPermission('testvariables:delete')">
         <template slot-scope="scope">
           <el-button

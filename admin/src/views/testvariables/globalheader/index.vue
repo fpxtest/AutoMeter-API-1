@@ -43,11 +43,11 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="全局Header名" align="center" prop="globalheadername" width="200"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="150">
+      <el-table-column label="全局Header名" align="center" prop="globalheadername" width="280"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="200">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="150">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="200">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>

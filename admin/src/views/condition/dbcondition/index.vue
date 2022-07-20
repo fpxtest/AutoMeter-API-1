@@ -20,11 +20,11 @@
         </el-form-item>
 
         <span v-if="hasPermission('dbcondition:search')">
-          <el-form-item>
+          <el-form-item label="父条件名:">
             <el-input clearable v-model="search.conditionname" @keyup.enter.native="searchBy" placeholder="父条件名"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-input clearable v-model="search.subconditionname" @keyup.enter.native="searchBy" placeholder="子条件名"></el-input>
+          <el-form-item label="数据库条件名:">
+            <el-input clearable v-model="search.subconditionname" @keyup.enter.native="searchBy" placeholder="数据库条件名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
@@ -47,11 +47,11 @@
         </template>
       </el-table-column>
       <el-table-column label="父条件名" align="center" prop="conditionname" width="120"/>
-      <el-table-column label="数据库条件名" align="center" prop="subconditionname" width="120"/>
+      <el-table-column label="数据库条件名" align="center" prop="subconditionname" width="130"/>
       <el-table-column label="环境" align="center" prop="enviromentname" width="120"/>
-      <el-table-column label="组件名" align="center" prop="assemblename" width="120"/>
-      <el-table-column label="Sql类型" align="center" prop="dbtype" width="120"/>
-      <el-table-column label="Sql内容" align="center" prop="dbcontent" width="120">
+      <el-table-column label="组件名" align="center" prop="assemblename" width="100"/>
+      <el-table-column label="Sql类型" align="center" prop="dbtype" width="80"/>
+      <el-table-column label="Sql内容" align="center" prop="dbcontent" width="80">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>{{ scope.row.dbcontent }}</p>
@@ -61,16 +61,16 @@
           </el-popover>
         </template>
       </el-table-column>>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="120">
+      <el-table-column label="操作人" align="center" prop="creator" width="70"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="120">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
 
-      <el-table-column label="管理" align="center"
+      <el-table-column label="管理" align="center" width="150"
                        v-if="hasPermission('dbcondition:update')  || hasPermission('dbcondition:delete')">
         <template slot-scope="scope">
           <el-button

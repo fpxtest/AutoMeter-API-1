@@ -50,15 +50,15 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="账户名" align="center" prop="name" width="100" />
+      <el-table-column label="账户名" align="center" prop="name" width="140" />
       <el-table-column label="邮箱" align="center" prop="email" width="160" />
-      <el-table-column label="注册时间" align="center" prop="registerTime" width="150">
+      <el-table-column label="注册时间" align="center" prop="registerTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.registerTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后登录时间" align="center" prop="loginTime" width="150">
+      <el-table-column label="最后登录时间" align="center" prop="loginTime" width="160">
         <template slot-scope="scope">{{ scope.row.loginTime ? unix2CurrentTime(scope.row.loginTime) : '从未登录' }}</template>
       </el-table-column>
-      <el-table-column label="角色" align="center" prop="roleName" width="100" />
+      <el-table-column label="角色" align="center" prop="roleName" width="140" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('account:update') || hasPermission('account:delete')">
         <template slot-scope="scope">

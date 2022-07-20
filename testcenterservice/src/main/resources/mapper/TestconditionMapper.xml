@@ -26,7 +26,7 @@
     FROM testcondition a
     <where>
       <if test="objecttype != null and objecttype != ''">a.objecttype like CONCAT('%',#{objecttype},'%')</if>
-      <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
+      <if test="conditionname != null and conditionname != ''"> and a.conditionname like CONCAT('%',#{conditionname},'%')</if>
     </where>
     order by lastmodify_time  DESC
   </select>

@@ -20,7 +20,7 @@
         </el-form-item>
 
         <span v-if="hasPermission('delaycondition:search')">
-          <el-form-item>
+          <el-form-item label="父条件名:">
             <el-select v-model="search.conditionname" placeholder="父条件名">
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
@@ -53,11 +53,11 @@
       <el-table-column label="父条件名" align="center" prop="conditionname" width="200"/>
       <el-table-column label="等待时间(秒)" align="center" prop="delaytime" width="150">
       </el-table-column>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="操作人" align="center" prop="creator" width="70"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>

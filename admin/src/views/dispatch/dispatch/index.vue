@@ -51,10 +51,10 @@
       </el-table-column>
       <el-table-column label="执行机" align="center" prop="slavername" width="150"/>
       <el-table-column label="测试集合" align="center" prop="execplanname" width="150"/>
-      <el-table-column label="执行计划" align="center" prop="batchname" width="150"/>
+      <el-table-column :show-overflow-tooltip="true" label="执行计划" align="center" prop="batchname" width="150"/>
       <el-table-column label="执行用例" align="center" prop="testcasename" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="100"/>
-      <el-table-column label="备注" align="center" prop="memo" width="150">
+      <el-table-column :show-overflow-tooltip="true" label="异常详情" align="center" prop="memo" width="150">
       <template slot-scope="scope">
         <span v-if="scope.row.memo !== ''" style="color:red">{{ scope.row.memo }}</span>
       </template>

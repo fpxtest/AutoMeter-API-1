@@ -20,7 +20,7 @@
         </el-form-item>
 
         <span v-if="hasPermission('scriptcondition:search')">
-          <el-form-item>
+          <el-form-item label="父条件名:">
             <el-select v-model="search.conditionname" placeholder="父条件名">
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
@@ -61,7 +61,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="操作人" align="center" prop="creator" width="100"/>
+      <el-table-column label="操作人" align="center" prop="creator" width="70"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
