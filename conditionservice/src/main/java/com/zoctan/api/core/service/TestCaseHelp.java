@@ -47,6 +47,7 @@ public class TestCaseHelp {
         tch.testvariablesValueService = this.testvariablesValueService;
         tch.variablesService = this.variablesService;
         tch.dbvariablesService = this.dbvariablesService;
+        tch.globalvariablesService = this.globalvariablesService;
     }
 
     @Autowired(required = false)
@@ -63,6 +64,9 @@ public class TestCaseHelp {
 
     @Autowired(required = false)
     private DbvariablesService dbvariablesService;
+
+    @Autowired(required = false)
+    private GlobalvariablesService globalvariablesService;
 
 
     public RequestObject GetCaseRequestDataForDebug(HashMap<String, String> DBValueMap, HashMap<String, String> InterfaceValueMap, List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
@@ -118,15 +122,6 @@ public class TestCaseHelp {
                 }
             }
             TestCaseHelp.log.info("GetCaseRequestDataForDebug resource is ：" + resource);
-
-//            if (deployunitvisittype.equals(new String("ip"))) {
-//                testserver = machine.getIp();
-//                resource = protocal + "://" + testserver + ":" + port + path;
-//            } else {
-//                testserver = macdepunit.getDomain();
-//                resource = protocal + "://" + testserver + path;
-//            }
-
             HashMap<String, String> InterfaceMap = InterfaceValueMap;
             HashMap<String, String> DBMap = DBValueMap;
 //            HashMap<String, String> ScriptMap = GetMap(scriptValueList);
@@ -135,6 +130,13 @@ public class TestCaseHelp {
             HashMap<String, String> RadomMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomMap.put(va.getVariablesname(), va.getVariablestype());
+            }
+
+            //全局变量
+            List<Globalvariables> globalvariablesList = tch.globalvariablesService.listAll();
+            HashMap<String, String> GlobalVariablesMap = new HashMap<>();
+            for (Globalvariables va : globalvariablesList) {
+                GlobalVariablesMap.put(va.getKeyname(), va.getKeyvalue());
             }
 
             //url中的变量替换
@@ -163,6 +165,14 @@ public class TestCaseHelp {
                     resource = resource.replace(UseDBvariables, VariableValue.toString());
                 }
             }
+            //4.全局变量替换
+            for (Globalvariables variables : globalvariablesList) {
+                String VariableName = "$" + variables.getKeyname() + "$";
+                if (resource.contains(VariableName)) {
+                    Object VariableValue = variables.getKeyvalue();
+                    resource = resource.replace(VariableName, VariableValue.toString());
+                }
+            }
 
             HashMap<String, ApiCasedata> headmap = fixhttprequestdatas("Header", apiCasedataList);
             HashMap<String, ApiCasedata> bodymap = fixhttprequestdatas("Body", apiCasedataList);
@@ -175,8 +185,8 @@ public class TestCaseHelp {
                 for (String key : headmap.keySet()) {
                     String Value = headmap.get(key).getApiparamvalue().trim();
                     Object ObjectValue = Value;
-                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
                     }
                     header.addParam(key, ObjectValue);
                 }
@@ -189,8 +199,8 @@ public class TestCaseHelp {
                     String Value = paramsmap.get(key).getApiparamvalue().trim();
                     String DataType = paramsmap.get(key).getParamstype();
                     Object ObjectValue = Value;
-                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
                     }
                     Object Result = GetDataByType(ObjectValue.toString(), DataType);
                     paramers.addParam(key, Result);
@@ -207,8 +217,8 @@ public class TestCaseHelp {
                         String DataType = bodymap.get(key).getParamstype();
                         String Value = bodymap.get(key).getApiparamvalue().trim();
                         Object ObjectValue = Value;
-                        if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
-                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                        if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
                         }
                         Object Result = GetDataByType(ObjectValue.toString(), DataType);
                         Bodyparamers.addParam(key, Result);
@@ -246,6 +256,15 @@ public class TestCaseHelp {
                                 PostData = PostData.replace(UseVariableName, VariableValue);
                             }
                         }
+
+                        //4.替换全局变量
+                        for (Globalvariables variables : globalvariablesList) {
+                            String VariableName = "$" + variables.getKeyname() + "$";
+                            if (PostData.contains(VariableName)) {
+                                Object VariableValue = GlobalVariablesMap.get(variables.getKeyname());
+                                PostData = PostData.replace(VariableName, VariableValue.toString());
+                            }
+                        }
                     }
                 }
             }
@@ -271,7 +290,7 @@ public class TestCaseHelp {
 
 
     // 拼装请求需要的用例数据
-    public RequestObject GetCaseRequestData(Dispatch dispatch, List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
+    public RequestObject GetCaseRequestData(Dispatch dispatch, List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine)  {
         RequestObject ro = new RequestObject();
         try {
             // url请求资源路径
@@ -349,10 +368,18 @@ public class TestCaseHelp {
             HashMap<String, String> ScriptMap = GetMap(scriptValueList);
 
 
+            //随机变量
             List<Variables> variablesList = tch.variablesService.listAll();
             HashMap<String, String> RadomMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomMap.put(va.getVariablesname(), va.getVariablestype());
+            }
+
+            //全局变量
+            List<Globalvariables> globalvariablesList = tch.globalvariablesService.listAll();
+            HashMap<String, String> GlobalVariablesMap = new HashMap<>();
+            for (Globalvariables va : globalvariablesList) {
+                GlobalVariablesMap.put(va.getKeyname(), va.getKeyvalue());
             }
 
             //url中的变量替换
@@ -382,6 +409,15 @@ public class TestCaseHelp {
                 }
             }
 
+            //4.全局变量替换
+            for (Globalvariables variables : globalvariablesList) {
+                String VariableName = "$" + variables.getKeyname() + "$";
+                if (resource.contains(VariableName)) {
+                    Object VariableValue = variables.getKeyvalue();
+                    resource = resource.replace(VariableName, VariableValue.toString());
+                }
+            }
+
             HashMap<String, ApiCasedata> headmap = fixhttprequestdatas("Header", apiCasedataList);
             HashMap<String, ApiCasedata> bodymap = fixhttprequestdatas("Body", apiCasedataList);
             HashMap<String, ApiCasedata> paramsmap = fixhttprequestdatas("Params", apiCasedataList);
@@ -393,8 +429,8 @@ public class TestCaseHelp {
                 for (String key : headmap.keySet()) {
                     String Value = headmap.get(key).getApiparamvalue().trim();
                     Object ObjectValue = Value;
-                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
                     }
                     header.addParam(key, ObjectValue);
                 }
@@ -407,8 +443,8 @@ public class TestCaseHelp {
                     String Value = paramsmap.get(key).getApiparamvalue().trim();
                     String DataType = paramsmap.get(key).getParamstype().trim();
                     Object ObjectValue = Value;
-                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                    if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
                     }
                     Object Result = GetDataByType(ObjectValue.toString(), DataType);
                     paramers.addParam(key, Result);
@@ -425,8 +461,8 @@ public class TestCaseHelp {
                         String Value = bodymap.get(key).getApiparamvalue().trim();
                         String DataType = bodymap.get(key).getParamstype();
                         Object ObjectValue = Value;
-                        if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]"))) {
-                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap);
+                        if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
                         }
                         Object Result = GetDataByType(ObjectValue.toString(), DataType);
                         Bodyparamers.addParam(key, Result);
@@ -465,6 +501,14 @@ public class TestCaseHelp {
                                 PostData = PostData.replace(UseVariableName, VariableValue);
                             }
                         }
+                        //4.替换全局变量
+                        for (Globalvariables variables : globalvariablesList) {
+                            String VariableName = "$" + variables.getKeyname() + "$";
+                            if (PostData.contains(VariableName)) {
+                                Object VariableValue = GlobalVariablesMap.get(variables.getKeyname());
+                                PostData = PostData.replace(VariableName, VariableValue.toString());
+                            }
+                        }
                     }
                 }
             }
@@ -495,7 +539,7 @@ public class TestCaseHelp {
         return RadomMap;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap) throws Exception {
         Object ObjectValue = Value;
         boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
@@ -554,10 +598,23 @@ public class TestCaseHelp {
                 }
             }
         }
+        //参数值替换全局变量
+        for (String variables : globalvariablesMap.keySet()) {
+            boolean flag = GetSubOrNot(globalvariablesMap, Value, "$", "$");
+            if (Value.contains("$" + variables + "$")) {
+                exist = true;
+                if (flag) {
+                    Object GlobalVariableValue = globalvariablesMap.get(variables);
+                    Value = Value.replace("$" + variables + "$", GlobalVariableValue.toString());
+                    ObjectValue = Value;
+                } else {
+                    ObjectValue = globalvariablesMap.get(Value);
+                }
+            }
+        }
         if (!exist) {
             throw new Exception("当前接口子条件参数值中存在变量：" + Value + " 未找到对应值，请检查是否有配置变量对应的子条件获取此变量值");
         }
-
         return ObjectValue;
     }
 

@@ -79,6 +79,10 @@ public class ApicasesController {
     @Autowired(required = false)
     private GlobalheaderParamsService globalheaderParamsService;
 
+
+    @Autowired(required = false)
+    private GlobalvariablesService globalvariablesService;
+
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
         Condition con = new Condition(Apicases.class);
@@ -861,7 +865,6 @@ public class ApicasesController {
             for (Variables va : variablesList) {
                 RadomHashMap.put(va.getVariablesname(), va.getVariablestype());
             }
-
             ApicasesController.log.info("。。。。。。。。处理前的resource Url：" + resource);
 
             //url中的变量替换
@@ -891,8 +894,20 @@ public class ApicasesController {
                 }
             }
 
+            //4.全局变量替换
+            List<Globalvariables> globalvariablesList= globalvariablesService.listAll();
+            HashMap<String, String> GlobalVariablesHashMap = new HashMap<>();
+            for (Globalvariables va : globalvariablesList) {
+                GlobalVariablesHashMap.put(va.getKeyname(), va.getKeyvalue());
+            }
+            for (Globalvariables variables : globalvariablesList) {
+                String VariableName = "$" + variables.getKeyname() + "$";
+                if (resource.contains(VariableName)) {
+                    Object VariableValue = variables.getKeyvalue();
+                    resource = resource.replace(VariableName, VariableValue.toString());
+                }
+            }
             ApicasesController.log.info("。。。。。。。。处理后的resource Url：" + resource);
-
 
             List<ApiCasedata> HeaderApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Header");
             List<ApiCasedata> ParamsApiCasedataList = apiCasedataService.getparamvaluebycaseidandtype(Caseid, "Params");
@@ -902,13 +917,12 @@ public class ApicasesController {
             Condition con = new Condition(GlobalheaderParams.class);
             con.createCriteria().andCondition("globalheaderid = " + globalheaderid);
             List<GlobalheaderParams> globalheaderParamsList = globalheaderParamsService.listByCondition(con);
-
             String requestcontenttype = api.getRequestcontenttype();
 
             //Header用例值
             HttpHeader header = new HttpHeader();
             try {
-                header = GetHttpHeader(globalheaderParamsList, HeaderApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap);
+                header = GetHttpHeader(globalheaderParamsList, HeaderApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap,GlobalVariablesHashMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -917,7 +931,7 @@ public class ApicasesController {
             //参数用例值
             HttpParamers paramers = new HttpParamers();
             try {
-                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap);
+                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap,GlobalVariablesHashMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -927,7 +941,7 @@ public class ApicasesController {
             HttpParamers Bodyparamers = new HttpParamers();
             if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                 try {
-                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap);
+                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap,GlobalVariablesHashMap);
                 } catch (Exception exception) {
                     return ResultGenerator.genFailedResult(exception.getMessage());
                 }
@@ -960,6 +974,14 @@ public class ApicasesController {
                         if (PostData.contains(UseDBvariables)) {
                             Object VariableValue = DBParamsValuesMap.get(DBvariables);
                             PostData = PostData.replace(UseDBvariables, VariableValue.toString());
+                        }
+                    }
+                    //4.替换全局变量
+                    for (Globalvariables variables : globalvariablesList) {
+                        String VariableName = "$" + variables.getKeyname() + "$";
+                        if (PostData.contains(VariableName)) {
+                            Object VariableValue = GlobalVariablesHashMap.get(variables.getKeyname());
+                            PostData = PostData.replace(VariableName, VariableValue.toString());
                         }
                     }
                 }
@@ -1011,7 +1033,7 @@ public class ApicasesController {
 
 
     //获取HttpHeader
-    private HttpHeader GetHttpHeader(List<GlobalheaderParams> globalheaderParamsList, List<ApiCasedata> HeaderApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap) throws Exception {
+    private HttpHeader GetHttpHeader(List<GlobalheaderParams> globalheaderParamsList, List<ApiCasedata> HeaderApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap,HashMap<String, String> GlobalVariablesHashMap) throws Exception {
         HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
         for (ApiCasedata Headdata : HeaderApiCasedataList) {
             if (!globalheaderParamsHashMap.containsKey(Headdata.getApiparam())) {
@@ -1026,40 +1048,29 @@ public class ApicasesController {
         for (String HeaderName : globalheaderParamsHashMap.keySet()) {
             String HeaderValue = globalheaderParamsHashMap.get(HeaderName);
             Object Result = HeaderValue;
-            if ((HeaderValue.contains("<") && HeaderValue.contains(">")) || (HeaderValue.contains("<<") && HeaderValue.contains(">>")) || (HeaderValue.contains("[") && HeaderValue.contains("]"))) {
+            if ((HeaderValue.contains("<") && HeaderValue.contains(">")) || (HeaderValue.contains("<<") && HeaderValue.contains(">>")) || (HeaderValue.contains("[") && HeaderValue.contains("]")) || (HeaderValue.contains("$") && HeaderValue.contains("$"))) {
                 try {
-                    Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap, DBMap);
+                    Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap, DBMap,GlobalVariablesHashMap);
                 } catch (Exception ex) {
                     throw new Exception("当前用例的Header中参数名：" + HeaderName + "-对应的参数值：" + ex.getMessage());
                 }
             }
             header.addParam(HeaderName, Result);
         }
-//        HttpHeader header = new HttpHeader();
-//        for (ApiCasedata Headdata : HeaderApiCasedataList) {
-//            String HeaderName = Headdata.getApiparam();
-//            String HeaderValue = Headdata.getApiparamvalue();
-//            Object Result = HeaderValue;
-//
-//            if ((HeaderValue.contains("<") && HeaderValue.contains(">")) || (HeaderValue.contains("<<") && HeaderValue.contains(">>")) || (HeaderValue.contains("[") && HeaderValue.contains("]"))) {
-//                Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap, DBMap);
-//            }
-//            header.addParam(HeaderName, Result);
-//        }
         return header;
     }
 
     //获取HttpParams
-    private HttpParamers GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap) throws Exception {
+    private HttpParamers GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap,HashMap<String, String> GlobalVariablesHashMap) throws Exception {
         HttpParamers paramers = new HttpParamers();
         for (ApiCasedata Paramdata : ParamsApiCasedataList) {
             String ParamName = Paramdata.getApiparam();
             String ParamValue = Paramdata.getApiparamvalue();
             String DataType = Paramdata.getParamstype();
             Object ObjectResult = ParamValue;
-            if ((ParamValue.contains("<") && ParamValue.contains(">")) || (ParamValue.contains("<<") && ParamValue.contains(">>")) || (ParamValue.contains("[") && ParamValue.contains("]"))) {
+            if ((ParamValue.contains("<") && ParamValue.contains(">")) || (ParamValue.contains("<<") && ParamValue.contains(">>")) || (ParamValue.contains("[") && ParamValue.contains("]")) || (ParamValue.contains("$") && ParamValue.contains("$"))) {
                 try {
-                    ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap, DBMap);
+                    ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap, DBMap,GlobalVariablesHashMap);
                 } catch (Exception ex) {
                     throw new Exception("当前用例的Params或者Body中参数名：" + ParamName + "-对应的参数值：" + ex.getMessage());
                 }
@@ -1070,7 +1081,7 @@ public class ApicasesController {
         return paramers;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap) throws Exception {
         Object ObjectValue = Value;
         boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
@@ -1126,6 +1137,20 @@ public class ApicasesController {
                     ObjectValue = Value;
                 } else {
                     ObjectValue = GetRadomValue(variables);
+                }
+            }
+        }
+        //参数值替换全局变量
+        for (String variables : globalvariablesMap.keySet()) {
+            boolean flag = GetSubOrNot(globalvariablesMap, Value, "$", "$");
+            if (Value.contains("$" + variables + "$")) {
+                exist = true;
+                if (flag) {
+                    Object GlobalVariableValue = globalvariablesMap.get(variables);
+                    Value = Value.replace("$" + variables + "$", GlobalVariableValue.toString());
+                    ObjectValue = Value;
+                } else {
+                    ObjectValue = globalvariablesMap.get(Value);
                 }
             }
         }

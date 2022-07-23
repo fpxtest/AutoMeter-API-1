@@ -52,30 +52,6 @@ private ApicasesMapper apicasesMapper;
             apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid,apiid,casetype);
         }
         return apicasesPlanList;
-
-//        List<Apicases> last=new ArrayList<>();
-//        List<Apicases> apicasesList= apicasesMapper.getcasebydeployunitid(deployunitid);
-//        List<ExecuteplanTestcase> apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid);
-//        HashMap<Long,ExecuteplanTestcase> executeplanTestcaseHashMap=new HashMap<>();
-//
-//        for (ExecuteplanTestcase executeplanTestcase :apicasesPlanList) {
-//            executeplanTestcaseHashMap.put(executeplanTestcase.getTestcaseid(),executeplanTestcase);
-//        }
-//
-//        if(executeplanTestcaseHashMap.size()>0)
-//        {
-//            for (Apicases apicases :apicasesList) {
-//                if(!executeplanTestcaseHashMap.containsKey(apicases.getId()))
-//                {
-//                    last.add(apicases);
-//                }
-//            }
-//        }
-//        else
-//        {
-//            last=apicasesList;
-//        }
-//        return last;
     }
 
     @Override

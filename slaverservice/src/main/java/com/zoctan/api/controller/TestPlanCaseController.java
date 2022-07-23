@@ -104,6 +104,9 @@ public class TestPlanCaseController {
     @Autowired(required = false)
     private GlobalheaderParamsService globalheaderParamsService;
 
+    @Autowired(required = false)
+    private GlobalvariablesService globalvariablesService;
+
     @PostMapping("/exec")
     //    public Result exec(@RequestBody List<TestplanCase> plancaseList) {
     public Result exec(@RequestBody Testplanandbatch planbatch) throws Exception {
@@ -201,9 +204,6 @@ public class TestPlanCaseController {
     @PostMapping("/execperformancetest")
     public Result execperformancetest(@RequestBody Dispatch dispatch) throws Exception {
         String ip = null;
-//        InetAddress address = null;
-//        address = InetAddress.getLocalHost();
-//        ip = address.getHostAddress();
         ip = IPHelpUtils.getInet4Address();
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         if (slaverlist.size() == 0) {
@@ -293,9 +293,6 @@ public class TestPlanCaseController {
     @PostMapping("/execfunctiontest")
     public Result execfunctiontest(@RequestBody List<Dispatch> dispatchList) throws Exception {
         String ip = null;
-//        InetAddress address = null;
-//        address = InetAddress.getLocalHost();
-//        address.getHostAddress();
         ip = IPHelpUtils.getInet4Address();
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
         if (slaverlist.size() == 0) {
@@ -477,6 +474,13 @@ public class TestPlanCaseController {
             DBMap.put(te.getVariablesname(), te.getVariablesvalue());
         }
 
+        List<Globalvariables> globalvariablesList= globalvariablesService.listAll();
+        HashMap<String, String> GlobalVariablesHashMap = new HashMap<>();
+        for (Globalvariables va : globalvariablesList) {
+            GlobalVariablesHashMap.put(va.getKeyname(), va.getKeyvalue());
+        }
+
+
         //1.Url替换接口变量
         String RequestUrl = jmeterPerformanceObject.getResource();
         for (String VariableName : InterFaceMap.keySet()) {
@@ -495,6 +499,15 @@ public class TestPlanCaseController {
             }
         }
 
+        //3.全局变量替换
+        for (Globalvariables variables : globalvariablesList) {
+            String VariableName = "$" + variables.getKeyname() + "$";
+            if (RequestUrl.contains(VariableName)) {
+                Object VariableValue = variables.getKeyvalue();
+                RequestUrl = RequestUrl.replace(VariableName, VariableValue.toString());
+            }
+        }
+
         jmeterPerformanceObject.setResource(RequestUrl);
         //String Caseid=dispatch.getTestcaseid().toString();
         HashMap<String, Object> HeaderMap = new HashMap<>();
@@ -507,8 +520,8 @@ public class TestPlanCaseController {
             String DataType = apiCasedata.getParamstype();
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
                 Object Result = Paramvalue;
-                if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]"))) {
-                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap);
+                if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
+                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
                 }
                 Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                 ParamsMap.put(ParamName, LastObjectValue);
@@ -543,16 +556,16 @@ public class TestPlanCaseController {
                 {
                     Paramvalue=globalheaderParamsHashMap.get(ParamName);
                 }
-                if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]"))) {
-                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap);
+                if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
+                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
                 }
                 HeaderMap.put(ParamName, Result);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
                     Object Result = Paramvalue;
-                    if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]"))) {
-                        Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap);
+                    if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
+                        Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
                     }
                     Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                     BodyMap.put(ParamName, LastObjectValue);
@@ -572,6 +585,15 @@ public class TestPlanCaseController {
                         if (PostData.contains(UseVariableName)) {
                             String VariableValue = DBMap.get(VariableName);
                             PostData = PostData.replace(UseVariableName, VariableValue);
+                        }
+                    }
+
+                    //替换全局变量
+                    for (Globalvariables variables : globalvariablesList) {
+                        String VariableName = "$" + variables.getKeyname() + "$";
+                        if (PostData.contains(VariableName)) {
+                            Object VariableValue = GlobalVariablesHashMap.get(variables.getKeyname());
+                            PostData = PostData.replace(VariableName, VariableValue.toString());
                         }
                     }
                 }
@@ -635,7 +657,7 @@ public class TestPlanCaseController {
         return flag;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap) throws Exception {
         Object ObjectValue = Value;
         boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
 
@@ -681,7 +703,20 @@ public class TestPlanCaseController {
                 }
             }
         }
-
+        //参数值替换全局变量
+        for (String variables : globalvariablesMap.keySet()) {
+            boolean flag = GetSubOrNot(globalvariablesMap, Value, "$", "$");
+            if (Value.contains("$" + variables + "$")) {
+                exist = true;
+                if (flag) {
+                    Object GlobalVariableValue = globalvariablesMap.get(variables);
+                    Value = Value.replace("$" + variables + "$", GlobalVariableValue.toString());
+                    ObjectValue = Value;
+                } else {
+                    ObjectValue = globalvariablesMap.get(Value);
+                }
+            }
+        }
         if (!exist) {
             throw new Exception("当前用例参数值中存在变量：" + Value + " 未找到对应值，请检查是否有配置对应变量的子条件获取此变量值");
         }
@@ -689,52 +724,42 @@ public class TestPlanCaseController {
     }
 
 
-    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
-        HashMap<String, Object> resultmap = new HashMap<>();
-        //List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
-        Map<String,Object>params=new HashMap<>();
-        params.put("executeplanid",dispatch.getExecplanid());
-        List<Globalheaderuse> globalheaderuseList = globalheaderuseService.searchheaderbyepid(params);
-        List<GlobalheaderParams> globalheaderParamsList=new ArrayList<>();
-        HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
-
-        for (String HeaderName:HeaderMap.keySet()) {
-            globalheaderParamsHashMap.put(HeaderName,HeaderMap.get(HeaderName).toString());
-        }
-
-        //获取所有的全局header，k,v,如果有和用例header相同参数名则覆盖
-        for (Globalheaderuse globalheaderuse :globalheaderuseList) {
-//            Condition con=new Condition(GlobalheaderParams.class);
-//            con.createCriteria().andCondition("globalheaderid = " + globalheaderuse.getGlobalheaderid());
-            Map<String, Object> headeridparams=new HashMap<>();
-            params.put("globalheaderid",globalheaderuse.getGlobalheaderid());
-            globalheaderParamsList= globalheaderParamsService.findGlobalheaderParamsWithName(headeridparams);
-            for (GlobalheaderParams globalheaderParams : globalheaderParamsList) {
-                if (!globalheaderParamsHashMap.containsKey(globalheaderParams.getKeyname())) {
-                    globalheaderParamsHashMap.put(globalheaderParams.getKeyname(), globalheaderParams.getKeyvalue());
-                }
-            }
-        }
-        for (String ParamName : globalheaderParamsHashMap.keySet()) {
-            String ParamValue = globalheaderParamsHashMap.get(ParamName);
-            Object Result = ParamValue;
-            if ((ParamValue.contains("<") && ParamValue.contains(">")) || (ParamValue.contains("<<") && ParamValue.contains(">>")) || (ParamValue.contains("[") && ParamValue.contains("]"))) {
-                Result = GetVaraibaleValue(ParamValue, InterfaceMap, DBMap);
-            }
-            resultmap.put(ParamName, Result);
-        }
-        //全局Header如果有参数，则替换原参数，没有则加上全局Header参数
-//        for (ExecuteplanParams executeplanParams : executeplanHeaderParamList) {
-//            String ParamName = executeplanParams.getKeyname();
-//            String ParamValue = executeplanParams.getKeyvalue();
+//    private HashMap<String, Object> GetHeaderFromTestPlanParam(HashMap<String, Object> HeaderMap, Dispatch dispatch, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap) throws Exception {
+//        HashMap<String, Object> resultmap = new HashMap<>();
+//        //List<ExecuteplanParams> executeplanHeaderParamList = executeplanParamsService.getParamsbyepid(dispatch.getExecplanid(), "Header");
+//        Map<String,Object>params=new HashMap<>();
+//        params.put("executeplanid",dispatch.getExecplanid());
+//        List<Globalheaderuse> globalheaderuseList = globalheaderuseService.searchheaderbyepid(params);
+//        List<GlobalheaderParams> globalheaderParamsList=new ArrayList<>();
+//        HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
+//
+//        for (String HeaderName:HeaderMap.keySet()) {
+//            globalheaderParamsHashMap.put(HeaderName,HeaderMap.get(HeaderName).toString());
+//        }
+//
+//        //获取所有的全局header，k,v,如果有和用例header相同参数名则覆盖
+//        for (Globalheaderuse globalheaderuse :globalheaderuseList) {
+////            Condition con=new Condition(GlobalheaderParams.class);
+////            con.createCriteria().andCondition("globalheaderid = " + globalheaderuse.getGlobalheaderid());
+//            Map<String, Object> headeridparams=new HashMap<>();
+//            params.put("globalheaderid",globalheaderuse.getGlobalheaderid());
+//            globalheaderParamsList= globalheaderParamsService.findGlobalheaderParamsWithName(headeridparams);
+//            for (GlobalheaderParams globalheaderParams : globalheaderParamsList) {
+//                if (!globalheaderParamsHashMap.containsKey(globalheaderParams.getKeyname())) {
+//                    globalheaderParamsHashMap.put(globalheaderParams.getKeyname(), globalheaderParams.getKeyvalue());
+//                }
+//            }
+//        }
+//        for (String ParamName : globalheaderParamsHashMap.keySet()) {
+//            String ParamValue = globalheaderParamsHashMap.get(ParamName);
 //            Object Result = ParamValue;
 //            if ((ParamValue.contains("<") && ParamValue.contains(">")) || (ParamValue.contains("<<") && ParamValue.contains(">>")) || (ParamValue.contains("[") && ParamValue.contains("]"))) {
 //                Result = GetVaraibaleValue(ParamValue, InterfaceMap, DBMap);
 //            }
-//            HeaderMap.put(ParamName, Result);
+//            resultmap.put(ParamName, Result);
 //        }
-        return HeaderMap;
-    }
+//        return HeaderMap;
+//    }
 
     public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch) throws Exception {
         JmeterPerformanceObject jmeterPerformanceObject = GetJmeterPerformanceCaseData(dispatch);

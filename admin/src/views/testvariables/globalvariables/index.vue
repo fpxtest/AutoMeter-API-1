@@ -103,7 +103,7 @@
 
         <el-form-item label="变量值" prop="keyvalue" required>
           <el-input
-            maxlength="60"
+            maxlength="180"
             type="text"
             prefix-icon="el-icon-edit"
             auto-complete="off"
