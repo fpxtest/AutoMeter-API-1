@@ -202,7 +202,7 @@
           </template>
         </el-table-column>
         <el-table-column label="参数名" align="center" prop="keyname" width="100"/>
-        <el-table-column label="参数值" align="center" prop="keyvalue" width="100"/>
+        <el-table-column :show-overflow-tooltip="true" label="参数值" align="center" prop="keyvalue" width="100"/>
         <el-table-column label="创建时间" align="center" prop="createTime" width="140">
           <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
         </el-table-column>

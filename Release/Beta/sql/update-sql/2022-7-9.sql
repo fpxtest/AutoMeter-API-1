@@ -21,7 +21,7 @@ CREATE TABLE `globalheader_params`
     `id`            bigint(20) unsigned  NOT NULL AUTO_INCREMENT COMMENT '主键Id',
     `globalheaderid` bigint(20) unsigned  NOT NULL  COMMENT 'globalheaderId',
     `keyname`   varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'key名',
-    `keyvalue`   varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '值',
+    `keyvalue`   varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '值',
     `create_time` datetime DEFAULT NOW() COMMENT '创建时间',
     `lastmodify_time`    datetime DEFAULT NOW() COMMENT '上一次修改时间',
     PRIMARY KEY (`id`)

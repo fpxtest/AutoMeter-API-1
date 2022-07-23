@@ -40,7 +40,17 @@ private ApicasesMapper apicasesMapper;
         String  casetype= params.get("casetype").toString();
         Long executeplanid= Long.parseLong(params.get("executeplanid").toString());
         Long deployunitid= Long.parseLong(params.get("deployunitid").toString());
-        List<Apicases> apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid,casetype);
+        List<Apicases> apicasesPlanList=new ArrayList<>();
+        long apiid=0;
+        if(params.get("apiid")==null)
+        {
+            apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid,apiid,casetype);
+        }
+        else
+        {
+            apiid= Long.parseLong(params.get("apiid").toString());
+            apicasesPlanList= executeplanTestcaseMapper.findcasebyplanid(executeplanid,deployunitid,apiid,casetype);
+        }
         return apicasesPlanList;
 
 //        List<Apicases> last=new ArrayList<>();

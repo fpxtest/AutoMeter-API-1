@@ -517,18 +517,22 @@ public class TestPlanCaseController {
                 Map<String,Object>params=new HashMap<>();
                 params.put("executeplanid",dispatch.getExecplanid());
                 List<Globalheaderuse> globalheaderuseList = globalheaderuseService.searchheaderbyepid(params);
+
                 List<GlobalheaderParams> globalheaderParamsList=new ArrayList<>();
                 HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
 
                 for (String HeaderName:HeaderMap.keySet()) {
+                    TestPlanCaseController.log.info("全局Header参数HeaderMap参数："+HeaderName+" HeaderMap参数Value: "+HeaderMap.get(HeaderName).toString());
                     globalheaderParamsHashMap.put(HeaderName,HeaderMap.get(HeaderName).toString());
                 }
                 //获取所有的全局header，k,v,如果有和用例header相同参数名则覆盖
                 for (Globalheaderuse globalheaderuse :globalheaderuseList) {
                     Map<String, Object> headeridparams=new HashMap<>();
-                    params.put("globalheaderid",globalheaderuse.getGlobalheaderid());
+                    headeridparams.put("globalheaderid",globalheaderuse.getGlobalheaderid());
+                    TestPlanCaseController.log.info("全局Header参数globalheaderid："+globalheaderuse.getGlobalheaderid());
                     globalheaderParamsList= globalheaderParamsService.findGlobalheaderParamsWithName(headeridparams);
                     for (GlobalheaderParams globalheaderParams : globalheaderParamsList) {
+                        TestPlanCaseController.log.info("全局Header参数globalheaderParams："+globalheaderParams+" globalheaderparamvalue:"+globalheaderParams.getKeyvalue());
                         if (!globalheaderParamsHashMap.containsKey(globalheaderParams.getKeyname())) {
                             globalheaderParamsHashMap.put(globalheaderParams.getKeyname(), globalheaderParams.getKeyvalue());
                         }

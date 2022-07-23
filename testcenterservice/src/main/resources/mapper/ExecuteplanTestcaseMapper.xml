@@ -56,7 +56,13 @@
   </select>
 
   <select id="findcasebyplanid" resultMap="BaseResultMap">
-    select a.* from apicases a  WHERE a.deployunitid  =#{deployunitid} and a.casetype=#{casetype} and a.id
+    select a.* from apicases a
+    <where>
+      <if test="deployunitid != null and deployunitid != ''"> a.deployunitid  =#{deployunitid}</if>
+      <if test="casetype != null  and casetype != ''">and a.casetype=#{casetype}</if>
+      <if test="apiid != null  and apiid != 0">and a.apiid=#{apiid}</if>
+    </where>
+    and a.id
       not in(select testcaseid from executeplan_testcase   WHERE executeplanid=#{executeplanid})
   </select>
 

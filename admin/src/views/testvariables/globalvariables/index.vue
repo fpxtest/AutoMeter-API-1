@@ -44,7 +44,7 @@
         </template>
       </el-table-column>
       <el-table-column label="全局变量名" align="center" prop="keyname" width="150"/>
-      <el-table-column label="变量值" align="center" prop="keyvalue" width="80"/>
+      <el-table-column :show-overflow-tooltip="true" label="变量值" align="center" prop="keyvalue" width="80"/>
       <el-table-column label="描述" align="center" prop="memo" width="250"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>

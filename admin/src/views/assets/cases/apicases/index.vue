@@ -183,16 +183,17 @@
             type="primary"
             size="mini"
             v-if="hasPermission('apicases:params') && scope.row.id !== id"
-            @click.native.prevent="showTestDialog(scope.$index)"
-          >调试
+            @click.native.prevent="showcasedataDialog(scope.$index)"
+          >用例值
           </el-button>
           <el-button
             type="primary"
             size="mini"
             v-if="hasPermission('apicases:params') && scope.row.id !== id"
-            @click.native.prevent="showcasedataDialog(scope.$index)"
-          >用例值
+            @click.native.prevent="showTestDialog(scope.$index)"
+          >调试
           </el-button>
+
         </template>
       </el-table-column>
     </el-table>
