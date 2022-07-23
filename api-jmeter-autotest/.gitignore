@@ -5,3 +5,10 @@
 *.log
 *.gz
 */target/*
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
