@@ -467,6 +467,7 @@ public class TestPlanCaseController {
         HashMap<String, String> InterFaceMap = new HashMap<>();
         for (TestvariablesValue te : testvariablesValueList) {
             InterFaceMap.put(te.getVariablesname(), te.getVariablesvalue());
+            TestPlanCaseController.log.info("接口变量："+te.getVariablesname()+" 接口变量值: "+te.getVariablesvalue());
         }
 
         HashMap<String, String> DBMap = new HashMap<>();
@@ -514,6 +515,10 @@ public class TestPlanCaseController {
         HashMap<String, Object> ParamsMap = new HashMap<>();
         HashMap<String, Object> BodyMap = new HashMap<>();
         String PostData = "";
+        HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
+        Map<String,Object>params=new HashMap<>();
+        params.put("executeplanid",dispatch.getExecplanid());
+        List<Globalheaderuse> globalheaderuseList = globalheaderuseService.searchheaderbyepid(params);
         for (ApiCasedata apiCasedata : apiCasedataList) {
             String ParamName = apiCasedata.getApiparam();
             String Paramvalue = apiCasedata.getApiparamvalue();
@@ -527,39 +532,25 @@ public class TestPlanCaseController {
                 ParamsMap.put(ParamName, LastObjectValue);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Header")) {
-                Map<String,Object>params=new HashMap<>();
-                params.put("executeplanid",dispatch.getExecplanid());
-                List<Globalheaderuse> globalheaderuseList = globalheaderuseService.searchheaderbyepid(params);
-
-                List<GlobalheaderParams> globalheaderParamsList=new ArrayList<>();
-                HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
-
-                for (String HeaderName:HeaderMap.keySet()) {
-                    TestPlanCaseController.log.info("全局Header参数HeaderMap参数："+HeaderName+" HeaderMap参数Value: "+HeaderMap.get(HeaderName).toString());
-                    globalheaderParamsHashMap.put(HeaderName,HeaderMap.get(HeaderName).toString());
-                }
+                globalheaderParamsHashMap.put(ParamName,Paramvalue);
+                TestPlanCaseController.log.info("Header用例参数："+ParamName+" Header用例Value: "+Paramvalue);
                 //获取所有的全局header，k,v,如果有和用例header相同参数名则覆盖
-                for (Globalheaderuse globalheaderuse :globalheaderuseList) {
-                    Map<String, Object> headeridparams=new HashMap<>();
-                    headeridparams.put("globalheaderid",globalheaderuse.getGlobalheaderid());
-                    TestPlanCaseController.log.info("全局Header参数globalheaderid："+globalheaderuse.getGlobalheaderid());
-                    globalheaderParamsList= globalheaderParamsService.findGlobalheaderParamsWithName(headeridparams);
-                    for (GlobalheaderParams globalheaderParams : globalheaderParamsList) {
-                        TestPlanCaseController.log.info("全局Header参数globalheaderParams："+globalheaderParams+" globalheaderparamvalue:"+globalheaderParams.getKeyvalue());
-                        if (!globalheaderParamsHashMap.containsKey(globalheaderParams.getKeyname())) {
-                            globalheaderParamsHashMap.put(globalheaderParams.getKeyname(), globalheaderParams.getKeyvalue());
-                        }
-                    }
-                }
-                Object Result = Paramvalue;
-                if(globalheaderParamsHashMap.containsKey(ParamName))
-                {
-                    Paramvalue=globalheaderParamsHashMap.get(ParamName);
-                }
-                if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
-                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
-                }
-                HeaderMap.put(ParamName, Result);
+//                for (Globalheaderuse globalheaderuse :globalheaderuseList) {
+//                    Map<String, Object> headeridparams=new HashMap<>();
+//                    headeridparams.put("globalheaderid",globalheaderuse.getGlobalheaderid());
+//                    TestPlanCaseController.log.info("全局Header参数--globalheadername："+globalheaderuse.getGlobalheadername());
+//                    globalheaderParamsList= globalheaderParamsService.findGlobalheaderParamsWithName(headeridparams);
+//                    for (GlobalheaderParams globalheaderParams : globalheaderParamsList) {
+//                        TestPlanCaseController.log.info("全局Header参数globalheaderParams："+globalheaderParams.getKeyname()+" globalheaderparamvalue:"+globalheaderParams.getKeyvalue());
+//                        globalheaderParamsHashMap.put(globalheaderParams.getKeyname(), globalheaderParams.getKeyvalue());
+//                    }
+//                }
+//                Object Result = Paramvalue;
+//                if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
+//                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
+//                }
+//                HeaderMap.put(ParamName, Result);
+//                TestPlanCaseController.log.info("最终Header参数："+ParamName+" 最终Header的Value: "+Result);
             }
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Body")) {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
@@ -599,8 +590,27 @@ public class TestPlanCaseController {
                 }
             }
         }
-        //全局参数Header
-        //HeaderMap = GetHeaderFromTestPlanParam(HeaderMap, dispatch, InterFaceMap, DBMap);
+
+        //获取所有的全局header，k,v,如果有和用例header相同参数名则覆盖
+        for (Globalheaderuse globalheaderuse :globalheaderuseList) {
+            Map<String, Object> headeridparams=new HashMap<>();
+            headeridparams.put("globalheaderid",globalheaderuse.getGlobalheaderid());
+            TestPlanCaseController.log.info("全局Header参数--globalheadername："+globalheaderuse.getGlobalheadername());
+            List<GlobalheaderParams>globalheaderParamsList= globalheaderParamsService.findGlobalheaderParamsWithName(headeridparams);
+            for (GlobalheaderParams globalheaderParams : globalheaderParamsList) {
+                globalheaderParamsHashMap.put(globalheaderParams.getKeyname(), globalheaderParams.getKeyvalue());
+                TestPlanCaseController.log.info("全局Header参数globalheaderParams："+globalheaderParams.getKeyname()+" globalheaderparamvalue:"+globalheaderParams.getKeyvalue());
+            }
+        }
+        for (String ParamName:globalheaderParamsHashMap.keySet()) {
+            String Paramvalue=globalheaderParamsHashMap.get(ParamName);
+            Object Result = Paramvalue;
+            if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
+                Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
+            }
+            HeaderMap.put(ParamName, Result);
+            TestPlanCaseController.log.info("最终Header参数："+ParamName+" 最终Header的Value: "+Result);
+        }
 
         if (HeaderMap.size() > 0) {
             jmeterPerformanceObject.setHeadjson(JSON.toJSONString(HeaderMap));

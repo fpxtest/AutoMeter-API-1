@@ -482,7 +482,7 @@
       handleSizeChange(size) {
         this.search.page = 1
         this.search.size = size
-        this.getassembleLists()
+        this.getmacdepunitList()
       },
       /**
        * 改变页码
@@ -490,7 +490,7 @@
        */
       handleCurrentChange(page) {
         this.search.page = page
-        this.getassembleLists()
+        this.getmacdepunitList()
       },
       /**
        * 表格序号

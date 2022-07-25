@@ -20,7 +20,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <PieChart BusinessName="执行计划用例" :typeData="pieplancasetypedata"  :typeValueData="pieplancaseValueData"/>
+          <PieChart BusinessName="测试集合用例" :typeData="pieplancasetypedata"  :typeValueData="pieplancaseValueData"/>
         </div>
       </el-col>
     </el-row>
