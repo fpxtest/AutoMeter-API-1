@@ -14,7 +14,8 @@ import org.apache.jmeter.samplers.SampleResult;
 import java.util.*;
 
 public class HttpApiFunction extends AbstractJavaSamplerClient {
-    TestCore Core=null;
+    TestCore Core = null;
+
     // 初始化方法，实际运行时每个线程仅执行一次，在测试方法运行前执行，类似于LoadRunner中的init方法
     public void setupTest(JavaSamplerContext context) {
         super.setupTest(context);
@@ -49,7 +50,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         Map<String, List<RequestObject>> BatchRequestObjectMap = InitalTestData(Core, ctx);
         for (String BatchName : BatchRequestObjectMap.keySet()) {
             getLogger().info("BatchName 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + BatchName + " size is" + BatchRequestObjectMap.get(BatchName).size());
-            String TestPlanID="";
+            String TestPlanID = "";
             if (BatchRequestObjectMap.get(BatchName).size() > 0) {
                 TestPlanID = BatchRequestObjectMap.get(BatchName).get(0).getTestplanid();
                 getLogger().info("TestPlanID 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + TestPlanID);
@@ -66,48 +67,49 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                 long AllCostTime = 0;
                 // 发送用例请求，并返回结果
                 for (RequestObject requestObject : DeployUnitrequestObjectMap.get(DeployUnitID)) {
-                    getLogger().info("Deployid:" + DeployUnitID + " requestObject case id is 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + requestObject.getCaseid());
-                    apicasesReportstatics.setTestplanid(requestObject.getTestplanid());
-                    apicasesReportstatics.setTestplanname(requestObject.getTestplanname());
-                    apicasesReportstatics.setSlaverid(requestObject.getSlaverid());
-                    long Start = new Date().getTime();
-                    //断言信息汇总
-                    String AssertInfo = "";
-                    String ErrorInfo = "";
-                    String ActualResult = "";
-                    TestAssert TestAssert = new TestAssert(getLogger());
-                    try {
-                        //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
-                        Core.FixCondition(requestObject);
-                        TestResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
-                        ActualResult = responeData.getResponeContent();
-                        //断言
-                        AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
-                    } catch (Exception ex) {
-                        getLogger().error("CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
-                        String ExceptionMess=ex.getMessage();
-                        if(ExceptionMess.contains("Illegal character in path at"))
-                        {
-                            ExceptionMess="Url不合法，请检查是否有无法替换的变量，或者有相关非法字符："+ex.getMessage();
+                    for (int i = 0; i < requestObject.getLoop(); i++) {
+                        getLogger().info("Deployid:" + DeployUnitID + " requestObject case id is 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + requestObject.getCaseid());
+                        apicasesReportstatics.setTestplanid(requestObject.getTestplanid());
+                        apicasesReportstatics.setTestplanname(requestObject.getTestplanname());
+                        apicasesReportstatics.setSlaverid(requestObject.getSlaverid());
+                        long Start = new Date().getTime();
+                        //断言信息汇总
+                        String AssertInfo = "";
+                        String ErrorInfo = "";
+                        String ActualResult = "";
+                        TestAssert TestAssert = new TestAssert(getLogger());
+                        try {
+                            //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
+                            Core.FixCondition(requestObject);
+                            TestResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
+                            ActualResult = responeData.getResponeContent();
+                            //断言
+                            AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
+                        } catch (Exception ex) {
+                            getLogger().error("CaseException start。。。。。。。。。。。。。!" + ex.getMessage());
+                            String ExceptionMess = ex.getMessage();
+                            if (ExceptionMess.contains("Illegal character in path at")) {
+                                ExceptionMess = "Url不合法，请检查是否有无法替换的变量，或者有相关非法字符：" + ex.getMessage();
+                            }
+                            ErrorInfo = CaseException(results, TestAssert, ExceptionMess);
+                        } finally {
+                            // 保存用例运行结果，Jmeter的sample运行结果
+                            long End = new Date().getTime();
+                            long CostTime = End - Start;
+                            AllCostTime = AllCostTime + CostTime;
+                            if (TestAssert.isCaseresult()) {
+                                BatchDeployTotalPassNums = BatchDeployTotalPassNums + 1;
+                            } else {
+                                BatchDeployTotalFailNUms = BatchDeployTotalFailNUms + 1;
+                            }
+                            CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult, ctx, requestObject);
                         }
-                        ErrorInfo = CaseException(results, TestAssert, ExceptionMess);
-                    } finally {
-                        // 保存用例运行结果，Jmeter的sample运行结果
-                        long End = new Date().getTime();
-                        long CostTime = End - Start;
-                        AllCostTime = AllCostTime + CostTime;
-                        if (TestAssert.isCaseresult()) {
-                            BatchDeployTotalPassNums = BatchDeployTotalPassNums + 1;
-                        } else {
-                            BatchDeployTotalFailNUms = BatchDeployTotalFailNUms + 1;
-                        }
-                        CaseFinish(Core, results, TestAssert, AssertInfo, CostTime, ErrorInfo, ActualResult, ctx, requestObject);
                     }
                 }
                 //收集本次运行的功能用例统计结果
                 CollectionBatchDeployReportStatics(Core, apicasesReportstatics, BatchName, BatchDeployTotalCaseNums, BatchDeployTotalPassNums, BatchDeployTotalFailNUms, AllCostTime, SlaverId);
             }
-            FinisBatchCase(Core,TestPlanID,BatchName,SlaverId);
+            FinisBatchCase(Core, TestPlanID, BatchName, SlaverId);
         }
         //Jmeter事务，表示这是事务的结束点
         results.sampleEnd();
@@ -163,12 +165,12 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
             core.savetestcaseresult(testAssert.isCaseresult(), time, ActualResult, assertInfo, ErrorInfo, requestObject, ctx);
             core.updatedispatchcasestatus(requestObject.getTestplanid(), requestObject.getCaseid(), requestObject.getSlaverid(), requestObject.getBatchid());
         } catch (Exception ex) {
-            getLogger().error( "用例运行结束保存记录CaseFinish发生异常，请检查!" + ex.getMessage());
+            getLogger().error("用例运行结束保存记录CaseFinish发生异常，请检查!" + ex.getMessage());
         }
     }
 
     //功能用例统计批次发布单元用例执行信息
-    private void CollectionBatchDeployReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId)  {
+    private void CollectionBatchDeployReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId) {
         apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));
         apicasesReportstatics.setTotalpasscases(String.valueOf(TotalPassNums));
@@ -177,18 +179,18 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         core.SaveReportStatics(apicasesReportstatics);
     }
 
-    private void  FinisBatchCase(TestCore core,String planid, String BatchName, String SlaverId)  {
+    private void FinisBatchCase(TestCore core, String planid, String BatchName, String SlaverId) {
         getLogger().info("SlaverId 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" + SlaverId);
         getLogger().info("功能用例统计收集信息 完成。。。。。。。。。。。。。。。。");
         //查询此计划下的批次调度是否已经全部完成，如果完成，刷新计划批次状态为finish
-        long DispatchNotFinishNums= core.PlanBatchAllDipatchFinish(planid,BatchName);
+        long DispatchNotFinishNums = core.PlanBatchAllDipatchFinish(planid, BatchName);
 
         if (DispatchNotFinishNums > 0) {
             getLogger().info("查询计划下的批次调度未完成数量：" + DispatchNotFinishNums);
         } else {
             core.UpdateReportStatics(planid, BatchName, "已完成");
-            core.SendMessageDingDing(planid,BatchName);
-            core.SendMailByFinishPlanCase(planid,BatchName);
+            core.SendMessageDingDing(planid, BatchName);
+            core.SendMailByFinishPlanCase(planid, BatchName);
         }
         //增加邮件通知
     }
@@ -206,7 +208,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     }
 
     // 本地调试
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Arguments params = new Arguments();
         params.addArgument("DispatchIds", "151");
         params.addArgument("SlaverId", "7");

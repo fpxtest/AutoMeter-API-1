@@ -203,8 +203,10 @@ public class ApicasesReportController {
             List<ApicasesReport> apicasesReportFailList = apicasesReportService.getreportbyplanandbatchstatus(executeplanid, "失败", batchname);
             functionCaseStatis.setFailCaseNums(apicasesReportFailList.size());
 
-            float successrate = Float.valueOf(apicasesReportSuccessList.size()) / Float.valueOf(dispatchList.size());
-            float failrate = Float.valueOf(apicasesReportFailList.size()) / Float.valueOf(dispatchList.size());
+            int totalrunnums=apicasesReportSuccessList.size()+apicasesReportFailList.size();
+
+            float successrate = Float.valueOf(apicasesReportSuccessList.size()) / Float.valueOf(totalrunnums);
+            float failrate = Float.valueOf(apicasesReportFailList.size()) / Float.valueOf(totalrunnums);
             String sresultrate="";
             String fresultrate = "";
             DecimalFormat decimalFormat=new DecimalFormat(".00");

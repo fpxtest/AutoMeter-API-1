@@ -123,6 +123,15 @@ public class RequestObject {
     private String casetype = "";
     private String expect = "";
 
+    public int getLoop() {
+        return loop;
+    }
+
+    public void setLoop(int loop) {
+        this.loop = loop;
+    }
+
+    private int loop;
 
 
 

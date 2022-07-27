@@ -66,6 +66,7 @@ public class TestCore {
             String ExecPlanName = getcaseValue("execplanname", DispatchList);
             RequestObject ro =testCaseData.GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName);
             ro=testHttpRequestData.GetFuntionHttpRequestData(ro);
+            ro.setLoop(Integer.parseInt(getcaseValue("loops", DispatchList)));
             FunctionROList.add(ro);
         }
         return FunctionROList;

@@ -259,6 +259,8 @@
             v-model="tmpapicases.threadnum"
           />
         </el-form-item>
+        </div>
+
 
         <el-form-item label="线程循环" prop="loops" required>
           <el-input
@@ -270,7 +272,6 @@
             v-model="tmpapicases.loops"
           />
         </el-form-item>
-        </div>
 
         <div v-if="JmeterClassVisible">
         <el-form-item label="Jmeter" prop="casejmxname" required>
