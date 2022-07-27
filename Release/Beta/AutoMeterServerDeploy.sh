@@ -104,11 +104,31 @@ if [ $? -ne 0 ]; then
 fi
 echo "*选择安装AutoMeter服务的IP地址为：${local_ip}"
 
-sed -i  "s@192.168.3.95@${local_ip}@" ../conditionservice/config/application.yml
-sed -i  "s@192.168.3.95@${local_ip}@" ../dispatchservice/config/application.yml 
-sed -i  "s@192.168.3.95@${local_ip}@" ../slaverservice/config/application.yml 
-sed -i  "s@192.168.3.95@${local_ip}@" ../testcenterservice/config/application.yml 
-sed -i  "s@192.168.3.95@${local_ip}@" ../testcenterapp/dist/static/config.js
+os=`uname  -os`
+b="Darwin"
+c="centos"
+d="ubuntu"
+
+if [[ $os =~ $b ]];then
+    echo "mac"
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+else
+    echo $os
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+fi
+#sed -i  "s@192.168.3.95@${local_ip}@" ../conditionservice/config/application.yml
+#sed -i  "s@192.168.3.95@${local_ip}@" ../dispatchservice/config/application.yml 
+#sed -i  "s@192.168.3.95@${local_ip}@" ../slaverservice/config/application.yml 
+#sed -i  "s@192.168.3.95@${local_ip}@" ../testcenterservice/config/application.yml 
+#sed -i  "s@192.168.3.95@${local_ip}@" ../testcenterapp/dist/static/config.js
 echo "配置AutoMeter后端服务IP成功。。。。。。。"
 
  

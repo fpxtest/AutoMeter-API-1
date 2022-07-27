@@ -84,7 +84,7 @@ public class postcondition extends AbstractJavaSamplerClient {
                 }
             }
             //新增性能日志记录表
-            String FileName = testplanid + "-" + batchid + "-" + slaverid;
+            String FileName = testplanid + "-" + batchid + "-" + slaverid+ "-" + caseid;
             core.generalperformancelogfile(testplanid, caseid, slaverid, batchid, FileName, "待处理");
             getLogger().info(TestCaseData.logplannameandcasename + "generalperformancelogfile完成");
             core.SendMessageDingDing(testplanid, batchname);

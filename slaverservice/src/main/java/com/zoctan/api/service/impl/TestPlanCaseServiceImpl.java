@@ -5,6 +5,7 @@ import com.zoctan.api.dto.TestplanCase;
 import com.zoctan.api.entity.JmeterPerformanceObject;
 import com.zoctan.api.mapper.ApicasesMapper;
 import com.zoctan.api.service.TestPlanCaseService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author Zoctan
@@ -87,20 +89,22 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String JmeterCmd="";
         String os = System.getProperty("os.name");
         TestPlanCaseServiceImpl.log.info("性能测试当前系统版本是  is :" + os);
+        Date current= new Date();
+        String jmeterlogfilename=PlanName+"-"+BatchName+"-"+CaseName;
         //Windows操作系统
         if (os != null && os.toLowerCase().startsWith("windows")) {
             JmeterCmd = JmeterPath + "/jmeter.bat -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                     + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
-                    " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder;
+                    " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder+ " -j jmeter-pt"+jmeterlogfilename+".log ";
         }else
         {
             JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                     + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
-                    " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder;
+                    " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder+ " -j jmeter-pt"+jmeterlogfilename+".log ";
         }
 
         TestPlanCaseServiceImpl.log.info("性能JmeterCmd is :" + JmeterCmd);

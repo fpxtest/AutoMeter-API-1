@@ -62,9 +62,9 @@ function isValidIp()
 }
  
 local_ip=''
-echo "开始getIpAddr"
+#echo "开始getIpAddr"
 getIpAddr       #自动获取IP
-echo "结束getIpAddr"
+#echo "结束getIpAddr"
 isValidIp ${local_ip}   # IP校验
 if [ $? -ne 0 ]; then
         echo -e "\033[31m*自动获取的IP地址无效，请重试！ \033[0m"
@@ -72,11 +72,26 @@ if [ $? -ne 0 ]; then
 fi
 echo "*选择安装的IP地址为：${local_ip}"
 
-sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
-sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
-sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
-sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
-sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
-echo "修改IP成功"
+os=`uname  -os`
+b="Darwin"
+c="centos"
+d="ubuntu"
+
+if [[ $os =~ $b ]];then
+    echo "mac"
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
+	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
+	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
+	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+else
+    echo $os
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
+	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
+	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
+	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+fi
+#echo "修改IP成功"
 docker-compose -f docker-compose.yaml up -d 
 echo "AutoMeter部署成功，执行完增量sql后，访问入口 http://$local_ip:8084  默认账户密码admin admin123"
