@@ -208,6 +208,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpconditionname: '',
         tmpsubconditionname: '',
@@ -264,7 +265,7 @@
       this.getassembleallnameList()
       this.getdbconditionList()
       this.getenviromentallList()
-      this.getmachineLists()
+      // this.getmachineLists()
     },
 
     methods: {

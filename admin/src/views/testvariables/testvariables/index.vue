@@ -332,6 +332,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmptestvariablesname: '',
         apiList: [], // api列表

@@ -180,6 +180,7 @@
         tmptestplanname: '',
         tmptestplanid: null,
         tmpbatchname: null,
+        visittypeList: [],
         apiperformancestatisticsList: [], // api报告列表
         apiList: [], // api列表
         planbatchList: [], // 执行计划列表

@@ -303,6 +303,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpscriptvariablesname: '',
         apiList: [], // api列表

@@ -173,6 +173,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpslavername: null,
         tmpip: null,

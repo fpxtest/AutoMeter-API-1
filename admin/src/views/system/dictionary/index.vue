@@ -171,6 +171,7 @@
     },
     data() {
       return {
+        id: null,
         tmpdicname: null,
         tmpdicitemname: null,
         dictionaryList: [], // 字典列表

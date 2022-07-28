@@ -1221,6 +1221,7 @@
     },
     data() {
       return {
+        id: null,
         Headertabledatas: [],
         Paramstabledatas: [],
         Bodytabledatas: [],

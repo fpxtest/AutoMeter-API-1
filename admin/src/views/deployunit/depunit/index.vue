@@ -189,6 +189,7 @@
         }
       }
       return {
+        id: null,
         itemKey: null,
         tmpdeployunitname: null,
         tmpprotocal: null,

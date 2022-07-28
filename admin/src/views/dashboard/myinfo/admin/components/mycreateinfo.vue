@@ -27,6 +27,7 @@ import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      listLoading: false, // 数据加载等待动画
       list: null,
       tmpcreator: {
         id: '',

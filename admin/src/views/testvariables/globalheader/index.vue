@@ -252,6 +252,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpglobalheadername: '',
         globalheaderList: [], // 全局Header列表

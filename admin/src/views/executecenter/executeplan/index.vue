@@ -454,8 +454,10 @@
     },
     data() {
       return {
+        id: null,
         datevisible: false,
         timevisible: false,
+        itemKey: null,
         itemplanKey: null,
         itemcaseKey: null,
         planbusinessdiclist: [], // 执行计划字典表业务类型列表
@@ -505,6 +507,7 @@
           executeplanid: null,
           casetype: null
         },
+        ParamsdialogStatus: 'add',
         dialogStatus: 'add',
         dialogFormVisible: false,
         casedialogFormVisible: false,

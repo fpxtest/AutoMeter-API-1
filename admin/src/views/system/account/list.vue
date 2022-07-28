@@ -206,6 +206,7 @@ export default {
       }
     }
     return {
+      id: null,
       accountList: [], // 用户列表
       roleList: [], // 全部角色
       filterRoleNameList: [], // 用于过滤表格角色的列表 http://element-cn.eleme.io/#/zh-CN/component/table#shai-xuan

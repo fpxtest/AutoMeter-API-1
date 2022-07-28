@@ -227,6 +227,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpassemblename: null,
         tmpassembletype: null,

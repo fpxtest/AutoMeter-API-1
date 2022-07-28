@@ -193,6 +193,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpconditionname: '',
         conditionList: [], // 条件列表

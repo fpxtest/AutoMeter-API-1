@@ -695,6 +695,7 @@ export default {
   },
   data() {
     return {
+      id: null,
       fileName: '',
       fileList: [],
       SwfileList: [],
@@ -848,8 +849,8 @@ export default {
     this.getrequestcontenttypeList()
     this.getresponecontenttypeList()
     this.getdepunitLists()
-    this.editAll()
-    this.editParamAll()
+    // this.editAll()
+    // this.editParamAll()
   },
   methods: {
     // 单个复制

@@ -32,7 +32,6 @@
       :data="executeplanbatchList"
       :key="itemKey"
       @row-click="handleClickTableRow"
-      @selection-change="handleSelectionChange"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -90,6 +89,8 @@
     },
     data() {
       return {
+        id: null,
+        itemKey: null,
         execplanList: [], // 计划列表
         tmpexecuteplanbatchname: '',
         tmpexecuteplanname: '',
@@ -220,6 +221,9 @@
         this.tmpexecuteplanbatch.executeplanbatchname = this.executeplanbatchList[index].executeplanbatchname
         this.tmpexecuteplanbatch.envtype = this.executeplanbatchList[index].envtype
         this.tmpexecuteplanbatch.memo = this.executeplanbatchList[index].memo
+      },
+
+      handleClickTableRow(row, event, column) {
       },
 
       /**

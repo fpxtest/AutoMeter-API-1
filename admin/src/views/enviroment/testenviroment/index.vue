@@ -160,6 +160,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpenviromentname: '',
         enviromentList: [], // 环境列表

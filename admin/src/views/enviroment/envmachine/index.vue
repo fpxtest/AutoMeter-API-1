@@ -153,6 +153,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpenviromentname: '',
         envmachineList: [], // 环境服务器列表

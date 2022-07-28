@@ -179,6 +179,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpexecplanname: null,
         tmpbatchname: null,

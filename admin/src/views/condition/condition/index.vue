@@ -277,6 +277,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpconditionname: '',
         tmpobjecttype: '',

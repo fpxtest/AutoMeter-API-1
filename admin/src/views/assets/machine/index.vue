@@ -196,6 +196,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpmachinename: null,
         tmpip: null,

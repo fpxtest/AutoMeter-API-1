@@ -180,6 +180,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpvariablesname: '',
         variablecondition: false,

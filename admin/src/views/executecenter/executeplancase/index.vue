@@ -319,6 +319,7 @@
     },
     data() {
       return {
+        id: null,
         itemplanKey: null,
         itemcaseKey: null,
         itemexistcaseKey: null,
@@ -350,6 +351,7 @@
         listLoading: false, // 数据加载等待动画
         caselistLoading: false, // 用例列表页面数据加载等待动画
         existcaselistLoading: false, // 用例列表页面数据加载等待动画
+        show: false,
         total: 0, // 数据总数
         casetotal: 0, // 用例数据总数
         existcasetotal: 0, // 已经装载用例数据总数
@@ -406,8 +408,8 @@
       this.getexecuteplancaseList()
       this.getdepunitLists()
       this.getloaddepunitLists()
-      this.getenviromentallList()
-      this.getdatabydiccodeList()
+      // this.getenviromentallList()
+      // this.getdatabydiccodeList()
     },
 
     methods: {
@@ -441,14 +443,12 @@
       handleSelectionChange(rows) {
         // console.log(rows)
         this.multipleSelection = rows
-        console.log('00000000000000000000000000')
-        console.log(this.multipleSelection)
       },
 
       casehandleClickTableRow(row, event, column) {
-        console.log(row)
       },
-
+      handleClickTableRow(row, event, column) {
+      },
       casehandleSelectionChange(rows) {
         this.casemultipleSelection = rows
         // console.log(this.casemultipleSelection)

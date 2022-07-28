@@ -162,6 +162,7 @@
     },
     data() {
       return {
+        id: null,
         itemKey: null,
         tmpglobalvariablesname: '',
         globalvariablesList: [], // 全局变量列表
