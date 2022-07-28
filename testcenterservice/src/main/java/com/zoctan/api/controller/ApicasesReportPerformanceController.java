@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -136,8 +137,10 @@ public class ApicasesReportPerformanceController {
 
         long threadnums=0;
         long loopnums=0;
+        long totalrunnuns=0;
         for (Dispatch dispatch:dispatchList) {
             long caseid=dispatch.getTestcaseid();
+            totalrunnuns=totalrunnuns+dispatch.getLoops()*dispatch.getThreadnum();
             Apicases apicases= apicasesService.getBy("id",caseid);
             if(apicases!=null)
             {
@@ -156,20 +159,20 @@ public class ApicasesReportPerformanceController {
         Condition prscon=new Condition(Performancereportsource.class);
         prscon.createCriteria().andCondition("planid = " + planid ).andCondition("batchid = " + batchid);
         List<Performancereportsource>performancereportsourceList= performancereportsourceService.listByCondition(prscon);
-        long totalrunnuns=0;
         long totalpassnums=0;
-        long totalfailnums=0;
         double costtime=0;
         for (Performancereportsource per:performancereportsourceList) {
-            totalrunnuns=totalrunnuns+per.getTotalcasenums();
+            //totalrunnuns=totalrunnuns+per.getTotalcasenums();
             totalpassnums=totalpassnums+per.getTotalcasepassnums();
-            totalfailnums=totalfailnums+per.getTotalcasefailnums();
+            //totalfailnums=totalfailnums+per.getTotalcasefailnums();
             costtime=costtime+per.getRuntime();
         }
+        long totalfailnums=totalrunnuns-totalpassnums;
         performanceCaseStatis.setExecCaseNums(totalrunnuns);
         performanceCaseStatis.setSuccessCaseNums(totalpassnums);
         performanceCaseStatis.setFailCaseNums(totalfailnums);
-        performanceCaseStatis.setCosttime(costtime);
+        DecimalFormat decimalFormat=new DecimalFormat("#.00");
+        performanceCaseStatis.setCosttime(decimalFormat.format(costtime));
 
         performanceCaseStatisList.add(performanceCaseStatis);
         return ResultGenerator.genOkResult(performanceCaseStatisList);
@@ -194,9 +197,10 @@ public class ApicasesReportPerformanceController {
             performanceSlaverStatics.setThreadnums(dis.getThreadnum());
             performanceSlaverStatics.setLoops(dis.getLoops());
             long slaverid=dis.getSlaverid();
+            long caseid=dis.getTestcaseid();
             Condition perfcon=new Condition(Performancereportsource.class);
             perfcon.createCriteria().andCondition("planid = " + planid ).andCondition("batchid = " + batchid )
-            .andCondition("slaverid = " + slaverid );
+            .andCondition("slaverid = " + slaverid ).andCondition("caseid = " + caseid );
             List<Performancereportsource>performancereportsourceList= performancereportsourceService.listByCondition(perfcon);
             if(performancereportsourceList.size()>0)
             {
@@ -222,16 +226,26 @@ public class ApicasesReportPerformanceController {
             Long executeplanid = Long.parseLong(param.get("executeplanid").toString());
             Long batchid = Long.parseLong(param.get("batchid").toString());
 
+
+            Condition discon=new Condition(Dispatch.class);
+            discon.createCriteria().andCondition("execplanid = " + executeplanid ).andCondition("batchid = " + batchid);
+            List<Dispatch>dispatchList= dispatchService.listByCondition(discon);
+
+            long totalrunnums=0;
+            for (Dispatch dis:dispatchList) {
+                totalrunnums=totalrunnums+dis.getThreadnum()*dis.getLoops();
+            }
+
             List<FunctionCaseSandF> functionCaseSandFList = new ArrayList<>();
             Condition con=new Condition(Performancereportsource.class);
             con.createCriteria().andCondition("planid = " + executeplanid ).andCondition("batchid = " + batchid );
             List<Performancereportsource>performancereportsourceList= performancereportsourceService.listByCondition(con);
             long totalsuccess=0;
-            long totalfail=0;
             for (Performancereportsource per:performancereportsourceList) {
                 totalsuccess=totalsuccess+per.getTotalcasepassnums();
-                totalfail=totalfail+per.getTotalcasefailnums();
             }
+            long totalfail=totalrunnums-totalsuccess;
+
             FunctionCaseSandF functionCaseSandF = new FunctionCaseSandF();
             functionCaseSandF.setName("成功数");
             functionCaseSandF.setValue(totalsuccess);

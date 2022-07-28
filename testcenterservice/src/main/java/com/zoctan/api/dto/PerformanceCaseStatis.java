@@ -91,11 +91,11 @@ public class PerformanceCaseStatis {
         this.failrate = failrate;
     }
 
-    public double getCosttime() {
+    public String getCosttime() {
         return costtime;
     }
 
-    public void setCosttime(double costtime) {
+    public void setCosttime(String costtime) {
         this.costtime = costtime;
     }
 
@@ -112,7 +112,7 @@ public class PerformanceCaseStatis {
     private String successrate;
     private String failrate;
 
-    private double costtime;
+    private String costtime;
 
 
 }
