@@ -15,7 +15,7 @@ public class PerformanceCaseStatis {
         return CaseNum;
     }
 
-    public void setCaseNum(float caseNum) {
+    public void setCaseNum(long caseNum) {
         CaseNum = caseNum;
     }
 
@@ -55,7 +55,7 @@ public class PerformanceCaseStatis {
         return SuccessCaseNums;
     }
 
-    public void setSuccessCaseNums(float successCaseNums) {
+    public void setSuccessCaseNums(long successCaseNums) {
         SuccessCaseNums = successCaseNums;
     }
 
@@ -63,7 +63,7 @@ public class PerformanceCaseStatis {
         return FailCaseNums;
     }
 
-    public void setFailCaseNums(float failCaseNums) {
+    public void setFailCaseNums(long failCaseNums) {
         FailCaseNums = failCaseNums;
     }
 
@@ -99,14 +99,14 @@ public class PerformanceCaseStatis {
         this.costtime = costtime;
     }
 
-    private float CaseNum;
+    private long CaseNum;
     private long Threadnums;
     private long Loops;
     private int Slavernums;
 
     private long ExecCaseNums;
-    private float SuccessCaseNums;
-    private float FailCaseNums;
+    private long SuccessCaseNums;
+    private long FailCaseNums;
     private long NotExecCaseNums;
 
     private String successrate;

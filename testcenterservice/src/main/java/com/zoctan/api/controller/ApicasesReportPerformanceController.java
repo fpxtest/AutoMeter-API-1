@@ -9,6 +9,7 @@ import com.zoctan.api.dto.PerformanceCaseStatis;
 import com.zoctan.api.dto.PerformanceSlaverStatics;
 import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  * @author SeasonFan
  * @date 2020/12/14
  */
+@Slf4j
 @RestController
 @RequestMapping("/apicases/report/performance")
 public class ApicasesReportPerformanceController {
@@ -148,12 +150,9 @@ public class ApicasesReportPerformanceController {
                 loopnums=loopnums+apicases.getLoops();
             }
         }
+        ApicasesReportPerformanceController.log.info("运行总数量："+totalrunnuns);
         performanceCaseStatis.setThreadnums(threadnums);
         performanceCaseStatis.setLoops(loopnums);
-
-//        Condition con=new Condition(Dispatch.class);
-//        con.createCriteria().andCondition("execplanid = " + planid ).andCondition("batchid = " + batchid);
-//        List<Dispatch>dispatchList= dispatchService.listByCondition(con);
         performanceCaseStatis.setSlavernums(dispatchList.size());
 
         Condition prscon=new Condition(Performancereportsource.class);
@@ -162,12 +161,13 @@ public class ApicasesReportPerformanceController {
         long totalpassnums=0;
         double costtime=0;
         for (Performancereportsource per:performancereportsourceList) {
-            //totalrunnuns=totalrunnuns+per.getTotalcasenums();
             totalpassnums=totalpassnums+per.getTotalcasepassnums();
-            //totalfailnums=totalfailnums+per.getTotalcasefailnums();
+            ApicasesReportPerformanceController.log.info("成功数量："+totalpassnums+"-"+per.getTotalcasepassnums());
             costtime=costtime+per.getRuntime();
         }
+        ApicasesReportPerformanceController.log.info("成功总数量："+totalpassnums);
         long totalfailnums=totalrunnuns-totalpassnums;
+        ApicasesReportPerformanceController.log.info("失败总数量："+totalfailnums);
         performanceCaseStatis.setExecCaseNums(totalrunnuns);
         performanceCaseStatis.setSuccessCaseNums(totalpassnums);
         performanceCaseStatis.setFailCaseNums(totalfailnums);
@@ -202,13 +202,21 @@ public class ApicasesReportPerformanceController {
             perfcon.createCriteria().andCondition("planid = " + planid ).andCondition("batchid = " + batchid )
             .andCondition("slaverid = " + slaverid ).andCondition("caseid = " + caseid );
             List<Performancereportsource>performancereportsourceList= performancereportsourceService.listByCondition(perfcon);
+            ApicasesReportPerformanceController.log.info("性能记录数量："+"-"+performancereportsourceList.size());
             if(performancereportsourceList.size()>0)
             {
                 Performancereportsource performancereportsource= performancereportsourceList.get(0);
+                ApicasesReportPerformanceController.log.info("性能记录总数量："+"-"+performancereportsource.getTotalcasenums());
                 performanceSlaverStatics.setCaseNum(performancereportsource.getTotalcasenums());
                 performanceSlaverStatics.setSuccessCaseNums(performancereportsource.getTotalcasepassnums());
+                ApicasesReportPerformanceController.log.info("性能记录总成功数量："+"-"+performancereportsource.getTotalcasepassnums());
                 performanceSlaverStatics.setFailCaseNums(performancereportsource.getTotalcasefailnums());
+                ApicasesReportPerformanceController.log.info("性能记录总失败数量："+"-"+performancereportsource.getTotalcasefailnums());
                 performanceSlaverStatics.setCosttime(performancereportsource.getRuntime());
+            }
+            else
+            {
+                performanceSlaverStatics.setFailCaseNums(dis.getLoops()*dis.getThreadnum());
             }
             performanceSlaverStaticsList.add(performanceSlaverStatics);
         }
@@ -242,10 +250,12 @@ public class ApicasesReportPerformanceController {
             List<Performancereportsource>performancereportsourceList= performancereportsourceService.listByCondition(con);
             long totalsuccess=0;
             for (Performancereportsource per:performancereportsourceList) {
+                ApicasesReportPerformanceController.log.info("性能图表成功数量："+"-"+per.getTotalcasepassnums());
                 totalsuccess=totalsuccess+per.getTotalcasepassnums();
+                ApicasesReportPerformanceController.log.info("性能图表总成功数量："+"-"+totalsuccess);
             }
             long totalfail=totalrunnums-totalsuccess;
-
+            ApicasesReportPerformanceController.log.info("性能图表总失败数量："+"-"+totalfail);
             FunctionCaseSandF functionCaseSandF = new FunctionCaseSandF();
             functionCaseSandF.setName("成功数");
             functionCaseSandF.setValue(totalsuccess);
