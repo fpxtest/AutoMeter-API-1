@@ -22,7 +22,7 @@
   <select id="getbatchbyplan" resultMap="BaseResultMap">
     SELECT a.*
     FROM executeplanbatch a
-    where a.executeplanid=#{executeplanid}
+    where a.executeplanid=#{executeplanid} order by create_time desc
   </select>
 
 

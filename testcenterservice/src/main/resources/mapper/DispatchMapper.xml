@@ -32,7 +32,7 @@
       <if test="execplanname != null and execplanname != ''">a.execplanname like CONCAT('%',#{execplanname},'%')</if>
       <if test="batchname != null  and batchname != ''">and a.batchname like CONCAT('%',#{batchname},'%')</if>
     </where>
-    order by lastmodify_time  DESC
+    order by create_time  DESC
   </select>
 
   <select id="getDispatchWithstatus" resultMap="BaseResultMap">

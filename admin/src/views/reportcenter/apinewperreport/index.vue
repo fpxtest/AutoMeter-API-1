@@ -45,14 +45,14 @@
         <el-col :xs="24" :sm="24" :lg="9">
           <div id="22" class="chart-wrapper">
             <template>
-              <div id="mian" style="width: 300px;height:280px;"></div>
+              <div id="mian" style="width: 300px;height:380px;"></div>
             </template>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="15">
           <div id="12" class="chart-wrapper">
             <el-table
-              style="width: 290vh"
+              style="width: 290vh;height:100px;"
               :data="casestaticsList"
               v-loading.body="listLoading"
               element-loading-text="loading"
@@ -67,14 +67,14 @@
               <el-table-column label="运行总数" align="center" prop="execCaseNums" width="80"/>
               <el-table-column label="成功总数" align="center" prop="successCaseNums" width="80"/>
               <el-table-column label="失败总数" align="center" prop="failCaseNums" width="80"/>
-              <el-table-column label="总耗时(秒)" align="center" prop="costtime" width="80"/>
+              <el-table-column label="总耗时(秒)" align="center" prop="costtime" width="90"/>
             </el-table>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="15">
           <div id="13" class="chart-wrapper">
             <el-table
-              style="width: 120vh"
+              style="width: 120vh;height:120px;"
               :data="performancecasesstaticsList"
               :key="itemKey"
               v-loading.body="listLoading"
@@ -117,7 +117,7 @@
               <el-table-column label="运行总数" align="center" prop="execCaseNums" width="80"/>
               <el-table-column label="成功总数" align="center" prop="successCaseNums" width="80"/>
               <el-table-column label="失败总数" align="center" prop="failCaseNums" width="80"/>
-              <el-table-column label="耗时(秒)" align="center" prop="costtime" width="80"/>
+              <el-table-column label="耗时(秒)" align="center" prop="costtime" width="110"/>
             </el-table>
           </div>
         </el-col>

@@ -45,14 +45,14 @@
         <el-col :xs="24" :sm="24" :lg="9">
           <div id="22" class="chart-wrapper">
             <template>
-              <div id="mian" style="width: 300px;height:280px;"></div>
+              <div id="mian" style="width: 300px;height:380px;"></div>
             </template>
           </div>
         </el-col>
         <el-col :xs="24" :sm="24" :lg="15">
           <div id="12" class="chart-wrapper">
             <el-table
-              style="width: 290vh"
+              style="width: 290vh;height:100px;"
               :data="casestaticsList"
               v-loading.body="listLoading"
               element-loading-text="loading"
@@ -73,7 +73,7 @@
         <el-col :xs="24" :sm="24" :lg="15">
           <div id="14" class="chart-wrapper">
             <el-table
-              style="width: 120vh"
+              style="width: 120vh;height:100px;"
               :data="casestaticsList"
               :key="itemKey"
               v-loading.body="listLoading"
@@ -91,7 +91,7 @@
         <el-col :xs="24" :sm="24" :lg="15">
           <div id="13" class="chart-wrapper">
             <el-table
-              style="width: 100vh"
+              style="width: 100vh;height:120px;"
               :data="casesconditiontaticsList"
               :key="itemKey"
               v-loading.body="listLoading"
