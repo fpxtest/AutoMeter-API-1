@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ApiCasedataMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ApiCasedata">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="caseid" jdbcType="BIGINT" property="caseid" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="apiparam" jdbcType="VARCHAR" property="apiparam" />
+    <result column="apiparamvalue" jdbcType="VARCHAR" property="apiparamvalue" />
+    <result column="propertytype" jdbcType="VARCHAR" property="propertytype" />
+    <result column="paramstype" jdbcType="VARCHAR" property="paramstype" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+
+  <insert id="saveCasedata">
+    INSERT INTO api_casedata (caseid, casename,apiparam,apiparamvalue,propertytype,memo,create_time,lastmodify_time)
+    VALUES
+    <foreach collection="casedataMap" item="item" index="index" separator=",">
+      (#{item.caseid}, #{item.casename}, #{item.apiparam}, #{item.apiparamvalue}, #{item.propertytype}, #{item.memo}, DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+    </foreach>
+  </insert>
+
+
+  <select id="GetCaseDatasByCaseID" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api_casedata a where a.caseid = #{caseid}
+  </select>
+
+  <select id="GetCaseDatasByCaseIDAndApiparamAndType" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM api_casedata a where a.caseid = #{caseid} and a.apiparam = #{apiparam} and a.propertytype =#{propertytype}
+  </select>
+
+  <select id="getparamvaluebycaseidandtype" resultMap="BaseResultMap">
+    SELECT a.apiparam,a.apiparamvalue
+    FROM api_casedata a where a.caseid = #{caseid} and a.propertytype=#{propertytype}
+  </select>
+
+  <update id="UpdateByCaseIDAndApiparam" parameterType="com.zoctan.api.entity.ApiCasedata">
+    update api_casedata a set a.apiparamvalue = #{apiparamvalue} where a.caseid = #{caseid} and a.apiparam = #{apiparam} and a.propertytype =#{propertytype}
+  </update>
+
+  <insert id="deleteparamvaluebycaseidandtype">
+    DELETE from api_casedata where caseid = #{caseid} and propertytype=#{propertytype}
+  </insert>
+
+  <insert id="deletcasedatabyid">
+    DELETE from api_casedata where caseid = #{caseid}
+  </insert>
+</mapper>

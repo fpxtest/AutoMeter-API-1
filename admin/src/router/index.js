@@ -187,6 +187,17 @@ export const asyncRouterMap = [
   //   ]
   // },
   //
+  {
+    path: '/mock',
+    component: Layout,
+    name: 'Mock管理',
+    icon: 'execute',
+    children: [
+      { path: 'mockmodel/list', name: '模块管理', component: _import('mock/mockmodel/index'), meta: { title: '模块管理', permission: ['mockmodel:list'] }},
+      { path: 'mockapi/list', name: 'MockAPI', component: _import('mock/mockapi/index'), meta: { title: 'MockAPI', permission: ['mockapi:list'] }},
+      { path: 'executeplan/list', name: 'Mock日志', component: _import('executecenter/executeplan/index'), meta: { title: '测试集合', permission: ['executeplan:list'] }}
+    ]
+  },
 
   {
     path: '/system',

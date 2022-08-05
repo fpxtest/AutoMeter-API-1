@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.MockapiMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Mockapi">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="modelid" jdbcType="BIGINT" property="modelid" />
+    <result column="modelname" jdbcType="VARCHAR" property="modelname" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="apiurl" jdbcType="VARCHAR" property="apiurl" />
+    <result column="apitype" jdbcType="VARCHAR" property="apitype" />
+    <result column="requesttype" jdbcType="VARCHAR" property="requesttype" />
+    <result column="timeout" jdbcType="BIGINT" property="timeout" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findMockapiWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM mockapi a
+    <where>
+      <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updateMockapi" parameterType="com.zoctan.api.entity.Mockapi">
+    update mockapi set modelid = #{modelid}, modelname = #{modelname}, apiname = #{apiname},apiurl=#{apiurl}
+    ,apitype = #{apitype}  ,requesttype = #{requesttype}, memo = #{memo}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>

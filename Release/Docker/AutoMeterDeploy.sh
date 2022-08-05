@@ -81,6 +81,7 @@ if [[ $os =~ $b ]];then
     echo "mac"
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
 	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/mockservice/config/application.yml 
 	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
 	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
 	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
@@ -88,6 +89,7 @@ else
     echo $os
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
 	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/mockservice/config/application.yml 
 	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
 	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
 	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js

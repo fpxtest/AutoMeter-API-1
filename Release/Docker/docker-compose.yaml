@@ -37,6 +37,23 @@ services:
       autometer:
         ipv4_address: 173.20.1.6
 
+  mockservice:
+    container_name: mockservice
+    privileged: true
+    build:
+      context: ../Beta/mockservice
+      dockerfile: Dockerfile
+    image: mockservice:1.0
+    ports:
+      - "8085:8084"
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.10
+
   slaverservice1:
     container_name: slaverservice1
     privileged: true

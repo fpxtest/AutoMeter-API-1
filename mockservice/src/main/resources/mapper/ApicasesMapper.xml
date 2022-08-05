@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ApicasesMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Apicases">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apiname" jdbcType="VARCHAR" property="apiname" />
+    <result column="deployunitname" jdbcType="VARCHAR" property="deployunitname" />
+    <result column="casename" jdbcType="VARCHAR" property="casename" />
+    <result column="casejmxname" jdbcType="VARCHAR" property="casejmxname" />
+    <result column="casecontent" jdbcType="VARCHAR" property="casecontent" />
+    <result column="expect" jdbcType="VARCHAR" property="expect" />
+    <result column="level" jdbcType="VARCHAR" property="level" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+  </resultMap>
+
+  <select id="findApiCaseWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM apicases a
+    <where>
+      <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
+      <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
+    </where>
+  </select>
+
+  <select id="GetCaseByCaseID" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM apicases a
+    where a.id= #{id}
+  </select>
+
+  <update id="updateApicase" parameterType="com.zoctan.api.entity.Apicases">
+    update apicases set casename = #{casename},casejmxname = #{casejmxname}, apiname = #{apiname}, deployunitname = #{deployunitname}, casecontent = #{casecontent},expect = #{expect},
+    memo = #{memo}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+    where id = #{id};
+  </update>
+</mapper>

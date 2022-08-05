@@ -85,7 +85,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            执行计划
+            测试集合
           </div>
           <count-to :start-val="execplan.start" :end-val="execplan.end" :duration="2600" class="card-panel-num" />
         </div>

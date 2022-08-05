@@ -114,12 +114,14 @@ if [[ $os =~ $b ]];then
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
+    sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/mockservice/config/application.yml 
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
 else
     echo $os
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
+    sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/mockservice/config/application.yml 
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
@@ -133,11 +135,21 @@ echo "配置AutoMeter后端服务IP成功。。。。。。。"
 
  
 conditionservicejar=/conditionservice/conditionservice.jar
-serviceyml=/conditionservice/config/application.yml
+conditionserviceyml=/conditionservice/config/application.yml
 
 echo "AutoMeter-conditionservice开始启动。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
 
-nohup java -Xms256m -Xmx256m -Xmn128m -XX:ReservedCodeCacheSize=120M -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -XX:+UseConcMarkSweepGC -XX:MaxTenuringThreshold=6 -XX:+ExplicitGCInvokesConcurrent -XX:-UseBiasedLocking -XX:-UseCounterDecay -XX:AutoBoxCacheMax=20000 -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom  -jar $CURRENT_DIR$conditionservicejar --spring.config.location=$CURRENT_DIR$serviceyml &
+nohup java -Xms256m -Xmx256m -Xmn128m -XX:ReservedCodeCacheSize=120M -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -XX:+UseConcMarkSweepGC -XX:MaxTenuringThreshold=6 -XX:+ExplicitGCInvokesConcurrent -XX:-UseBiasedLocking -XX:-UseCounterDecay -XX:AutoBoxCacheMax=20000 -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom  -jar $CURRENT_DIR$conditionservicejar --spring.config.location=$CURRENT_DIR$conditionserviceyml &
+
+sleep 3
+echo "AutoMeter-conditionservice启动成功"
+
+mockservicejar=/mockservice/mockservice.jar
+mockserviceyml=/mockservice/config/application.yml
+
+echo "AutoMeter-mockservicejar开始启动。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
+
+nohup java -Xms256m -Xmx256m -Xmn128m -XX:ReservedCodeCacheSize=120M -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -XX:+UseConcMarkSweepGC -XX:MaxTenuringThreshold=6 -XX:+ExplicitGCInvokesConcurrent -XX:-UseBiasedLocking -XX:-UseCounterDecay -XX:AutoBoxCacheMax=20000 -XX:+PerfDisableSharedMem -XX:+AlwaysPreTouch -Djava.security.egd=file:/dev/./urandom  -jar $CURRENT_DIR$mockservicejar --spring.config.location=$CURRENT_DIR$mockserviceyml &
 
 sleep 3
 echo "AutoMeter-conditionservice启动成功"
@@ -171,7 +183,7 @@ sleep 3
 echo "AutoMeter-dispatchservice启动成功"
 
 
-echo "AutoMeter后台服务部署成功，配置nginx.conf中的http.server.location.root配置文件目录，例如：/app/AutoMeter/testcenterapp/dist/，访问入口 http://$local_ip:nginx端口  默认账户密码admin admin123"
+echo "AutoMeter后台服务部署成功，配置nginx.conf中的http.server.location.root配置testcenterapp目录，例如：/app/AutoMeter/testcenterapp/dist/，访问入口 http://$local_ip:nginx端口  默认账户密码admin admin123"
 
 
 

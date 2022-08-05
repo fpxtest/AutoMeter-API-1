@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.MockapiresponeMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.Mockapirespone">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="apiid" jdbcType="BIGINT" property="apiid" />
+    <result column="responecode" jdbcType="VARCHAR" property="responecode" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="responecontent" jdbcType="LONGVARCHAR" property="responecontent" />
+  </resultMap>
+
+  <select id="findMockapiresponeWithName" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM mockapirespone a
+    <where>
+      <if test="apiid != null and apiid != ''">a.apiid =#{apiid}</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updateMockapirespone" parameterType="com.zoctan.api.entity.Mockapirespone">
+    update mockapirespone set responecode = #{responecode},responecontent=#{responecontent}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+
+  <update id="enableapirespone" >
+    update mockapirespone set status = #{status}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where apiid = #{apiid};
+  </update>
+
+  <update id="enablerespone" >
+    update mockapirespone set status = #{status}, lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+
+
+</mapper>
