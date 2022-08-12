@@ -24,6 +24,9 @@
     FROM mockapi a
     <where>
       <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
+      <if test="modelname != null and modelname != ''">and a.modelname like CONCAT('%',#{modelname},'%')</if>
+      <if test="apitype != null and apitype != ''">and a.apitype = #{apitype}</if>
+      <if test="requesttype != null and requesttype != ''">and a.requesttype = #{requesttype}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('mockmodel:search')">
           <el-form-item>
-            <el-input clearable maxlength="40" v-model="search.mockmodelname" @keyup.enter.native="searchBy" placeholder="mock模块名"></el-input>
+            <el-input clearable maxlength="40" v-model="search.modelname" @keyup.enter.native="searchBy" placeholder="mock模块名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>

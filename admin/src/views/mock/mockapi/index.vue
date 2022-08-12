@@ -20,9 +20,18 @@
         </el-form-item>
 
         <span v-if="hasPermission('mockapi:search')">
-          <el-form-item>
-            <el-input clearable maxlength="40" v-model="search.mockapiname" @keyup.enter.native="searchBy" placeholder="Mock接口名"></el-input>
+          <el-form-item label="Mock接口名:">
+            <el-input clearable maxlength="40" v-model="search.apiname" @keyup.enter.native="searchBy" placeholder="Mock接口名"></el-input>
           </el-form-item>
+          <el-form-item label="模块名:">
+            <el-input clearable maxlength="40" v-model="search.modelname" @keyup.enter.native="searchBy" placeholder="模块名"></el-input>
+          </el-form-item>
+           <el-form-item label="API类型:" prop="apitype" >
+          <el-select v-model="search.apitype" placeholder="API类型" style="width:100%">
+            <el-option label="功能" value="功能"></el-option>
+            <el-option label="性能" value="性能"></el-option>
+          </el-select>
+        </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy"  :loading="btnLoading">查询</el-button>
           </el-form-item>
@@ -340,6 +349,8 @@
         responeitemKey: null,
         itemKey: null,
         tmpmockapiname: '',
+        tmpmodelname: '',
+        tmpapitype: '',
         multipleSelection: [], // 被选中的内容
         responeList: [],
         mockmodelList: [], // 模块列表
@@ -399,7 +410,9 @@
         search: {
           page: 1,
           size: 10,
-          mockapiname: null
+          apiname: null,
+          apitype: null,
+          modelname: null
         }
       }
     },
@@ -461,7 +474,9 @@
        */
       getmockapiList() {
         this.listLoading = true
-        this.search.mockapiname = this.tmpmockapiname
+        this.search.apiname = this.tmpmockapiname
+        this.search.modelname = this.tmpmodelname
+        this.search.apitype = this.tmpapitype
         search(this.search).then(response => {
           this.mockapiList = response.data.list
           this.total = response.data.total
@@ -481,7 +496,9 @@
         }).catch(res => {
           this.$message.error('搜索失败')
         })
-        this.tmpmockapiname = this.search.mockapiname
+        this.tmpmockapiname = this.search.apiname
+        this.tmpmodelname = this.search.modelname
+        this.tmpapitype = this.search.apitype
         this.listLoading = false
         this.btnLoading = false
       },

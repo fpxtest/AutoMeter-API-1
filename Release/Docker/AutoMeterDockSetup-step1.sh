@@ -3,13 +3,11 @@
  {
         # 获取IP命令
         echo "开始获取ip"
-        ipaddr=`ifconfig -a|grep inet|grep -v 192.168.3.95|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
-        echo "获取ip：$ipaddr"
+        ipaddr=`ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
+        echo "获取本机ip：$ipaddr"
         array=(`echo $ipaddr | tr '\n' ' '` )  # IP地址分割，区分是否多网卡
-        #array=(172.20.32.214 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2 192.168.1.10 192.168.1.2);
-        num=${#array[@]}                                                #获取数组元素的个数
-        echo "ip数组长度为$num"
-
+        num=${#array[@]}
+        #echo "ip数组长度为$num"
         # 选择安装的IP地址
         if [ $num -eq 1 ]; then
                 echo "*单网卡"
@@ -62,7 +60,7 @@ function isValidIp()
 }
  
 local_ip=''
-#echo "开始getIpAddr"
+echo "AutoMeter开始执行系统配置。。。。。。。。。。。。。"
 getIpAddr       #自动获取IP
 #echo "结束getIpAddr"
 isValidIp ${local_ip}   # IP校验
@@ -83,17 +81,18 @@ if [[ $os =~ $b ]];then
 	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
     sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/mockservice/config/application.yml 
 	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
-	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
-	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+	sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml
+		sed -i "" "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+
 else
     echo $os
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/conditionservice/config/application.yml
 	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/dispatchservice/config/application.yml 
     sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/mockservice/config/application.yml 
 	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/slaverservice/config/application.yml 
-	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml 
-	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+	sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterservice/config/application.yml
+		sed -i  "s@192.168.3.95@${local_ip}@" ../Beta/testcenterapp/dist/static/config.js
+
 fi
 #echo "修改IP成功"
-docker-compose -f docker-compose.yaml up -d 
-echo "AutoMeter部署成功，执行完增量sql后，访问入口 http://$local_ip:8084  默认账户密码admin admin123"
+echo "AutoMeter系统配置成功，如果部署在云服务器以公网访问，请务必执行如下操作，将Release/Beta/testcenterapp/dist/static/config.js中的ip替换为服务器的公网访问ip，然后执行AutoMeterDockSetup-step2.sh"
