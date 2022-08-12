@@ -70,7 +70,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "*选择安装的IP地址为：${local_ip}"
 
-os=`uname  -os`
+os=`uname  -s`
 b="Darwin"
 c="centos"
 d="ubuntu"
