@@ -148,7 +148,6 @@
         </el-form-item>
         <el-form-item label="参数值：" prop="keyvalue" required>
           <el-input
-            maxlength="180"
             type="textarea"
             rows="15" cols="50"
             prefix-icon="el-icon-message"
