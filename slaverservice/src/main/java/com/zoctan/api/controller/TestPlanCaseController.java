@@ -723,7 +723,7 @@ public class TestPlanCaseController {
                     Value = Value.replace("$" + variables + "$", GlobalVariableValue.toString());
                     ObjectValue = Value;
                 } else {
-                    ObjectValue = globalvariablesMap.get(Value);
+                    ObjectValue = globalvariablesMap.get(variables);
                 }
             }
         }
