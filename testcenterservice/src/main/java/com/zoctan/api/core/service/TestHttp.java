@@ -2,10 +2,20 @@ package com.zoctan.api.core.service;
 
 import com.zoctan.api.dto.TestResponeData;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
 
 @Slf4j
 public class TestHttp {
     public  TestResponeData doService(String Protocal,String ApiStyle,String Url,HttpHeader header,HttpParamers httpParamers,String PostData, String VisitType, String RequestContenType,int connectTimeout) throws Exception {
+        TestHttp.log.info( "Http doService 参数.....Protocal： "+Protocal+ "ApiStyle： "+ApiStyle+" Url： "+Url+" PostData： "+PostData+" VisitType： "+VisitType+" RequestContenType："+RequestContenType+" connectTimeout ："+connectTimeout);
+        for (String key : header.getParams().keySet()) {
+            TestHttp.log.info("Http doService Header key:" + key + "  Header值：" + header.getParams().get(key));
+        }
+
+        for (String key : httpParamers.getParams().keySet()) {
+            TestHttp.log.info("Http doService Params key:" + key + "  Params值：" + httpParamers.getParams().get(key));
+        }
+
         TestResponeData testResponeData=new TestResponeData();
         if(VisitType.equalsIgnoreCase("GET"))
         {

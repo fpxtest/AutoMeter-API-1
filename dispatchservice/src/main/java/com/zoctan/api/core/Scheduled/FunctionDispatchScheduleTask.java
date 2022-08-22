@@ -100,8 +100,8 @@ public class FunctionDispatchScheduleTask {
                                         Long Slaverid = dispatch1.getSlaverid();
                                         FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器..................PlanID:" + PlanID + " BatchName:" + BatchName + " slaverid:" + Slaverid);
                                         slaver = slaverMapper.findslaverbyid(Slaverid);
-                                        FunctionDispatchScheduleTask.log.info("调度服务【功能】执行机 SlaverIP:" + slaver.getIp() + " 状态：" + slaver.getStatus());
                                         if (slaver != null) {
+                                            FunctionDispatchScheduleTask.log.info("调度服务【功能】执行机 SlaverIP:" + slaver.getIp() + " 状态：" + slaver.getStatus());
                                             //检测slaver是否运行，如果异常认为已经挂了，
                                             CheckAliveSlaver(slaver);
                                             if (slaver.getStatus().equals("空闲")) {
@@ -120,17 +120,21 @@ public class FunctionDispatchScheduleTask {
                                                 }
                                             }
                                         }
-                                    } catch (Exception ex) {
-                                        String ErrorMessage="";
-                                        if(ex.getMessage().contains("未找到IP为")) {
-                                            ErrorMessage = "未找到用例所分配的执行机：" + slaver.getSlavername() + "已被删除，请重新注册";
-                                        }
                                         else
                                         {
-                                            ErrorMessage="用例所分配的执行机:"+slaver.getSlavername()+"已下线，请检查此slaver是否正常运行！";
+                                            CompensateAfterFail(dispatch,PlanID,SlaverDispathcList);
                                         }
+                                    } catch (Exception ex) {
+//                                        String ErrorMessage="";
+//                                        if(ex.getMessage().contains("未找到IP为")) {
+//                                            ErrorMessage = "未找到用例所分配的执行机：" + slaver.getSlavername() + "已被删除，请重新注册";
+//                                        }
+//                                        else
+//                                        {
+//                                            ErrorMessage="用例所分配的执行机:"+slaver.getSlavername()+"已下线，请检查此slaver是否正常运行！";
+//                                        }
                                         //自动更换到可用的slaver上，如果没有可用的slaver再把dispatch状态更新为调度失败
-                                        CompensateAfterFail(ErrorMessage,dispatch,PlanID,SlaverDispathcList);
+                                        CompensateAfterFail(dispatch,PlanID,SlaverDispathcList);
                                         FunctionDispatchScheduleTask.log.info("调度服务【功能】测试定时器请求执行服务异常：" + ex.getMessage());
                                     }
                                 }
@@ -155,11 +159,11 @@ public class FunctionDispatchScheduleTask {
     }
 
 
-    private  void CompensateAfterFail(String ErrorMessage,Dispatch dispatch,Long PlanID,List<Dispatch>SlaverDispathcList)
+    private  void CompensateAfterFail(Dispatch dispatch,Long PlanID,List<Dispatch>SlaverDispathcList)
     {
         List<Slaver> allliveslaver = GetAllAliveSlaver();
         if (allliveslaver.size() == 0) {
-            dispatchMapper.updatedispatchfail("调度失败", ErrorMessage, dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid());
+            dispatchMapper.updatedispatchfail("调度失败", "未找到任何可以用的功能执行机，请检查slaverservice是否启动", dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid());
         } else
         {
             Executeplan ep = executeplanMapper.findexplanWithid(PlanID);

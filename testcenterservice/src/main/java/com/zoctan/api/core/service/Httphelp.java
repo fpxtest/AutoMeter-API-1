@@ -266,9 +266,11 @@ public class Httphelp {
                     .setDefaultCookieStore(cookieStore)
                     .setDefaultRequestConfig(requestConfig).build();
             httpGet.setConfig(requestConfig);
+            Httphelp.log.info("Httphelp..................header.getParams().size() :  " + header.getParams().size());
             if (header.getParams().size() > 0) {
                 setHeader(httpGet, header);
             }
+
             if (protocal.equalsIgnoreCase("http")) {
                 httpClient = HttpClients.createDefault();
             }
