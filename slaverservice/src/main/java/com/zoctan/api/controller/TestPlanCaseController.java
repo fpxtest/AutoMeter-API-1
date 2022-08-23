@@ -336,7 +336,7 @@ public class TestPlanCaseController {
 
             } else {
                 if(property.toLowerCase().startsWith("win")){
-                    JmeterPath = ProjectPath + "\\slaverservice\\apache-jmeter-5.3/bin";
+                    JmeterPath = ProjectPath + "\\slaverservice\\apache-jmeter-5.3\\bin";
                     JmxPath = ProjectPath + "\\slaverservice\\servicejmxcase";
                 }else {
                     JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
