@@ -1,7 +1,7 @@
 package com.zoctan.api;
 
-import com.zoctan.api.core.constant.ProjectConstant;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import com.zoctan.api.core.constant.ProjectConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -26,7 +26,7 @@ import java.util.TimeZone;
 @EnableTransactionManagement
 @MapperScan(basePackages = ProjectConstant.MAPPER_PACKAGE)
 @ServletComponentScan(basePackages = ProjectConstant.FILTER_PACKAGE)
-public class SlaverserviceApplication extends SpringBootServletInitializer {
+public class Application extends SpringBootServletInitializer {
 
   @PostConstruct
   void started() {
@@ -34,12 +34,12 @@ public class SlaverserviceApplication extends SpringBootServletInitializer {
   }
 
   public static void main(final String[] args) {
-    SpringApplication.run(SlaverserviceApplication.class, args);
+    SpringApplication.run(Application.class, args);
   }
 
   /** 容器启动配置 */
   @Override
   protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
-    return builder.sources(SlaverserviceApplication.class);
+    return builder.sources(Application.class);
   }
 }
