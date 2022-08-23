@@ -91,16 +91,18 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         TestPlanCaseServiceImpl.log.info("性能测试当前系统版本是  is :" + os);
         Date current= new Date();
         String jmeterlogfilename=PlanName+"-"+BatchName+"-"+CaseName;
+        //截取_之前字符串
+        String JdbcMysqlUrl = MysqlUrl.substring(0, MysqlUrl.indexOf("?"));
         //Windows操作系统
         if (os != null && os.toLowerCase().startsWith("windows")) {
-            JmeterCmd = JmeterPath + "/jmeter.bat -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
+            JmeterCmd = JmeterPath + "/jmeter.bat -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                     + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
                     " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder+ " -j jmeter-pt"+jmeterlogfilename+".log ";
         }else
         {
-            JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
+            JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                     + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
@@ -112,18 +114,26 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         TestPlanCaseServiceImpl.log.info("性能JmeterCmd finish。。。。。。。。。。。。。。。。。。。。。。。。。。。。。 :");
     }
 
+    public static void main(String[] args) {
+        String a = "jdbc:mysql://localhost:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            //截取_之前字符串
+            String str1 = a.substring(0, a.indexOf("?"));
+            System.out.println("截取_之前字符串:"+str1);
+    }
 
     @Override
     public void ExecuteHttpPlanFunctionCase(Long Slaverid, String JmeterPath, String JmxPath, String DispatchIds, String MysqlUrl, String MysqlUserName, String MysqlPassword,int JmeterLogFileNum) throws IOException {
         String JmeterCmd="";
         String os = System.getProperty("os.name");
         TestPlanCaseServiceImpl.log.info("功能测试当前系统版本是  is :" + os);
+        //截取_之前字符串
+        String JdbcMysqlUrl = MysqlUrl.substring(0, MysqlUrl.indexOf("?"));
         //Windows操作系统
         if (os != null && os.toLowerCase().startsWith("windows")) {
-            JmeterCmd = JmeterPath + "\\jmeter.bat -n -t " + JmxPath + "\\HTTPFunction.jmx -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds+" -JSlaverid="+Slaverid+ " -j jmeter-ft"+JmeterLogFileNum+".log ";
+            JmeterCmd = JmeterPath + "\\jmeter.bat -n -t " + JmxPath + "\\HTTPFunction.jmx -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds+" -JSlaverid="+Slaverid+ " -j jmeter-ft"+JmeterLogFileNum+".log ";
         } else
         {
-            JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HTTPFunction.jmx -Jmysqlurl=" + MysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds+" -JSlaverid="+Slaverid+ " -j jmeter-ft"+JmeterLogFileNum+".log ";
+            JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HTTPFunction.jmx -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName + " -Jmysqlpassword=" + MysqlPassword + " -Jthread=1 -Jloops=1 -JDispatchIds=" + DispatchIds+" -JSlaverid="+Slaverid+ " -j jmeter-ft"+JmeterLogFileNum+".log ";
         }
         TestPlanCaseServiceImpl.log.info("功能JmeterCmd  is :" + JmeterCmd);
         ExecShell(JmeterCmd);
