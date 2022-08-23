@@ -467,7 +467,7 @@ public class TestHttpRequestData {
                     Value = Value.replace("$" + variables + "$", GlobalVariableValue.toString());
                     ObjectValue = Value;
                 } else {
-                    ObjectValue = GlobalVariablesHashMap.get(Value);
+                    ObjectValue = GlobalVariablesHashMap.get(variables);
                 }
             }
         }
