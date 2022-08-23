@@ -21,7 +21,7 @@ import java.util.TimeZone;
  * @date 2018/05/27
  */
 @EnableCaching
-@SpringBootApplication
+  @SpringBootApplication
 @EnableEncryptableProperties
 @EnableTransactionManagement
 @MapperScan(basePackages = ProjectConstant.MAPPER_PACKAGE)
