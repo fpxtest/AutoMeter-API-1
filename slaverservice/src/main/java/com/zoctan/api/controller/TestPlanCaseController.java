@@ -203,6 +203,7 @@ public class TestPlanCaseController {
 
     @PostMapping("/execperformancetest")
     public Result execperformancetest(@RequestBody Dispatch dispatch) throws Exception {
+        String property = System.getProperty("os.name");
         String ip = null;
         ip = IPHelpUtils.getInet4Address();
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
@@ -218,17 +219,36 @@ public class TestPlanCaseController {
         String JmeterPerformanceReportLogFilePath = "";
 
         if (ProjectPath.contains("slaverservice")) {
-            JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
-            JmxPath = ProjectPath + "/servicejmxcase";
-            JmeterPerformanceReportPath = ProjectPath + "/performancereport";
-            JmeterPerformanceReportLogFilePath = ProjectPath + "/performancereportlogfile";
+            if(property.toLowerCase().startsWith("win")){
+                JmeterPath = ProjectPath + "\\apache-jmeter-5.3\\bin";
+                JmxPath = ProjectPath + "\\servicejmxcase";
+                JmeterPerformanceReportPath = ProjectPath + "\\performancereport";
+                JmeterPerformanceReportLogFilePath = ProjectPath + "\\performancereportlogfile";
+            }else {
+                JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
+                JmxPath = ProjectPath + "/servicejmxcase";
+                JmeterPerformanceReportPath = ProjectPath + "/performancereport";
+                JmeterPerformanceReportLogFilePath = ProjectPath + "/performancereportlogfile";
+            }
+            JmeterPath = ProjectPath + "\\apache-jmeter-5.3\\bin";
+            JmxPath = ProjectPath + "\\servicejmxcase";
+            JmeterPerformanceReportPath = ProjectPath + "\\performancereport";
+            JmeterPerformanceReportLogFilePath = ProjectPath + "\\performancereportlogfile";
 
         } else {
-            JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
-            JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
-            JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
-            JmeterPerformanceReportLogFilePath = ProjectPath + "/slaverservice/performancereportlogfile";
+            if(property.toLowerCase().startsWith("win")){
+                JmeterPath = ProjectPath + "\\slaverservice\\apache-jmeter-5.3\\bin";
+                JmxPath = ProjectPath + "\\slaverservice\\servicejmxcase";
+                JmeterPerformanceReportPath = ProjectPath + "\\slaverservice\\performancereport";
+                JmeterPerformanceReportLogFilePath = ProjectPath + "\\slaverservice\\performancereportlogfile";
+            }else {
+                JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
+                JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+                JmeterPerformanceReportPath = ProjectPath + "/slaverservice/performancereport";
+                JmeterPerformanceReportLogFilePath = ProjectPath + "/slaverservice/performancereportlogfile";
+            }
         }
+
         File dir = new File(JmeterPerformanceReportPath);
         if (!dir.exists()) {// 判断目录是否存在
             dir.mkdir();
@@ -292,6 +312,7 @@ public class TestPlanCaseController {
 
     @PostMapping("/execfunctiontest")
     public Result execfunctiontest(@RequestBody List<Dispatch> dispatchList) throws Exception {
+        String property = System.getProperty("os.name");
         String ip = null;
         ip = IPHelpUtils.getInet4Address();
         List<Slaver> slaverlist = slaverMapper.findslaverbyip(ip);
@@ -305,11 +326,23 @@ public class TestPlanCaseController {
             String JmeterPath = "";
             String JmxPath = "";
             if (ProjectPath.contains("slaverservice")) {
-                JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
-                JmxPath = ProjectPath + "/servicejmxcase";
+                if(property.toLowerCase().startsWith("win")){
+                    JmeterPath = ProjectPath + "\\apache-jmeter-5.3\\bin";
+                    JmxPath = ProjectPath + "\\servicejmxcase";
+                }else {
+                    JmeterPath = ProjectPath + "/apache-jmeter-5.3/bin";
+                    JmxPath = ProjectPath + "/servicejmxcase";
+                }
+
             } else {
-                JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
-                JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+                if(property.toLowerCase().startsWith("win")){
+                    JmeterPath = ProjectPath + "\\slaverservice\\apache-jmeter-5.3\\bin";
+                    JmxPath = ProjectPath + "\\slaverservice\\servicejmxcase";
+                }else {
+                    JmeterPath = ProjectPath + "/slaverservice/apache-jmeter-5.3/bin";
+                    JmxPath = ProjectPath + "/slaverservice/servicejmxcase";
+                }
+
             }
             TestPlanCaseController.log.info("功能任务-获取待执行的功能用例数：。。。。。。。。。。。。。。。。。。。。。。。。" + dispatchList.size());
             int FunctionJmeter = 1;// GetJmeterProcess("FunctionJmeterProcess", "功能");
