@@ -420,6 +420,10 @@ public class TestCaseHelp {
 
             HashMap<String, ApiCasedata> headmap = fixhttprequestdatas("Header", apiCasedataList);
             HashMap<String, ApiCasedata> bodymap = fixhttprequestdatas("Body", apiCasedataList);
+            for (String key:bodymap.keySet())
+            {
+                TestCaseHelp.log.info("处理Body参数数据..............：" + key+"  value:"+bodymap.get(key));
+            }
             HashMap<String, ApiCasedata> paramsmap = fixhttprequestdatas("Params", apiCasedataList);
 
             //Header
@@ -454,6 +458,7 @@ public class TestCaseHelp {
             HttpParamers Bodyparamers = new HttpParamers();
             //Body内容
             String PostData = "";
+            TestCaseHelp.log.info("requestcontenttype is：" + requestcontenttype);
             // 设置Body
             if (bodymap.size() > 0) {
                 if (requestcontenttype.equalsIgnoreCase("Form表单")) {
@@ -715,15 +720,17 @@ public class TestCaseHelp {
     }
 
     private String GetParasPostData(String RequestContentType, HttpParamers paramers) throws IOException {
+        TestCaseHelp.log.info("GetCaseRequestData GetParasPostData RequestContentType is ：" + RequestContentType);
+
         String Result = "";
-        if (RequestContentType.equals("json")) {
+        if (RequestContentType.equalsIgnoreCase("json")) {
             paramers.setJsonParamer();
             Result = paramers.getJsonParamer();
         }
-        if (RequestContentType.equals("form表单")) {
+        if (RequestContentType.equals("form表单")||RequestContentType.equals("Form表单")) {
             Result = paramers.getQueryString("UTF-8");
         }
-        if (RequestContentType.equals("xml")) {
+        if (RequestContentType.equalsIgnoreCase("xml")) {
 
         } else {
 

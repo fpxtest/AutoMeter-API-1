@@ -2,10 +2,13 @@ package com.zoctan.api.core.service;
 
 import cn.hutool.core.util.XmlUtil;
 import com.jayway.jsonpath.JsonPath;
+import com.zoctan.api.controller.TestconditionController;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 
 import javax.xml.xpath.XPathConstants;
 
+@Slf4j
 public class ParseResponeHelp {
     public String ParseRespone(String ResponeResultType,String Respone,String Path) throws Exception {
         String Result="";
@@ -23,6 +26,7 @@ public class ParseResponeHelp {
         String Result="";
         try {
              Result= JsonPath.read(JsonRespone,JSPath).toString();
+            ParseResponeHelp.log.info("接口子条件条件报告子条件处理变量表达式-============：" + JSPath + " 响应数据类型" + JsonRespone+" Result is:"+Result);
         }
         catch (Exception ex)
         {

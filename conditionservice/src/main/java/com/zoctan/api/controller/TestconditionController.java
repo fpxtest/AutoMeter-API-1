@@ -201,6 +201,7 @@ public class TestconditionController {
     //接口子条件
     private HashMap<String, String> conditionApi(ConditionApi conditionApi, long ConditionID, Dispatch dispatch, Executeplan executeplan, Long Planid)
     {
+        TestconditionController.log.info("接口子条件Subconditionname-============：" + conditionApi.getSubconditionname()+" caseid:"+conditionApi.getCasename());
         HashMap<String, String> VariableNameValueMap = new HashMap<>();
         TestconditionReport testconditionReport = new TestconditionReport();
         testconditionReport.setTestplanid(dispatch.getExecplanid());
@@ -224,7 +225,11 @@ public class TestconditionController {
         String Respone = "";
         String ConditionResultStatus = "成功";
         Long CaseID = conditionApi.getCaseid();
+        TestconditionController.log.info("接口子条件用例id-============：" + CaseID);
+
         Apicases apicases = apicasesService.GetCaseByCaseID(CaseID);
+
+        TestconditionController.log.info("接口子条件用例名-============：" + apicases.getCasename());
 
         if (apicases == null) {
             Respone = "未找到条件运行的接口用例，请检查是否存在或已被删除";
@@ -254,6 +259,12 @@ public class TestconditionController {
         }
 
         List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
+        for (ApiCasedata ap:apiCasedataList) {
+
+            TestconditionController.log.info("接口子条件用例数据-============：type" + ap.getPropertytype()+" key:"+ap.getApiparam()+" value:"+ap.getApiparamvalue());
+
+        }
+
         //区分环境类型
         Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(), deployunit.getId());
         if (macdepunit == null) {
