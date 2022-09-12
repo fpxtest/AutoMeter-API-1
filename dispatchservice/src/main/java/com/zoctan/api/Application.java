@@ -1,7 +1,7 @@
 package com.zoctan.api;
 
-import com.zoctan.api.core.constant.ProjectConstant;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
+import com.zoctan.api.core.constant.ProjectConstant;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -21,7 +21,7 @@ import java.util.TimeZone;
  * @date 2018/05/27
  */
 @EnableCaching
-@SpringBootApplication
+  @SpringBootApplication
 @EnableEncryptableProperties
 @EnableTransactionManagement
 @MapperScan(basePackages = ProjectConstant.MAPPER_PACKAGE)

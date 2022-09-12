@@ -7,7 +7,7 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="keyname" jdbcType="VARCHAR" property="keyname" />
-    <result column="keyvalue" jdbcType="VARCHAR" property="keyvalue" />
+    <result column="keyvalue" jdbcType="LONGVARCHAR" property="keyvalue" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />

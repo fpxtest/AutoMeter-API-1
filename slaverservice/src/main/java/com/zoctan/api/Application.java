@@ -8,7 +8,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -22,7 +21,7 @@ import java.util.TimeZone;
  * @date 2018/05/27
  */
 @EnableCaching
-@SpringBootApplication
+  @SpringBootApplication
 @EnableEncryptableProperties
 @EnableTransactionManagement
 @MapperScan(basePackages = ProjectConstant.MAPPER_PACKAGE)

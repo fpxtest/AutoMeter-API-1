@@ -87,7 +87,7 @@
         class="small-space"
         label-position="left"
         label-width="120px"
-        style="width: 400px; margin-left:50px;"
+        style="width: 550px; margin-left:50px;"
         :model="tmpglobalvariables"
         ref="tmpglobalvariables"
       >
@@ -103,9 +103,9 @@
 
         <el-form-item label="变量值" prop="keyvalue" required>
           <el-input
-            maxlength="180"
-            type="text"
-            prefix-icon="el-icon-edit"
+            type="textarea"
+            rows="15" cols="50"
+            prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpglobalvariables.keyvalue"
           />

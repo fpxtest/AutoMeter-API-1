@@ -34,10 +34,11 @@ public class TestCore {
         String MysqlUrl = context.getParameter("mysqlurl");
         String MysqlUserName = context.getParameter("mysqlusername");
         String MysqlPass = context.getParameter("mysqlpassword");
-        logger.info("TestCore 数据库连接字 is :  " + MysqlUrl + "   " + MysqlUserName + "   " + MysqlPass);
+        String JdbcMysql = "?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC";
+        logger.info("TestCore 数据库连接字 is :  " + MysqlUrl + JdbcMysql + "   " + MysqlUserName + "   " + MysqlPass);
         //GetDBConnection(MysqlUrl, MysqlUserName, MysqlPass);
         testHttp=new TestHttp(log);
-        testMysqlHelp=new TestMysqlHelp(MysqlUrl, MysqlUserName, MysqlPass, log);
+        testMysqlHelp=new TestMysqlHelp(MysqlUrl+ JdbcMysql, MysqlUserName, MysqlPass, log);
         testCaseData=new TestCaseData(log,testMysqlHelp);
         testHttpRequestData=new TestHttpRequestData(log,testMysqlHelp);
         testCondition=new TestCondition(log,testMysqlHelp,testCaseData,testHttpRequestData,testHttp);

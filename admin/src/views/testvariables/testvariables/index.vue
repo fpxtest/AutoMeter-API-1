@@ -252,7 +252,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title='接口绑定变量' :visible.sync="BindVariablesDialogVisible">
+    <el-dialog title='绑定接口' :visible.sync="BindVariablesDialogVisible">
       <div class="filter-container">
         <el-form :inline="true">
           <el-form-item>
@@ -262,7 +262,7 @@
               icon="el-icon-plus"
               v-if="hasPermission('ApicasesVariables:add')"
               @click.native.prevent="showAddApicasesVariablesDialog"
-            >绑定接口变量</el-button>
+            >绑定接口</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -353,9 +353,9 @@
           add: '添加接口变量'
         },
         BindtextMap: {
-          updateRole: '修改绑定变量',
-          update: '修改绑定变量',
-          add: '添加绑定变量'
+          updateRole: '修改绑定接口',
+          update: '修改绑定接口',
+          add: '添加绑定接口'
         },
         apiquery: {
           casedeployunitname: '',
