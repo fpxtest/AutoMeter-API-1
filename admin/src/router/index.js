@@ -109,13 +109,13 @@ export const asyncRouterMap = [
   {
     path: '/deployunit',
     component: Layout,
-    name: '发布单元',
+    name: '微服务',
     alwaysShow: true,
     activeMenu: '/deployunit',
     icon: 'deploy',
     children: [
-      { path: 'depunit/list', name: '发布单元', component: _import('deployunit/depunit/index'), meta: { title: '发布单元', permission: ['depunit:list'] }, icon: 'testmanager' },
-      { path: 'api/list', name: 'API管理', component: _import('deployunit/api/index'), meta: { title: 'API管理', permission: ['api:list'] }}
+      { path: 'depunit/list', name: '微服务', component: _import('deployunit/depunit/index'), meta: { title: '微服务', permission: ['depunit:list'] }, icon: 'testmanager' },
+      { path: 'api/list', name: 'API接口', component: _import('deployunit/api/index'), meta: { title: 'API接口', permission: ['api:list'] }}
     ]
   },
   {
