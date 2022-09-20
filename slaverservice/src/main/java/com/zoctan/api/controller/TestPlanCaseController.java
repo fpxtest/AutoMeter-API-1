@@ -230,10 +230,10 @@ public class TestPlanCaseController {
                 JmeterPerformanceReportPath = ProjectPath + "/performancereport";
                 JmeterPerformanceReportLogFilePath = ProjectPath + "/performancereportlogfile";
             }
-            JmeterPath = ProjectPath + "\\apache-jmeter-5.3\\bin";
-            JmxPath = ProjectPath + "\\servicejmxcase";
-            JmeterPerformanceReportPath = ProjectPath + "\\performancereport";
-            JmeterPerformanceReportLogFilePath = ProjectPath + "\\performancereportlogfile";
+//            JmeterPath = ProjectPath + "\\apache-jmeter-5.3\\bin";
+//            JmxPath = ProjectPath + "\\servicejmxcase";
+//            JmeterPerformanceReportPath = ProjectPath + "\\performancereport";
+//            JmeterPerformanceReportLogFilePath = ProjectPath + "\\performancereportlogfile";
 
         } else {
             if(property.toLowerCase().startsWith("win")){

@@ -95,7 +95,7 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String JdbcMysqlUrl = MysqlUrl.substring(0, MysqlUrl.indexOf("?"));
         //Windows操作系统
         if (os != null && os.toLowerCase().startsWith("windows")) {
-            JmeterCmd = JmeterPath + "/jmeter.bat -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
+            JmeterCmd = JmeterPath + "\\jmeter.bat -n -t " + JmxPath + "\\HttpPerformance.jmx  -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
                     + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
