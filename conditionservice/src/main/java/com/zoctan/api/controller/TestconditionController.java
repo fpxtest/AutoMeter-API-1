@@ -288,10 +288,11 @@ public class TestconditionController {
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
             TestconditionController.log.info("接口子条件条件获取请求数据GetCaseRequestData异常-============：" + ex.getMessage());
         }
+        TestResponeData testResponeData =new TestResponeData();
         try {
             Start = new Date().getTime();
             TestconditionController.log.info("接口子条件条件请求数据-============：" + requestObject.getPostData());
-            TestResponeData testResponeData = testCaseHelp.request(requestObject);
+            testResponeData = testCaseHelp.request(requestObject);
             Respone = testResponeData.getResponeContent();
             String ResponeContentType="application/json;charset=utf-8";
             List<Header>responeheaderlist= testResponeData.getHeaderList();
@@ -321,7 +322,7 @@ public class TestconditionController {
             //ApicasesVariables apicasesVariables = apicasesVariablesService.getBy("caseid", apicases.getId());
             TestvariablesValue testvariablesValue = new TestvariablesValue();
             try {
-                testvariablesValue = FixApicasesVariables(apicasesVariables, requestObject, Respone, Planid, CaseID, dispatch, apicases);
+                testvariablesValue = FixApicasesVariables(apicasesVariables,testResponeData, requestObject, Respone, Planid, CaseID, dispatch, apicases);
             } catch (Exception exception) {
                 ConditionResultStatus = "失败";
             }
@@ -350,18 +351,43 @@ public class TestconditionController {
         return VariableNameValueMap;
     }
 
-    private TestvariablesValue FixApicasesVariables(ApicasesVariables apicasesVariables, RequestObject requestObject, String Respone, Long Planid, Long CaseID, Dispatch dispatch, Apicases apicases) throws Exception {
+    private TestvariablesValue FixApicasesVariables(ApicasesVariables apicasesVariables,TestResponeData testResponeData, RequestObject requestObject, String Respone, Long Planid, Long CaseID, Dispatch dispatch, Apicases apicases) throws Exception {
         TestvariablesValue testvariablesValue = new TestvariablesValue();
         if (apicasesVariables != null) {
             TestconditionController.log.info("接口子条件条件报告子条件处理变量-============：" + apicasesVariables.getVariablesname());
             Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
             if (testvariables != null) {
+                String VariablesResoruce=testvariables.getTestvariablestype();
                 String VariablesPath = testvariables.getVariablesexpress();
                 TestconditionController.log.info("接口子条件条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
                 ParseResponeHelp parseResponeHelp = new ParseResponeHelp();
                 String ParseValue = "";
                 try {
-                    ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                    switch (VariablesResoruce) {
+                        case "Body":
+                            ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                            break;
+                        case "Header":
+                            ParseValue = parseResponeHelp.ParseHeader(testResponeData,VariablesPath);
+                            break;
+                        case "Cookies":
+                            ParseValue = parseResponeHelp.ParseCookies(testResponeData,VariablesPath);
+                            break;
+                        default:
+                            ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                    }
+//                    if(VariablesResoruce.equalsIgnoreCase("Body")||VariablesResoruce.isEmpty())
+//                    {
+//                        ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+//                    }
+//                    if(VariablesResoruce.equalsIgnoreCase("Header"))
+//                    {
+//                        ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+//                    }
+//                    if(VariablesResoruce.equalsIgnoreCase("Cookies"))
+//                    {
+//                        ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+//                    }
                 } catch (Exception ex) {
                     ParseValue = ex.getMessage();
                     throw new Exception("接口变量：" + apicasesVariables.getVariablesname() + " 异常：" + ex.getMessage());
@@ -490,10 +516,27 @@ public class TestconditionController {
                 Testvariables testvariables = testvariablesService.getById(apicasesVariables.getVariablesid());
                 if (testvariables != null) {
                     try {
+                        String VariablesResoruce=testvariables.getTestvariablestype();
+                        String ParseValue ="";
+                        String VariablesPath = testvariables.getVariablesexpress();
                         TestconditionController.log.info("调试接口子条件响应ResponeContentType-============：" + requestObject.getResponecontenttype());
                         TestconditionController.log.info("调试接口子条件响应Respone-============：" + Respone);
                         TestconditionController.log.info("调试接口子条件响应变量表达式-============：" + testvariables.getVariablesexpress());
-                        String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
+
+                        switch (VariablesResoruce) {
+                            case "Body":
+                                ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                                break;
+                            case "Header":
+                                ParseValue = parseResponeHelp.ParseHeader(testResponeData,VariablesPath);
+                                break;
+                            case "Cookies":
+                                ParseValue = parseResponeHelp.ParseCookies(testResponeData,VariablesPath);
+                                break;
+                            default:
+                                ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                        }
+//                        String ParseValue = parseResponeHelp.ParseRespone(requestObject.getResponecontenttype(), Respone, testvariables.getVariablesexpress());
                         VariableNameValueMap.put(testvariables.getTestvariablesname(), ParseValue);
                     } catch (Exception ex) {
                         return ResultGenerator.genFailedResult("前置接口子条件执行异常，变量:" + apicasesVariables.getVariablesname() + " 获取值异常,原因为：" + ex.getMessage());

@@ -3,10 +3,15 @@ package com.zoctan.api.core.service;
 import cn.hutool.core.util.XmlUtil;
 import com.jayway.jsonpath.JsonPath;
 import com.zoctan.api.controller.TestconditionController;
+import com.zoctan.api.dto.TestResponeData;
 import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 
+import org.apache.http.Header;
+
+import org.apache.http.cookie.Cookie;
 import javax.xml.xpath.XPathConstants;
+import java.util.List;
 
 @Slf4j
 public class ParseResponeHelp {
@@ -47,6 +52,38 @@ public class ParseResponeHelp {
         {
             Result=ex.getMessage();
             throw new Exception("变量管理中此变量值表达式XPath："+XPath+" 在接口子条件的请求响应："+ActualXml+" 中未匹配到对应的值");
+        }
+        return Result;
+    }
+
+    public String ParseHeader(TestResponeData testResponeData, String Path) throws Exception {
+        String Result="";
+        List<Header> headerList=testResponeData.getHeaderList();
+        for (Header header:headerList) {
+            if(header.getName().equalsIgnoreCase(Path))
+            {
+                Result=header.getValue();
+            }
+        }
+        if(Result=="")
+        {
+            throw new Exception("接口变量来源Header："+Path+" 在绑定的接口的请求响应中没有对应的值");
+        }
+        return Result;
+    }
+
+    public String ParseCookies(TestResponeData testResponeData,String Path) throws Exception {
+        String Result="";
+        List<Cookie> headerList=testResponeData.getCookies();
+        for (Cookie cookie:headerList) {
+            if(cookie.getName().equalsIgnoreCase(Path))
+            {
+                Result=cookie.getValue();
+            }
+        }
+        if(Result=="")
+        {
+            throw new Exception("接口变量来源Cookies："+Path+" 在绑定的接口的请求响应中没有对应的值");
         }
         return Result;
     }

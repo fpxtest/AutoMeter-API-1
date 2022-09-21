@@ -6,8 +6,10 @@ import com.api.autotest.dto.ApicasesAssert;
 import com.api.autotest.dto.ResponeData;
 import com.api.autotest.dto.TestResponeData;
 import com.jayway.jsonpath.JsonPath;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.util.EntityUtils;
 import org.apache.log.Logger;
 import org.w3c.dom.Document;
@@ -52,6 +54,38 @@ public class TestAssert {
         }
         logger.info(TestCaseData.logplannameandcasename + "ParseJson AssertInfo is:" + AssertInfo );
         return AssertInfo;
+    }
+
+    public String ParseHeader(TestResponeData testResponeData, String Path) {
+        String Result="";
+        List<Header> headerList=testResponeData.getHeaderList();
+        for (Header header:headerList) {
+            if(header.getName().equalsIgnoreCase(Path))
+            {
+                Result=header.getValue();
+            }
+        }
+        if(Result=="")
+        {
+            Result="接口变量来源Header："+Path+" 在绑定的接口的请求响应中没有对应的值";
+        }
+        return Result;
+    }
+
+    public String ParseCookies(TestResponeData testResponeData,String Path)  {
+        String Result="";
+        List<Cookie> headerList=testResponeData.getCookies();
+        for (Cookie cookie:headerList) {
+            if(cookie.getName().equalsIgnoreCase(Path))
+            {
+                Result=cookie.getValue();
+            }
+        }
+        if(Result=="")
+        {
+            Result="接口变量来源Cookies："+Path+" 在绑定的接口的请求响应中没有对应的值";
+        }
+        return Result;
     }
 
 

@@ -45,13 +45,14 @@ public class TestCondition {
         String ConditionResultStatus = "成功";
         RequestObject re = new RequestObject();
         String CondionCaseID = "";
+        TestResponeData responeData =new TestResponeData();
         try {
             CondionCaseID = conditionApi.get("caseid");
             Start = new Date().getTime();
             re = testCaseData.GetCaseRequestData(requestObject.getTestplanid(), CondionCaseID, requestObject.getSlaverid(), requestObject.getBatchid(), requestObject.getBatchname(), requestObject.getTestplanname());
             re = testHttpRequestData.GetFuntionHttpRequestData(re);
             End = new Date().getTime();
-            TestResponeData responeData = testHttp.doService(re,30000);
+            responeData = testHttp.doService(re,30000);
             Respone = responeData.getResponeContent();
 
             String ResponeContentType = "application/json;charset=utf-8";
@@ -64,13 +65,13 @@ public class TestCondition {
             requestObject.setResponecontenttype(ResponeContentType);
             re.setResponecontenttype(ResponeContentType);
             CostTime = End - Start;
-            SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+            SaveApiSubCondition(re, responeData,requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
         } catch (Exception ex) {
             ConditionResultStatus = "失败";
             End = new Date().getTime();
             Respone = ex.getMessage();
             CostTime = End - Start;
-            SaveApiSubCondition(re, requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
+            SaveApiSubCondition(re, responeData,requestObject.getCasename(), PlanID, requestObject.getTestplanname(), requestObject.getBatchname(), Long.parseLong(CondionCaseID), ConditionID, conditionApi, Respone, ConditionResultStatus, CostTime);
             throw new Exception("接口子条件执行异常：" + ex.getMessage());
         }
     }
@@ -119,7 +120,7 @@ public class TestCondition {
         }
     }
 
-    private void SaveApiSubCondition(RequestObject requestObject, String CaseName, Long PlanID, String PlanName, String BatchName, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
+    private void SaveApiSubCondition(RequestObject requestObject,TestResponeData testResponeData, String CaseName, Long PlanID, String PlanName, String BatchName, Long CaseID, Long ConditionID, HashMap<String, String> conditionApi, String Respone, String ConditionResultStatus, long CostTime) {
         TestconditionReport testconditionReport = new TestconditionReport();
         testconditionReport.setTestplanid(PlanID);
         testconditionReport.setPlanname(CaseName);
@@ -148,9 +149,26 @@ public class TestCondition {
                         ArrayList<HashMap<String, String>> VariablesList = testMysqlHelp.GetVaribales(Variablesid);
                         if (VariablesList.size() > 0) {
                             String VariablesPath = VariablesList.get(0).get("variablesexpress");
+                            String VariablesResoruce=VariablesList.get(0).get("testvariablestype");
+                            String ParseValue ="";
                             logger.info("TestCondition条件报告子条件处理变量表达式-============：" + VariablesPath + " 响应数据类型" + requestObject.getResponecontenttype());
                             TestAssert testAssert = new TestAssert(logger);
-                            String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
+
+                            switch (VariablesResoruce) {
+                                case "Body":
+                                    ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                                    break;
+                                case "Header":
+                                    ParseValue = testAssert.ParseHeader(testResponeData,VariablesPath);
+                                    break;
+                                case "Cookies":
+                                    ParseValue = testAssert.ParseCookies(testResponeData,VariablesPath);
+                                    break;
+                                default:
+                                    ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), Respone, VariablesPath);
+                            }
+
+                            //String ParseValue = testAssert.ParseRespone(requestObject.getResponecontenttype(), VariablesPath, Respone);
                             logger.info("TestCondition条件报告子条件处理变量取值-============：" + ParseValue);
                             TestvariablesValue testvariablesValue = new TestvariablesValue();
                             testvariablesValue.setPlanid(PlanID);

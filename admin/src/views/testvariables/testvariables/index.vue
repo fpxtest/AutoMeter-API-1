@@ -45,7 +45,8 @@
       </el-table-column>
       <el-table-column label="变量名" align="center" prop="testvariablesname" width="80"/>
       <el-table-column :show-overflow-tooltip="true" label="变量描述" align="center" prop="variablesdes" width="150"/>
-      <el-table-column label="变量值类型" align="center" prop="valuetype" width="80"/>
+      <el-table-column label="变量来源" align="center" prop="testvariablestype" width="80"/>
+      <el-table-column label="变量值类型" align="center" prop="valuetype" width="90"/>
       <el-table-column label="变量值提取表达" align="center" prop="variablesexpress" width="120"/>
       <el-table-column :show-overflow-tooltip="true" label="备注" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
@@ -121,11 +122,13 @@
         </el-form-item>
 
 
-<!--        <el-form-item label="变量类型" prop="testvariablestype" required >-->
-<!--          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量类型" style="width:100%">-->
-<!--            <el-option label="接口变量" value="用例变量"></el-option>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
+        <el-form-item label="变量来源" prop="testvariablestype" required >
+          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量来源" style="width:100%">
+            <el-option label="Header" value="Header"></el-option>
+            <el-option label="Cookies" value="Cookies"></el-option>
+            <el-option label="Body" value="Body"></el-option>
+          </el-select>
+        </el-form-item>
 
         <el-form-item label="变量值类型" prop="valuetype" required >
           <el-select v-model="tmptestvariables.valuetype" placeholder="变量值类型" style="width:100%">
@@ -377,7 +380,7 @@
           testvariablesname: '',
           variablesdes: '',
           valuetype: '',
-          testvariablestype: '接口变量',
+          testvariablestype: '',
           variablesexpress: '',
           memo: '',
           creator: ''
