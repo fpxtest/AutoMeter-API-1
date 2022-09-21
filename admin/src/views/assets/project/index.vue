@@ -16,19 +16,19 @@
             icon="el-icon-plus"
             v-if="hasPermission('project:add')"
             @click.native.prevent="showAddprojectDialog"
-          >添加项目迭代</el-button>
+          >创建项目</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('project:search')">
           <el-form-item>
-            <el-input clearable maxlength="40" v-model="search.projectname" @keyup.enter.native="searchBy" placeholder="项目迭代名"></el-input>
+            <el-input clearable maxlength="40" v-model="search.projectname" @keyup.enter.native="searchBy" placeholder="项目名"></el-input>
           </el-form-item>
 
           <el-form-item label="状态" prop="status"  >
           <el-select v-model="search.status" placeholder="状态" style="width:100%">
-            <el-option label="待测试" value="待测试"></el-option>
-            <el-option label="测试中" value="测试中"></el-option>
-            <el-option label="测试完成" value="测试完成"></el-option>
+            <el-option label="开始" value="开始"></el-option>
+            <el-option label="暂停" value="暂停"></el-option>
+            <el-option label="关闭" value="关闭"></el-option>
           </el-select>
         </el-form-item>
 
@@ -52,18 +52,15 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="项目/迭代" align="center" prop="projectname" width="150"/>
+      <el-table-column label="项目名称" align="center" prop="projectname" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="80"/>
-      <el-table-column label="创建时间" align="center" prop="startTime" width="160">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.startTime) }}</template>
-      </el-table-column>
-      <el-table-column label="结束时间" align="center" prop="endTime" width="160">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.endTime) }}</template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="项目简介" align="center" prop="memo" width="350"/>
+      <el-table-column label="创建人" align="center" prop="creator" width="80"/>
+      <el-table-column label="成员" align="center" prop="creator" width="80"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>
@@ -83,6 +80,12 @@
             v-if="hasPermission('project:delete') && scope.row.id !== id"
             @click.native.prevent="removeproject(scope.$index)"
           >删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('project:delete') && scope.row.id !== id"
+            @click.native.prevent="removeproject(scope.$index)"
+          >成员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -105,7 +108,7 @@
         :model="tmpproject"
         ref="tmpproject"
       >
-        <el-form-item label="项目迭代名" prop="projectname" required>
+        <el-form-item label="项目名" prop="projectname" required>
           <el-input
             maxlength="50"
             type="text"
@@ -117,9 +120,9 @@
 
         <el-form-item label="状态" prop="status" required >
           <el-select v-model="tmpproject.status" placeholder="状态" style="width:100%">
-            <el-option label="待测试" value="待测试"></el-option>
-            <el-option label="测试中" value="测试中"></el-option>
-            <el-option label="测试完成" value="测试完成"></el-option>
+            <el-option label="开始" value="开始"></el-option>
+            <el-option label="暂停" value="暂停"></el-option>
+            <el-option label="关闭" value="关闭"></el-option>
           </el-select>
         </el-form-item>
 
@@ -386,7 +389,7 @@
         for (let i = 0; i < this.projectList.length; i++) {
           if (this.projectList[i].id !== project.id) { // 排除自己
             if (this.projectList[i].projectname === project.projectname) {
-              this.$message.error('项目迭代名已存在')
+              this.$message.error('项目名已存在')
               return false
             }
           }
