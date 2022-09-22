@@ -90,7 +90,7 @@ public class Httphelp {
             httpResponse = httpClient.execute(httpPost);
             List<Cookie> cookies = cookieStore.getCookies();
             testResponeData.setCookies(cookies);
-            testResponeData = GetResponeData(httpResponse);
+            testResponeData = GetResponeData(httpResponse,cookies);
         } catch (Exception e) {
             Httphelp.log.info("Get Exception is :" + e.getMessage());
             throw new Exception("请求地址:" + url + " 发生异常，原因：" + e.getMessage());
@@ -154,16 +154,18 @@ public class Httphelp {
             }
             Httphelp.log.info("Post PostWithBody..................Post开始请求数据 :  " + Query);
             httpResponse = httpClient.execute(httpPost);
+
             Httphelp.log.info("Post PostWithBody..................Post结束请求");
+            List<Cookie> cookies = new ArrayList<>();
             if (cookieStore != null) {
-                List<Cookie> cookies = cookieStore.getCookies();
+                cookies = cookieStore.getCookies();
                 if (cookies.size() > 0) {
                     testResponeData.setCookies(cookies);
                     Httphelp.log.info("Post PostWithBody..................Post setCookies结束");
                 }
             }
             if (httpResponse != null) {
-                testResponeData = GetResponeData(httpResponse);
+                testResponeData = GetResponeData(httpResponse,cookies);
                 Httphelp.log.info("Post PostWithBody..................Post GetResponeData结束");
             }
         } catch (Exception e) {
@@ -226,7 +228,7 @@ public class Httphelp {
             httpResponse = httpClient.execute(httpGetWithEntity);
             List<Cookie> cookies = cookieStore.getCookies();
             testResponeData.setCookies(cookies);
-            testResponeData = GetResponeData(httpResponse);
+            testResponeData = GetResponeData(httpResponse,cookies);
 
         } catch (Exception e) {
             Httphelp.log.info("Httphelp doGetWithBody Exception is :" + e.getMessage());
@@ -277,7 +279,7 @@ public class Httphelp {
 
             List<Cookie> cookies = cookieStore.getCookies();
             testResponeData.setCookies(cookies);
-            testResponeData = GetResponeData(httpResponse);
+            testResponeData = GetResponeData(httpResponse,cookies);
 
         } catch (Exception e) {
             Httphelp.log.info("Httphelp GetWithNoParams Exception is :" + e.getMessage());
@@ -336,7 +338,7 @@ public class Httphelp {
             httpResponse = httpClient.execute(httpGet);
             List<Cookie> cookies = cookieStore.getCookies();
             testResponeData.setCookies(cookies);
-            testResponeData = GetResponeData(httpResponse);
+            testResponeData = GetResponeData(httpResponse,cookies);
         } catch (Exception e) {
             Httphelp.log.info("Httphelp Get Exception is :" + e.getMessage());
             throw new Exception("请求地址:" + url + " 发生异常，原因：" + e.getMessage());
@@ -403,7 +405,7 @@ public class Httphelp {
             httpResponse = httpClient.execute(httpPut);
             List<Cookie> cookies = cookieStore.getCookies();
             testResponeData.setCookies(cookies);
-            testResponeData = GetResponeData(httpResponse);
+            testResponeData = GetResponeData(httpResponse,cookies);
         } catch (Exception e) {
             Httphelp.log.info("Httphelp Put Exception is :" + e.getMessage());
             throw new Exception("请求地址:" + url + " 发生异常，原因：" + e.getMessage());
@@ -468,7 +470,7 @@ public class Httphelp {
             httpResponse = httpClient.execute(httpDelete);
             List<Cookie> cookies = cookieStore.getCookies();
             testResponeData.setCookies(cookies);
-            testResponeData = GetResponeData(httpResponse);
+            testResponeData = GetResponeData(httpResponse,cookies);
         } catch (Exception e) {
             Httphelp.log.info("Httphelp Delete Exception is :" + e.getMessage());
             throw new Exception("请求地址:" + url + " 发生异常，原因：" + e.getMessage());
@@ -630,7 +632,7 @@ public class Httphelp {
     }
 
 
-    private static TestResponeData GetResponeData(CloseableHttpResponse closeableHttpResponse) throws IOException {
+    private static TestResponeData GetResponeData(CloseableHttpResponse closeableHttpResponse,List<Cookie>cookies) throws IOException {
         String ActualResult = "";
         TestResponeData responeData = new TestResponeData();
         int Code = 0;
@@ -645,6 +647,7 @@ public class Httphelp {
         responeData.setResponeContent(ActualResult);
         responeData.setResponeCode(Code);
         responeData.setHeaderList(Arrays.asList(closeableHttpResponse.getAllHeaders()));
+        responeData.setCookies(cookies);
         return responeData;
     }
 

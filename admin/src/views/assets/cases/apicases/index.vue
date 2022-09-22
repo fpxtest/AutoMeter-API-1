@@ -900,13 +900,16 @@
                 </el-tab-pane>
 
                 <el-tab-pane label="Cookies" name="six">
-                  <el-input
-                    type="textarea"
-                    style="width: 100%;border: none;outline: none;resize:none;overflow:hidden" readonly
-                    rows="20" cols="90"
-                    maxlength="4000"
-                    v-model="tmptest.size"
-                  />
+                  <el-table
+                    :data="cookies"
+                    element-loading-text="loading"
+                    border
+                    fit
+                    highlight-current-row
+                  >
+                    <el-table-column label="Name" align="center" prop="name" width="250"/>
+                    <el-table-column label="Value" align="center" prop="value" width="350"/>
+                  </el-table>
                 </el-tab-pane>
               </el-tabs>
             </template>
@@ -1267,6 +1270,7 @@
         sourcetestcaseList: [],
         assertList: [],
         headerList: [], // Header列表
+        cookies: [], // cookies列表
         requestHeadList: [], // Header列表
         requestParamsList: [], // Params列表
         conditionList: [], // 条件列表
@@ -2116,6 +2120,7 @@
               this.tmptest.general = '1.请求地址：' + response.data.responeGeneral.url + '\n' + '2.协议：' + response.data.responeGeneral.protocal + '\n' + '3.请求风格：' + response.data.responeGeneral.apistyle + '\n' + '4.请求方法：' + response.data.responeGeneral.method
               this.tmptest.requestdata = response.data.responeGeneral.postData
               this.headerList = response.data.headerList
+              this.cookies = response.data.cookies
               this.requestHeadList = response.data.requestHeadList
               this.requestParamsList = response.data.requestParamsList
               this.tmptest.respone = response.data.responeContent
@@ -2344,6 +2349,7 @@
         this.tmptest.conditionname = ''
         this.tmptest.general = ''
         this.headerList = null
+        this.cookies = null
         this.requestHeadList = null
         this.tmptest.size = ''
         this.tmptest.code = ''
