@@ -2222,15 +2222,16 @@
         this.tmpapicases.middleparam = this.apicasesList[index].middleparam
         this.tmpapicases.level = this.apicasesList[index].level
         this.tmpapicases.memo = this.apicasesList[index].memo
+        this.tmpapicases.loops = this.apicasesList[index].loops
         this.tmpapicases.creator = this.name
         if (this.tmpapicases.casetype === '性能') {
           this.threadloopvisible = true
           this.tmpapicases.threadnum = this.apicasesList[index].threadnum
-          this.tmpapicases.loops = this.apicasesList[index].loops
+          // this.tmpapicases.loops = this.apicasesList[index].loops
         } else {
           this.threadloopvisible = false
           this.tmpapicases.threadnum = 1
-          this.tmpapicases.loops = 1
+          // this.tmpapicases.loops = 1
         }
       },
 

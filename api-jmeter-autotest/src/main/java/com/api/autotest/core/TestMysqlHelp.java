@@ -107,7 +107,7 @@ public class TestMysqlHelp {
             list = MysqlConnectionUtils.query(Sql);
             for (HashMap<String, String> maplog:list) {
                 for (String Key: maplog.keySet()) {
-                    logger.info("获取数据的字段名为:  " + Key + "  字段值为：" + maplog.get(Key));
+                    //logger.info("获取数据的字段名为:  " + Key + "  字段值为：" + maplog.get(Key));
                 }
             }
         } catch (Exception e) {
@@ -365,8 +365,8 @@ public class TestMysqlHelp {
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
-        String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,creator,batchname)" +
-                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname().replace("'","''") + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename().replace("'","''") + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname().replace("'","''") + "', '" + testvariablesValue.getMemo().replace("'","''") + "' , '" + dateNowStr + "', '" + dateNowStr + "','admin'" + ", '" + testvariablesValue.getBatchname().replace("'","''") + "')";
+        String sql = "insert testvariables_value (planid,planname,caseid,casename,variablesid,variablesname,variablesvalue,memo,create_time,lastmodify_time,batchname,variablestype)" +
+                " values(" + testvariablesValue.getPlanid() + ", '" + testvariablesValue.getPlanname().replace("'","''") + "', " + testvariablesValue.getCaseid() + ", '" + testvariablesValue.getCasename().replace("'","''") + "', " + testvariablesValue.getVariablesid() + ", '" + testvariablesValue.getVariablesname().replace("'","''")+ "', '" + testvariablesValue.getVariablesvalue().replace("'","''") + "', '" + testvariablesValue.getMemo().replace("'","''") + "' , '" + dateNowStr + "', '" + dateNowStr + "', '" + testvariablesValue.getBatchname().replace("'","''")+ "', '" + testvariablesValue.getVariablestype().replace("'","''") + "')";
         logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + sql);
         try {
             logger.info(logplannameandcasename + "获取数据库 保存变量结果 result sql is...........: " + MysqlConnectionUtils.update(sql));

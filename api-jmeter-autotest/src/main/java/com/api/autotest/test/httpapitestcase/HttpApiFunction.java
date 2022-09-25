@@ -81,7 +81,9 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
                         try {
                             //增加条件处理逻辑，bug用例前置api还未执行，变量未产生，用例的参数值是错的
                             Core.FixCondition(requestObject);
+                            requestObject=Core.GetFuntionHttpRequestData(requestObject);
                             TestResponeData responeData = Core.request(requestObject);// SendCaseRequest(requestObject, Core);
+                            getLogger().info("用例："+requestObject.getCasename()+" 请求完成 。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。:" );
                             ActualResult = responeData.getResponeContent();
                             //断言
                             AssertInfo = Core.FixAssert(TestAssert, requestObject.getApicasesAssertList(), responeData);
@@ -210,8 +212,8 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
     // 本地调试
     public static void main(String[] args) {
         Arguments params = new Arguments();
-        params.addArgument("DispatchIds", "151");
-        params.addArgument("SlaverId", "7");
+        params.addArgument("DispatchIds", "210,211");
+        params.addArgument("SlaverId", "8");
         params.addArgument("mysqlurl", "jdbc:mysql://127.0.0.1:3306/testcenter?useUnicode=true&useSSL=false&allowMultiQueries=true&characterEncoding=utf-8&useLegacyDatetimeCode=false&serverTimezone=UTC");
         params.addArgument("mysqlusername", "test");
         params.addArgument("mysqlpassword", "test");

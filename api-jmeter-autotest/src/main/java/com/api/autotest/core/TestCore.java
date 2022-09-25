@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.api.autotest.common.utils.*;
 import com.api.autotest.dto.*;
 import com.google.common.collect.Maps;
+import org.apache.http.Header;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.log.Logger;
 import java.util.*;
@@ -66,11 +67,19 @@ public class TestCore {
             String BatchName = getcaseValue("batchname", DispatchList);
             String ExecPlanName = getcaseValue("execplanname", DispatchList);
             RequestObject ro =testCaseData.GetCaseRequestData(PlanId, CaseId, SlaverId, BatchId, BatchName, ExecPlanName);
-            ro=testHttpRequestData.GetFuntionHttpRequestData(ro);
+            //ro=testHttpRequestData.GetFuntionHttpRequestData(ro);
+            ro=GetFuntionHttpRequestData(ro);
             ro.setLoop(Integer.parseInt(getcaseValue("loops", DispatchList)));
             FunctionROList.add(ro);
+            logger.info("CaseId:"+CaseId+"初始化 完成-============================================================：");
         }
         return FunctionROList;
+    }
+
+    public RequestObject GetFuntionHttpRequestData(RequestObject ro)
+    {
+        RequestObject roresult=testHttpRequestData.GetFuntionHttpRequestData(ro);
+        return  roresult;
     }
 
     //处理条件入口
@@ -150,6 +159,17 @@ public class TestCore {
     // 发送http请求
     public TestResponeData request(RequestObject requestObject) throws Exception {
         TestResponeData result = testHttp.doService(requestObject,30000);
+        logger.info("用例:"+requestObject.getCasename()+" doService完成-============================================================：");
+        String ResponeContentType = "application/json;charset=utf-8";
+        List<Header> responeheaderlist = result.getHeaderList();
+        for (Header head : responeheaderlist) {
+            if (head.getName().equalsIgnoreCase("Content-Type")) {
+                ResponeContentType = head.getValue();
+            }
+        }
+        requestObject.setResponecontenttype(ResponeContentType);
+        testCondition.FixInterfaceVariables(requestObject,Long.parseLong(requestObject.getCaseid()),result,result.getResponeContent(),Long.parseLong(requestObject.getTestplanid()),requestObject.getTestplanname(),requestObject.getBatchname());
+        logger.info("用例:"+requestObject.getCasename()+" 处理变量完成-============================================================：");
         return result;
     }
 

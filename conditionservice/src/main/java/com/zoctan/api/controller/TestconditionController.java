@@ -314,7 +314,7 @@ public class TestconditionController {
             End = new Date().getTime();
         }
 
-        //根据用例是否有中间变量（多个），如果有变量，解析（json，xml，html）保存变量值表，如果解析失败，置条件为失败
+        //根据用例是否有中间变量（多个），如果有变量，解析（header,cookies,json，xml，html）保存变量值表，如果解析失败，置条件为失败
         Condition con = new Condition(ApicasesVariables.class);
         con.createCriteria().andCondition("caseid = " + apicases.getId());
         List<ApicasesVariables> apicasesVariablesList = apicasesVariablesService.listByCondition(con);

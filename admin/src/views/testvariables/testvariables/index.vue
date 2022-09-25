@@ -123,7 +123,7 @@
 
 
         <el-form-item label="变量来源" prop="testvariablestype" required >
-          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量来源" style="width:100%">
+          <el-select v-model="tmptestvariables.testvariablestype" placeholder="变量来源" style="width:100%" @change="testvariablestypeselectChanged($event)">
             <el-option label="Header" value="Header"></el-option>
             <el-option label="Cookies" value="Cookies"></el-option>
             <el-option label="Body" value="Body"></el-option>
@@ -141,10 +141,10 @@
 
 
 
-        <el-form-item label="变量值提取表达" prop="variablesexpress" required>
+        <el-form-item :label="expressname" prop="variablesexpress" required>
           <el-input
             type="textarea"
-            rows="5"
+            rows="3"
             cols="10"
             maxlength="200"
             placeholder="例如 $.store.book[0].title"
@@ -212,8 +212,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="api" prop="apiname" required >
-          <el-select v-model="tmpApicasesVariables.apiname" placeholder="api" style="width:100%" @change="apiselectChanged($event)">
+        <el-form-item label="API" prop="apiname" required >
+          <el-select v-model="tmpApicasesVariables.apiname" placeholder="API" style="width:100%" @change="apiselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(api, index) in apiList" :key="index">
               <el-option :label="api.apiname" :value="api.apiname"/>
@@ -221,8 +221,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="用例" prop="casename" required >
-          <el-select v-model="tmpApicasesVariables.casename" placeholder="用例" style="width:100%" @change="testcaseselectChanged($event)">
+        <el-form-item label="绑定接口" prop="casename" required >
+          <el-select v-model="tmpApicasesVariables.casename" placeholder="绑定接口" style="width:100%" @change="testcaseselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testcase, index) in caseList" :key="index">
               <el-option :label="testcase.casename" :value="testcase.casename" required/>
@@ -335,6 +335,7 @@
     },
     data() {
       return {
+        expressname: '变量值提取表达',
         id: null,
         itemKey: null,
         tmptestvariablesname: '',
@@ -418,6 +419,13 @@
     methods: {
       unix2CurrentTime,
 
+      testvariablestypeselectChanged(e) {
+        if (e === 'Body') {
+          this.expressname = '变量值提取表达'
+        } else {
+          this.expressname = 'Key名'
+        }
+      },
       /**
        * 获取变量列表
        */
