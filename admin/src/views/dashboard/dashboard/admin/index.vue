@@ -10,17 +10,17 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div id="11" class="chart-wrapper">
-          <PieChart BusinessName="发布单元用例" :typeData="piedeployunittypedata" :typeValueData="pietypedeployunitcaseValueData"/>
+          <PieChart BusinessName="发布单元:用例" :typeData="piedeployunittypedata" :typeValueData="pietypedeployunitcaseValueData"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div id="12" class="chart-wrapper">
-          <PieChart BusinessName="发布单元API" :typeData="piedeployunittypedata"  :typeValueData="pietypedeployunitapiValueData"/>
+          <PieChart BusinessName="发布单元:API" :typeData="piedeployunittypedata"  :typeValueData="pietypedeployunitapiValueData"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <PieChart BusinessName="测试集合用例" :typeData="pieplancasetypedata"  :typeValueData="pieplancaseValueData"/>
+          <PieChart BusinessName="测试集合:用例" :typeData="pieplancasetypedata"  :typeValueData="pieplancaseValueData"/>
         </div>
       </el-col>
     </el-row>
