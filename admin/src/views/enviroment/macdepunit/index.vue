@@ -304,6 +304,13 @@
       this.getassembleLists()
     },
 
+    activated() {
+      this.getenviromentallList()
+      this.getmachineLists()
+      this.getdepunitLists()
+      this.getassembleLists()
+    },
+
     methods: {
       unix2CurrentTime,
 

@@ -231,6 +231,10 @@
       this.getalltestconditionbytype()
     },
 
+    activated() {
+      this.getalltestconditionbytype()
+    },
+
     methods: {
       unix2CurrentTime,
 

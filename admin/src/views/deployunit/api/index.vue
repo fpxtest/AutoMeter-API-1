@@ -858,8 +858,7 @@ export default {
   },
 
   activated() {
-    console.log(787888878)
-    this.getapiList()
+    this.getdepunitLists()
   },
   methods: {
     // 单个复制

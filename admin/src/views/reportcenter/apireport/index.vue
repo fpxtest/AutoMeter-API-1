@@ -331,6 +331,10 @@
       this.getapireportList()
     },
 
+    activated() {
+      this.getexecplanList()
+    },
+
     methods: {
       unix2CurrentTime,
 

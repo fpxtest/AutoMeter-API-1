@@ -272,6 +272,12 @@
       // this.getmachineLists()
     },
 
+    activated() {
+      this.getenviromentallList()
+      this.getconditionallList()
+      this.getassembleallnameList()
+    },
+
     methods: {
       unix2CurrentTime,
 

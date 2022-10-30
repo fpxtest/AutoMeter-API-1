@@ -365,6 +365,10 @@
       this.getdepunitLists()
     },
 
+    activated() {
+      this.getdepunitLists()
+    },
+
     methods: {
       unix2CurrentTime,
 

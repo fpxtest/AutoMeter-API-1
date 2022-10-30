@@ -523,6 +523,10 @@
       this.getexecplanList()
     },
 
+    activated() {
+      this.getexecplanList()
+    },
+
     mounted() {
       this.drawLine()
     },

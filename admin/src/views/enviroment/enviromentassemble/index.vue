@@ -296,6 +296,10 @@
       this.getmachineLists()
     },
 
+    activated() {
+      this.getmachineLists()
+    },
+
     methods: {
       unix2CurrentTime,
       selectChanged(e) {

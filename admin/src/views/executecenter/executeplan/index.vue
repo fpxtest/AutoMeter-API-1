@@ -628,6 +628,14 @@
       this.getglobalheaderallList()
     },
 
+    activated() {
+      this.getapiList()
+      this.getdepunitList()
+      this.getenviromentallList()
+      this.getdatabydiccodeList()
+      this.getglobalheaderallList()
+    },
+
     methods: {
       /**
        * 获取组件名字典列表

@@ -264,6 +264,11 @@
       this.getalltestcondition()
     },
 
+    activated() {
+      this.getdepunitLists()
+      this.getalltestcondition()
+    },
+
     methods: {
       unix2CurrentTime,
 

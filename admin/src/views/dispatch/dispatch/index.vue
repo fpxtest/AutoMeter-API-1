@@ -230,6 +230,10 @@
       this.getdispatchList()
     },
 
+    activated() {
+      this.getallexplan()
+    },
+
     methods: {
       unix2CurrentTime,
 

@@ -132,6 +132,10 @@
       this.getexecuteplanbatchList()
     },
 
+    activated() {
+      this.getallexplan()
+    },
+
     methods: {
       unix2CurrentTime,
 

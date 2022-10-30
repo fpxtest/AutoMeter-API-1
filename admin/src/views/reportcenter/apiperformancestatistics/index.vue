@@ -249,6 +249,10 @@
       // this.getapiperformancestatisticsList()
     },
 
+    activated() {
+      this.getexecplanList()
+    },
+
     methods: {
       unix2CurrentTime,
 

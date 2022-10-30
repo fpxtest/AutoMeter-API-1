@@ -415,6 +415,11 @@
       // this.getdatabydiccodeList()
     },
 
+    activated() {
+      this.getdepunitLists()
+      this.getexecplanList()
+    },
+
     methods: {
       unix2CurrentTime,
 
