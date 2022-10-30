@@ -9,6 +9,9 @@ const getters = {
   loginTime: state => state.account.loginTime,
   registerTime: state => state.account.registerTime,
   roleName: state => state.account.roleName,
+  projectlist: state => state.project.projectlist,
+  projectid: state => state.project.projectid,
+  pname: state => state.project.projectname,
   permissionCodeList: state => state.account.permissionCodeList,
 
   permissionRouters: state => state.permission.routers,

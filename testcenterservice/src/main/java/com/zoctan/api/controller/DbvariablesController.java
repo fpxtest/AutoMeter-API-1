@@ -28,7 +28,8 @@ public class DbvariablesController {
     public Result add(@RequestBody Dbvariables dbvariables) {
 
         Condition con=new Condition(Dbvariables.class);
-        con.createCriteria().andCondition("dbvariablesname = '" + dbvariables.getDbvariablesname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+dbvariables.getProjectid())
+                .andCondition("dbvariablesname = '" + dbvariables.getDbvariablesname().replace("'","''") + "'");
         if(dbvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("变量名已经存在");
@@ -71,7 +72,8 @@ public class DbvariablesController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Dbvariables dic) {
         Condition con=new Condition(Dbvariables.class);
-        con.createCriteria().andCondition("dbvariablesname = '" + dic.getDbvariablesname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("dbvariablesname = '" + dic.getDbvariablesname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
         if(dbvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("变量名已经存在");

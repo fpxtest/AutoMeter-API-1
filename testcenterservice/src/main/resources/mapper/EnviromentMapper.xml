@@ -10,6 +10,7 @@
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="envtype" jdbcType="VARCHAR" property="envtype" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -21,7 +22,7 @@
 
   <select id="findEnviromentName" resultMap="enviromentWithNameMap">
     SELECT a.enviromentname,a.memo
-    FROM enviroment a
+    FROM enviroment a where a.projectid=#{projectid}
   </select>
 
   <select id="findEnviromentWithName" resultMap="enviromentWithNameMap">
@@ -29,13 +30,14 @@
     FROM enviroment a
     <where>
       <if test="enviromentname != null and enviromentname != ''">a.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>
 
   <select id="getenviromentnum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM enviroment a
+    FROM enviroment a where a.projectid=#{projectid}
   </select>
 
   <update id="updateEnviroment" parameterType="com.zoctan.api.entity.Enviroment">

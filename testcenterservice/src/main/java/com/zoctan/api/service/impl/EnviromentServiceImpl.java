@@ -24,8 +24,8 @@ private EnviromentMapper enviromentMapper;
 
 
     @Override
-    public List<Enviroment> findEnviromentName(String params) {
-        return this.enviromentMapper.findEnviromentName(params);
+    public List<Enviroment> findEnviromentName(String params,long projectid) {
+        return this.enviromentMapper.findEnviromentName(params,projectid);
     }
 
     @Override
@@ -45,7 +45,7 @@ private EnviromentMapper enviromentMapper;
     }
 
     @Override
-    public Integer getenviromentnum() {
-        return enviromentMapper.getenviromentnum();
+    public Integer getenviromentnum(long projectid) {
+        return enviromentMapper.getenviromentnum(projectid);
     }
 }

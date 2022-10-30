@@ -76,8 +76,8 @@ public class ExecuteplanTestcaseController {
 
 
     @GetMapping("/getstaticsplancases")
-    public Result getstaticsplancases() {
-        List<ExecuteplanTestcase> list = executeplanTestcaseService.getstaticsplancases();
+    public Result getstaticsplancases(@RequestParam long projectid) {
+        List<ExecuteplanTestcase> list = executeplanTestcaseService.getstaticsplancases(projectid);
         List<StaticsDataForPie> result=new ArrayList<>();
         for (ExecuteplanTestcase executeplanTestcase: list) {
             StaticsDataForPie staticsDataForPie =new StaticsDataForPie();

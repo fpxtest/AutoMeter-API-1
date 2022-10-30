@@ -31,7 +31,8 @@ public class DeployunitController {
     @PostMapping
     public Result add(@RequestBody Deployunit deployunit) {
         Condition con=new Condition(Deployunit.class);
-        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+deployunit.getProjectid())
+                .andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'");
         if(deployunitService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("此发布单元已经存在");
@@ -71,8 +72,8 @@ public class DeployunitController {
     }
 
     @GetMapping("/getdeploynum")
-    public Result getdeploynum() {
-        Integer deployunitnum = deployunitService.getdeploynum();
+    public Result getdeploynum(@RequestParam long projectid) {
+        Integer deployunitnum = deployunitService.getdeploynum(projectid);
         return ResultGenerator.genOkResult(deployunitnum);
     }
 
@@ -86,21 +87,25 @@ public class DeployunitController {
     }
 
     @GetMapping("/getdeplist")
-    public Result listall() {
-        List<Deployunit> list = deployunitService.listAll();
+    public Result listall(@RequestParam long projectid) {
+        Condition con=new Condition(Deployunit.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<Deployunit> list = deployunitService.listByCondition(con);
+        //List<Deployunit> list = deployunitService.listAll();
         return ResultGenerator.genOkResult(list);
     }
 
 
     @GetMapping("/getstaticsdeploynames")
-    public Result getstaticsdeploynames() {
-        List<String> list = deployunitService.getstaticsdeploynames();
+    public Result getstaticsdeploynames(@RequestParam long projectid) {
+        List<String> list = deployunitService.getstaticsdeploynames(projectid);
         return ResultGenerator.genOkResult(list);
     }
 
     @GetMapping("/findDeployNameValueWithCode")
-    public Result findDeployNameValueWithCode(@RequestParam String deployunitname) {
-        Deployunit dep = deployunitService.findDeployNameValueWithCode(deployunitname);
+    public Result findDeployNameValueWithCode(@RequestParam long deployunitid) {
+        Deployunit dep = deployunitService.getBy("id",deployunitid);
+//        Deployunit dep = deployunitService.findDeployNameValueWithCode(deployunitid);
         return ResultGenerator.genOkResult(dep);
     }
 
@@ -110,7 +115,8 @@ public class DeployunitController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Deployunit deployunit) {
         Condition con=new Condition(Deployunit.class);
-        con.createCriteria().andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'")
+        con.createCriteria().andCondition("projectid = "+deployunit.getProjectid())
+                .andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'")
                 .andCondition("id <> " + deployunit.getId());
         if(deployunitService.ifexist(con)>0)
         {

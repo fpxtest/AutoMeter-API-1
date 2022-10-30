@@ -31,7 +31,8 @@ public class ConditionApiController {
     @PostMapping
     public Result add(@RequestBody ConditionApi conditionApi) {
         Condition con=new Condition(ConditionApi.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
+        con.createCriteria().andCondition("projectid = "+conditionApi.getProjectid())
+                .andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
                 .andCondition("subconditionname = '" + conditionApi.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("deployunitname = '" + conditionApi.getDeployunitname()+ "'")
                 .andCondition("apiname = '" + conditionApi.getApiname()+ "'")
@@ -81,7 +82,8 @@ public class ConditionApiController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final ConditionApi conditionApi) {
         Condition con=new Condition(ConditionApi.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
+        con.createCriteria().andCondition("projectid = "+conditionApi.getProjectid())
+                .andCondition("conditionname = '" + conditionApi.getConditionname()+ "'")
                 .andCondition("subconditionname = '" + conditionApi.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("deployunitname = '" + conditionApi.getDeployunitname()+ "'")
                 .andCondition("apiname = '" + conditionApi.getApiname()+ "'")

@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
-import com.zoctan.api.entity.Dispatch;
-import com.zoctan.api.entity.Envmachine;
-import com.zoctan.api.entity.Macdepunit;
-import com.zoctan.api.entity.Machine;
+import com.zoctan.api.entity.*;
 import com.zoctan.api.service.EnvmachineService;
 import com.zoctan.api.service.MacdepunitService;
 import com.zoctan.api.service.MachineService;
@@ -34,12 +31,20 @@ public class MachineController {
     @PostMapping
     public Result add(@RequestBody Machine machine) {
         Condition con=new Condition(Machine.class);
-        con.createCriteria().andCondition("machinename = '" + machine.getMachinename().replace("'","''") + "'").orCondition("ip = '" + machine.getIp() + "'");
+        con.createCriteria().andCondition("projectid = "+machine.getProjectid())
+                .andCondition("machinename = '" + machine.getMachinename().replace("'","''") + "'");
         if(machineService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("机器名或者ip已经存在");
+            return ResultGenerator.genFailedResult("服务器名已经存在");
         }
-        else {
+        Condition conip=new Condition(Machine.class);
+        conip.createCriteria().andCondition("projectid = "+machine.getProjectid())
+                .andCondition("ip = '" + machine.getIp() + "'");
+        if(machineService.ifexist(conip)>0)
+        {
+            return ResultGenerator.genFailedResult("IP已经存在");
+        } else
+        {
             machineService.save(machine);
             return ResultGenerator.genOkResult();
         }
@@ -62,20 +67,41 @@ public class MachineController {
 
     @PutMapping("/detail")
     public Result update(@RequestBody Machine machine) {
-//        Condition con=new Condition(Machine.class);
-//        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'")
-//                .orCondition("ip = '" + machine.getIp() + "'")
-//        .andCondition("id <> " + machine.getId());
-        Machine machine1=machineService.findmachinebymachineandip(machine.getMachinename(),machine.getIp(),machine.getId());
-        if(machine1!=null)
+
+        Condition con=new Condition(Machine.class);
+        con.createCriteria().andCondition("projectid = "+machine.getProjectid())
+                .andCondition("machinename = '" + machine.getMachinename().replace("'","''") + "'")
+                .andCondition("id <> " + machine.getId());
+        if(machineService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("服务器名或者ip已经存在");
+            return ResultGenerator.genFailedResult("服务器名已经存在");
         }
-        else
+        Condition conip=new Condition(Machine.class);
+        conip.createCriteria().andCondition("projectid = "+machine.getProjectid())
+                .andCondition("ip = '" + machine.getIp() + "'")
+                .andCondition("id <> " + machine.getId());
+        if(machineService.ifexist(conip)>0)
+        {
+            return ResultGenerator.genFailedResult("IP已经存在");
+        } else
         {
             machineService.updateMachine(machine);
             return ResultGenerator.genOkResult();
         }
+//        Condition con=new Condition(Machine.class);
+//        con.createCriteria().andCondition("machinename = '" + machine.getMachinename() + "'")
+//                .orCondition("ip = '" + machine.getIp() + "'")
+//        .andCondition("id <> " + machine.getId());
+//        Machine machine1=machineService.findmachinebymachineandip(machine.getMachinename(),machine.getIp(),machine.getId(),machine.getProjectid());
+//        if(machine1!=null)
+//        {
+//            return ResultGenerator.genFailedResult("IP已经存在");
+//        }
+//        else
+//        {
+//            machineService.updateMachine(machine);
+//            return ResultGenerator.genOkResult();
+//        }
     }
 
     @GetMapping("/{id}")
@@ -85,8 +111,8 @@ public class MachineController {
     }
 
     @GetMapping("/getmachinenum")
-    public Result getmachinenum() {
-        Integer machinenum = machineService.getmachinenum();
+    public Result getmachinenum(@RequestParam long projectid) {
+        Integer machinenum = machineService.getmachinenum(projectid);
         return ResultGenerator.genOkResult(machinenum);
     }
 
@@ -100,8 +126,11 @@ public class MachineController {
     }
 
     @GetMapping("/getmachine")
-    public Result listbyenvname() {
-        List<Machine> list = machineService.listAll();
+    public Result listbyenvname(@RequestParam long projectid) {
+        Condition con=new Condition(Machine.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<Machine> list = machineService.listByCondition(con);
+//        List<Machine> list = machineService.listAll();
         return ResultGenerator.genOkResult(list);
     }
 

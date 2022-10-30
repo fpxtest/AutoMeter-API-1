@@ -183,7 +183,7 @@
         <el-form-item label="绑定Sql列名" prop="fieldname" required>
           <el-input
             placeholder="数据库子条件查询Sql结果列名"
-            maxLength='10'
+            maxLength='50'
             type="text"
             prefix-icon="el-icon-message"
             auto-complete="off"
@@ -284,13 +284,14 @@
 <script>
   import { search, adddbvariables, updatedbvariables, removedbvariables } from '@/api/testvariables/dbvariables'
   import { adddbconditionvariables, updatedbconditionvariables, removedbconditionvariables, getbyvariablesid } from '@/api/testvariables/dbconditionvariables'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
   import { listalldbcondition } from '@/api/condition/dbcondition'
 
   export default {
+    name: '数据库变量',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -347,7 +348,8 @@
           variablesdes: '',
           valuetype: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         tmpDbConditionVariables: {
           id: '',
@@ -362,18 +364,20 @@
         search: {
           page: 1,
           size: 10,
-          dbvariablesname: null
+          dbvariablesname: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getdbvariablesList()
-      this.getdepunitList()
+      this.getdepunitLists()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -405,8 +409,8 @@
         })
       },
       listalldbcondition() {
-        listalldbcondition().then(response => {
-          this.DbconditionList = response.data.list
+        listalldbcondition(this.search).then(response => {
+          this.DbconditionList = response.data
         }).catch(res => {
           this.$message.error('加载数据库条件失败')
         })
@@ -414,9 +418,9 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
+      getdepunitLists() {
         this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
+        getdepunitLists(this.search).then(response => {
           this.deployunitList = response.data.list
           this.listLoading = false
         }).catch(res => {
@@ -548,6 +552,7 @@
         this.tmpdbvariables.valuetype = ''
         this.tmpdbvariables.tmpdbvariables = ''
         this.tmpdbvariables.creator = this.name
+        this.tmpdbvariables.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加变量

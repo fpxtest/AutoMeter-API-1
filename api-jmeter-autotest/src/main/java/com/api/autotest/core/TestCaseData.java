@@ -33,7 +33,7 @@ public class TestCaseData {
             logplannameandcasename = executeplanname + "--" + casename + " :";
             //logger.info(logplannameandcasename + "用例数据casename is :  " + casename);
             //logger.info(logplannameandcasename + "用例数据executeplanname is :  " + executeplanname);
-
+            String ProjectID = context.getParameter("projectid");
             String testplanid = context.getParameter("testplanid");
             String caseid = context.getParameter("caseid");
             String slaverid = context.getParameter("slaverid");
@@ -77,6 +77,7 @@ public class TestCaseData {
             String protocal = context.getParameter("protocal");
             //logger.info(logplannameandcasename + "用例数据 protocal is :  " + protocal);
 
+            newob.setProjectid(ProjectID);
             newob.setCaseid(caseid);
             newob.setCasename(casename);
             newob.setTestplanid(testplanid);
@@ -188,9 +189,12 @@ public class TestCaseData {
 
             String casetype = testMysqlHelp.getcaseValue("casetype", caselist);
             String CaseName = testMysqlHelp.getcaseValue("casename", caselist);
+            String ProjectID = testMysqlHelp.getcaseValue("projectid", caselist);
+
             String expect = GetAssertInfo(apicasesAssertList);
             logger.info(logplannameandcasename + "用例数据 resource is :  " + resource + "   protocal  is:   " + protocal + "  expect is :      " + expect + "  visittype is: " + method + "   path is: " + path + " casetype is: " + casetype);
 
+            ro.setProjectid(ProjectID);
             ro.setCaseid(TestCaseId);
             ro.setCasename(CaseName);
             ro.setDeployunitid(deployunitid);

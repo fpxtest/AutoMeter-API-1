@@ -241,8 +241,10 @@
   import { getallexplanbytype as getallexplanbytype } from '@/api/executecenter/executeplan'
   import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
+    name: '功能报告明细',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -303,19 +305,27 @@
           memo: ''
         },
         tmpexecplantype: {
-          usetype: ''
+          usetype: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
           testplanname: '',
           testplanid: null,
-          batchname: null
+          batchname: null,
+          projectid: ''
         }
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
+    },
+
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
+      this.tmpexecplantype.projectid = window.localStorage.getItem('pid')
       this.getexecplanList()
       this.getdepunitList()
       this.getapireportList()

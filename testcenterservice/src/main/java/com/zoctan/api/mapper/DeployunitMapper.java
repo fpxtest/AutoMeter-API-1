@@ -37,9 +37,9 @@ public interface DeployunitMapper extends MyMapper<Deployunit> {
 
     int ifexist(Condition condition);
 
-    Integer getdeploynum();
+    Integer getdeploynum(@Param("projectid")long projectid);
 
-    List<String> getstaticsdeploynames();
+    List<String> getstaticsdeploynames(@Param("projectid")long projectid);
 
     Deployunit findDeployUnitWithid(@Param("id") Long id);
 

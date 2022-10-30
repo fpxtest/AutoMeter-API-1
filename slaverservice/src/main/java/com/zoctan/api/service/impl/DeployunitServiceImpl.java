@@ -20,7 +20,7 @@ public class DeployunitServiceImpl extends AbstractService<Deployunit> implement
 private DeployunitMapper deployunitMapper;
 
     @Override
-    public Deployunit findDeployNameValueWithCode(String params) {
-        return deployunitMapper.findDeployNameValueWithCode(params);
+    public Deployunit findDeployNameValueWithCode(String params,long projectid) {
+        return deployunitMapper.findDeployNameValueWithCode(params,projectid);
     }
 }

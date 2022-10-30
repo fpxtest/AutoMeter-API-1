@@ -16,6 +16,7 @@
     <result column="requestcontenttype" jdbcType="VARCHAR" property="requestcontenttype" />
     <result column="responecontenttype" jdbcType="VARCHAR" property="responecontenttype" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -28,6 +29,7 @@
     <where>
       <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>
@@ -46,7 +48,7 @@
 
   <select id="getapinum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM api a
+    FROM api a where projectid=#{projectid}
   </select>
 
   <select id="getapibydvap" resultMap="BaseResultMap">
@@ -63,7 +65,7 @@
 
   <select id="getstaticsdeployapi" resultMap="BaseResultMap">
     SELECT deployunitname ,count(*) as id
-    FROM api group by deployunitname
+    FROM api where projectid=#{projectid} group by deployunitname
   </select>
 
   <select id="getapibydeployunitid" resultMap="BaseResultMap">

@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('delaycondition:search')">
           <el-form-item label="父条件名:">
-            <el-select v-model="search.conditionname" placeholder="父条件名">
+            <el-select v-model="search.conditionname" clearable placeholder="父条件名">
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
                 <el-option :label="condition.conditionname" :value="condition.conditionname"/>
@@ -110,7 +110,7 @@
         </el-form-item>
 
         <el-form-item label="父条件名" prop="conditionname" required >
-          <el-select v-model="tmpdelaycondition.conditionname"  placeholder="父条件名" style="width:100%" @change="ConditionselectChanged($event)" >
+          <el-select v-model="tmpdelaycondition.conditionname"   placeholder="父条件名" style="width:100%" @change="ConditionselectChanged($event)" >
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(condition, index) in conditionList" :key="index">
               <el-option :label="condition.conditionname" :value="condition.conditionname" required/>
@@ -193,7 +193,8 @@
         },
         btnLoading: false, // 按钮等待动画
         tmpconditionquery: {
-          objecttype: ''
+          objecttype: '',
+          projectid: ''
         },
         tmpdelaycondition: {
           id: '',
@@ -201,21 +202,26 @@
           conditionid: '',
           conditionname: '',
           delaytime: '',
-          creator: ''
+          creator: '',
+          projectid: ''
+
         },
         search: {
           page: 1,
           size: 10,
-          conditionname: null
+          conditionname: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
+      this.tmpconditionquery.projectid = window.localStorage.getItem('pid')
       this.getdelayconditionList()
       this.getalltestconditionbytype()
     },
@@ -332,6 +338,7 @@
         this.tmpdelaycondition.conditionname = ''
         this.tmpdelaycondition.delaytime = ''
         this.tmpdelaycondition.creator = this.name
+        this.tmpdelaycondition.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加延时条件

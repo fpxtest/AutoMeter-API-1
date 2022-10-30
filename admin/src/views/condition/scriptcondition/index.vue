@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('scriptcondition:search')">
           <el-form-item label="父条件名:">
-            <el-select v-model="search.conditionname" placeholder="父条件名">
+            <el-select v-model="search.conditionname" clearable placeholder="父条件名">
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
                 <el-option :label="condition.conditionname" :value="condition.conditionname"/>
@@ -199,7 +199,8 @@
         },
         btnLoading: false, // 按钮等待动画
         tmpconditionquery: {
-          objecttype: ''
+          objecttype: '',
+          projectid: ''
         },
         tmpscriptcondition: {
           id: '',
@@ -207,21 +208,25 @@
           conditionid: '',
           conditionname: '',
           script: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
-          conditionname: null
+          conditionname: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
+      this.tmpconditionquery.projectid = window.localStorage.getItem('pid')
       this.getscriptconditionList()
       this.getalltestconditionbytype()
     },
@@ -324,6 +329,7 @@
         this.tmpscriptcondition.conditionname = ''
         this.tmpscriptcondition.script = ''
         this.tmpscriptcondition.creator = this.name
+        this.tmpscriptcondition.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加脚本条件

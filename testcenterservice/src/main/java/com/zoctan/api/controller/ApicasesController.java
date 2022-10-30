@@ -86,7 +86,8 @@ public class ApicasesController {
     @PostMapping
     public Result add(@RequestBody Apicases apicases) {
         Condition con = new Condition(Apicases.class);
-        con.createCriteria().andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
+        con.createCriteria().andCondition("projectid = " + apicases.getProjectid())
+                .andCondition("deployunitname = '" + apicases.getDeployunitname() + "'")
                 .andCondition("apiname = '" + apicases.getApiname() + "'").andCondition("casename = '" + apicases.getCasename().replace("'", "''") + "'");
         if (apicasesService.ifexist(con) > 0) {
             return ResultGenerator.genFailedResult("用例名已存在");
@@ -541,14 +542,14 @@ public class ApicasesController {
     }
 
     @GetMapping("/getcasenum")
-    public Result getcasenum(@RequestParam String casetype) {
-        Integer apicasesnum = apicasesService.getcasenum(casetype);
+    public Result getcasenum(@RequestParam String casetype, @RequestParam long projectid) {
+        Integer apicasesnum = apicasesService.getcasenum(casetype, projectid);
         return ResultGenerator.genOkResult(apicasesnum);
     }
 
     @GetMapping("/getperformancecasenum")
-    public Result getperformancecasenum(@RequestParam String casetype) {
-        Integer apicasesnum = apicasesService.getcasenum(casetype);
+    public Result getperformancecasenum(@RequestParam String casetype, @RequestParam long projectid) {
+        Integer apicasesnum = apicasesService.getcasenum(casetype, projectid);
         return ResultGenerator.genOkResult(apicasesnum);
     }
 
@@ -562,8 +563,8 @@ public class ApicasesController {
     }
 
     @GetMapping("/getstaticsdeployunitcases")
-    public Result getstaticsdeployunitcases() {
-        List<Apicases> list = apicasesService.getstaticsdeployunitcases();
+    public Result getstaticsdeployunitcases(@RequestParam long projectid) {
+        List<Apicases> list = apicasesService.getstaticsdeployunitcases(projectid);
         List<StaticsDataForPie> result = new ArrayList<>();
         for (Apicases ac : list) {
             StaticsDataForPie staticsDataForPie = new StaticsDataForPie();
@@ -754,57 +755,49 @@ public class ApicasesController {
         Long Caseid = Long.parseLong(param.get("caseid").toString());
         Long conditionid = Long.parseLong(param.get("conditionid").toString());
         Long globalheaderid = Long.parseLong(param.get("globalheaderid").toString());
+        Long projectid = Long.parseLong(param.get("projectid").toString());
         boolean prixflag = Boolean.parseBoolean(param.get("prixflag").toString());
         HashMap<String, String> ParamsValuesMap = new HashMap<>();
         HashMap<String, String> DBParamsValuesMap = new HashMap<>();
 
+        String APIRespone = "";
+        String DBRespone = "";
         if (conditionid != 0) {
-            //前置调试父条件
+            //先处理测试集合前置父条件
             ConditionResult conditionResult = new ConditionResult();
-            String APIRespone = "";
-            String DBRespone = "";
             try {
                 Condition con = new Condition(Testcondition.class);
                 con.createCriteria().andCondition("id = " + conditionid);
                 List<Testcondition> testconditionList = testconditionService.listByCondition(con);
+                param.put("apivariablesvalues",APIRespone);
                 conditionResult = FixCondition(testconditionList, param, Caseid, "调试用例");
                 APIRespone = conditionResult.getAPIRespone();
+                ApicasesController.log.info("。。。。。。。。接口前置测试集合子条件响应数据：" + APIRespone);
                 ParamsValuesMap = GetResponeMap(APIRespone, ParamsValuesMap);
                 DBRespone = conditionResult.getDBRespone();
+                ApicasesController.log.info("。。。。。。。。接口前置测试集合子条件响应数据：" + DBRespone);
                 DBParamsValuesMap = GetResponeMap(DBRespone, DBParamsValuesMap);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
-//            ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", Caseid);
-//            if (apicasesDebugCondition != null) {
-//                try {
-//                    long conditionid = apicasesDebugCondition.getConditionid();
-//                    Condition con = new Condition(Testcondition.class);
-//                    con.createCriteria().andCondition("id = " + conditionid);
-//                    List<Testcondition> testconditionList = testconditionService.listByCondition(con);
-//                    conditionResult = FixCondition(testconditionList, param, Caseid, "调试用例");
-//                    APIRespone = conditionResult.getAPIRespone();
-//                    ParamsValuesMap = GetResponeMap(APIRespone, ParamsValuesMap);
-//                    DBRespone = conditionResult.getDBRespone();
-//                    DBParamsValuesMap = GetResponeMap(DBRespone, DBParamsValuesMap);
-//                } catch (Exception exception) {
-//                    return ResultGenerator.genFailedResult(exception.getMessage());
-//                }
-//            }
-            //请求条件服务处理前置条件
-            //用例前置条件
-            try {
-                List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Caseid, "前置条件", "测试用例");
-                conditionResult = FixCondition(testconditionList, param, Caseid, "测试用例");
-                APIRespone = conditionResult.getAPIRespone();
-                ApicasesController.log.info("。。。。。。。。接口前置子条件响应数据：" + APIRespone);
-                ParamsValuesMap = GetResponeMap(APIRespone, ParamsValuesMap);
-                DBRespone = conditionResult.getDBRespone();
-                ApicasesController.log.info("。。。。。。。。数据库前置子条件响应数据：" + DBRespone);
-                DBParamsValuesMap = GetResponeMap(DBRespone, DBParamsValuesMap);
-            } catch (Exception exception) {
-                return ResultGenerator.genFailedResult(exception.getMessage());
-            }
+        }
+
+        //用例前置条件
+        ConditionResult CaseconditionResult = new ConditionResult();
+        String CaseAPIRespone = "";
+        String CaseDBRespone = "";
+        try {
+            List<Testcondition> testconditionList = testconditionService.GetConditionByPlanIDAndConditionType(Caseid, "前置条件", "测试用例");
+            param.put("apivariablesvalues",APIRespone);
+            CaseconditionResult = FixCondition(testconditionList, param, Caseid, "测试用例");
+            CaseAPIRespone = CaseconditionResult.getAPIRespone();
+            ApicasesController.log.info("。。。。。。。。接口前置用例子条件响应数据：" + CaseAPIRespone);
+            ParamsValuesMap = GetResponeMap(CaseAPIRespone, ParamsValuesMap);
+            CaseDBRespone = CaseconditionResult.getDBRespone();
+            ApicasesController.log.info("。。。。。。。。数据库前置用例子条件响应数据：" + CaseDBRespone);
+            DBParamsValuesMap = GetResponeMap(CaseDBRespone, DBParamsValuesMap);
+        } catch (Exception exception) {
+            return ResultGenerator.genFailedResult(exception.getMessage());
         }
 
         Apicases apicases = apicasesService.getBy("id", Caseid);
@@ -860,7 +853,10 @@ public class ApicasesController {
                     }
                 }
             }
-            List<Variables> variablesList = variablesService.listAll();
+
+            Condition rdcon = new Condition(Variables.class);
+            rdcon.createCriteria().andCondition("projectid = " + projectid);
+            List<Variables> variablesList = variablesService.listByCondition(rdcon);
             HashMap<String, String> RadomHashMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomHashMap.put(va.getVariablesname(), va.getVariablestype());
@@ -895,7 +891,10 @@ public class ApicasesController {
             }
 
             //4.全局变量替换
-            List<Globalvariables> globalvariablesList= globalvariablesService.listAll();
+            Condition gvcon = new Condition(Globalvariables.class);
+            gvcon.createCriteria().andCondition("projectid = " + projectid);
+            List<Globalvariables> globalvariablesList = globalvariablesService.listByCondition(gvcon);
+
             HashMap<String, String> GlobalVariablesHashMap = new HashMap<>();
             for (Globalvariables va : globalvariablesList) {
                 GlobalVariablesHashMap.put(va.getKeyname(), va.getKeyvalue());
@@ -922,7 +921,7 @@ public class ApicasesController {
             //Header用例值
             HttpHeader header = new HttpHeader();
             try {
-                header = GetHttpHeader(globalheaderParamsList, HeaderApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap,GlobalVariablesHashMap);
+                header = GetHttpHeader(globalheaderParamsList, HeaderApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap, GlobalVariablesHashMap,projectid);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -931,7 +930,7 @@ public class ApicasesController {
             //参数用例值
             HttpParamers paramers = new HttpParamers();
             try {
-                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap,GlobalVariablesHashMap);
+                paramers = GetHttpParamers(ParamsApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap, GlobalVariablesHashMap,projectid);
             } catch (Exception exception) {
                 return ResultGenerator.genFailedResult(exception.getMessage());
             }
@@ -941,7 +940,7 @@ public class ApicasesController {
             HttpParamers Bodyparamers = new HttpParamers();
             if (requestcontenttype.equalsIgnoreCase("Form表单")) {
                 try {
-                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap,GlobalVariablesHashMap);
+                    Bodyparamers = GetHttpParamers(BodyApiCasedataList, ParamsValuesMap, RadomHashMap, DBParamsValuesMap, GlobalVariablesHashMap,projectid);
                 } catch (Exception exception) {
                     return ResultGenerator.genFailedResult(exception.getMessage());
                 }
@@ -1033,7 +1032,7 @@ public class ApicasesController {
 
 
     //获取HttpHeader
-    private HttpHeader GetHttpHeader(List<GlobalheaderParams> globalheaderParamsList, List<ApiCasedata> HeaderApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap,HashMap<String, String> GlobalVariablesHashMap) throws Exception {
+    private HttpHeader GetHttpHeader(List<GlobalheaderParams> globalheaderParamsList, List<ApiCasedata> HeaderApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap, HashMap<String, String> GlobalVariablesHashMap,long projectid) throws Exception {
         HashMap<String, String> globalheaderParamsHashMap = new HashMap<>();
         for (ApiCasedata Headdata : HeaderApiCasedataList) {
             if (!globalheaderParamsHashMap.containsKey(Headdata.getApiparam())) {
@@ -1050,7 +1049,7 @@ public class ApicasesController {
             Object Result = HeaderValue;
             if ((HeaderValue.contains("<") && HeaderValue.contains(">")) || (HeaderValue.contains("<<") && HeaderValue.contains(">>")) || (HeaderValue.contains("[") && HeaderValue.contains("]")) || (HeaderValue.contains("$") && HeaderValue.contains("$"))) {
                 try {
-                    Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap, DBMap,GlobalVariablesHashMap);
+                    Result = GetVaraibaleValue(HeaderValue, RadomMap, ParamsValuesMap, DBMap, GlobalVariablesHashMap,projectid);
                 } catch (Exception ex) {
                     throw new Exception("当前用例的Header中参数名：" + HeaderName + "-对应的参数值：" + ex.getMessage());
                 }
@@ -1061,7 +1060,7 @@ public class ApicasesController {
     }
 
     //获取HttpParams
-    private HttpParamers GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap,HashMap<String, String> GlobalVariablesHashMap) throws Exception {
+    private HttpParamers GetHttpParamers(List<ApiCasedata> ParamsApiCasedataList, HashMap<String, String> ParamsValuesMap, HashMap<String, String> RadomMap, HashMap<String, String> DBMap, HashMap<String, String> GlobalVariablesHashMap,long projectid) throws Exception {
         HttpParamers paramers = new HttpParamers();
         for (ApiCasedata Paramdata : ParamsApiCasedataList) {
             String ParamName = Paramdata.getApiparam();
@@ -1070,7 +1069,7 @@ public class ApicasesController {
             Object ObjectResult = ParamValue;
             if ((ParamValue.contains("<") && ParamValue.contains(">")) || (ParamValue.contains("<<") && ParamValue.contains(">>")) || (ParamValue.contains("[") && ParamValue.contains("]")) || (ParamValue.contains("$") && ParamValue.contains("$"))) {
                 try {
-                    ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap, DBMap,GlobalVariablesHashMap);
+                    ObjectResult = GetVaraibaleValue(ParamValue, RadomMap, ParamsValuesMap, DBMap, GlobalVariablesHashMap,projectid);
                 } catch (Exception ex) {
                     throw new Exception("当前用例的Params或者Body中参数名：" + ParamName + "-对应的参数值：" + ex.getMessage());
                 }
@@ -1081,7 +1080,7 @@ public class ApicasesController {
         return paramers;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap) throws Exception {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap, HashMap<String, String> globalvariablesMap,long projectid) throws Exception {
         Object ObjectValue = Value;
         boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
@@ -1096,7 +1095,10 @@ public class ApicasesController {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Testvariables testvariables = testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Condition tvcon = new Condition(Testvariables.class);
+                    tvcon.createCriteria().andCondition("projectid = "+projectid).andCondition("testvariablesname= '"+interfacevariablesName+"'");
+                    List<Testvariables> variablesList= testvariablesService.listByCondition(tvcon);
+                    Testvariables testvariables =variablesList.get(0);// testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (testvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {
@@ -1117,7 +1119,10 @@ public class ApicasesController {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Dbvariables dbvariables = dbvariablesService.getBy("dbvariablesname", DBvariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Condition dbcon = new Condition(Dbvariables.class);
+                    dbcon.createCriteria().andCondition("projectid = "+projectid).andCondition("dbvariablesname= '"+DBvariablesName+"'");
+                    List<Dbvariables> variablesList= dbvariablesService.listByCondition(dbcon);
+                    Dbvariables dbvariables =variablesList.get(0);// dbvariablesService.getBy("dbvariablesname", DBvariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (dbvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {

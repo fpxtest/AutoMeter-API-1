@@ -316,13 +316,14 @@
 <script>
   import { search, addtestvariables, updatetestvariables, removetestvariables } from '@/api/testvariables/testvariables'
   import { addApicasesVariables, getbyvariablesid, updateApicasesVariables, removeApicasesVariables } from '@/api/assets/apicasesvariables'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '接口变量',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -384,7 +385,8 @@
           testvariablestype: '',
           variablesexpress: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         tmpApicasesVariables: {
           id: '',
@@ -402,18 +404,20 @@
         search: {
           page: 1,
           size: 10,
-          testvariablesname: null
+          testvariablesname: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.gettestvariablesList()
-      this.getdepunitList()
+      this.getdepunitLists()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -454,10 +458,10 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
+      getdepunitLists() {
         this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
+        getdepunitLists(this.search).then(response => {
+          this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -579,7 +583,6 @@
         this.tmpApicasesVariables.deployunitname = ''
         this.tmpApicasesVariables.apiname = ''
         this.tmpApicasesVariables.casename = ''
-        console.log(this.tmpApicasesVariables.variablesname)
         this.tmpApicasesVariables.memo = ''
         this.tmpApicasesVariables.creator = this.name
       },
@@ -599,6 +602,7 @@
         this.tmptestvariables.valuetype = ''
         this.tmptestvariables.tmptestvariables = ''
         this.tmptestvariables.creator = this.name
+        this.tmptestvariables.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加变量

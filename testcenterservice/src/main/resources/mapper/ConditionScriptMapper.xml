@@ -12,6 +12,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
   </resultMap>
 
   <select id="findtestconditionscriptWithName" resultMap="BaseResultMap">
@@ -19,6 +20,7 @@
     FROM condition_script a inner join testcondition b on a.conditionid=b.id
     <where>
       <if test="conditionname != null and conditionname != ''">a.conditionname like CONCAT('%',#{conditionname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

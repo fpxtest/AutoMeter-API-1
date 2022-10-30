@@ -8,17 +8,19 @@ export function getmachineList(params) {
   })
 }
 
-export function getmachineLists() {
+export function getmachineLists(params) {
   return request({
     url: '/machine/getmachine',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
-export function getmachinenum() {
+export function getmachinenum(params) {
   return request({
     url: '/machine/getmachinenum',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

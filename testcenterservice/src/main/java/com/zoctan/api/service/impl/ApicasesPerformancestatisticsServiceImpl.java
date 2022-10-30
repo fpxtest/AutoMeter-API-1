@@ -32,7 +32,7 @@ private ApicasesPerformancestatisticsMapper apicasesPerformancestatisticsMapper;
     }
 
     @Override
-    public List<ApicasesPerformancestatistics> getresultbyidandname(long testplanid, String batchname) {
-        return apicasesPerformancestatisticsMapper.getresultbyidandname(testplanid, batchname);
+    public List<ApicasesPerformancestatistics> getresultbyidandname(long testplanid, String batchname,long projectid) {
+        return apicasesPerformancestatisticsMapper.getresultbyidandname(testplanid, batchname,projectid);
     }
 }

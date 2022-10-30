@@ -52,6 +52,8 @@ public class TestPlanCaseController {
     @Autowired
     private ExecuteplanMapper executeplanMapper;
     @Autowired
+    private ExecuteplanService executeplanService;
+    @Autowired
     private SlaverMapper slaverMapper;
     @Autowired(required = false)
     private DictionaryMapper dictionaryMapper;
@@ -203,6 +205,8 @@ public class TestPlanCaseController {
 
     @PostMapping("/execperformancetest")
     public Result execperformancetest(@RequestBody Dispatch dispatch) throws Exception {
+        long Execplanid=dispatch.getExecplanid();
+        Executeplan executeplan=executeplanService.getBy("id",Execplanid);
         String property = System.getProperty("os.name");
         String ip = null;
         ip = IPHelpUtils.getInet4Address();
@@ -263,7 +267,7 @@ public class TestPlanCaseController {
         String DeployUnitName = dispatch.getDeployunitname();
         String CaseName = dispatch.getTestcasename();
         TestPlanCaseController.log.info("性能任务-执行多机并行性能用例名 is......." + CaseName);
-        Deployunit Deployunit = deployunitService.findDeployNameValueWithCode(DeployUnitName);
+        Deployunit Deployunit = deployunitService.findDeployNameValueWithCode(DeployUnitName,executeplan.getProjectid());
         if (Deployunit == null) {
             return ResultGenerator.genFailedResult("未找到发布单元为：" + DeployUnitName);
         }
@@ -287,7 +291,9 @@ public class TestPlanCaseController {
             JmeterClassNotExist(dispatch, ClassName, CaseName);
             String memo = CaseName + "未开发对应的JmeterClass：" + ClassName;
             dispatchMapper.updatedispatchstatusandmemo("调度异常", memo, dispatch.getSlaverid(), dispatch.getExecplanid(), dispatch.getBatchid(), dispatch.getTestcaseid());
-        } else {
+        }
+        else
+        {
             JmeterPerformanceObject jmeterPerformanceObject = null;
             try {
                 jmeterPerformanceObject = GetJmeterPerformance(dispatch);
@@ -488,6 +494,10 @@ public class TestPlanCaseController {
         String PlanID = String.valueOf(jmeterPerformanceObject.getTestplanid());
         String BatchName = jmeterPerformanceObject.getBatchname();
         String RequestContentType = jmeterPerformanceObject.getRequestcontenttype();
+        long Caseid=jmeterPerformanceObject.getCaseid();
+        Apicases apicases= apicasesService.getBy("id",Caseid);
+        long projectid=apicases.getProjectid();
+
         List<ApiCasedata> apiCasedataList = apiCasedataService.getcasedatabycaseid(dispatch.getTestcaseid());
 
         TestPlanCaseController.log.info("GetJmeterPerformanceCaseRequestData :" + PlanID + " BatchName:" + BatchName);
@@ -508,7 +518,10 @@ public class TestPlanCaseController {
             DBMap.put(te.getVariablesname(), te.getVariablesvalue());
         }
 
-        List<Globalvariables> globalvariablesList= globalvariablesService.listAll();
+        Condition gvcon = new Condition(Globalvariables.class);
+        gvcon.createCriteria().andCondition("projectid = "+projectid);
+        List<Globalvariables> globalvariablesList= globalvariablesService.listByCondition(gvcon);
+
         HashMap<String, String> GlobalVariablesHashMap = new HashMap<>();
         for (Globalvariables va : globalvariablesList) {
             GlobalVariablesHashMap.put(va.getKeyname(), va.getKeyvalue());
@@ -533,7 +546,7 @@ public class TestPlanCaseController {
             }
         }
 
-        //3.全局变量替换
+        //3.全局变量Url替换
         for (Globalvariables variables : globalvariablesList) {
             String VariableName = "$" + variables.getKeyname() + "$";
             if (RequestUrl.contains(VariableName)) {
@@ -559,7 +572,7 @@ public class TestPlanCaseController {
             if (apiCasedata.getPropertytype().equalsIgnoreCase("Params")) {
                 Object Result = Paramvalue;
                 if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
-                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
+                    Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap,projectid);
                 }
                 Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                 ParamsMap.put(ParamName, LastObjectValue);
@@ -589,7 +602,7 @@ public class TestPlanCaseController {
                 if (RequestContentType.equalsIgnoreCase("Form表单")) {
                     Object Result = Paramvalue;
                     if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
-                        Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
+                        Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap,projectid);
                     }
                     Object LastObjectValue = GetDataByType(Result.toString(), DataType);
                     BodyMap.put(ParamName, LastObjectValue);
@@ -639,7 +652,7 @@ public class TestPlanCaseController {
             String Paramvalue=globalheaderParamsHashMap.get(ParamName);
             Object Result = Paramvalue;
             if ((Paramvalue.contains("<") && Paramvalue.contains(">")) || (Paramvalue.contains("<<") && Paramvalue.contains(">>")) || (Paramvalue.contains("[") && Paramvalue.contains("]")) || (Paramvalue.contains("$") && Paramvalue.contains("$"))) {
-                Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap);
+                Result = GetVaraibaleValue(Paramvalue, InterFaceMap, DBMap,GlobalVariablesHashMap,projectid);
             }
             HeaderMap.put(ParamName, Result);
             TestPlanCaseController.log.info("最终Header参数："+ParamName+" 最终Header的Value: "+Result);
@@ -664,7 +677,9 @@ public class TestPlanCaseController {
         jmeterPerformanceObject.setPostdata(PostData);
 
         //增加随机变量json
-        List<Variables> variablesList = variablesService.listAll();
+        Condition rdcon = new Condition(Variables.class);
+        rdcon.createCriteria().andCondition("projectid = "+projectid);
+        List<Variables> variablesList= variablesService.listByCondition(rdcon);
         String variablesjson = "";
         if (variablesList.size() > 0) {
             variablesjson = JSON.toJSONString(variablesList);
@@ -700,7 +715,7 @@ public class TestPlanCaseController {
         return flag;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap) throws Exception {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap,long projectid) throws Exception {
         Object ObjectValue = Value;
         boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
 
@@ -716,7 +731,10 @@ public class TestPlanCaseController {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Testvariables testvariables = testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Condition tvcon = new Condition(Testvariables.class);
+                    tvcon.createCriteria().andCondition("projectid = "+projectid).andCondition("testvariablesname= '"+interfacevariablesName+"'");
+                    List<Testvariables> variablesList= testvariablesService.listByCondition(tvcon);
+                    Testvariables testvariables =variablesList.get(0);// testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (testvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {
@@ -737,7 +755,10 @@ public class TestPlanCaseController {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Dbvariables dbvariables = dbvariablesService.getBy("dbvariablesname", DBvariablesName);
+                    Condition dbcon = new Condition(Dbvariables.class);
+                    dbcon.createCriteria().andCondition("projectid = "+projectid).andCondition("dbvariablesname= '"+DBvariablesName+"'");
+                    List<Dbvariables> variablesList= dbvariablesService.listByCondition(dbcon);
+                    Dbvariables dbvariables =variablesList.get(0);// dbvariablesService.getBy("dbvariablesname", DBvariablesName);
                     if (dbvariables == null) {
                         ObjectValue = "未找到变量：" + Value + " 请检查变量管理-数据库变量中是否存在此变量";
                     } else {
@@ -805,8 +826,9 @@ public class TestPlanCaseController {
 //    }
 
     public JmeterPerformanceObject GetJmeterPerformance(Dispatch dispatch) throws Exception {
-        JmeterPerformanceObject jmeterPerformanceObject = GetJmeterPerformanceCaseData(dispatch);
         Apicases apicases = apicasesService.getBy("id", dispatch.getTestcaseid());
+        JmeterPerformanceObject jmeterPerformanceObject = GetJmeterPerformanceCaseData(dispatch);
+        jmeterPerformanceObject.setProjectid(apicases.getProjectid());
         Api api = apiService.getBy("id", apicases.getApiid());
         jmeterPerformanceObject = GetJmeterPerformanceCaseRequestData(jmeterPerformanceObject, dispatch, api);
         return jmeterPerformanceObject;

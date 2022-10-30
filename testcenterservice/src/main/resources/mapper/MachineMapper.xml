@@ -12,6 +12,7 @@
     <result column="disk" jdbcType="VARCHAR" property="disk" />
     <result column="mem" jdbcType="VARCHAR" property="mem" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -23,13 +24,14 @@
     <where>
       <if test="machinename != null and machinename != ''">a.machinename like CONCAT('%',#{machinename},'%')</if>
       <if test="ip != null  and ip != ''">and a.ip like CONCAT('%',#{ip},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>
 
   <select id="findmachinebymachineandip" resultMap="BaseResultMap">
     SELECT * FROM machine
-    WHERE ( machinename = #{machinename} or ip = #{ip}) and id != #{id}
+    WHERE ip = #{ip} and id != #{id} and projectid=#{projectid}
   </select>
 
   <select id="findmachinebymachinename" resultMap="BaseResultMap">
@@ -40,7 +42,7 @@
 
   <select id="getmachinenum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM machine a
+    FROM machine a where  a.projectid=#{projectid}
   </select>
 
   <select id="findmachinebyip" resultMap="BaseResultMap">

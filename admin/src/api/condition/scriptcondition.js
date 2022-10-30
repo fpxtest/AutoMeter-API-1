@@ -15,10 +15,11 @@ export function getscriptconditionnum() {
   })
 }
 
-export function getscriptconditionallList() {
+export function getscriptconditionallList(params) {
   return request({
-    url: '/condition/script/ens',
-    method: 'get'
+    url: '/condition/script/getscriptconditionallList',
+    method: 'get',
+    params
   })
 }
 

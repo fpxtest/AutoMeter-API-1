@@ -6,6 +6,7 @@ import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.entity.ConditionApi;
 import com.zoctan.api.entity.ConditionDb;
+import com.zoctan.api.entity.Testcondition;
 import com.zoctan.api.service.ConditionDbService;
 import com.zoctan.api.service.ConditionOrderService;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,8 @@ public class ConditionDbController {
     public Result add(@RequestBody ConditionDb conditionDb) {
 
         Condition con=new Condition(ConditionDb.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
+        con.createCriteria().andCondition("projectid = "+conditionDb.getProjectid())
+                .andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
                 .andCondition("subconditionname = '" + conditionDb.getSubconditionname().replace("'","''")+ "'");
         if(conditionDbService.ifexist(con)>0)
         {
@@ -73,10 +75,13 @@ public class ConditionDbController {
     }
 
     @GetMapping("/listalldbcondition")
-    public Result listalldbcondition() {
-        List<ConditionDb> list = conditionDbService.listAll();
-        PageInfo<ConditionDb> pageInfo = PageInfo.of(list);
-        return ResultGenerator.genOkResult(pageInfo);
+    public Result listalldbcondition(@RequestParam long projectid) {
+        Condition con=new Condition(ConditionDb.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<ConditionDb> list = conditionDbService.listByCondition(con);
+//        List<ConditionDb> list = conditionDbService.listAll();
+//        PageInfo<ConditionDb> pageInfo = PageInfo.of(list);
+        return ResultGenerator.genOkResult(list);
     }
 
     /**
@@ -85,7 +90,8 @@ public class ConditionDbController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final ConditionDb conditionDb) {
         Condition con=new Condition(ConditionApi.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
+        con.createCriteria().andCondition("projectid = "+conditionDb.getProjectid())
+                .andCondition("conditionname = '" + conditionDb.getConditionname()+ "'")
                 .andCondition("subconditionname = '" + conditionDb.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("id <> " + conditionDb.getId());
         if(conditionDbService.ifexist(con)>0)

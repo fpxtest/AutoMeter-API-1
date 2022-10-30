@@ -15,10 +15,11 @@ export function getenviroment_assembleallList() {
   })
 }
 
-export function getassembleallnameList() {
+export function getassembleallnameList(params) {
   return request({
     url: '/enviroment_assemble/getassemblename',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

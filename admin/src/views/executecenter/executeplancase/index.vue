@@ -32,7 +32,7 @@
         </el-form-item>
         <span v-if="hasPermission('executeplan:search')">
           <el-form-item  prop="executeplanname" >
-          <el-select v-model="search.executeplanname" placeholder="测试集合" @change="loadtestplanselectChanged($event)">
+          <el-select v-model="search.executeplanname" clearable placeholder="测试集合" @change="loadtestplanselectChanged($event)">
               <el-option label="请选择" value />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -41,7 +41,7 @@
         </el-form-item>
 
           <el-form-item prop="deployunitname">
-            <el-select v-model="search.deployunitname" placeholder="发布单元" @change="loaddeployunitselectChanged($event)">
+            <el-select v-model="search.deployunitname" clearable placeholder="发布单元" @change="loaddeployunitselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in loaddeployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" required/>
@@ -50,7 +50,7 @@
           </el-form-item>
 
           <el-form-item prop="apiname">
-            <el-select v-model="search.apiname" placeholder="api名" @change="loadApiselectChanged($event)">
+            <el-select v-model="search.apiname" clearable placeholder="api名" @change="loadApiselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(api, index) in loadapiList" :key="index">
                 <el-option :label="api.apiname" :value="api.apiname"/>
@@ -307,6 +307,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '集合用例',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -376,7 +377,8 @@
           apiid: null,
           executeplanname: null,
           deployunitname: null,
-          apiname: null
+          apiname: null,
+          projectid: ''
         },
         searchcase: {
           page: 1,
@@ -399,10 +401,11 @@
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getexecplanList()
       this.getloadexecplanList()
       this.getexecuteplancaseList()
@@ -458,7 +461,7 @@
        * 获取测试集合列表
        */
       getexecplanList() {
-        getallexplan().then(response => {
+        getallexplan(this.search).then(response => {
           this.execplanList = response.data
         }).catch(res => {
           this.$message.error('加载计划列表失败')
@@ -469,7 +472,7 @@
        * 获取测试集合列表
        */
       getloadexecplanList() {
-        getallexplan().then(response => {
+        getallexplan(this.search).then(response => {
           this.loadexecplanList = response.data
         }).catch(res => {
           this.$message.error('加载计划列表失败')
@@ -657,7 +660,7 @@
        * 获取发布单元列表
        */
       getdepunitLists() {
-        getdepunitLists().then(response => {
+        getdepunitLists(this.search).then(response => {
           this.deployunitList = response.data
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -668,7 +671,7 @@
        * 获取发布单元列表
        */
       getloaddepunitLists() {
-        getdepunitLists().then(response => {
+        getdepunitLists(this.search).then(response => {
           this.loaddeployunitList = response.data
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -855,7 +858,8 @@
               'testcaseid': this.casemultipleSelection[i].id,
               'caseorder': this.casemultipleSelection[i].id,
               'casename': this.casemultipleSelection[i].casename,
-              'creator': this.name
+              'creator': this.name,
+              'projectid': window.localStorage.getItem('pid')
             })
           }
           addexecuteplantestcase(this.testcaseList).then(() => {

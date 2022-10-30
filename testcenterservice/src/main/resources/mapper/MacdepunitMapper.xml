@@ -17,6 +17,7 @@
     <result column="domain" jdbcType="VARCHAR" property="domain" />
     <result column="visittype" jdbcType="VARCHAR" property="visittype" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -29,6 +30,7 @@
     <where>
       <if test="envid != null and envid != ''"> c.envid=#{envid}</if>
       <if test="depunitid != null and depunitid != ''">and c.depunitid=#{depunitid}</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by c.lastmodify_time  DESC
   </select>
@@ -42,6 +44,7 @@
       <if test="enviromentname != null and enviromentname != ''">and c.enviromentname like CONCAT('%',#{enviromentname},'%')</if>
       <if test="deployunitname != null and deployunitname != ''">and c.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
       <if test="machinename != null  and machinename != ''">and c.machinename like CONCAT('%',#{machinename},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

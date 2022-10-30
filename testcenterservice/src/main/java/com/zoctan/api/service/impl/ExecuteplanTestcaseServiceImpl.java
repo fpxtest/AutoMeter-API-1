@@ -102,7 +102,7 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
 
 
     @Override
-    public List<ExecuteplanTestcase> getstaticsplancases() {
-        return executeplanTestcaseMapper.getstaticsplancases();
+    public List<ExecuteplanTestcase> getstaticsplancases(long projectid) {
+        return executeplanTestcaseMapper.getstaticsplancases(projectid);
     }
 }

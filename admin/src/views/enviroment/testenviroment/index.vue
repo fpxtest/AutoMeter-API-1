@@ -148,6 +148,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '测试环境',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -179,22 +180,25 @@
           enviromentname: '',
           envtype: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
-          enviromentname: null
+          enviromentname: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getenviromentList()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -269,6 +273,7 @@
         this.tmpenviroment.memo = ''
         this.tmpenviroment.envtype = ''
         this.tmpenviroment.creator = this.name
+        this.tmpenviroment.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加测试环境
@@ -301,6 +306,7 @@
         this.tmpenviroment.envtype = this.enviromentList[index].envtype
         this.tmpenviroment.memo = this.enviromentList[index].memo
         this.tmpenviroment.creator = this.name
+        this.tmpenviroment.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 更新测试环境

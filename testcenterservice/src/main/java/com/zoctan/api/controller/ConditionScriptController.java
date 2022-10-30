@@ -32,8 +32,9 @@ public class ConditionScriptController {
     public Result add(@RequestBody ConditionScript conditionScript) {
 
         Condition con=new Condition(ConditionScript.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionScript.getConditionname()+ "'")
-                .orCondition("subconditionname = '" + conditionScript.getSubconditionname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+conditionScript.getProjectid())
+                .andCondition("conditionname = '" + conditionScript.getConditionname()+ "'")
+                .andCondition("subconditionname = '" + conditionScript.getSubconditionname().replace("'","''") + "'");
         if(conditionScriptService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("已存在该条件名或子条件名");
@@ -73,14 +74,21 @@ public class ConditionScriptController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
-
+    @GetMapping("/getscriptconditionallList")
+    public Result getscriptconditionallList(@RequestParam long projectid) {
+        Condition con=new Condition(ConditionScript.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<ConditionScript> list = conditionScriptService.listByCondition(con);
+        return ResultGenerator.genOkResult(list);
+    }
     /**
      * 更新自己的资料
      */
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final ConditionScript conditionScript) {
         Condition con=new Condition(ConditionScript.class);
-        con.createCriteria().andCondition("conditionname = '" + conditionScript.getConditionname() + "'")
+        con.createCriteria().andCondition("projectid = "+conditionScript.getProjectid())
+                .andCondition("conditionname = '" + conditionScript.getConditionname() + "'")
                 .andCondition("subconditionname = '" + conditionScript.getSubconditionname().replace("'","''") + "'")
                 .andCondition("id <> " + conditionScript.getId());
         if(conditionScriptService.ifexist(con)>0)

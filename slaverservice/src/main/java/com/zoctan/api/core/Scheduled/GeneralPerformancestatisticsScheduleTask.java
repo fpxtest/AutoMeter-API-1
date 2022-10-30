@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zoctan.api.core.config.RedisUtils;
 import com.zoctan.api.entity.ApicasesPerformancestatistics;
+import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.Performancereportsource;
 import com.zoctan.api.entity.Slaver;
 import com.zoctan.api.mapper.DictionaryMapper;
@@ -107,7 +108,17 @@ public class GeneralPerformancestatisticsScheduleTask {
 
     public void fixperformancestatistics(String testclass,String batchname,String testplanid,String batchid,String slaverid,String caseid,String casereportfolder,Double costtime,String Creator)  {
         try {
-            String casereport=casereportfolder+"/content/js/dashboard.js";
+
+            Executeplan executeplan=epservice.getBy("id",Long.parseLong(testplanid));
+            long projectid=executeplan.getProjectid();
+            String casereport="";
+            String property = System.getProperty("os.name");
+            if(property.toLowerCase().startsWith("win")) {
+                casereport=casereportfolder+"\\content\\js\\dashboard.js";
+            }else
+            {
+                casereport=casereportfolder+"/content/js/dashboard.js";
+            }
             GeneralPerformancestatisticsScheduleTask.log.info("参数为 is:"+testclass+"，"+batchname+"，"+testplanid+"，"+batchid+","+slaverid+","+caseid+","+casereportfolder+","+costtime);
             BufferedReader reader = new BufferedReader(new FileReader(casereport));
 //            try {
@@ -203,6 +214,7 @@ public class GeneralPerformancestatisticsScheduleTask {
             apicasesPerformancestatistics.setSlaverid(Long.parseLong(slaverid));
             apicasesPerformancestatistics.setTps(Double.parseDouble(Throughput));
             apicasesPerformancestatistics.setCreator(Creator);
+            apicasesPerformancestatistics.setProjectid(projectid);
             apicasesPerformancestatisticsService.save(apicasesPerformancestatistics);
 
             performancereportsourceMapper.updateperformancereportsourcedone(Long.parseLong(testplanid),Long.parseLong(slaverid),Long.parseLong(batchid),Long.parseLong(caseid));

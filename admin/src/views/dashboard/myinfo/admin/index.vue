@@ -43,7 +43,6 @@ import myrecentfunctioninfo from './components/myrecentfunctioninfo'
 import myrecentperformanceinfo from './components/myrecentperformanceinfo'
 
 export default {
-  name: 'DashboardAdmin',
   components: {
     mycreateinfo,
     RunTable,

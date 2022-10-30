@@ -150,6 +150,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '全局变量',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -180,22 +181,25 @@
           id: '',
           keyname: '',
           keyvalue: '',
-          memo: ''
+          memo: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
-          keyname: null
+          keyname: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getglobalvariablesList()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -269,6 +273,7 @@
         this.tmpglobalvariables.keyname = ''
         this.tmpglobalvariables.keyvalue = ''
         this.tmpglobalvariables.memo = ''
+        this.tmpglobalvariables.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加全局变量

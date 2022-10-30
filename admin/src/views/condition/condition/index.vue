@@ -260,11 +260,12 @@
   import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '父条件管理',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -330,7 +331,8 @@
           memo: '',
           creator: '',
           deployunitname: '',
-          apiname: ''
+          apiname: '',
+          projectid: ''
         },
         tmpconditionorder: {
           id: '',
@@ -347,18 +349,20 @@
           page: 1,
           size: 10,
           conditionname: null,
-          objecttype: null
+          objecttype: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getconditionList()
-      this.getdepunitList()
+      this.getdepunitLists()
     },
 
     methods: {
@@ -490,10 +494,10 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
+      getdepunitLists() {
         this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
+        getdepunitLists(this.search).then(response => {
+          this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -501,7 +505,7 @@
       },
 
       getallexplan() {
-        getallexplan().then(response => {
+        getallexplan(this.search).then(response => {
           this.execplanList = response.data
         }).catch(res => {
           this.$message.error('加载测试集合列表失败')
@@ -584,6 +588,7 @@
         this.tmpcondition.conditiontype = ''
         this.tmpcondition.memo = ''
         this.tmpcondition.creator = this.name
+        this.tmpcondition.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加条件

@@ -2,6 +2,7 @@ package com.zoctan.api.mapper;
 
 import com.zoctan.api.core.mapper.MyMapper;
 import com.zoctan.api.entity.Enviroment;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public interface EnviromentMapper extends MyMapper<Enviroment> {
      * @param params 参数
      * @return 发布单元列表
      */
-    List<Enviroment> findEnviromentName(String params);
+    List<Enviroment> findEnviromentName(String params,long projectid);
 
 
     /**
@@ -33,6 +34,6 @@ public interface EnviromentMapper extends MyMapper<Enviroment> {
      */
     void updateEnviroment(Enviroment params);
 
-    Integer getenviromentnum();
+    Integer getenviromentnum(@Param("projectid") long projectid);
 
 }

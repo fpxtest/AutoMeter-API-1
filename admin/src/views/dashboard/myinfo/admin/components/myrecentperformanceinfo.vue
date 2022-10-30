@@ -49,14 +49,16 @@ export default {
       listLoading: false, // 数据加载等待动画
       list: null,
       tmpcreator: {
-        creator: ''
+        creator: '',
+        projectid: ''
       }
     }
   },
   computed: {
-    ...mapGetters(['name', 'sidebar', 'avatar'])
+    ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
   },
   created() {
+    this.tmpcreator.projectid = window.localStorage.getItem('pid')
     this.fetchData()
   },
   methods: {

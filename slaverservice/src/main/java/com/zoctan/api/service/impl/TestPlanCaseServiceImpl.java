@@ -23,12 +23,14 @@ import java.util.Date;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> implements TestPlanCaseService {
-    @Resource
-    private ApicasesMapper apicaseMapper;
+//    @Resource
+//    private ApicasesMapper apicaseMapper;
 
 
     @Override
     public void ExecuteHttpPerformancePlanCase(JmeterPerformanceObject jmeterPerformanceObject, String DeployName, String JmeterPath, String JmxPath, String JmxCaseName, String JmeterPerformanceReportPath, String JmeterPerformanceReportLogPath, Long Thread, Long Loop,String Creator) throws IOException {
+        long ProjectId=jmeterPerformanceObject.getProjectid();
+
         long SlaverId=jmeterPerformanceObject.getSlaverid();
         long PlanId=jmeterPerformanceObject.getTestplanid();
         long CaseId=jmeterPerformanceObject.getCaseid();
@@ -61,22 +63,43 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         String MachineIP=jmeterPerformanceObject.getMachineip();
         String DeployVisityType=jmeterPerformanceObject.getDeployunitvisittype();
 
-
-        String CaseReportFolder = JmeterPerformanceReportPath + "/" +SlaverId + "-" + PlanId + "-" + CaseId + "-" + BatchName;
+        String os = System.getProperty("os.name");
+        String CaseReportFolder ="";
+        if (os != null && os.toLowerCase().startsWith("windows")) {
+             CaseReportFolder = JmeterPerformanceReportPath + "\\" +SlaverId + "-" + PlanId + "-" + CaseId + "-" + BatchName;
+        }
+        else
+        {
+             CaseReportFolder = JmeterPerformanceReportPath + "/" +SlaverId + "-" + PlanId + "-" + CaseId + "-" + BatchName;
+        }
         File dir = new File(CaseReportFolder);
         if (!dir.exists()) {// 判断目录是否存在
             dir.mkdir();
             TestPlanCaseServiceImpl.log.info("创建性能报告目录完成 :" + CaseReportFolder);
         }
 
-        String ReportSlaverLogFolder = JmeterPerformanceReportLogPath + "/" + SlaverId;
+        String ReportSlaverLogFolder = "";
+        if (os != null && os.toLowerCase().startsWith("windows")) {
+             ReportSlaverLogFolder = JmeterPerformanceReportLogPath + "\\" + SlaverId;
+        }
+        else
+        {
+             ReportSlaverLogFolder = JmeterPerformanceReportLogPath + "/" + SlaverId;
+        }
         File logdir = new File(ReportSlaverLogFolder);
         if (!logdir.exists()) {// 判断目录是否存在
             logdir.mkdir();
             TestPlanCaseServiceImpl.log.info("创建性能报告SlaverId日志目录完成 :" + ReportSlaverLogFolder);
         }
 
-        String ReportSlaverPlanLogFolder = ReportSlaverLogFolder + "/" + PlanId;
+        String ReportSlaverPlanLogFolder = "";
+        if (os != null && os.toLowerCase().startsWith("windows")) {
+             ReportSlaverPlanLogFolder = ReportSlaverLogFolder + "\\" + PlanId;
+        }
+        else
+        {
+             ReportSlaverPlanLogFolder = ReportSlaverLogFolder + "/" + PlanId;
+        }
         File slaverplanlogdir = new File(ReportSlaverPlanLogFolder);
         if (!slaverplanlogdir.exists()) {// 判断目录是否存在
             slaverplanlogdir.mkdir();
@@ -87,7 +110,6 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         ReportSlaverPlanLogFolder=ReportSlaverPlanLogFolder.replace(" ","Autometer");
 
         String JmeterCmd="";
-        String os = System.getProperty("os.name");
         TestPlanCaseServiceImpl.log.info("性能测试当前系统版本是  is :" + os);
         Date current= new Date();
         String jmeterlogfilename=PlanName+"-"+BatchName+"-"+CaseName;
@@ -96,14 +118,14 @@ public class TestPlanCaseServiceImpl extends AbstractService<TestplanCase> imple
         //Windows操作系统
         if (os != null && os.toLowerCase().startsWith("windows")) {
             JmeterCmd = JmeterPath + "\\jmeter.bat -n -t " + JmxPath + "\\HttpPerformance.jmx  -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
-                    + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
+                    + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jprojectid=" +   ProjectId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
-                    " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder+ " -j jmeter-pt"+jmeterlogfilename+".log ";
+                    " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "\\" + CaseId + ".jtl -e -o " + CaseReportFolder+ " -j jmeter-pt"+jmeterlogfilename+".log ";
         }else
         {
             JmeterCmd = JmeterPath + "/jmeter -n -t " + JmxPath + "/HttpPerformance.jmx  -Jmysqlurl=" + JdbcMysqlUrl + " -Jmysqlusername=" + MysqlUserName+ " -Jmachineip=" + MachineIP+ " -Jdeployvisitytype=" + DeployVisityType + " -Jmysqlpassword="
-                    + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
+                    + MysqlPassword + " -Jthread=" + Thread + " -Jloops=" + Loop + " -Jtestplanid=" + PlanId + " -Jprojectid=" +   ProjectId + " -Jcaseid=" + CaseId + " -Jslaverid=" + SlaverId + " -Jbatchid=" + BatchId + " -Jbatchname=" + BatchName +
                     " -Jexecuteplanname=" + PlanName +" -Jcasename=" + CaseName+" -Jexpect=" + Expect+" -Jprotocal=" + Protocal+" -JRequestmMthod=" + RequestmMthod+" -Jcasetype=" + Casetype+" -Jresource=" + Resource+" -Jcreator=" + Creator+
                     " -Japistyle=" + Apistyle +" -Jrequestcontenttype=" + Requestcontenttype +" -Jresponecontenttype=" + Responecontenttype +" -Jheadjson="  + Headjson  +" -Jparamsjson=" + Paramsjson+" -Jpostdata=" + PostData +" -Jbodyjson=" + Bodyjson +" -Jvariablesjson="+VariablesJson+
                     " -Jtestdeployunit=" + DeployName + " -Jreportlogfolder=" + ReportSlaverPlanLogFolder + " -Jcasereportfolder=" + CaseReportFolder + " -Jtestclass=" + JmxCaseName + " -l  " + CaseReportFolder + "/" + CaseId + ".jtl -e -o " + CaseReportFolder+ " -j jmeter-pt"+jmeterlogfilename+".log ";

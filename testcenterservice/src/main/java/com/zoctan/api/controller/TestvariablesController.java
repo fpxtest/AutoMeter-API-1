@@ -32,7 +32,8 @@ public class TestvariablesController {
     public Result add(@RequestBody Testvariables testvariables) {
 
         Condition con=new Condition(Testvariables.class);
-        con.createCriteria().andCondition("testvariablesname = '" + testvariables.getTestvariablesname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+testvariables.getProjectid())
+                .andCondition("testvariablesname = '" + testvariables.getTestvariablesname().replace("'","''") + "'");
         if(testvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("变量名已经存在");
@@ -83,7 +84,8 @@ public class TestvariablesController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Testvariables dic) {
         Condition con=new Condition(Testvariables.class);
-        con.createCriteria().andCondition("testvariablesname = '" + dic.getTestvariablesname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("testvariablesname = '" + dic.getTestvariablesname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
         if(testvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("变量名已经存在");

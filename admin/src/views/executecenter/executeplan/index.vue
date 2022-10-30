@@ -27,11 +27,11 @@
 
         <span v-if="hasPermission('executeplan:search')">
           <el-form-item label="测试集合:">
-            <el-input v-model="search.executeplanname" @keyup.enter.native="searchBy" placeholder="测试集合"></el-input>
+            <el-input v-model="search.executeplanname" clearable @keyup.enter.native="searchBy" placeholder="测试集合"></el-input>
           </el-form-item>
 
           <el-form-item  label="业务类型:">
-            <el-select v-model="search.businesstype" placeholder="业务类型">
+            <el-select v-model="search.businesstype" clearable placeholder="业务类型">
               <el-option label="请选择" value />
               <div v-for="(businessdicitem, index) in planbusinessdiclist" :key="index">
                 <el-option :label="businessdicitem.dicitmevalue" :value="businessdicitem.dicitmevalue"/>
@@ -442,6 +442,7 @@
   import { mapGetters } from 'vuex'
   import { addapicasesdebug, removeapicasesdebug, updateapicasesdebug, searchheaderbyepid } from '@/api/assets/globalheaderuse'
   export default {
+    name: '测试集合',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -546,7 +547,8 @@
           memo: '',
           creator: '',
           dingdingtoken: '',
-          runmode: ''
+          runmode: '',
+          projectid: ''
         },
         tmpplanbatch: {
           executeplanid: '',
@@ -556,7 +558,8 @@
           exectype: '',
           exectmpdate: '',
           execdate: '',
-          exectime: ''
+          exectime: '',
+          projectid: ''
         },
         tmpplanenv: {
           id: '',
@@ -591,7 +594,8 @@
           page: 1,
           size: 10,
           executeplanname: null,
-          businesstype: ''
+          businesstype: '',
+          projectid: ''
         },
         searchcase: {
           page: 1,
@@ -599,7 +603,8 @@
           deployunitname: null,
           apiname: null,
           executeplanid: null,
-          casetype: null
+          casetype: null,
+          projectid: ''
         },
         searchparam: {
           page: 1,
@@ -609,10 +614,12 @@
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
+      this.tmpplanbatch.projectid = window.localStorage.getItem('pid')
       this.getexecuteplanList()
       this.getapiList()
       this.getdepunitList()
@@ -636,8 +643,8 @@
       unix2CurrentTime,
 
       getglobalheaderallList() {
-        getglobalheaderallList().then(response => {
-          this.globalheaderallList = response.data.list
+        getglobalheaderallList(this.search).then(response => {
+          this.globalheaderallList = response.data
         }).catch(res => {
           this.$message.error('加载全局Header列表失败')
         })
@@ -907,7 +914,7 @@
        * 获取环境列表
        */
       getenviromentallList() {
-        getenviromentallList().then(response => {
+        getenviromentallList(this.search).then(response => {
           this.enviromentnameList = response.data
         }).catch(res => {
           this.$message.error('加载环境列表失败')
@@ -1077,6 +1084,7 @@
         this.tmpexecuteplan.creator = this.name
         this.tmpexecuteplan.runmode = ''
         this.tmpexecuteplan.dingdingtoken = ''
+        this.tmpexecuteplan.projectid = window.localStorage.getItem('pid')
       },
 
       showplanparamsDialog(index) {
@@ -1229,6 +1237,7 @@
         this.tmpexecuteplan.creator = this.name
         this.tmpexecuteplan.runmode = this.executeplanList[index].runmode
         this.tmpexecuteplan.dingdingtoken = this.executeplanList[index].dingdingtoken
+        this.tmpexecuteplan.projectid = window.localStorage.getItem('pid')
         for (let i = 0; i < this.enviromentnameList.length; i++) {
           if (this.enviromentnameList[i].enviromentname === this.tmpexecuteplan.enviromentname) {
             this.tmpexecuteplan.envid = this.enviromentnameList[i].id

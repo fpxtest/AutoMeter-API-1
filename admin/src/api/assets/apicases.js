@@ -8,10 +8,11 @@ export function getapicasesList(params) {
   })
 }
 
-export function getstaticsdeployunitcases() {
+export function getstaticsdeployunitcases(params) {
   return request({
     url: '/apicases/getstaticsdeployunitcases',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

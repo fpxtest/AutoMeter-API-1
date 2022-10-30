@@ -15,10 +15,11 @@ export function getglobalheadernum() {
   })
 }
 
-export function getglobalheaderallList() {
+export function getglobalheaderallList(params) {
   return request({
     url: '/globalheader/getvariableslist',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

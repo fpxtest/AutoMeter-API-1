@@ -32,17 +32,19 @@ export function removebatchapi(executeplanForm) {
   })
 }
 
-export function getstaticsdeployapi() {
+export function getstaticsdeployapi(params) {
   return request({
     url: '/api/getstaticsdeployapi',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
-export function getapinum() {
+export function getapinum(params) {
   return request({
     url: '/api/getapinum',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

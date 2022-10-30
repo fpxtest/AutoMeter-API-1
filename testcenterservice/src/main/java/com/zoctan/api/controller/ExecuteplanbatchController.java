@@ -10,14 +10,12 @@ import com.zoctan.api.core.service.HttpParamers;
 import com.zoctan.api.core.service.TestHttp;
 import com.zoctan.api.dto.TestResponeData;
 import com.zoctan.api.dto.Testplanandbatch;
-import com.zoctan.api.entity.Executeplan;
-import com.zoctan.api.entity.ExecuteplanTestcase;
-import com.zoctan.api.entity.Executeplanbatch;
-import com.zoctan.api.entity.Slaver;
+import com.zoctan.api.entity.*;
 import com.zoctan.api.mapper.ExecuteplanMapper;
 import com.zoctan.api.mapper.SlaverMapper;
 import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanbatchService;
+import com.zoctan.api.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +37,8 @@ public class ExecuteplanbatchController {
     private ExecuteplanbatchService executeplanbatchService;
     @Autowired
     private ExecuteplanService executeplanService;
+    @Autowired
+    private ProjectService projectService;
     @Resource
     private SlaverMapper slaverMapper;
     @Resource
@@ -47,7 +47,8 @@ public class ExecuteplanbatchController {
     @PostMapping
     public Result add(@RequestBody Executeplanbatch executeplanbatch) {
         Condition con=new Condition(Executeplanbatch.class);
-        con.createCriteria().andCondition("batchname = '" + executeplanbatch.getBatchname().replace("'","''") + "'")
+        con.createCriteria().andCondition("projectid = "+executeplanbatch.getProjectid())
+                .andCondition("batchname = '" + executeplanbatch.getBatchname().replace("'","''") + "'")
                 .andCondition("executeplanid = " + executeplanbatch.getExecuteplanid());
         if(executeplanbatchService.ifexist(con)>0)
         {
@@ -107,6 +108,14 @@ public class ExecuteplanbatchController {
         String TestPlanName=param.get("TestPlanName").toString();
         String BatchName=param.get("BatchName").toString();
         String Source=param.get("Source").toString();
+        String ProjectName=param.get("ProjectName").toString();
+
+        Project project= projectService.getBy("",ProjectName);
+        if(project==null)
+        {
+            return ResultGenerator.genFailedResult("不存在该项目，请联系AutoMeter管理员获取项目名");
+        }
+        long ProjectId=project.getId();
         long PlanID;
         Executeplan executeplan= executeplanService.getBy("executeplanname",TestPlanName);
         if (executeplan != null)
@@ -114,7 +123,8 @@ public class ExecuteplanbatchController {
             Executeplanbatch executeplanbatch=new Executeplanbatch();
             PlanID=executeplan.getId();
             Condition con=new Condition(Executeplanbatch.class);
-            con.createCriteria().andCondition("batchname = '" + BatchName + "'")
+            con.createCriteria().andCondition("projectid = "+ProjectId)
+                    .andCondition("batchname = '" + BatchName + "'")
                     .andCondition("executeplanid = " + PlanID);
             if(executeplanbatchService.ifexist(con)>0)
             {
@@ -126,6 +136,7 @@ public class ExecuteplanbatchController {
                 executeplanbatch.setBatchname(BatchName);
                 executeplanbatch.setExecuteplanid(PlanID);
                 executeplanbatch.setExecuteplanname(TestPlanName);
+                executeplanbatch.setProjectid(ProjectId);
                 executeplanbatchService.save(executeplanbatch);
 
                 List<Testplanandbatch> list=new ArrayList<>();

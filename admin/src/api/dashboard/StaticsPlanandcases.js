@@ -1,16 +1,18 @@
 import request from '@/utils/request'
 
-export function getStaticsPlanCasesList() {
+export function getStaticsPlanCasesList(params) {
   return request({
     url: '/statics/planandcases/getplanstatics',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
-export function getStaticsDeployUnitCasesList() {
+export function getStaticsDeployUnitCasesList(params) {
   return request({
     url: '/statics/deployunitandcases/getdeployunitstatics',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

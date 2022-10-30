@@ -84,9 +84,9 @@ public class ApicasesReportController {
 
     @GetMapping
     public Result list(@RequestParam(defaultValue = "0") Integer page,
-                       @RequestParam(defaultValue = "0") Integer size) {
+                       @RequestParam(defaultValue = "0") Integer size,@RequestParam long projectid) {
         PageHelper.startPage(page, size);
-        List<ApicasesReport> list = apicasesReportService.listallresult();
+        List<ApicasesReport> list = apicasesReportService.listallresult(projectid);
         PageInfo<ApicasesReport> pageInfo = PageInfo.of(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
@@ -111,8 +111,9 @@ public class ApicasesReportController {
         Long executeplanid = Long.parseLong(param.get("executeplanid").toString());
         String status = param.get("caseststus").toString();
         String batchname = param.get("batchname").toString();
+        Long projectid = Long.parseLong(param.get("projectid").toString());
         PageHelper.startPage(page, size);
-        final List<ApicasesReport> list = this.apicasesReportService.findApicasereportWithNameandStatus(executeplanid,status,batchname);
+        final List<ApicasesReport> list = this.apicasesReportService.findApicasereportWithNameandStatus(executeplanid,status,batchname,projectid);
         final PageInfo<ApicasesReport> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }

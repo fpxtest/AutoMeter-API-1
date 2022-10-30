@@ -22,6 +22,14 @@ export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
   { path: '/404', component: _import('errorPage/404'), hidden: true },
   { path: '/401', component: _import('errorPage/401'), hidden: true },
+  {
+    path: '/refresh',
+    hidden: 'true',
+    component: resolve => require(['@/views/refresh'], resolve),
+    meta: {
+      title: '用于同路由刷新'
+    }
+  },
   // {
   //   path: '/',
   //   component: Layout,
@@ -41,7 +49,7 @@ export const constantRouterMap = [
     name: 'Dashboard',
     icon: 'dashboard',
     children: [
-      { path: 'Dashboard', name: '首页', component: _import('dashboard/dashboard/index'), meta: { title: '首页', icon: 'dashboard', noCache: true }},
+      { path: 'Dashboard', name: '首页', component: _import('dashboard/dashboard/index'), meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }},
       { path: 'myinfo', name: '我的总览', component: _import('dashboard/myinfo/index'), meta: { title: '我的总览', icon: 'dashboard', noCache: true }}
     ]
   }
@@ -57,55 +65,51 @@ export const asyncRouterMap = [
   {
     path: '/enviroment',
     component: Layout,
+    redirect: '/enviroment/project/list',
     name: '项目管理',
-    icon: 'enviroment',
+    icon: 'project',
     children: [
-      { path: 'project/list', name: '项目管理', component: _import('assets/project/index'), meta: { title: '项目管理', permission: ['project:list'] }, icon: 'testmanager' },
-      { path: 'testenviroment/list', name: '故事管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }}
+      { path: 'project/list', name: '项目管理', component: _import('assets/project/index'), meta: { title: '项目管理', permission: ['project:list'] }, icon: 'testmanager' }
     ]
   },
-  {
-    path: '/enviroment',
-    component: Layout,
-    name: '迭代管理',
-    icon: 'enviroment',
-    children: [
-      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
-      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
-      // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
-      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
-      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
-      }
-    ]
-  },
-  {
-    path: '/enviroment',
-    component: Layout,
-    name: '代码管理',
-    icon: 'enviroment',
-    children: [
-      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
-      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
-      // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
-      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
-      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
-      }
-    ]
-  },
-  {
-    path: '/enviroment',
-    component: Layout,
-    name: '环境管理',
-    icon: 'enviroment',
-    children: [
-      { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
-      { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
-      // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
-      { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
-      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/enviroment',
+  //   component: Layout,
+  //   redirect: '/enviroment/project/list',
+  //   name: '需求管理',
+  //   icon: 'enviroment',
+  //   children: [
+  //     { path: 'project/list', name: '用户故事', component: _import('assets/project/index'), meta: { title: '用户故事', permission: ['project:list'] }, icon: 'testmanager' }
+  //   ]
+  // },
+  // {
+  //   path: '/enviroment',
+  //   component: Layout,
+  //   name: '迭代管理',
+  //   icon: 'enviroment',
+  //   children: [
+  //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
+  //     { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
+  //     // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
+  //     { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
+  //     { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/enviroment',
+  //   component: Layout,
+  //   name: '代码管理',
+  //   icon: 'enviroment',
+  //   children: [
+  //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
+  //     { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
+  //     // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
+  //     { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
+  //     { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
+  //     }
+  //   ]
+  // },
   {
     path: '/deployunit',
     component: Layout,
@@ -119,6 +123,20 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/enviroment',
+    component: Layout,
+    name: '测试环境',
+    icon: 'enviroment',
+    children: [
+      { path: 'machine/list', name: '测试服务器', component: _import('assets/machine/index'), meta: { title: '测试服务器', permission: ['machine:list'] }},
+      { path: 'testenviroment/list', name: '测试环境', component: _import('enviroment/testenviroment/index'), meta: { title: '测试环境', permission: ['enviroment:list'] }},
+      // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
+      { path: 'enviromentassemble/list', name: '环境中间件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
+      { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
+      }
+    ]
+  },
+  {
     path: '/testvariables',
     component: Layout,
     name: '变量管理',
@@ -128,8 +146,8 @@ export const asyncRouterMap = [
       { path: 'globalheader/list', name: '全局Header', component: _import('testvariables/globalheader/index'), meta: { title: '全局Header', permission: ['globalheader:list'] }},
       { path: 'variables/list', name: '随机变量', component: _import('testvariables/variables/index'), meta: { title: '随机变量', permission: ['variables:list'] }},
       { path: 'testvariables/list', name: '接口变量', component: _import('testvariables/testvariables/index'), meta: { title: '接口变量', permission: ['testvariables:list'] }},
-      { path: 'dbvariables/list', name: '数据库变量', component: _import('testvariables/dbvariables/index'), meta: { title: '数据库变量', permission: ['dbvariables:list'] }}
-      // { path: 'scriptvariables/list', name: '脚本变量', component: _import('testvariables/scriptvariables/index'), meta: { title: '脚本变量', permission: ['scriptvariables:list'] }}
+      { path: 'dbvariables/list', name: '数据库变量', component: _import('testvariables/dbvariables/index'), meta: { title: '数据库变量', permission: ['dbvariables:list'] }},
+      { path: 'scriptvariables/list', name: '脚本变量', component: _import('testvariables/scriptvariables/index'), meta: { title: '脚本变量', permission: ['scriptvariables:list'] }}
       // { path: 'apicasesvariables/list', name: '绑定变量', component: _import('assets/cases/apicasesvariables/index'), meta: { title: '绑定变量', permission: ['testvariables:list'] }}
       // { path: 'testvariablesvalue/list', name: '变量结果', component: _import('testvariables/testvariablesvalue/index'), meta: { title: '变量结果', permission: ['testvariablesvalue:list'] }}
     ]
@@ -143,7 +161,7 @@ export const asyncRouterMap = [
       { path: 'condition/list', name: '父条件管理', component: _import('condition/condition/index'), meta: { title: '父条件管理', permission: ['condition:list'] }},
       { path: 'apicondition/list', name: '接口子条件', component: _import('condition/apicondition/index'), meta: { title: '接口子条件', permission: ['apicondition:list'] }},
       { path: 'dbcondition/list', name: '数据库子条件', component: _import('condition/dbcondition/index'), meta: { title: 'DB子条件', permission: ['dbcondition:list'] }},
-      // { path: 'scriptcondition/list', name: '脚本子条件', component: _import('condition/scriptcondition/index'), meta: { title: '脚本子条件', permission: ['scriptcondition:list'] }},
+      { path: 'scriptcondition/list', name: '脚本子条件', component: _import('condition/scriptcondition/index'), meta: { title: '脚本子条件', permission: ['scriptcondition:list'] }},
       { path: 'delaycondition/list', name: '延时子条件', component: _import('condition/delaycondition/index'), meta: { title: '延时子条件', permission: ['delaycondition:list'] }}
     ]
   },
@@ -198,18 +216,18 @@ export const asyncRouterMap = [
       { path: 'apiperformancestatistics/list', name: '性能统计报告', component: _import('reportcenter/apiperformancestatistics/index'), meta: { title: '性能统计报告', permission: ['apiperformancestatistics:list'] }}
     ]
   },
-  {
-    path: '/executecenter',
-    component: Layout,
-    name: '监控中心',
-    icon: 'execute',
-    children: [
-      { path: 'executeplan/list', name: '测试集合', component: _import('executecenter/executeplan/index'), meta: { title: '测试集合', permission: ['executeplan:list'] }},
-      { path: 'executeplancase/list', name: '集合用例', component: _import('executecenter/executeplancase/index'), meta: { title: '集合用例', permission: ['executeplan:list'] }},
-      // { path: 'processtestcase/list', name: '流程用例', component: _import('executecenter/processtestcase/index'), meta: { title: '流程用例', permission: ['processtestcase:list'] }},
-      { path: 'executeplanbatch/list', name: '计划执行', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划执行', permission: ['executeplanbatch:list'] }}
-    ]
-  },
+  // {
+  //   path: '/executecenter',
+  //   component: Layout,
+  //   name: '监控中心',
+  //   icon: 'execute',
+  //   children: [
+  //     { path: 'executeplan/list', name: '测试集合', component: _import('executecenter/executeplan/index'), meta: { title: '测试集合', permission: ['executeplan:list'] }},
+  //     { path: 'executeplancase/list', name: '集合用例', component: _import('executecenter/executeplancase/index'), meta: { title: '集合用例', permission: ['executeplan:list'] }},
+  //     // { path: 'processtestcase/list', name: '流程用例', component: _import('executecenter/processtestcase/index'), meta: { title: '流程用例', permission: ['processtestcase:list'] }},
+  //     { path: 'executeplanbatch/list', name: '计划执行', component: _import('executecenter/executeplanbatch/index'), meta: { title: '计划执行', permission: ['executeplanbatch:list'] }}
+  //   ]
+  // },
   // {
   //   path: '/test',
   //   component: Layout,
@@ -240,7 +258,7 @@ export const asyncRouterMap = [
     path: '/mock',
     component: Layout,
     name: 'Mock管理',
-    icon: 'execute',
+    icon: 'mock',
     children: [
       { path: 'mockmodel/list', name: '模块管理', component: _import('mock/mockmodel/index'), meta: { title: '模块管理', permission: ['mockmodel:list'] }},
       { path: 'mockapi/list', name: 'MockAPI', component: _import('mock/mockapi/index'), meta: { title: 'MockAPI', permission: ['mockapi:list'] }},

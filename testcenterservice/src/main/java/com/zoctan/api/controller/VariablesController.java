@@ -28,7 +28,8 @@ public class VariablesController {
     public Result add(@RequestBody Variables dic) {
 
         Condition con=new Condition(Variables.class);
-        con.createCriteria().andCondition("variablesname = '" + dic.getVariablesname().replace("'","''") + "'")
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("variablesname = '" + dic.getVariablesname().replace("'","''") + "'")
                 .andCondition("variablestype = '" + dic.getVariablestype()+ "'");
         if(variablesService.ifexist(con)>0)
         {
@@ -75,7 +76,8 @@ public class VariablesController {
     @PutMapping("/detail")
     public Result updateVariables(@RequestBody final Variables dic) {
         Condition con=new Condition(Variables.class);
-        con.createCriteria().andCondition("variablesname = '" + dic.getVariablesname().replace("'","''") + "'")
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("variablesname = '" + dic.getVariablesname().replace("'","''") + "'")
                 .andCondition("variablestype = '" + dic.getVariablestype()+ "'")
                 .andCondition("id <> " + dic.getId());
         if(variablesService.ifexist(con)>0)

@@ -48,23 +48,23 @@ public class ExecuteplanServiceImpl extends AbstractService<Executeplan> impleme
     }
 
     @Override
-    public List<Executeplan> getallexplan() {
-        return executeplanMapper.getallexplan();
+    public List<Executeplan> getallexplan(long projectid) {
+        return executeplanMapper.getallexplan(projectid);
     }
 
     @Override
-    public List<Executeplan> getallexplanbytype(String usetype) {
-        return executeplanMapper.getallexplanbytype(usetype);
+    public List<Executeplan> getallexplanbytype(String usetype,long projectid) {
+        return executeplanMapper.getallexplanbytype(usetype,projectid);
     }
 
     @Override
-    public Integer getexecuteplannum() {
-        return executeplanMapper.getexecuteplannum();
+    public Integer getexecuteplannum(long projectid) {
+        return executeplanMapper.getexecuteplannum(projectid);
     }
 
     @Override
-    public List<String> getstaticsplan() {
-        return executeplanMapper.getstaticsplan();
+    public List<String> getstaticsplan(long projectid) {
+        return executeplanMapper.getstaticsplan(projectid);
     }
 
     @Override

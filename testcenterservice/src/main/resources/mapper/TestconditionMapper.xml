@@ -19,6 +19,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
   </resultMap>
 
   <select id="findtestconditionWithName" resultMap="BaseResultMap">
@@ -27,6 +28,7 @@
     <where>
       <if test="objecttype != null and objecttype != ''">a.objecttype like CONCAT('%',#{objecttype},'%')</if>
       <if test="conditionname != null and conditionname != ''"> and a.conditionname like CONCAT('%',#{conditionname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

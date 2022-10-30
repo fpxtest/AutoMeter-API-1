@@ -33,9 +33,9 @@ public interface ApiMapper extends MyMapper<Api> {
 
     int ifexist(Condition condition);
 
-    Integer getapinum();
+    Integer getapinum(long projectid);
 
-    List<Api> getstaticsdeployapi();
+    List<Api> getstaticsdeployapi(long projectid);
 
     List<Api> getapibydeployunitid(@Param("deployunitid")Long deployunitid);
 }

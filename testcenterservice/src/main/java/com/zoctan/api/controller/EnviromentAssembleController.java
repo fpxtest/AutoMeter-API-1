@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.Enviroment;
 import com.zoctan.api.entity.EnviromentAssemble;
 import com.zoctan.api.entity.Macdepunit;
 import com.zoctan.api.entity.Machine;
@@ -38,7 +39,8 @@ public class EnviromentAssembleController {
     @PostMapping
     public Result add(@RequestBody EnviromentAssemble enviromentAssemble) {
         Condition con=new Condition(EnviromentAssemble.class);
-        con.createCriteria().andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
+        con.createCriteria().andCondition("projectid = "+enviromentAssemble.getProjectid())
+                .andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
                 .andCondition("assemblename = '" + enviromentAssemble.getAssemblename().replace("'","''") + "'");
         if(enviromentAssembleService.ifexist(con)>0)
         {
@@ -71,7 +73,8 @@ public class EnviromentAssembleController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final EnviromentAssemble enviromentAssemble) {
         Condition con=new Condition(EnviromentAssemble.class);
-        con.createCriteria().andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
+        con.createCriteria().andCondition("projectid = "+enviromentAssemble.getProjectid())
+                .andCondition("assembletype = '" + enviromentAssemble.getAssembletype() + "'")
                 .andCondition("assemblename = '" + enviromentAssemble.getAssemblename().replace("'","''") + "'")
                 .andCondition("id <> " + enviromentAssemble.getId());
         if(enviromentAssembleService.ifexist(con)>0)
@@ -102,8 +105,11 @@ public class EnviromentAssembleController {
 
 
     @GetMapping("/getassemblename")
-    public Result listall() {
-        List<EnviromentAssemble> list = enviromentAssembleService.listAll();
+    public Result listall(@RequestParam long projectid) {
+        Condition con=new Condition(EnviromentAssemble.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<EnviromentAssemble> list = enviromentAssembleService.listByCondition(con);
+//        List<EnviromentAssemble> list = enviromentAssembleService.listAll();
         return ResultGenerator.genOkResult(list);
     }
     /**

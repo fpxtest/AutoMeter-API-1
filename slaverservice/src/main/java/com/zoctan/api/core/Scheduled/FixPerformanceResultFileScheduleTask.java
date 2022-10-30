@@ -77,16 +77,29 @@ public class FixPerformanceResultFileScheduleTask {
                 long batchid = performancereportfilelog.getBatchid();
                 long slaverid = performancereportfilelog.getSlaverid();
                 long caseid = performancereportfilelog.getCaseid();
-
+                String property = System.getProperty("os.name");
                 String ProjectPath = System.getProperty("user.dir");
                 String JmeterPerformanceReportLogFilePath = "";
                 if (ProjectPath.contains("slaverservice")) {
-                    JmeterPerformanceReportLogFilePath = ProjectPath + "/performancereportlogfile";
-                } else {
-                    JmeterPerformanceReportLogFilePath = ProjectPath + "/slaverservice/performancereportlogfile";
+                    if(property.toLowerCase().startsWith("win")) {
+                        JmeterPerformanceReportLogFilePath = ProjectPath + "\\performancereportlogfile"+ "\\" +SlaverId+"\\"+ planid + "\\" + performancereportfilelog.getFilename()+".txt";
+                    }
+                    else
+                    {
+                        JmeterPerformanceReportLogFilePath = ProjectPath + "/performancereportlogfile"+ "/" +SlaverId+"/"+ planid + "/" + performancereportfilelog.getFilename()+".txt";
+                    }
+                } else
+                {
+                    if(property.toLowerCase().startsWith("win")) {
+                        JmeterPerformanceReportLogFilePath = ProjectPath + "\\slaverservice\\performancereportlogfile"+ "\\" +SlaverId+"\\"+ planid + "\\" + performancereportfilelog.getFilename()+".txt";
+                    }
+                    else
+                    {
+                        JmeterPerformanceReportLogFilePath = ProjectPath + "/slaverservice/performancereportlogfile"+ "/" +SlaverId+"/"+ planid + "/" + performancereportfilelog.getFilename()+".txt";
+                    }
                 }
-                reader = new BufferedReader(new FileReader(JmeterPerformanceReportLogFilePath + "/" +SlaverId+"/"+ planid + "/" + performancereportfilelog.getFilename()+".txt"));
-                FixPerformanceResultFileScheduleTask.log.info("收集性能报告数据-开始读文件=======================" + performancereportfilelog.getFilename()+".txt");
+                reader = new BufferedReader(new FileReader(JmeterPerformanceReportLogFilePath ));
+                FixPerformanceResultFileScheduleTask.log.info("收集性能报告数据-开始读文件=======================" + JmeterPerformanceReportLogFilePath);
                 performancereportfilelog.setStatus("处理中");
                 performancereportfilelogService.update(performancereportfilelog);
                 String line = reader.readLine();
@@ -147,7 +160,7 @@ public class FixPerformanceResultFileScheduleTask {
         String[] array = Content.split("\\$\\$");
         FixPerformanceResultFileScheduleTask.log.info("收集性能报告数据文件每行长度：=======================" + array.length);
         boolean caseresultstatus = true;
-        if (array.length == 17) {
+        if (array.length == 18) {
             ApicasesReportPerformance apicasesReportPerformance = new ApicasesReportPerformance();
             long caseid = Long.parseLong(array[0]);
             apicasesReportPerformance.setCaseid(caseid);
@@ -193,7 +206,9 @@ public class FixPerformanceResultFileScheduleTask {
             apicasesReportPerformance.setUrl(Url);
             String Requestmethod = array[16];
             apicasesReportPerformance.setRequestmethod(Requestmethod);
-            apicasesReportPerformanceService.adddynamiccaseperformancereport(caseid, planid, batchname, slaverid, status, respone, Assertvalue, runtime, Expect, Errorinfo, dateNowStr, dateNowStr, Creator, Requestheader, Requestdatas, Url, Requestmethod, TableName);
+            long peojectid=Long.parseLong(array[17]);
+            apicasesReportPerformance.setProjectid(peojectid);
+            apicasesReportPerformanceService.adddynamiccaseperformancereport(caseid, planid, batchname, slaverid, status, respone, Assertvalue, runtime, Expect, Errorinfo, dateNowStr, dateNowStr, Creator, Requestheader, Requestdatas, Url, Requestmethod, TableName,peojectid);
         }
         return caseresultstatus;
     }

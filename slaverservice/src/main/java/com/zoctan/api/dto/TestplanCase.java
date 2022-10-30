@@ -1,11 +1,17 @@
 package com.zoctan.api.dto;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * @author Zoctan
  * @date 2018/10/16
  */
 public class TestplanCase  {
-
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   public Long getExecplanid() {
     return execplanid;

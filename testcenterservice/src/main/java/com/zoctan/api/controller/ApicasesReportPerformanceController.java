@@ -87,6 +87,7 @@ public class ApicasesReportPerformanceController {
         Integer page= Integer.parseInt(param.get("page").toString());
         Integer size= Integer.parseInt(param.get("size").toString());
         long planid=Long.parseLong(param.get("executeplanid").toString());
+        long projectid=Long.parseLong(param.get("projectid").toString());
         String batchname=param.get("batchname").toString();
 
         Routeperformancereport routeperformancereport= routeperformancereportService.getBy("executeplanid",planid);
@@ -95,7 +96,7 @@ public class ApicasesReportPerformanceController {
         {
             String TableName=routeperformancereport.getTablename();
             PageHelper.startPage(page, size);
-            list = this.apicasesReportPerformanceService.finddynamicresult(planid,batchname,TableName);
+            list = this.apicasesReportPerformanceService.finddynamicresult(planid,batchname,TableName,projectid);
         }
         final PageInfo<ApicasesReportPerformance> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
@@ -110,9 +111,10 @@ public class ApicasesReportPerformanceController {
         Integer page= Integer.parseInt(param.get("page").toString());
         Integer size= Integer.parseInt(param.get("size").toString());
         long planid=Long.parseLong(param.get("executeplanid").toString());
+        long projectid=Long.parseLong(param.get("projectid").toString());
         String batchname=param.get("batchname").toString();
         PageHelper.startPage(page, size);
-        List<ApicasesPerformancestatistics>apicasesPerformancestatisticsList = apicasesPerformancestatisticsService.getresultbyidandname(planid,batchname);
+        List<ApicasesPerformancestatistics>apicasesPerformancestatisticsList = apicasesPerformancestatisticsService.getresultbyidandname(planid,batchname,projectid);
         final PageInfo<ApicasesPerformancestatistics> pageInfo = new PageInfo<>(apicasesPerformancestatisticsList);
         return ResultGenerator.genOkResult(pageInfo);
     }

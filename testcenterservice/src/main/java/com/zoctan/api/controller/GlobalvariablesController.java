@@ -28,7 +28,8 @@ public class GlobalvariablesController {
     public Result add(@RequestBody Globalvariables globalvariables) {
 
         Condition con=new Condition(Globalvariables.class);
-        con.createCriteria().andCondition("keyname = '" + globalvariables.getKeyname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+globalvariables.getProjectid())
+                .andCondition("keyname = '" + globalvariables.getKeyname().replace("'","''") + "'");
         if(globalvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("全局变量名已经存在");
@@ -71,7 +72,8 @@ public class GlobalvariablesController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Globalvariables dic) {
         Condition con=new Condition(Globalvariables.class);
-        con.createCriteria().andCondition("keyname = '" + dic.getKeyname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("keyname = '" + dic.getKeyname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
         if(globalvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("全局变量名已经存在");

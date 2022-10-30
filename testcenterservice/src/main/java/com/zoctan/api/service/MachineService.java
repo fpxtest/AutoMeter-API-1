@@ -15,7 +15,7 @@ import java.util.Map;
 public interface MachineService extends Service<Machine> {
 
     Machine findmachinebymachinename(String machinename);
-    Machine findmachinebymachineandip(String machinename,String ip,Long ID);
+    Machine findmachinebymachineandip(String machinename,String ip,Long ID,long projectid);
 
 
     Machine findmachinebyip(String ip);
@@ -23,7 +23,7 @@ public interface MachineService extends Service<Machine> {
     List<Machine> findMachineWithName(final Map<String, Object> params);
     void updateMachine(Machine params);
 
-    Integer getmachinenum();
+    Integer getmachinenum(long projectid);
 
 
 }

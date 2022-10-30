@@ -31,13 +31,13 @@ public interface ExecuteplanMapper extends MyMapper<Executeplan> {
 
     int ifexist(Condition condition);
 
-    List<Executeplan> getallexplan();
+    List<Executeplan> getallexplan(@Param("projectid")long projectid);
 
-    List<Executeplan> getallexplanbytype(String usetype);
+    List<Executeplan> getallexplanbytype(@Param("usetype")String usetype,@Param("projectid")long projectid);
 
-    Integer getexecuteplannum();
+    Integer getexecuteplannum(@Param("projectid")long projectid);
 
-    List<String> getstaticsplan();
+    List<String> getstaticsplan(@Param("projectid")long projectid);
 
     void createNewTable(@Param("tableName") String tableName);
 

@@ -161,6 +161,7 @@
   import { unix2CurrentTime } from '@/utils'
 
   export default {
+    name: '测试执行机',
     filters: {
       statusFilter(status) {
         const statusMap = {

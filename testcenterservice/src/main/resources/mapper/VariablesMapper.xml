@@ -10,6 +10,7 @@
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="variablestype" jdbcType="VARCHAR" property="variablestype" />
     <result column="variablecondition" jdbcType="VARCHAR" property="variablecondition" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -20,6 +21,7 @@
     FROM variables a
     <where>
       <if test="variablesname != null and variablesname != ''">a.variablesname like CONCAT('%',#{variablesname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

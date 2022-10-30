@@ -16,6 +16,7 @@
     <result column="enviromentname" jdbcType="VARCHAR" property="enviromentname" />
     <result column="runmode" jdbcType="VARCHAR" property="runmode" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+      <result column="projectid" jdbcType="BIGINT" property="projectid" />
       <result column="dingdingtoken" jdbcType="VARCHAR" property="dingdingtoken" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
@@ -27,6 +28,7 @@
     <where>
       <if test="businesstype != null and businesstype != ''">a.businesstype = #{businesstype} </if>
       <if test="executeplanname != null and executeplanname != ''">and a.executeplanname like CONCAT('%',#{executeplanname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>
@@ -38,16 +40,16 @@
   </select>
 
   <select id="getallexplan" resultMap="BaseResultMap">
-    SELECT a.* FROM executeplan a
+    SELECT a.* FROM executeplan a where a.projectid =#{projectid}
   </select>
 
   <select id="getallexplanbytype" resultMap="BaseResultMap">
-    SELECT a.* FROM executeplan a where usetype=#{usetype}
+    SELECT a.* FROM executeplan a where usetype=#{usetype} and a.projectid =#{projectid}
   </select>
 
   <select id="getexecuteplannum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM executeplan a
+    FROM executeplan a where a.projectid =#{projectid}
   </select>
 
   <update id="updateexecuteplanname" parameterType="com.zoctan.api.entity.Executeplan">
@@ -81,6 +83,7 @@
         `requestdatas` text COMMENT '请求数据',
         `url` varchar(200) DEFAULT NULL COMMENT '地址',
         `requestmethod` varchar(20) DEFAULT NULL COMMENT '请求方式',
+        `projectid` bigint(20) unsigned NOT NULL COMMENT '项目id',
         PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='api用例报告表';
   </update>
@@ -89,6 +92,6 @@
 
   <select id="getstaticsplan" resultType="java.lang.String">
     SELECT a.executeplanname
-    FROM executeplan a
+    FROM executeplan a where a.projectid =#{projectid}
   </select>
 </mapper>

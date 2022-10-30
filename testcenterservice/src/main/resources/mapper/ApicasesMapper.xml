@@ -20,6 +20,7 @@
     <result column="middleparam" jdbcType="VARCHAR" property="middleparam" />
     <result column="level" jdbcType="VARCHAR" property="level" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -33,6 +34,7 @@
       <if test="casetype != null and casetype != ''">and a.casetype = #{casetype}</if>
       <if test="deployunitid != null  and deployunitid != ''">and a.deployunitid = #{deployunitid}</if>
       <if test="casename != null and casename != ''">and a.casename like CONCAT('%',#{casename},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>
@@ -44,6 +46,7 @@
       <if test="apiname != null and apiname != ''">a.apiname = #{apiname}</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname = #{deployunitname}</if>
       <if test="casetype != null and casetype != ''">and a.casetype = #{casetype}</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
   </select>
 
@@ -62,7 +65,7 @@
 
   <select id="getcasenum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM apicases  where casetype=#{casetype}
+    FROM apicases  where casetype=#{casetype} and projectid =#{projectid}
   </select>
 
   <update id="updateApicase" parameterType="com.zoctan.api.entity.Apicases">
@@ -73,7 +76,7 @@
 
   <select id="getstaticsdeployunitcases" resultMap="BaseResultMap">
     SELECT deployunitname ,count(*) as apiid
-    FROM apicases group by deployunitname
+    FROM apicases where projectid =#{projectid} group by deployunitname
   </select>
 
   <select id="getcasebydeployunitid" resultMap="BaseResultMap">
@@ -85,8 +88,5 @@
     SELECT *
     FROM apicases WHERE apiid = #{apiid}
   </select>
-
-
-
 
 </mapper>

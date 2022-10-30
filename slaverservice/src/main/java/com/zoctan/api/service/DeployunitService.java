@@ -8,6 +8,6 @@ import com.zoctan.api.core.service.Service;
 * @date 2020/04/17
 */
 public interface DeployunitService extends Service<Deployunit> {
-    Deployunit findDeployNameValueWithCode(String params);
+    Deployunit findDeployNameValueWithCode(String params,long projectid);
 
 }

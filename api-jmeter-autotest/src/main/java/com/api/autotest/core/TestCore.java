@@ -383,22 +383,22 @@ public class TestCore {
 
 
     //获取变量值类型
-    private String GetVariablesDataType(String VariablesName) {
-        String ValueType=testMysqlHelp.GetVariablesDataType(VariablesName);
-        return ValueType;
-    }
-
-    //根据变量名获取caseid
-    private String GetCaseIdByVariablesName(String VariablesName,String Caseid) {
-        String CaseID=testMysqlHelp.GetCaseIdByVariablesName(VariablesName);
-        return CaseID;
-    }
-
-    //获取变量值
-    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String VariablesName) {
-        String VariablesResult=testMysqlHelp.GetVariablesValues(PlanID,TestCaseId,BatchName,VariablesName);
-        return VariablesResult;
-    }
+//    private String GetVariablesDataType(String VariablesName) {
+//        String ValueType=testMysqlHelp.GetVariablesDataType(VariablesName);
+//        return ValueType;
+//    }
+//
+//    //根据变量名获取caseid
+//    private String GetCaseIdByVariablesName(String VariablesName,String Caseid) {
+//        String CaseID=testMysqlHelp.GetCaseIdByVariablesName(VariablesName);
+//        return CaseID;
+//    }
+//
+//    //获取变量值
+//    private String GetVariablesValues(String PlanID, String TestCaseId, String BatchName, String VariablesName) {
+//        String VariablesResult=testMysqlHelp.GetVariablesValues(PlanID,TestCaseId,BatchName,VariablesName);
+//        return VariablesResult;
+//    }
 
 
     //获取条件

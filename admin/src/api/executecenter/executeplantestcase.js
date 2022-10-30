@@ -32,10 +32,11 @@ export function updatePlanCaseorder(executeplanForm) {
   })
 }
 
-export function getstaticsplancases() {
+export function getstaticsplancases(params) {
   return request({
     url: '/executeplan/testcase/getstaticsplancases',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

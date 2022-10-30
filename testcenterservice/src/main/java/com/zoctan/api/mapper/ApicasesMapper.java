@@ -33,10 +33,10 @@ public interface ApicasesMapper extends MyMapper<Apicases> {
 
     List<Apicases> getapicasebyName(@Param("deployunitid") long deployunitid, @Param("apiid") long apiid);
 
-    Integer getcasenum(@Param("casetype") String casetype);
+    Integer getcasenum(@Param("casetype") String casetype,@Param("projectid")long projectid);
 
 
-    List<Apicases> getstaticsdeployunitcases();
+    List<Apicases> getstaticsdeployunitcases(@Param("projectid")long projectid);
 
     List<Apicases> getcasebydeployunitid(Long deployunitid);
 

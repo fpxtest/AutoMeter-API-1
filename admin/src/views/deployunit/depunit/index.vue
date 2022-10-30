@@ -21,10 +21,10 @@
 
         <span v-if="hasPermission('depunit:search')">
           <el-form-item label="服务名:">
-            <el-input clearable v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="服务名"></el-input>
+            <el-input clearable v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="服务名"></el-input>
           </el-form-item>
           <el-form-item label="协议:">
-            <el-input clearable v-model="search.protocal" @keyup.enter.native="searchBy" placeholder="协议"></el-input>
+            <el-input clearable v-model="search.protocal" clearable @keyup.enter.native="searchBy" placeholder="协议"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -170,6 +170,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '微服务',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -211,13 +212,15 @@
           port: '',
           baseurl: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
           deployunitname: null,
-          protocal: null
+          protocal: null,
+          projectid: ''
         },
         createRules: {
           email: [{ required: true, trigger: 'blur', validator: validateDeployName }]
@@ -226,11 +229,13 @@
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
       this.getdepunitList()
+      this.search.projectid = window.localStorage.getItem('pid')
+      console.log(window.localStorage.getItem('pid'))
     },
 
     methods: {
@@ -308,6 +313,7 @@
         this.tmpdepunit.baseurl = ''
         this.tmpdepunit.memo = ''
         this.tmpdepunit.creator = this.name
+        this.tmpdepunit.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加服务
@@ -342,6 +348,7 @@
         this.tmpdepunit.baseurl = this.depunitList[index].baseurl
         this.tmpdepunit.memo = this.depunitList[index].memo
         this.tmpdepunit.creator = this.name
+        this.tmpdepunit.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 更新服务

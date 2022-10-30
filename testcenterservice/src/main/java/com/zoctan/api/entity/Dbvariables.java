@@ -11,6 +11,16 @@ public class Dbvariables {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Long getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(Long projectid) {
+        this.projectid = projectid;
+    }
+
+    private Long projectid;
+
     /**
      * 变量名
      */

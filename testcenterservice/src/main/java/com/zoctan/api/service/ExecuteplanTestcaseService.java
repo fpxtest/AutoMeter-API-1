@@ -37,7 +37,7 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
 
     Integer findcasenumbyplanid(long executeplanid);
 
-    List<ExecuteplanTestcase> getstaticsplancases();
+    List<ExecuteplanTestcase> getstaticsplancases(long projectid);
 
     int ifexist(Condition condition);
 

@@ -28,8 +28,8 @@ private MachineMapper machineMapper;
     }
 
     @Override
-    public Machine findmachinebymachineandip(String machinename, String ip, Long ID) {
-        return machineMapper.findmachinebymachineandip(machinename, ip, ID);
+    public Machine findmachinebymachineandip(String machinename, String ip, Long ID,long projectid) {
+        return machineMapper.findmachinebymachineandip(machinename, ip, ID,projectid);
     }
 
     @Override
@@ -53,8 +53,8 @@ private MachineMapper machineMapper;
     }
 
     @Override
-    public Integer getmachinenum() {
-        return machineMapper.getmachinenum();
+    public Integer getmachinenum(long projectid) {
+        return machineMapper.getmachinenum(projectid);
     }
 
 }

@@ -137,10 +137,10 @@ public class TestMysqlHelp {
 
 
     //获取变量值类型
-    public String GetVariablesDataType(String VariablesName) {
+    public String GetVariablesDataType(String VariablesName,long projectid) {
         String ValueType = "";
         try {
-            String sql = "select valuetype from testvariables where  testvariablesname='" + VariablesName + "'";
+            String sql = "select valuetype from testvariables where  testvariablesname='" + VariablesName + "' and projectid="+projectid;
             logger.info(logplannameandcasename + "获取数据库 获取变量值类型 result sql is...........: " + sql);
             ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
             if (result.size() > 0) {
@@ -153,10 +153,10 @@ public class TestMysqlHelp {
     }
 
     //获取数据库变量值类型
-    public String GetDBVariablesDataType(String VariablesName) {
+    public String GetDBVariablesDataType(String VariablesName,long projectid) {
         String ValueType = "";
         try {
-            String sql = "select valuetype from dbvariables where  dbvariablesname='" + VariablesName + "'";
+            String sql = "select valuetype from dbvariables where  dbvariablesname='" + VariablesName + "' and projectid="+projectid;
             logger.info(logplannameandcasename + "获取数据库 获取数据库变量值类型 result sql is...........: " + sql);
             ArrayList<HashMap<String, String>> result = MysqlConnectionUtils.query(sql);
             if (result.size() > 0) {
@@ -458,6 +458,7 @@ public class TestMysqlHelp {
             String resulttable = "";
             String casetype = "";
             String testplanid = "";
+            String projectid = "";
             String caseid = "";
             String slaverid = "";
             String expect = "";
@@ -470,6 +471,7 @@ public class TestMysqlHelp {
             String Method = "";
             if (requestObject == null) {
                 casetype = context.getParameter("casetype");
+                projectid = context.getParameter("projectid");
                 testplanid = context.getParameter("testplanid");
                 caseid = context.getParameter("caseid");
                 slaverid = context.getParameter("slaverid");
@@ -480,6 +482,7 @@ public class TestMysqlHelp {
             } else {
                 casetype = requestObject.getCasetype();// context.getParameter("casetype");
                 testplanid = requestObject.getTestplanid();// context.getParameter("testplanid");
+                projectid = requestObject.getProjectid();
                 caseid = requestObject.getCaseid();// context.getParameter("caseid");
                 slaverid = requestObject.getSlaverid();// context.getParameter("slaverid");
                 expect = requestObject.getExpect();// context.getParameter("expect");
@@ -517,11 +520,11 @@ public class TestMysqlHelp {
             String dateNowStr = sdf.format(d);
             String sql = "";
             if (status) {
-                sql = "insert " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone.replace("'","''") + "' ,'" + assertvalue.replace("'","''") + "', " + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + PostData + "', '" + Url + "', '" + Method + "')";
+                sql = "insert " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod,projectid)" +
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '成功" + "' , '" + respone.replace("'","''") + "' ,'" + assertvalue.replace("'","''") + "', " + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "', '" + dateNowStr + "','admin', '" + header + "', '" + PostData + "', '" + Url + "', '" + Method + "'," + projectid +")";
             } else {
-                sql = "insert  " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)" +
-                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone.replace("'","''") + "','" + assertvalue.replace("'","''") + "'," + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + PostData + "', '" + Url + "', '" + Method + "')";
+                sql = "insert  " + resulttable + " (caseid,testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod,projectid)" +
+                        " values(" + caseid + "," + testplanid + ", '" + batchname + "', " + slaverid + ", '失败" + "' , '" + respone.replace("'","''") + "','" + assertvalue.replace("'","''") + "'," + time + ",'" + expect.replace("'","''") + "','" + errorinfo + "','" + dateNowStr + "','" + dateNowStr + "','admin', '" + header + "', '" + PostData + "', '" + Url + "', '" + Method + "'," + projectid +")";
             }
             logger.info(logplannameandcasename + "获取数据库 测试结果 result sql is...........: " + sql);
             logger.info(logplannameandcasename + "获取数据库 记录用例测试结果 result sql is...........: " + MysqlConnectionUtils.update(sql));

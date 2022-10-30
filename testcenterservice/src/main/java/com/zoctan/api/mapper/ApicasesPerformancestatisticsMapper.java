@@ -12,6 +12,6 @@ public interface ApicasesPerformancestatisticsMapper extends MyMapper<ApicasesPe
 
     List<ApicasesPerformancestatistics> findApicasereportWithName(final Map<String, Object> params);
 
-    List<ApicasesPerformancestatistics> getresultbyidandname(@Param("testplanid") long testplanid, @Param("batchname") String batchname);
+    List<ApicasesPerformancestatistics> getresultbyidandname(@Param("testplanid") long testplanid, @Param("batchname") String batchname,@Param("projectid") long projectid);
 
 }

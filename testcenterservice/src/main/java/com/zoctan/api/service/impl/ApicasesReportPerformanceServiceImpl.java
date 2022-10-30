@@ -27,8 +27,8 @@ private ApicasesReportPerformanceMapper apicasesReportPerformanceMapper;
     }
 
     @Override
-    public List<ApicasesReportPerformance> finddynamicresult(long planid, String batchname, String tableName) {
-        return apicasesReportPerformanceMapper.finddynamicresult(planid, batchname, tableName);
+    public List<ApicasesReportPerformance> finddynamicresult(long planid, String batchname, String tableName,long projectid) {
+        return apicasesReportPerformanceMapper.finddynamicresult(planid, batchname, tableName,projectid);
     }
 
     @Override

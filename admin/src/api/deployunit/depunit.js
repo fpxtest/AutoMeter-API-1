@@ -8,10 +8,11 @@ export function getdepunitList(params) {
   })
 }
 
-export function getstaticsdeploynames() {
+export function getstaticsdeploynames(params) {
   return request({
     url: '/deployunit/getstaticsdeploynames',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -23,17 +24,19 @@ export function findDeployNameValueWithCode(params) {
   })
 }
 
-export function getdeploynum() {
+export function getdeploynum(params) {
   return request({
     url: '/deployunit/getdeploynum',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
-export function getdepunitLists() {
+export function getdepunitLists(params) {
   return request({
     url: '/deployunit/getdeplist',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

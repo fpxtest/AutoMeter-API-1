@@ -168,6 +168,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '随机变量',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -202,22 +203,25 @@
           variablestype: '',
           variablecondition: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
-          variablesname: null
+          variablesname: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getvariablesList()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -304,6 +308,7 @@
         this.tmpvariables.variablecondition = ''
         this.tmpvariables.variablestype = ''
         this.tmpvariables.creator = this.name
+        this.tmpvariables.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加随机变量

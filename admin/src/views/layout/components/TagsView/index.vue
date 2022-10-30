@@ -64,8 +64,35 @@ export default {
   mounted() {
     this.initTags()
     this.addTags()
+    this.beforeUnload()
   },
   methods: {
+    // 解决 vue-admin-template 刷新页面 TagsView 丢失问题
+    beforeUnload() {
+      console.log(1221212121212121)
+      // 监听页面刷新
+      window.addEventListener('beforeunload', () => {
+        // visitedViews数据结构太复杂无法直接JSON.stringify处理，先转换需要的数据
+        const tabViews = this.visitedViews.map(item => {
+          return {
+            fullPath: item.fullPath,
+            hash: item.hash,
+            meta: { ...item.meta },
+            name: item.name,
+            params: { ...item.params },
+            path: item.path,
+            query: { ...item.query },
+            title: item.title
+          }
+        })
+        sessionStorage.setItem('tabViews', JSON.stringify(tabViews))
+      })
+      // 页面初始化加载判断缓存中是否有数据
+      const oldViews = JSON.parse(sessionStorage.getItem('tabViews')) || []
+      if (oldViews.length > 0) {
+        this.$store.state.tagsView.visitedViews = oldViews
+      }
+    },
     isActive(route) {
       return route.path === this.$route.path
     },

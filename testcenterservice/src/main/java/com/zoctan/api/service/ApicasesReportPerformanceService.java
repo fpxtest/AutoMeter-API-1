@@ -19,7 +19,7 @@ public interface ApicasesReportPerformanceService extends Service<ApicasesReport
      * @return 用户列表
      */
     List<ApicasesReportPerformance> findApicasereportWithName(final Map<String, Object> params);
-    List<ApicasesReportPerformance> finddynamicresult(long planid,String batchname,String tableName);
+    List<ApicasesReportPerformance> finddynamicresult(long planid,String batchname,String tableName,long projectid);
     List<ApicasesReportPerformance> finddynamicresultbystatus(long planid,String batchname,String tableName,String status);
     List<ApicasesReportPerformance> listallresult();
 

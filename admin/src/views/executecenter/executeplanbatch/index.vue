@@ -14,7 +14,7 @@
 
         <span v-if="hasPermission('executeplanbatch:search')">
           <el-form-item label="集合：" prop="executeplanname" >
-          <el-select v-model="search.executeplanname" placeholder="集合" @change="testplanselectChanged($event)">
+          <el-select v-model="search.executeplanname" clearable placeholder="集合" @change="testplanselectChanged($event)">
             <el-option label="请选择" />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -75,8 +75,10 @@
   import { search } from '@/api/executecenter/executeplanbatch'
   import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
+  import { mapGetters } from 'vuex'
 
   export default {
+    name: '计划执行',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -114,12 +116,18 @@
         search: {
           page: 1,
           size: 10,
-          executeplanname: null
+          executeplanname: null,
+          projectid: ''
         }
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
+    },
+
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getallexplan()
       this.getexecuteplanbatchList()
     },
@@ -131,7 +139,7 @@
        * 获取执行计划列表
        */
       getallexplan() {
-        getallexplan().then(response => {
+        getallexplan(this.search).then(response => {
           this.execplanList = response.data
         }).catch(res => {
           this.$message.error('加载计划列表失败')

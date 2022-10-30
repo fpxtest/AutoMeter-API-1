@@ -116,6 +116,7 @@ import { getapinum as getapinum } from '@/api/deployunit/api'
 import { getdeploynum as getdeploynum } from '@/api/deployunit/depunit'
 import { getslavernum as getslavernum } from '@/api/dispatch/slaver'
 import { getexecuteplannum as getexecuteplannum } from '@/api/executecenter/executeplan'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -124,10 +125,12 @@ export default {
   data() {
     return {
       funtestcase: {
-        casetype: ''
+        casetype: '',
+        projectid: ''
       },
       pertestcase: {
-        casetype: ''
+        casetype: '',
+        projectid: ''
       },
       machinenum: {
         start: 0, // 开始计数
@@ -160,11 +163,21 @@ export default {
       execplan: {
         start: 0, // 开始计数
         end: 0 // 结束计数
+      },
+      search: {
+        projectid: ''
       }
     }
   },
 
+  computed: {
+    ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
+  },
+
   created() {
+    this.search.projectid = window.localStorage.getItem('pid')
+    this.pertestcase.projectid = window.localStorage.getItem('pid')
+    this.funtestcase.projectid = window.localStorage.getItem('pid')
     this.getmachinecount()
     this.getenviromentnum()
     this.getfuncasenum()
@@ -183,7 +196,7 @@ export default {
       this.$emit('handleSetLineChartData')
     },
     getmachinecount() {
-      getmachinenum().then(response => {
+      getmachinenum(this.search).then(response => {
         this.machinenum.end = response.data
       }).catch(res => {
         this.$message.error('加载服务器数量失败')
@@ -210,28 +223,28 @@ export default {
       })
     },
     getenviromentnum() {
-      getenviromentnum().then(response => {
+      getenviromentnum(this.search).then(response => {
         this.enviroemnt.end = response.data
       }).catch(res => {
         this.$message.error('加载环境数量失败')
       })
     },
     getapinum() {
-      getapinum().then(response => {
+      getapinum(this.search).then(response => {
         this.apinum.end = response.data
       }).catch(res => {
         this.$message.error('加载api数量失败')
       })
     },
     getdeploynum() {
-      getdeploynum().then(response => {
+      getdeploynum(this.search).then(response => {
         this.deployunum.end = response.data
       }).catch(res => {
         this.$message.error('加载发布单元数量失败')
       })
     },
     getexecuteplannum() {
-      getexecuteplannum().then(response => {
+      getexecuteplannum(this.search).then(response => {
         this.execplan.end = response.data
       }).catch(res => {
         this.$message.error('加载计划数量失败')

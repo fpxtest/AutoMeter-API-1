@@ -23,6 +23,7 @@
     <result column="requestdatas" jdbcType="LONGVARCHAR" property="requestdatas" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="requestmethod" jdbcType="VARCHAR" property="requestmethod" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
   </resultMap>
 
   <select id="findApicasereportWithName" resultMap="BaseResultMap">
@@ -31,6 +32,7 @@
     <where>
       <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
       <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+      and a.projectid =#{projectid}
     </where>
     order by a.lastmodify_time  DESC
   </select>
@@ -51,6 +53,7 @@
     <where>
       <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
       <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+      and a.projectid =#{projectid}
     </where>
     order by a.lastmodify_time  DESC
   </select>

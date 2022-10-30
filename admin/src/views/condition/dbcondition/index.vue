@@ -196,6 +196,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '数据库子条件',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -245,22 +246,25 @@
           dbcontent: '',
           connectstr: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
           conditionname: null,
-          subconditionname: null
+          subconditionname: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getconditionallList()
       this.getassembleallnameList()
       this.getdbconditionList()
@@ -276,7 +280,7 @@
        */
       getenviromentallList() {
         this.listLoading = true
-        getenviromentallList().then(response => {
+        getenviromentallList(this.search).then(response => {
           this.enviromentnameList = response.data
           this.total = response.data.total
           this.listLoading = false
@@ -289,7 +293,7 @@
        * 获取父条件列表
        */
       getconditionallList() {
-        getconditionallList().then(response => {
+        getconditionallList(this.search).then(response => {
           this.conditionList = response.data
         }).catch(res => {
           this.$message.error('获取父条件列表失败')
@@ -300,7 +304,7 @@
        * 获取组件列表
        */
       getassembleallnameList() {
-        getassembleallnameList().then(response => {
+        getassembleallnameList(this.search).then(response => {
           this.enviroment_assembleList = response.data
         }).catch(res => {
           this.$message.error('获取组件列表失败')
@@ -427,6 +431,7 @@
         this.tmpdbcondition.dbtype = ''
         this.tmpdbcondition.dbcontent = ''
         this.tmpdbcondition.creator = this.name
+        this.tmpdbcondition.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加数据库条件

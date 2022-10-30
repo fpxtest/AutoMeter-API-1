@@ -8,10 +8,11 @@ export function getdbconditionList(params) {
   })
 }
 
-export function listalldbcondition() {
+export function listalldbcondition(params) {
   return request({
     url: '/condition/db/listalldbcondition',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

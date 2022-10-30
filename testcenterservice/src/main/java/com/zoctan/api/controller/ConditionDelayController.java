@@ -29,7 +29,8 @@ public class ConditionDelayController {
 
 
         Condition con=new Condition(ConditionDelay.class);
-        con.createCriteria().andCondition("subconditionname = '" + conditionDelay.getSubconditionname().replace("'","''")+ "'");
+        con.createCriteria().andCondition("projectid = "+conditionDelay.getProjectid())
+                .andCondition("subconditionname = '" + conditionDelay.getSubconditionname().replace("'","''")+ "'");
         if(conditionDelayService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("已存在该延时子条件名");
@@ -71,7 +72,8 @@ public class ConditionDelayController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final ConditionDelay conditionApi) {
         Condition con=new Condition(ConditionDelay.class);
-        con.createCriteria().andCondition("subconditionname = '" + conditionApi.getSubconditionname().replace("'","''")+ "'")
+        con.createCriteria().andCondition("projectid = "+conditionApi.getProjectid())
+                .andCondition("subconditionname = '" + conditionApi.getSubconditionname().replace("'","''")+ "'")
                 .andCondition("id <> " + conditionApi.getId());
         if(conditionDelayService.ifexist(con)>0)
         {

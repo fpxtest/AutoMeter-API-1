@@ -32,7 +32,8 @@ export default {
       list: null,
       tmpcreator: {
         id: '',
-        creator: ''
+        creator: '',
+        projectid: ''
       }
     }
   },
@@ -40,6 +41,7 @@ export default {
     ...mapGetters(['name', 'sidebar', 'avatar'])
   },
   created() {
+    this.tmpcreator.projectid = window.localStorage.getItem('pid')
     this.fetchData()
   },
   methods: {

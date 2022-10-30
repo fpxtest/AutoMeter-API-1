@@ -438,12 +438,14 @@ public class TestconditionController {
 
     @PostMapping("/execcasecondition/api")
     public Result ConditionForAPI(@RequestBody final Map<String, Object> param) throws Exception {
+        HashMap<String, String> VariableNameValueMap = new HashMap<>();
         Long ConditionID = Long.parseLong(param.get("ConditionID").toString());
         Long EnviromentID = Long.parseLong(param.get("enviromentid").toString());
         String DBVariablesValue=param.get("dbvariablesvalue").toString();
+        String APIVariablesValue=param.get("apivariablesvalues").toString();
 
+        //准备数据库变量
         HashMap<String, String> DBVariableNameValueMap = new HashMap<>();
-
         if (!DBVariablesValue.isEmpty()) {
             try {
                 JSONObject jsonObject = JSON.parseObject(DBVariablesValue);
@@ -457,7 +459,21 @@ public class TestconditionController {
             }
         }
 
-        HashMap<String, String> VariableNameValueMap = new HashMap<>();
+        //准备前置测试集合的接口产生的变量值
+        HashMap<String, String> InterfaceNameValueMap = new HashMap<>();
+        if (!APIVariablesValue.isEmpty()) {
+            try {
+                JSONObject jsonObject = JSON.parseObject(APIVariablesValue);
+                for (Map.Entry<String, Object> objectEntry : jsonObject.getJSONObject("data").entrySet()) {
+                    String key = objectEntry.getKey();
+                    String value = objectEntry.getValue().toString();
+                    InterfaceNameValueMap.put(key, value);
+                }
+            } catch (Exception ex) {
+                return ResultGenerator.genFailedResult("执行前置接口条件结果异常：" + APIVariablesValue);
+            }
+        }
+
         List<ConditionApi> conditionApiList = conditionApiService.GetCaseListByConditionID(ConditionID);
         TestconditionController.log.info("调试接口子条件条件报告API子条件数量-============：" + conditionApiList.size());
         for (ConditionApi conditionApi : conditionApiList) {
@@ -490,7 +506,7 @@ public class TestconditionController {
             RequestObject requestObject=new RequestObject();
             try
             {
-                requestObject = testCaseHelp.GetCaseRequestDataForDebug(DBVariableNameValueMap,VariableNameValueMap,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
+                requestObject = testCaseHelp.GetCaseRequestDataForDebug(DBVariableNameValueMap,InterfaceNameValueMap,apiCasedataList, api, apicases, deployunit, macdepunit, machine);
             }
             catch (Exception ex)
             {

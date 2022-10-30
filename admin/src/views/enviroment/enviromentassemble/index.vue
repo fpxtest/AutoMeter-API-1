@@ -16,15 +16,15 @@
             icon="el-icon-plus"
             v-if="hasPermission('enviroment_assemble:add')"
             @click.native.prevent="showAddenviroment_assembleDialog"
-          >添加环境组件</el-button>
+          >添加环境中间件</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('enviroment_assemble:search')">
           <el-form-item>
-            <el-input clearable maxlength="40" v-model="search.assemblename" @keyup.enter.native="searchBy" placeholder="组件名"></el-input>
+            <el-input clearable maxlength="40" v-model="search.assemblename" @keyup.enter.native="searchBy" placeholder="中间件名"></el-input>
           </el-form-item>
-          <el-form-item label="组件名" prop="assembletype" >
-          <el-select v-model="search.assembletype" placeholder="组件名">
+          <el-form-item label="中间件名" prop="assembletype" >
+          <el-select v-model="search.assembletype" clearable placeholder="中间件名">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(asstype, index) in assembleypeList" :key="index">
               <el-option :label="asstype.dicitmevalue" :value="asstype.dicitmevalue" />
@@ -51,8 +51,8 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="组件名" align="center" prop="assemblename" width="100"/>
-      <el-table-column label="组件类型" align="center" prop="assembletype" width="80"/>
+      <el-table-column label="中间件名" align="center" prop="assemblename" width="100"/>
+      <el-table-column label="中间件类型" align="center" prop="assembletype" width="90"/>
         <el-table-column :show-overflow-tooltip="true" label="连接字" align="center" prop="connectstr" width="200"/>
       <el-table-column :show-overflow-tooltip="true" label="备注" align="center" prop="memo" width="150"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
@@ -107,7 +107,7 @@
         :model="tmpenviroment_assemble"
         ref="tmpenviroment_assemble"
       >
-        <el-form-item label="组件名" prop="assemblename" required>
+        <el-form-item label="中间件名" prop="assemblename" required>
           <el-input
             type="text"
             maxlength="60"
@@ -116,8 +116,8 @@
             v-model="tmpenviroment_assemble.assemblename"
           />
         </el-form-item>
-        <el-form-item label="组件类型" prop="assembletype" required >
-          <el-select v-model="tmpenviroment_assemble.assembletype" placeholder="组件类型" style="width:100%" @change="selectChanged($event)">
+        <el-form-item label="中间件类型" prop="assembletype" required >
+          <el-select v-model="tmpenviroment_assemble.assembletype" placeholder="中间件类型" style="width:100%" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(asstype, index) in assembleypeList" :key="index">
               <el-option :label="asstype.dicitmevalue" :value="asstype.dicitmevalue" required/>
@@ -215,6 +215,7 @@
   import { getmachineLists as getmachineLists } from '@/api/assets/machine'
 
   export default {
+    name: '环境中间件',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -247,9 +248,9 @@
         dialogFormVisible: false,
         testdialogFormVisible: false,
         textMap: {
-          updateRole: '修改环境组件',
-          update: '修改环境组件',
-          add: '添加环境组件'
+          updateRole: '修改环境中间件',
+          update: '修改环境中间件',
+          add: '添加环境中间件'
         },
         btnLoading: false, // 按钮等待动画
         diclevelQuery: {
@@ -263,7 +264,8 @@
           assembletype: '',
           connectstr: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         tmptest: {
           machineid: '',
@@ -277,16 +279,18 @@
           page: 1,
           size: 10,
           assembletype: null,
-          assemblename: null
+          assemblename: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getenviroment_assembleList()
       this.getdatabydiccodeList()
       this.getmachineLists()
@@ -298,14 +302,14 @@
         this.tmpenviroment_assemble.connectstr = ''
       },
       /**
-       * 获取组件名字典列表
+       * 获取中间件名字典列表
        */
       getdatabydiccodeList() {
         getdatabydiccodeList(this.diclevelQuery).then(response => {
           this.assembleypeList = response.data.list
           this.total = response.data.total
         }).catch(res => {
-          this.$message.error('加载组件名字典列表失败')
+          this.$message.error('加载中间件名字典列表失败')
         })
       },
 
@@ -313,14 +317,14 @@
        * 获取服务器列表
        */
       getmachineLists() {
-        getmachineLists().then(response => {
+        getmachineLists(this.search).then(response => {
           this.machinenameList = response.data
         }).catch(res => {
           this.$message.error('加载服务器列表失败')
         })
       },
       /**
-       * 获取组件列表
+       * 获取中间件列表
        */
       getenviroment_assembleList() {
         this.listLoading = true
@@ -367,10 +371,10 @@
        * 服务器下拉选择事件获取发布单元id  e的值为options的选值
        */
       selectChangedMN(e) {
+        console.log(e)
         for (let i = 0; i < this.machinenameList.length; i++) {
           if (this.machinenameList[i].machinename === e) {
             this.tmptest.machineid = this.machinenameList[i].id
-            console.log(this.tmptest.machineid)
           }
         }
       },
@@ -414,6 +418,7 @@
         this.tmpenviroment_assemble.connectstr = ''
         this.tmpenviroment_assemble.memo = ''
         this.tmpenviroment_assemble.creator = this.name
+        this.tmpenviroment_assemble.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加测试环境
@@ -460,6 +465,7 @@
         this.domianVisible = false
         this.tmptest.assembletype = this.enviroment_assembleList[index].assembletype
         this.tmptest.constr = this.enviroment_assembleList[index].connectstr
+        this.tmpenviroment_assemble.projectid = window.localStorage.getItem('pid')
       },
 
       /**

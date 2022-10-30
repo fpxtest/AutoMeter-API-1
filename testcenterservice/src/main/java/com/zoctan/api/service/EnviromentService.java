@@ -19,7 +19,7 @@ public interface EnviromentService extends Service<Enviroment> {
      * @param params 参数
      * @return 用户列表
      */
-    List<Enviroment> findEnviromentName(String params);
+    List<Enviroment> findEnviromentName(String params,long projectid);
 
     /**
      * 按条件查询字典内容
@@ -40,7 +40,7 @@ public interface EnviromentService extends Service<Enviroment> {
 
     int ifexist(Condition condition);
 
-    Integer getenviromentnum();
+    Integer getenviromentnum(long projectid);
 
 
 }

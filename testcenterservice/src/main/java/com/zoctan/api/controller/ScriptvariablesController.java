@@ -28,7 +28,8 @@ public class ScriptvariablesController {
     public Result add(@RequestBody Scriptvariables scriptvariables) {
 
         Condition con=new Condition(Scriptvariables.class);
-        con.createCriteria().andCondition("scriptvariablesname = '" + scriptvariables.getScriptvariablesname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+scriptvariables.getProjectid())
+                .andCondition("scriptvariablesname = '" + scriptvariables.getScriptvariablesname().replace("'","''") + "'");
         if(scriptvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("变量名已经存在");
@@ -69,7 +70,8 @@ public class ScriptvariablesController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Scriptvariables dic) {
         Condition con=new Condition(Dbvariables.class);
-        con.createCriteria().andCondition("scriptvariablesname = '" + dic.getScriptvariablesname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("scriptvariablesname = '" + dic.getScriptvariablesname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
         if(scriptvariablesService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("变量名已经存在");

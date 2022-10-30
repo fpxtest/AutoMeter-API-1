@@ -27,6 +27,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
   </resultMap>
 
   <select id="findApicasereportWithName" resultMap="BaseResultMap">
@@ -35,6 +36,7 @@
     <where>
       <if test="testplanid != null and testplanid != ''">a.testplanid =#{testplanid}</if>
       <if test="batchname != null  and batchname != ''">and a.batchname =#{batchname}</if>
+      and a.projectid =#{projectid}
     </where>
     order by a.create_time  DESC
   </select>
@@ -47,6 +49,7 @@
 
   <select id="getresultbyidandname" resultMap="BaseResultMap">
     SELECT b.executeplanname as executeplanname ,a.*
-    FROM apicases_performancestatistics a inner join executeplan b on a.testplanid =b.id where a.testplanid=#{testplanid} and a.batchname =#{batchname}
+    FROM apicases_performancestatistics a inner join executeplan b on a.testplanid =b.id where a.testplanid=#{testplanid} and a.batchname =#{batchname} and a.projectid =#{projectid}
+
   </select>
 </mapper>

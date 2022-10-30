@@ -71,6 +71,7 @@ public class TestCaseHelp {
 
     public RequestObject GetCaseRequestDataForDebug(HashMap<String, String> DBValueMap, HashMap<String, String> InterfaceValueMap, List<ApiCasedata> apiCasedataList, Api api, Apicases apicases, Deployunit deployunit, Macdepunit macdepunit, Machine machine) throws Exception {
         RequestObject ro = new RequestObject();
+        long projectid=apicases.getProjectid();
         try {
             // url请求资源路径
             String path = api.getPath();
@@ -126,14 +127,19 @@ public class TestCaseHelp {
             HashMap<String, String> DBMap = DBValueMap;
 //            HashMap<String, String> ScriptMap = GetMap(scriptValueList);
 
-            List<Variables> variablesList = tch.variablesService.listAll();
+            //随机变量
+            Condition rdcon = new Condition(Variables.class);
+            rdcon.createCriteria().andCondition("projectid = "+projectid);
+            List<Variables> variablesList= tch.variablesService.listByCondition(rdcon);
             HashMap<String, String> RadomMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomMap.put(va.getVariablesname(), va.getVariablestype());
             }
 
             //全局变量
-            List<Globalvariables> globalvariablesList = tch.globalvariablesService.listAll();
+            Condition gvcon = new Condition(Globalvariables.class);
+            gvcon.createCriteria().andCondition("projectid = "+projectid);
+            List<Globalvariables> globalvariablesList= tch.globalvariablesService.listByCondition(gvcon);
             HashMap<String, String> GlobalVariablesMap = new HashMap<>();
             for (Globalvariables va : globalvariablesList) {
                 GlobalVariablesMap.put(va.getKeyname(), va.getKeyvalue());
@@ -186,7 +192,7 @@ public class TestCaseHelp {
                     String Value = headmap.get(key).getApiparamvalue().trim();
                     Object ObjectValue = Value;
                     if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap,projectid);
                     }
                     header.addParam(key, ObjectValue);
                 }
@@ -200,7 +206,7 @@ public class TestCaseHelp {
                     String DataType = paramsmap.get(key).getParamstype();
                     Object ObjectValue = Value;
                     if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap,projectid);
                     }
                     Object Result = GetDataByType(ObjectValue.toString(), DataType);
                     paramers.addParam(key, Result);
@@ -218,7 +224,7 @@ public class TestCaseHelp {
                         String Value = bodymap.get(key).getApiparamvalue().trim();
                         Object ObjectValue = Value;
                         if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
-                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap,projectid);
                         }
                         Object Result = GetDataByType(ObjectValue.toString(), DataType);
                         Bodyparamers.addParam(key, Result);
@@ -268,6 +274,7 @@ public class TestCaseHelp {
                     }
                 }
             }
+            //需要增加全局header的逻辑。。。。。。。。。。。。。。。。。。。
             TestCaseHelp.log.info("处理Body完后，PostData：" + PostData);
             ro.setPostData(PostData);
             ro.setExpect(expect);
@@ -300,6 +307,7 @@ public class TestCaseHelp {
             }
             String casetype = apicases.getCasetype();
             String expect = apicases.getExpect();
+            long projectid=apicases.getProjectid();
 
             //获取请求响应的数据格式
             String requestcontenttype = api.getRequestcontenttype();
@@ -369,14 +377,18 @@ public class TestCaseHelp {
 
 
             //随机变量
-            List<Variables> variablesList = tch.variablesService.listAll();
+            Condition rdcon = new Condition(Variables.class);
+            rdcon.createCriteria().andCondition("projectid = "+projectid);
+            List<Variables> variablesList= tch.variablesService.listByCondition(rdcon);
             HashMap<String, String> RadomMap = new HashMap<>();
             for (Variables va : variablesList) {
                 RadomMap.put(va.getVariablesname(), va.getVariablestype());
             }
 
             //全局变量
-            List<Globalvariables> globalvariablesList = tch.globalvariablesService.listAll();
+            Condition gvcon = new Condition(Globalvariables.class);
+            gvcon.createCriteria().andCondition("projectid = "+projectid);
+            List<Globalvariables> globalvariablesList= tch.globalvariablesService.listByCondition(gvcon);
             HashMap<String, String> GlobalVariablesMap = new HashMap<>();
             for (Globalvariables va : globalvariablesList) {
                 GlobalVariablesMap.put(va.getKeyname(), va.getKeyvalue());
@@ -434,7 +446,7 @@ public class TestCaseHelp {
                     String Value = headmap.get(key).getApiparamvalue().trim();
                     Object ObjectValue = Value;
                     if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap,projectid);
                     }
                     header.addParam(key, ObjectValue);
                 }
@@ -448,7 +460,7 @@ public class TestCaseHelp {
                     String DataType = paramsmap.get(key).getParamstype().trim();
                     Object ObjectValue = Value;
                     if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
-                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
+                        ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap,projectid);
                     }
                     Object Result = GetDataByType(ObjectValue.toString(), DataType);
                     paramers.addParam(key, Result);
@@ -467,7 +479,7 @@ public class TestCaseHelp {
                         String DataType = bodymap.get(key).getParamstype();
                         Object ObjectValue = Value;
                         if ((Value.contains("<") && Value.contains(">")) || (Value.contains("<<") && Value.contains(">>")) || (Value.contains("[") && Value.contains("]")) || (Value.contains("$") && Value.contains("$"))) {
-                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap);
+                            ObjectValue = GetVaraibaleValue(Value, RadomMap, InterfaceMap, DBMap,GlobalVariablesMap,projectid);
                         }
                         Object Result = GetDataByType(ObjectValue.toString(), DataType);
                         Bodyparamers.addParam(key, Result);
@@ -517,6 +529,8 @@ public class TestCaseHelp {
                     }
                 }
             }
+            //需要增加全局header的逻辑。。。。。。。。。。。。。。。。。。。
+
             TestCaseHelp.log.info("处理Body完后，PostData：" + PostData);
             ro.setPostData(PostData);
             ro.setExpect(expect);
@@ -544,7 +558,7 @@ public class TestCaseHelp {
         return RadomMap;
     }
 
-    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap) throws Exception {
+    private Object GetVaraibaleValue(String Value, HashMap<String, String> RadomMap, HashMap<String, String> InterfaceMap, HashMap<String, String> DBMap,HashMap<String, String> globalvariablesMap,long projectid) throws Exception {
         Object ObjectValue = Value;
         boolean exist = false; //标记是否Value有变量处理，false表示没有对应的子条件处理过
         //参数值替换接口变量
@@ -559,7 +573,10 @@ public class TestCaseHelp {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Testvariables testvariables = tch.testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Condition tvcon = new Condition(Testvariables.class);
+                    tvcon.createCriteria().andCondition("projectid = "+projectid).andCondition("testvariablesname= '"+interfacevariablesName+"'");
+                    List<Testvariables> variablesList= tch.testvariablesService.listByCondition(tvcon);
+                    Testvariables testvariables = variablesList.get(0);//tch.testvariablesService.getBy("testvariablesname", interfacevariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (testvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {
@@ -580,7 +597,10 @@ public class TestCaseHelp {
                     ObjectValue = Value;
                 } else {
                     //无拼接则转换成具体类型,根据变量名获取变量类型
-                    Dbvariables dbvariables = tch.dbvariablesService.getBy("dbvariablesname", DBvariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
+                    Condition dbcon = new Condition(Dbvariables.class);
+                    dbcon.createCriteria().andCondition("projectid = "+projectid).andCondition("dbvariablesname= '"+DBvariablesName+"'");
+                    List<Dbvariables> variablesList= tch.dbvariablesService.listByCondition(dbcon);
+                    Dbvariables dbvariables =variablesList.get(0);// tch.dbvariablesService.getBy("dbvariablesname", DBvariablesName);//  testMysqlHelp.GetVariablesDataType(interfacevariablesName);
                     if (dbvariables == null) {
                         ObjectValue = "未找到变量：" + Value + "绑定的接口用例，请检查变量管理-用例变量中是否存在此变量绑定的接口用例";
                     } else {

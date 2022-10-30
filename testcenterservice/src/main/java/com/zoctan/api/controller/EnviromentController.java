@@ -32,7 +32,8 @@ public class EnviromentController {
     @PostMapping
     public Result add(@RequestBody Enviroment enviroment) {
         Condition con=new Condition(Enviroment.class);
-        con.createCriteria().andCondition("enviromentname = '" + enviroment.getEnviromentname().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+enviroment.getProjectid())
+                .andCondition("enviromentname = '" + enviroment.getEnviromentname().replace("'","''") + "'");
         if(enviromentService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("环境名已经存在");
@@ -72,8 +73,8 @@ public class EnviromentController {
     }
 
     @GetMapping("/getenviromentnum")
-    public Result getenviromentnum() {
-        Integer enviromentnum = enviromentService.getenviromentnum();
+    public Result getenviromentnum(@RequestParam long projectid) {
+        Integer enviromentnum = enviromentService.getenviromentnum(projectid);
         return ResultGenerator.genOkResult(enviromentnum);
     }
 
@@ -87,8 +88,11 @@ public class EnviromentController {
     }
 
     @GetMapping("/ens")
-    public Result listall() {
-        List<Enviroment> list = enviromentService.listAll();
+    public Result listall(@RequestParam long projectid) {
+        Condition con=new Condition(Enviroment.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<Enviroment> list = enviromentService.listByCondition(con);
+//        List<Enviroment> list = enviromentService.listAll();
         return ResultGenerator.genOkResult(list);
     }
 
@@ -98,7 +102,8 @@ public class EnviromentController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Enviroment dic) {
         Condition con=new Condition(Enviroment.class);
-        con.createCriteria().andCondition("enviromentname = '" + dic.getEnviromentname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("enviromentname = '" + dic.getEnviromentname().replace("'","''") + "'").andCondition("id <> " + dic.getId());
         if(enviromentService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("环境名已经存在");

@@ -41,7 +41,8 @@ export default {
       listLoading: false, // 数据加载等待动画
       list: null,
       tmpcreator: {
-        creator: ''
+        creator: '',
+        projectid: ''
       }
     }
   },
@@ -49,6 +50,7 @@ export default {
     ...mapGetters(['name', 'sidebar', 'avatar'])
   },
   created() {
+    this.tmpcreator.projectid = window.localStorage.getItem('pid')
     this.fetchData()
   },
   methods: {

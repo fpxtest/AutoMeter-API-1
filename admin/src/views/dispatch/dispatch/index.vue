@@ -14,7 +14,7 @@
 
         <span v-if="hasPermission('dispatch:search')">
           <el-form-item label="测试集合" prop="execplanname" >
-          <el-select v-model="search.execplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
+          <el-select v-model="search.execplanname" clearable placeholder="测试集合" @change="testplanselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(testplan, index) in execplanList" :key="index">
               <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -22,7 +22,7 @@
           </el-select>
         </el-form-item>
           <el-form-item label="批次" prop="batchname" >
-            <el-select v-model="search.batchname" placeholder="批次">
+            <el-select v-model="search.batchname" clearable placeholder="批次">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(planbatch, index) in planbatchList" :key="index">
               <el-option :label="planbatch.batchname" :value="planbatch.batchname" />
@@ -165,8 +165,10 @@
   import { unix2CurrentTime } from '@/utils'
   import { getallexplan as getallexplan } from '@/api/executecenter/executeplan'
   import { getbatchbyplan as getbatchbyplan } from '@/api/executecenter/executeplanbatch'
+  import { mapGetters } from 'vuex'
 
   export default {
+    name: '调度管理',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -212,12 +214,18 @@
           page: 1,
           size: 10,
           execplanname: null,
-          batchname: null
+          batchname: null,
+          projectid: ''
         }
       }
     },
 
+    computed: {
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
+    },
+
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getallexplan()
       this.getdispatchList()
     },
@@ -262,7 +270,7 @@
        * 测试集合
        */
       getallexplan() {
-        getallexplan().then(response => {
+        getallexplan(this.search).then(response => {
           this.execplanList = response.data
         }).catch(res => {
           this.$message.error('加载测试集合列表失败')

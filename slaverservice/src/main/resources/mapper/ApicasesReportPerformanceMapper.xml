@@ -7,6 +7,7 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="caseid" jdbcType="BIGINT" property="caseid" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="testplanid" jdbcType="BIGINT" property="testplanid" />
     <result column="batchname" jdbcType="VARCHAR" property="batchname" />
     <result column="slaverid" jdbcType="BIGINT" property="slaverid" />
@@ -46,7 +47,7 @@
 
 
   <insert id="adddynamiccaseperformancereport" >
-    INSERT INTO ${tableName} (caseid, testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod)
-    VALUES (#{caseid},#{testplanid},#{batchname},#{slaverid},#{status},#{respone},#{assertvalue},#{runtime},#{expect},#{errorinfo},#{create_time},#{lastmodify_time},#{creator},#{requestheader},#{requestdatas},#{url},#{requestmethod})
+    INSERT INTO ${tableName} (caseid, testplanid,batchname,slaverid,status,respone,assertvalue,runtime,expect,errorinfo,create_time,lastmodify_time,creator,requestheader,requestdatas,url,requestmethod,projectid)
+    VALUES (#{caseid},#{testplanid},#{batchname},#{slaverid},#{status},#{respone},#{assertvalue},#{runtime},#{expect},#{errorinfo},#{create_time},#{lastmodify_time},#{creator},#{requestheader},#{requestdatas},#{url},#{requestmethod},#{projectid})
   </insert>
 </mapper>

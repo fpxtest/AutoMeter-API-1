@@ -60,7 +60,7 @@ import { getstaticsdeploynames as getstaticsdeploynames } from '@/api/deployunit
 import { getstaticsplancases as getstaticsplancases } from '@/api/executecenter/executeplantestcase'
 import { getstaticsplan as getstaticsplan } from '@/api/executecenter/executeplan'
 import { getStaticsPlanCasesList as getStaticsPlanCasesList, getStaticsgetlastdays, getStaticsDeployUnitCasesList } from '@/api/dashboard/StaticsPlanandcases'
-
+import { mapGetters } from 'vuex'
 // import BarChart from './components/BarChart'
 
 const lineChartData = {
@@ -83,7 +83,6 @@ const lineChartData = {
 }
 
 export default {
-  name: 'DashboardAdmin',
   components: {
     PanelGroup,
     LineChart,
@@ -101,11 +100,19 @@ export default {
       pieplancaseValueData: [],
       PlanStaticsData: [],
       DeployUnitStaticsData: [],
-      LineDateData: []
+      LineDateData: [],
+      search: {
+        projectid: ''
+      }
     }
   },
 
+  computed: {
+    ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
+  },
+
   created() {
+    this.search.projectid = window.localStorage.getItem('pid')
     this.getstaticsdeploynames()
     this.getstaticsplan()
     this.getstaticsplancases()
@@ -138,7 +145,7 @@ export default {
      * 获取统计发布单元用例成功率
      */
     getStaticsDeployUnitCasesList() {
-      getStaticsDeployUnitCasesList().then(response => {
+      getStaticsDeployUnitCasesList(this.search).then(response => {
         this.DeployUnitStaticsData = response.data
       }).catch(res => {
         this.$message.error('加载统计发布单元用例成功率失败')
@@ -149,7 +156,7 @@ export default {
      * 获取统计执行计划用例成功率
      */
     getStaticsPlanCasesList() {
-      getStaticsPlanCasesList().then(response => {
+      getStaticsPlanCasesList(this.search).then(response => {
         this.PlanStaticsData = response.data
         console.log('获取统计执行计划成功率...................')
         console.log(this.PlanStaticsData)
@@ -161,7 +168,7 @@ export default {
      * 获取统计执行计划列表
      */
     getstaticsplan() {
-      getstaticsplan().then(response => {
+      getstaticsplan(this.search).then(response => {
         this.pieplancasetypedata = response.data
       }).catch(res => {
         this.$message.error('加载统计执行计划列表失败')
@@ -171,7 +178,7 @@ export default {
      * 获取统计发布单元列表
      */
     getstaticsdeploynames() {
-      getstaticsdeploynames().then(response => {
+      getstaticsdeploynames(this.search).then(response => {
         this.piedeployunittypedata = response.data
         console.log('pppppppppppppppppppppppppppppp')
         console.log(this.piedeployunittypedata)
@@ -184,7 +191,7 @@ export default {
      * 获取统计执行计划用例列表
      */
     getstaticsplancases() {
-      getstaticsplancases().then(response => {
+      getstaticsplancases(this.search).then(response => {
         this.pieplancaseValueData = response.data
       }).catch(res => {
         this.$message.error('加载统计执行计划用例列表失败')
@@ -195,7 +202,7 @@ export default {
      * 获取统计发布单元api列表
      */
     getstaticsdeployapi() {
-      getstaticsdeployapi().then(response => {
+      getstaticsdeployapi(this.search).then(response => {
         this.pietypedeployunitapiValueData = response.data
       }).catch(res => {
         this.$message.error('加载统计发布单元api列表失败')
@@ -206,7 +213,7 @@ export default {
      * 获取统计发布单元用例列表
      */
     getstaticsdeployunitcases() {
-      getstaticsdeployunitcases().then(response => {
+      getstaticsdeployunitcases(this.search).then(response => {
         this.pietypedeployunitcaseValueData = response.data
       }).catch(res => {
         this.$message.error('加载统计发布单元用例失败')

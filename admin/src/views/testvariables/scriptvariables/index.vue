@@ -284,13 +284,14 @@
 <script>
   import { search, addscriptvariables, updatescriptvariables, removescriptvariables } from '@/api/testvariables/scriptvariables'
   import { adddbconditionvariables, updatedbconditionvariables, removedbconditionvariables, getbyvariablesid } from '@/api/testvariables/dbconditionvariables'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
-  import { listalldbcondition } from '@/api/condition/dbcondition'
+  import { getscriptconditionallList } from '@/api/condition/scriptcondition'
 
   export default {
+    name: '脚本变量',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -347,7 +348,8 @@
           variablesdes: '',
           valuetype: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         tmpDbConditionVariables: {
           id: '',
@@ -362,18 +364,20 @@
         search: {
           page: 1,
           size: 10,
-          scriptvariablesname: null
+          scriptvariablesname: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getscriptvariablesList()
-      this.getdepunitList()
+      this.getdepunitLists()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -404,9 +408,9 @@
           this.$message.error('加载变量列表失败')
         })
       },
-      listalldbcondition() {
-        listalldbcondition().then(response => {
-          this.DbconditionList = response.data.list
+      getscriptconditionallList() {
+        getscriptconditionallList(this.search).then(response => {
+          this.DbconditionList = response.data
         }).catch(res => {
           this.$message.error('加载脚本条件失败')
         })
@@ -414,10 +418,10 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
+      getdepunitLists() {
         this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
+        getdepunitLists(this.search).then(response => {
+          this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -511,7 +515,7 @@
        */
       showDbconditionVariablesDialog(index) {
         // 显示新增对话框
-        this.listalldbcondition()
+        this.getscriptconditionallList()
         this.BindVariablesDialogVisible = true
         this.VariablescaseQuery.variablesid = this.scriptvariablesList[index].id
         this.tmpDbConditionVariables.variablesid = this.scriptvariablesList[index].id
@@ -548,6 +552,7 @@
         this.tmpscriptvariables.valuetype = ''
         this.tmpscriptvariables.tmpscriptvariables = ''
         this.tmpscriptvariables.creator = this.name
+        this.tmpscriptvariables.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加变量

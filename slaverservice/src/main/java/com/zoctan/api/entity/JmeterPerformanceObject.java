@@ -8,6 +8,16 @@ import java.util.Date;
 
 public class JmeterPerformanceObject {
 
+
+    public Long getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(Long projectid) {
+        this.projectid = projectid;
+    }
+
+    private Long projectid;
     public long getTestplanid() {
         return testplanid;
     }

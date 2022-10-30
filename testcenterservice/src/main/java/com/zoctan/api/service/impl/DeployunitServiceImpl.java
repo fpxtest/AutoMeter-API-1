@@ -44,13 +44,13 @@ private DeployunitMapper deployunitMapper;
     }
 
     @Override
-    public Integer getdeploynum() {
-        return deployunitMapper.getdeploynum();
+    public Integer getdeploynum(long projectid) {
+        return deployunitMapper.getdeploynum(projectid);
     }
 
     @Override
-    public List<String> getstaticsdeploynames() {
-        return deployunitMapper.getstaticsdeploynames();
+    public List<String> getstaticsdeploynames(long projectid) {
+        return deployunitMapper.getstaticsdeploynames(projectid);
     }
 
 }

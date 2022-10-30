@@ -1212,6 +1212,7 @@
   import { getglobalheaderallList } from '@/api/testvariables/globalheader'
 
   export default {
+    name: '用例库',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -1421,7 +1422,8 @@
           globalheaderid: 0,
           caseid: '',
           enviromentid: '',
-          prixflag: ''
+          prixflag: '',
+          projectid: ''
         },
         tmpapi: {
           id: '',
@@ -1450,7 +1452,8 @@
           deployunitid: '',
           apiname: null,
           casetype: null,
-          casename: null
+          casename: null,
+          projectid: ''
         },
         searchassert: {
           page: 1,
@@ -1491,12 +1494,16 @@
           deployunitname: ''
         },
         tmpconditionquery: {
-          objecttype: ''
+          objecttype: '',
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
+      this.tmpconditionquery.projectid = window.localStorage.getItem('pid')
+      this.tmptestdata.projectid = window.localStorage.getItem('pid')
       this.getenviromentallList()
       this.getapicasesList()
       this.getdepunitLists()
@@ -1505,7 +1512,7 @@
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -1703,15 +1710,15 @@
        * 获取环境列表
        */
       getenviromentallList() {
-        getenviromentallList().then(response => {
+        getenviromentallList(this.search).then(response => {
           this.enviromentnameList = response.data
         }).catch(res => {
           this.$message.error('加载环境列表失败')
         })
       },
       getglobalheaderallList() {
-        getglobalheaderallList().then(response => {
-          this.globalheaderallList = response.data.list
+        getglobalheaderallList(this.search).then(response => {
+          this.globalheaderallList = response.data
         }).catch(res => {
           this.$message.error('加载全局Header列表失败')
         })
@@ -1874,7 +1881,7 @@
        * 获取发布单元列表
        */
       getdepunitLists() {
-        getdepunitLists().then(response => {
+        getdepunitLists(this.search).then(response => {
           this.deployunitList = response.data
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -1984,6 +1991,7 @@
         this.tmpapicases.level = 0
         this.tmpapicases.memo = ''
         this.tmpapicases.creator = this.name
+        this.tmpapicases.projectid = window.localStorage.getItem('pid')
         console.log(this.name)
       },
 
@@ -2224,6 +2232,7 @@
         this.tmpapicases.memo = this.apicasesList[index].memo
         this.tmpapicases.loops = this.apicasesList[index].loops
         this.tmpapicases.creator = this.name
+        this.tmpapicases.projectid = window.localStorage.getItem('pid')
         if (this.tmpapicases.casetype === '性能') {
           this.threadloopvisible = true
           this.tmpapicases.threadnum = this.apicasesList[index].threadnum

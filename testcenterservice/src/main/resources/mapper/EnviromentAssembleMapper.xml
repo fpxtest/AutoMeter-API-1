@@ -10,6 +10,7 @@
     <result column="assembletype" jdbcType="VARCHAR" property="assembletype" />
     <result column="connectstr" jdbcType="VARCHAR" property="connectstr" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -21,6 +22,7 @@
     <where>
       <if test="assembletype != null and assembletype != ''">a.assembletype =#{assembletype}</if>
       <if test="assemblename != null and assemblename != ''">and a.assemblename like CONCAT('%',#{assemblename},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

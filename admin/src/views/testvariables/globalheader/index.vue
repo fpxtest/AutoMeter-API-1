@@ -239,6 +239,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '全局Header',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -293,22 +294,25 @@
           id: '',
           globalheaderid: '',
           keyname: '',
-          keyvalue: ''
+          keyvalue: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
-          globalheadername: null
+          globalheadername: null,
+          projectid: ''
         }
       }
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getglobalheaderList()
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     methods: {
@@ -420,6 +424,7 @@
         this.tmpglobalheader.valuetype = ''
         this.tmpglobalheader.tmpglobalheader = ''
         this.tmpglobalheader.creator = this.name
+        this.tmpglobalheader.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加全局Header

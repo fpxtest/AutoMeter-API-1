@@ -11,11 +11,20 @@ public class ExecuteplanTestcase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     /**
      * 执行计划id
      */
     private Long executeplanid;
+
+    public Long getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(Long projectid) {
+        this.projectid = projectid;
+    }
+
+    private Long projectid;
 
     public Long getApiid() {
         return apiid;

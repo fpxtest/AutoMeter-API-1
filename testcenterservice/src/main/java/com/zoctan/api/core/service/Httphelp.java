@@ -677,8 +677,9 @@ public class Httphelp {
 
     public static void main(String[] args) {
         HttpHeader header = new HttpHeader();
+        header.addParam("cookie",".AspNetCore.Antiforgery.i5sq83JKRJU=CfDJ8JhqMnLgj0RLlYWOEDB3GZP6CisrXSQcU7Q0jOzyE9l1-j72D5O4eK3UFczhiFBwEzgd59-Jss6IEsrkY0cQ3sNkHI--oON1Sz_DxwfghUlfHIsfGqWqN43q2xRdJuyGqjbvEocUP9V0CFDfANWbfnI; liveing=56c8a2a272d7eeea49e5499b2ddf8a99; logincode=+pdWaTtikbA=; lty=D25706E69113C562A05573DCE7BBDAA1; cklogin=rgB3xA2eBZ+TqiHVtdmcf2Ja1qSPGuLO0VN4qHPF4QM6A8SY7O3aRDSzzWvkDAys5V2RkSO9jLsRjfrgwhcsKqP3/ORithA8DWBg61FZbaprdEExLqtBh6PKzf/NRQBx; ckloginID=77506");
         try {
-            GetWithBody("https","https://www.baidu.com","test",header,10000);
+            GetWithNoParams("http","https://www.hketang.com/usercenter/course",header,10000);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
         }

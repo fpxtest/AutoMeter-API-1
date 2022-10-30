@@ -184,6 +184,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '测试服务器',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -218,22 +219,25 @@
           cpu: '',
           disk: '',
           mem: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
           machinename: null,
-          ip: null
+          ip: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getmachineList()
     },
 
@@ -313,6 +317,7 @@
         this.tmpmachine.disk = ''
         this.tmpmachine.mem = ''
         this.tmpmachine.creator = this.name
+        this.tmpmachine.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加服务器
@@ -347,6 +352,7 @@
         this.tmpmachine.disk = this.machineList[index].disk
         this.tmpmachine.mem = this.machineList[index].mem
         this.tmpmachine.creator = this.name
+        this.tmpmachine.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 更新服务器

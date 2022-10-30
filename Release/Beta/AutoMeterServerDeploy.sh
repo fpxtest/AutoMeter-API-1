@@ -64,34 +64,34 @@ function isValidIp()
 CURRENT_DIR=$(cd $(dirname $0); pwd)
 
 # 初始化数据库
-echo "开始数据库操作。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
+# echo "开始数据库操作。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
 
-mysql -u root -p 123456 -e "create database if NOT EXISTS testcenter default character set utf8mb4 collate utf8mb4_bin"
+# mysql -u root -p 123456 -e "create database if NOT EXISTS testcenter default character set utf8mb4 collate utf8mb4_bin"
 
-echo "创建数据库testcenter完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
-
-
-initsql=/sql/init-sql/*.sql
-initsqlfile=$CURRENT_DIR$initsql
-
-for i in $(find $initsqlfile) ; do
-  mysql -u root -p 123456 testcenter < ${i};
-done
-
-echo "初始化数据库testcenter完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
+# echo "创建数据库testcenter完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
 
 
-updatesql=/sql/update-sql/*.sql
-updatesqlfile=$CURRENT_DIR$updatesql
+# initsql=/sql/init-sql/*.sql
+# initsqlfile=$CURRENT_DIR$initsql
 
-# 更新sql
-for i in $(find $updatesqlfile) ; do
-  mysql -u root -p 123456 testcenter < ${i};
-done
+# for i in $(find $initsqlfile) ; do
+#   mysql -u root -p 123456 testcenter < ${i};
+# done
 
-echo "更新数据库testcenter完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
+# echo "初始化数据库testcenter完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
 
-echo "数据库操作完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
+
+# updatesql=/sql/update-sql/*.sql
+# updatesqlfile=$CURRENT_DIR$updatesql
+
+# # 更新sql
+# for i in $(find $updatesqlfile) ; do
+#   mysql -u root -p 123456 testcenter < ${i};
+# done
+
+# echo "更新数据库testcenter完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
+
+# echo "数据库操作完成。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。"
 
  
 local_ip=''
@@ -183,7 +183,7 @@ sleep 3
 echo "AutoMeter-dispatchservice启动成功"
 
 
-echo "AutoMeter后台服务部署成功，配置nginx.conf中的http.server.location.root配置testcenterapp目录，例如：/app/AutoMeter/testcenterapp/dist/，访问入口 http://$local_ip:nginx端口  默认账户密码admin admin123"
+echo "AutoMeter后台服务部署成功，配置nginx.conf中的http.server.location.root配置testcenterapp所在的目录，例如：/app/AutoMeter/testcenterapp/dist/，访问入口 http://$local_ip:nginx端口  默认账户密码admin admin123"
 
 
 

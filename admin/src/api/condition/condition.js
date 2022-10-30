@@ -15,10 +15,11 @@ export function getconditionnum() {
   })
 }
 
-export function getconditionallList() {
+export function getconditionallList(params) {
   return request({
     url: '/testcondition/getalltestcondition',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
@@ -30,10 +31,11 @@ export function search(conditionForm) {
   })
 }
 
-export function getalltestcondition() {
+export function getalltestcondition(params) {
   return request({
     url: '/testcondition/getalltestcondition',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

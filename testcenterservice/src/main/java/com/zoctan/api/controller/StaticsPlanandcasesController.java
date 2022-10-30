@@ -5,9 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.StaticsDataForLine;
+import com.zoctan.api.entity.StaticsDeployunitandcases;
 import com.zoctan.api.entity.StaticsPlanandcases;
 import com.zoctan.api.service.StaticsPlanandcasesService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -73,8 +75,10 @@ public class StaticsPlanandcasesController {
     }
 
     @GetMapping("/getplanstatics")
-    public Result getplanstatics() {
-        List<StaticsPlanandcases> list = staticsPlanandcasesService.listAll();
+    public Result getplanstatics(@RequestParam long projectid) {
+        Condition con=new Condition(StaticsPlanandcases.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<StaticsPlanandcases> list = staticsPlanandcasesService.listByCondition(con);//.listAll();
         List<StaticsDataForLine> staticsDataForLineList=new ArrayList<>();
         HashMap<String,List<Double>> tmp=new HashMap<>();
         for (StaticsPlanandcases staticsPlanandcases: list) {

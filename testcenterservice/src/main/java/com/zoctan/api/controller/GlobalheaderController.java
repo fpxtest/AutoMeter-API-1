@@ -32,7 +32,8 @@ public class GlobalheaderController {
     @PostMapping
     public Result add(@RequestBody Globalheader globalheader) {
         Condition con=new Condition(Globalheader.class);
-        con.createCriteria().andCondition("globalheadername = '" + globalheader.getGlobalheadername().replace("'","''") + "'");
+        con.createCriteria().andCondition("projectid = "+globalheader.getProjectid())
+                .andCondition("globalheadername = '" + globalheader.getGlobalheadername().replace("'","''") + "'");
         if(globalheaderService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("全局Header名已经存在");
@@ -73,11 +74,11 @@ public class GlobalheaderController {
 
     @GetMapping("/getvariableslist")
     public Result getvariableslist(@RequestParam(defaultValue = "0") Integer page,
-                       @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<Globalheader> list = globalheaderService.listAll();
-        PageInfo<Globalheader> pageInfo = PageInfo.of(list);
-        return ResultGenerator.genOkResult(pageInfo);
+                       @RequestParam(defaultValue = "0") Integer size,@RequestParam long projectid) {
+        Condition con=new Condition(Globalheader.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<Globalheader> list = globalheaderService.listByCondition(con);
+        return ResultGenerator.genOkResult(list);
     }
 
     /**
@@ -86,7 +87,8 @@ public class GlobalheaderController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Globalheader dic) {
         Condition con=new Condition(Globalheader.class);
-        con.createCriteria().andCondition("globalheadername = '" + dic.getGlobalheadername().replace("'","''") + "'").andCondition("id <> " + dic.getId());
+        con.createCriteria().andCondition("projectid = "+dic.getProjectid())
+                .andCondition("globalheadername = '" + dic.getGlobalheadername().replace("'","''") + "'").andCondition("id <> " + dic.getId());
         if(globalheaderService.ifexist(con)>0)
         {
             return ResultGenerator.genFailedResult("全局Header名已经存在");

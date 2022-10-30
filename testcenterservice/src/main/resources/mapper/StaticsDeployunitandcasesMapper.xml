@@ -16,6 +16,7 @@
     <result column="statics_date" jdbcType="TIMESTAMP" property="staticsDate" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
   </resultMap>
 
   <select id="getdeployunitstatics" resultMap="BaseResultMap">
@@ -25,10 +26,10 @@
   </select>
 
   <insert id="savestaticsdeployunitandcases">
-    INSERT INTO statics_deployunitandcases (deployunitid,deployunitname,passrate, totalcases,totalpasscases,totalfailcases,runtime,statics_date,create_time,lastmodify_time)
+    INSERT INTO statics_deployunitandcases (deployunitid,deployunitname,passrate, totalcases,totalpasscases,totalfailcases,runtime,statics_date,create_time,lastmodify_time,projectid)
     VALUES
     <foreach collection="casedataList" item="item" index="index" separator=",">
-      (#{item.deployunitid}, #{item.deployunitname}, #{item.passrate}, #{item.totalcases}, #{item.totalpasscases}, #{item.totalfailcases}, #{item.runtime},DATE_FORMAT(#{item.staticsDate},'%Y-%m-%d'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'))
+      (#{item.deployunitid}, #{item.deployunitname}, #{item.passrate}, #{item.totalcases}, #{item.totalpasscases}, #{item.totalfailcases}, #{item.runtime},DATE_FORMAT(#{item.staticsDate},'%Y-%m-%d'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), #{item.projectid})
     </foreach>
   </insert>
 </mapper>

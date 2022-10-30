@@ -44,7 +44,8 @@ public class ExecuteplanController {
     @PostMapping
     public Result add(@RequestBody Executeplan executeplan) {
         Condition con=new Condition(Executeplan.class);
-        con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
+        con.createCriteria().andCondition("projectid = "+executeplan.getProjectid())
+                .andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
                 .andCondition("enviromentname = '" + executeplan.getEnviromentname() + "'");
         if(executeplanService.ifexist(con)>0)
         {
@@ -152,8 +153,8 @@ public class ExecuteplanController {
 
 
     @GetMapping("/getexecuteplannum")
-    public Result detail() {
-        Integer executeplannum = executeplanService.getexecuteplannum();
+    public Result detail(@RequestParam long projectid) {
+        Integer executeplannum = executeplanService.getexecuteplannum(projectid);
         return ResultGenerator.genOkResult(executeplannum);
     }
 
@@ -167,20 +168,20 @@ public class ExecuteplanController {
     }
 
     @GetMapping("/getallexplan")
-    public Result getallexplan() {
-        List<Executeplan> list = executeplanService.getallexplan();
+    public Result getallexplan(@RequestParam long projectid) {
+        List<Executeplan> list = executeplanService.getallexplan(projectid);
         return ResultGenerator.genOkResult(list);
     }
 
     @GetMapping("/getstaticsplan")
-    public Result getstaticsplan() {
-        List<String> list = executeplanService.getstaticsplan();
+    public Result getstaticsplan(@RequestParam long projectid) {
+        List<String> list = executeplanService.getstaticsplan(projectid);
         return ResultGenerator.genOkResult(list);
     }
 
     @GetMapping("/getallexplanbytype")
-    public Result getallexplanbytype(@RequestParam String usetype) {
-        List<Executeplan> list = executeplanService.getallexplanbytype(usetype);
+    public Result getallexplanbytype(@RequestParam String usetype,@RequestParam long projectid) {
+        List<Executeplan> list = executeplanService.getallexplanbytype(usetype,projectid);
         return ResultGenerator.genOkResult(list);
     }
 
@@ -190,7 +191,8 @@ public class ExecuteplanController {
     @PutMapping("/detail")
     public Result updateExecuteplan(@RequestBody final Executeplan executeplan) {
         Condition con=new Condition(Executeplan.class);
-        con.createCriteria().andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
+        con.createCriteria().andCondition("projectid = "+executeplan.getProjectid())
+                .andCondition("executeplanname = '" + executeplan.getExecuteplanname().replace("'","''") + "'")
                 .andCondition("id <> " + executeplan.getId())
                 .andCondition("enviromentname = '" + executeplan.getEnviromentname() + "'");
         if(executeplanService.ifexist(con)>0)

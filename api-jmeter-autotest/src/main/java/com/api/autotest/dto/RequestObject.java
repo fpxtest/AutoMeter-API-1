@@ -82,6 +82,16 @@ public class RequestObject {
         this.expect = expect;
     }
 
+    public String getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(String projectid) {
+        this.projectid = projectid;
+    }
+
+    private String projectid = "";
+
     private String testplanid = "";
 
     public String getDeployunitid() {

@@ -54,10 +54,10 @@
 
         <span v-if="hasPermission('api:search')">
           <el-form-item>
-            <el-input v-model="search.apiname" @keyup.enter.native="searchBy" placeholder="api名"></el-input>
+            <el-input v-model="search.apiname" clearable @keyup.enter.native="searchBy" placeholder="api名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.deployunitname" @keyup.enter.native="searchBy" placeholder="服务名"></el-input>
+            <el-input v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="服务名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -683,6 +683,7 @@ import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 import store from '@/store'
 export default {
+  name: 'API接口',
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -779,7 +780,8 @@ export default {
         requestcontenttype: '',
         responecontenttype: '',
         memo: '',
-        creator: ''
+        creator: '',
+        projectid: ''
       },
       tmpcopyapi: {
         sourceapiid: '',
@@ -818,7 +820,8 @@ export default {
         page: 1,
         size: 10,
         apiname: null,
-        deployunitname: null
+        deployunitname: null,
+        projectid: ''
       },
       uploadData: {
         deployid: '',
@@ -828,9 +831,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'sidebar', 'avatar'])
+    ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
   },
   created() {
+    this.search.projectid = window.localStorage.getItem('pid')
     this.Headertabledatas = [
       { id: '', keyname: '', keytype: '', keydefaultvalue: '', propertytype: 'Header', creator: '' }
     ]
@@ -851,6 +855,11 @@ export default {
     this.getdepunitLists()
     // this.editAll()
     // this.editParamAll()
+  },
+
+  activated() {
+    console.log(787888878)
+    this.getapiList()
   },
   methods: {
     // 单个复制
@@ -1484,7 +1493,7 @@ export default {
      */
     getdepunitLists() {
       this.listLoading = true
-      getdepunitLists().then(response => {
+      getdepunitLists(this.search).then(response => {
         this.deployunitList = response.data
         this.total = response.data.total
         this.listLoading = false
@@ -1580,6 +1589,8 @@ export default {
       this.tmpapi.responecontenttype = ''
       this.tmpapi.memo = ''
       this.tmpapi.creator = this.name
+      this.tmpapi.projectid = window.localStorage.getItem('pid')
+      console.log(window.localStorage.getItem('pid'))
     },
     /**
      * 显示添加复制api对话框
@@ -1798,6 +1809,7 @@ export default {
       this.tmpapi.memo = this.apiList[index].memo
       this.tmpapi.creator = this.name
       this.tmpapi.requestcontenttype = this.apiList[index].requestcontenttype
+      this.tmpapi.projectid = window.localStorage.getItem('pid')
       // if (this.tmpapi.visittype === 'GET') {
       //   this.requestcontenttypeVisible = false
       //   this.tmpapi.requestcontenttype = '/'

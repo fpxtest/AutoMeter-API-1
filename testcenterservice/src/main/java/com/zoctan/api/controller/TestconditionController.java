@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
+import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.Testcondition;
 import com.zoctan.api.service.*;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,8 @@ public class TestconditionController {
         if(testcondition.getObjecttype().equalsIgnoreCase("调试用例"))
         {
             Condition con=new Condition(Testcondition.class);
-            con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+            con.createCriteria().andCondition("projectid = "+testcondition.getProjectid())
+                    .andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
                     .andCondition("conditionname = '" + testcondition.getConditionname() + "'")
                     .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
             if(testconditionService.ifexist(con)>0)
@@ -53,7 +55,8 @@ public class TestconditionController {
         else
         {
             Condition con=new Condition(Testcondition.class);
-            con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+            con.createCriteria().andCondition("projectid = "+testcondition.getProjectid())
+                    .andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
                     .andCondition("objectid = " + testcondition.getObjectid() )
                     .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'");
             if(testconditionService.ifexist(con)>0)
@@ -104,7 +107,8 @@ public class TestconditionController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Testcondition testcondition) {
         Condition con=new Condition(Testcondition.class);
-        con.createCriteria().andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
+        con.createCriteria().andCondition("projectid = "+testcondition.getProjectid())
+                .andCondition("objecttype = '" + testcondition.getObjecttype() + "'")
                 .andCondition("conditionname = '" + testcondition.getConditionname() + "'")
                 .andCondition("objectid = " + testcondition.getObjectid() )
                 .andCondition("conditiontype = '" + testcondition.getConditiontype() + "'")
@@ -122,20 +126,29 @@ public class TestconditionController {
 
 
     @GetMapping("/getalltestcondition")
-    public Result getalltestcondition() {
-        List<Testcondition> list = testconditionService.getallTestcondition();
+    public Result getalltestcondition(@RequestParam long projectid) {
+        Condition con=new Condition(Testcondition.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<Testcondition> list = testconditionService.listByCondition(con);
         return ResultGenerator.genOkResult(list);
     }
 
     @GetMapping("/getalltestconditionbytype")
-    public Result getallconditionbytype(@RequestParam String objecttype) {
-        List<Testcondition> list = testconditionService.getallTestconditionByType(objecttype);
+    public Result getallconditionbytype(@RequestParam String objecttype,@RequestParam long projectid) {
+        Condition con=new Condition(Testcondition.class);
+        con.createCriteria().andCondition("projectid = "+projectid)
+        .andCondition("objecttype = '"+objecttype+"'");
+        List<Testcondition> list = testconditionService.listByCondition(con);
         return ResultGenerator.genOkResult(list);
     }
 
     @GetMapping("/gettestconditionforscripyanddelay")
-    public Result gettestconditionforscripyanddelay(@RequestParam String objecttype) {
-        List<Testcondition> list = testconditionService.gettestconditionforscripyanddelay(objecttype);
+    public Result gettestconditionforscripyanddelay(@RequestParam String objecttype,@RequestParam long projectid) {
+        Condition con=new Condition(Testcondition.class);
+        con.createCriteria().andCondition("projectid = "+projectid)
+                .andCondition("objecttype = '"+objecttype+"'");
+        List<Testcondition> list = testconditionService.listByCondition(con);
+        //List<Testcondition> list = testconditionService.gettestconditionforscripyanddelay(objecttype);
         return ResultGenerator.genOkResult(list);
     }
 

@@ -19,6 +19,16 @@ public class Api {
      */
     private Long deployunitid;
 
+    public Long getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(Long projectid) {
+        this.projectid = projectid;
+    }
+
+    private Long projectid;
+
     /**
      * 发布单元名
      */

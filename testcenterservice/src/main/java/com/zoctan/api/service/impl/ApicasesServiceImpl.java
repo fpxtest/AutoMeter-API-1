@@ -6,6 +6,7 @@ import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.mapper.ApicasesMapper;
 import com.zoctan.api.mapper.ExecuteplanTestcaseMapper;
 import com.zoctan.api.service.ApicasesService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
@@ -81,13 +82,13 @@ private ApicasesMapper apicasesMapper;
     }
 
     @Override
-    public Integer getcasenum(String casetype) {
-        return apicasesMapper.getcasenum(casetype);
+    public Integer getcasenum(String casetype,long projectid) {
+        return apicasesMapper.getcasenum(casetype,projectid);
     }
 
     @Override
-    public List<Apicases> getstaticsdeployunitcases() {
-        return apicasesMapper.getstaticsdeployunitcases();
+    public List<Apicases> getstaticsdeployunitcases(long projectid) {
+        return apicasesMapper.getstaticsdeployunitcases(projectid);
     }
 
     @Override

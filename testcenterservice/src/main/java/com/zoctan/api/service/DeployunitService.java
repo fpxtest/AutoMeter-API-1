@@ -38,9 +38,9 @@ public interface DeployunitService extends Service<Deployunit> {
 
     int ifexist(Condition condition);
 
-    Integer getdeploynum();
+    Integer getdeploynum(long projectid);
 
-    List<String> getstaticsdeploynames();
+    List<String> getstaticsdeploynames(long projectid);
 
 
 }

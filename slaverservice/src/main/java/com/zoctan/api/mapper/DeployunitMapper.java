@@ -6,6 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface DeployunitMapper extends MyMapper<Deployunit> {
 
-    Deployunit findDeployNameValueWithCode(@Param("deployunitname") String params);
+    Deployunit findDeployNameValueWithCode(@Param("deployunitname") String params,@Param("projectid")long projectid);
 
 }

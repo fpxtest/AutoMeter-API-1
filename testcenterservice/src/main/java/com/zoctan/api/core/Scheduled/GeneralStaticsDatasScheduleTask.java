@@ -70,6 +70,7 @@ public class GeneralStaticsDatasScheduleTask {
         for (ApicasesReportstatics apicasesReportstatics :apicasesReportstaticsList) {
             Long PlanID= apicasesReportstatics.getTestplanid();
             Executeplan executeplan= executeplanMapper.findexplanWithid(PlanID);
+            long projectid=executeplan.getProjectid();
             StaticsPlanandcases staticsPlanandcases=new StaticsPlanandcases();
             Long TotalCase=apicasesReportstatics.getTotalcases();
             Long TotalPassCase=apicasesReportstatics.getTotalpasscases();
@@ -78,6 +79,7 @@ public class GeneralStaticsDatasScheduleTask {
             staticsPlanandcases.setTotalfailcases(apicasesReportstatics.getTotalfailcases());
             staticsPlanandcases.setRuntime(apicasesReportstatics.getRuntime());
             staticsPlanandcases.setTestplanname(executeplan.getExecuteplanname());
+            staticsPlanandcases.setProjectid(projectid);
             Double PassRate=TotalPassCase.doubleValue()/TotalCase.doubleValue();
             DecimalFormat df   = new DecimalFormat("######0.00");
             df.format(PassRate*100);
@@ -112,6 +114,7 @@ public class GeneralStaticsDatasScheduleTask {
         for (ApicasesReportstatics apicasesReportstatics :apicasesReportstaticsList) {
             Long DeployUnitID= apicasesReportstatics.getDeployunitid();
             Deployunit deployunit= deployunitMapper.findDeployUnitWithid(DeployUnitID);
+            long projectid = deployunit.getProjectid();
             StaticsDeployunitandcases staticsDeployunitandcases=new StaticsDeployunitandcases();
             Long TotalCase=apicasesReportstatics.getTotalcases();
             Long TotalPassCase=apicasesReportstatics.getTotalpasscases();
@@ -120,6 +123,7 @@ public class GeneralStaticsDatasScheduleTask {
             staticsDeployunitandcases.setTotalfailcases(apicasesReportstatics.getTotalfailcases());
             staticsDeployunitandcases.setRuntime(apicasesReportstatics.getRuntime());
             staticsDeployunitandcases.setDeployunitname(deployunit.getDeployunitname());
+            staticsDeployunitandcases.setProjectid(projectid);
             Double PassRate=TotalPassCase.doubleValue()/TotalCase.doubleValue();
             DecimalFormat df   = new DecimalFormat("######0.00");
             df.format(PassRate*100);

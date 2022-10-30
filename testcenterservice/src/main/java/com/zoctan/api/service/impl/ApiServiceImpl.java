@@ -39,13 +39,13 @@ private ApiMapper apiMapper;
     }
 
     @Override
-    public Integer getapinum() {
-        return apiMapper.getapinum();
+    public Integer getapinum(long projectid) {
+        return apiMapper.getapinum(projectid);
     }
 
     @Override
-    public List<Api> getstaticsdeployapi() {
-        return apiMapper.getstaticsdeployapi();
+    public List<Api> getstaticsdeployapi(long projectid) {
+        return apiMapper.getstaticsdeployapi(projectid);
     }
 
     @Override

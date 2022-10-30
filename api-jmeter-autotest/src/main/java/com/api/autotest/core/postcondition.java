@@ -104,19 +104,39 @@ public class postcondition extends AbstractJavaSamplerClient {
         //slaver性能测试解析报告，生成数据入库
         try {
             if (casetype.equalsIgnoreCase("性能")) {
-                File file1 = new File(casereportfolder + "/index.html");
-                if (!file1.exists()) {
-                    getLogger().info(TestCaseData.logplannameandcasename + "性能报告文件未生成。。。。。。。。。。。。。。。");
-                }
                 getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
                 long end = new Date().getTime();
                 long starttime = Long.parseLong(start);
                 double costtime = (double) (end - starttime) / 1000;
                 core.genealperformacestaticsreport(testclass, batchname, testplanid, batchid, slaverid, caseid, casereportfolder, costtime, creator);
                 getLogger().info(TestCaseData.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
+//                String property = System.getProperty("os.name");
+//                File file1 =null;
+//                String FilePath="";
+//                if(property.toLowerCase().startsWith("win")) {
+//                    FilePath = casereportfolder + "\\index.html";
+//                }
+//                else
+//                {
+//                    FilePath = casereportfolder + "/index.html";
+//                }
+//                getLogger().info(TestCaseData.logplannameandcasename + "处理性能统计报告目录：" + FilePath);
+//                file1 = new File(FilePath);
+//                if (!file1.exists()) {
+//                    getLogger().error(TestCaseData.logplannameandcasename + "性能报告文件未生成。。。。。。。。。。。。。。。");
+//                }
+//                else
+//                {
+//                    getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告出错获取的开始时间：" + start);
+//                    long end = new Date().getTime();
+//                    long starttime = Long.parseLong(start);
+//                    double costtime = (double) (end - starttime) / 1000;
+//                    core.genealperformacestaticsreport(testclass, batchname, testplanid, batchid, slaverid, caseid, casereportfolder, costtime, creator);
+//                    getLogger().info(TestCaseData.logplannameandcasename + "保存待解析性能报告结果完成。。。。。。");
+//                }
             }
         } catch (Exception e) {
-            getLogger().info(TestCaseData.logplannameandcasename + "处理性能报告文件出错：" + e.getMessage());
+            getLogger().error(TestCaseData.logplannameandcasename + "处理性能报告文件出错：" + e.getMessage());
         }
     }
 

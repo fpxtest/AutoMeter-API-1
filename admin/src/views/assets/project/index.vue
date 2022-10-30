@@ -25,7 +25,7 @@
           </el-form-item>
 
           <el-form-item label="状态" prop="status"  >
-          <el-select v-model="search.status" placeholder="状态" style="width:100%">
+          <el-select v-model="search.status" clearable  placeholder="状态" style="width:100%">
             <el-option label="开始" value="开始"></el-option>
             <el-option label="暂停" value="暂停"></el-option>
             <el-option label="关闭" value="关闭"></el-option>
@@ -54,9 +54,9 @@
       </el-table-column>
       <el-table-column label="项目名称" align="center" prop="projectname" width="150"/>
       <el-table-column label="状态" align="center" prop="status" width="80"/>
-      <el-table-column label="项目简介" align="center" prop="memo" width="350"/>
+      <el-table-column :show-overflow-tooltip="true" label="项目简介" align="center" prop="memo" width="250"/>
       <el-table-column label="创建人" align="center" prop="creator" width="80"/>
-      <el-table-column label="成员" align="center" prop="creator" width="80"/>
+<!--      <el-table-column label="成员" align="center" prop="creator" width="80"/>-->
       <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
@@ -74,18 +74,18 @@
             v-if="hasPermission('project:update') && scope.row.id !== id"
             @click.native.prevent="showUpdateprojectDialog(scope.$index)"
           >修改</el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            v-if="hasPermission('project:delete') && scope.row.id !== id"
-            @click.native.prevent="removeproject(scope.$index)"
-          >删除</el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            v-if="hasPermission('project:delete') && scope.row.id !== id"
-            @click.native.prevent="removeproject(scope.$index)"
-          >成员</el-button>
+<!--          <el-button-->
+<!--            type="danger"-->
+<!--            size="mini"-->
+<!--            v-if="hasPermission('project:delete') && scope.row.id !== id"-->
+<!--            @click.native.prevent="removeproject(scope.$index)"-->
+<!--          >删除</el-button>-->
+<!--          <el-button-->
+<!--            type="primary"-->
+<!--            size="mini"-->
+<!--            v-if="hasPermission('project:delete') && scope.row.id !== id"-->
+<!--            @click.native.prevent="removeproject(scope.$index)"-->
+<!--          >成员</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -126,29 +126,30 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="开始时间：" prop="startTime" required >
-          <el-date-picker style="width:100%"
-                          v-model="tmpproject.startTime"
-                          type="datetime"
-                          format="yyyy-MM-dd HH:mm:ss"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="开始时间">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="开始时间：" prop="startTime" required >-->
+<!--          <el-date-picker style="width:100%"-->
+<!--                          v-model="tmpproject.startTime"-->
+<!--                          type="datetime"-->
+<!--                          format="yyyy-MM-dd HH:mm:ss"-->
+<!--                          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--                          placeholder="开始时间">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
 
-        <el-form-item label="结束时间：" prop="endTime" required >
-          <el-date-picker style="width:100%"
-                          v-model="tmpproject.endTime"
-                          type="datetime"
-                          format="yyyy-MM-dd HH:mm:ss"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          placeholder="结束时间">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="结束时间：" prop="endTime" required >-->
+<!--          <el-date-picker style="width:100%"-->
+<!--                          v-model="tmpproject.endTime"-->
+<!--                          type="datetime"-->
+<!--                          format="yyyy-MM-dd HH:mm:ss"-->
+<!--                          value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--                          placeholder="结束时间">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
 
-        <el-form-item label="备注" prop="memo">
+        <el-form-item label="项目描述" prop="memo" required>
           <el-input
-            type="text"
+            type="textarea"
+            rows="10" cols="50"
             prefix-icon="el-icon-message"
             auto-complete="off"
             v-model="tmpproject.memo"
@@ -322,6 +323,7 @@
               this.getprojectList()
               this.dialogFormVisible = false
               this.btnLoading = false
+              window.localStorage.set
             }).catch(res => {
               this.$message.error('添加失败')
               this.btnLoading = false

@@ -207,10 +207,20 @@ public class HttpApiPerformance extends AbstractJavaSamplerClient {
             PostData = postdatam.replaceAll("");
             stringBuilder.append(PostData.replace(System.getProperty("line.separator"), "") + "$$");
             stringBuilder.append(requestObject.getResource() + "$$");
-            stringBuilder.append(requestObject.getRequestmMthod());
+            stringBuilder.append(requestObject.getRequestmMthod() + "$$");
+            stringBuilder.append(requestObject.getProjectid());
 
             String LogFileName = requestObject.getTestplanid() + "-" + requestObject.getBatchid() + "-" + requestObject.getSlaverid()+"-" + requestObject.getCaseid();
-            fw = new FileWriter(LogFolder + "/" + LogFileName + ".txt", true);
+            String os = System.getProperty("os.name");
+
+            String Filepath="";
+            if (os != null && os.toLowerCase().startsWith("windows")) {
+                Filepath=LogFolder + "\\" + LogFileName + ".txt"  ;
+            }
+            else {
+                Filepath = LogFolder + "/" + LogFileName + ".txt";
+            }
+            fw = new FileWriter(Filepath, true);
             fw.write(stringBuilder.toString() + System.getProperty("line.separator"));
             getLogger().error("保存性能报告数据：" + stringBuilder);
         } catch (Exception ex) {

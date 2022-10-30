@@ -419,7 +419,8 @@ public class ApiController {
     @PostMapping
     public Result add(@RequestBody Api api) {
         Condition con = new Condition(Api.class);
-        con.createCriteria().andCondition("deployunitname = '" + api.getDeployunitname() + "'")
+        con.createCriteria().andCondition("projectid = "+api.getProjectid())
+                .andCondition("deployunitname = '" + api.getDeployunitname() + "'")
                 .andCondition("apiname = '" + api.getApiname().replace("'", "''") + "'");
         if (apiService.ifexist(con) > 0) {
             return ResultGenerator.genFailedResult("此发布单元下已经存在此API");
@@ -470,8 +471,8 @@ public class ApiController {
     }
 
     @GetMapping("/getapinum")
-    public Result getapinum() {
-        Integer apinum = apiService.getapinum();
+    public Result getapinum(@RequestParam long projectid) {
+        Integer apinum = apiService.getapinum(projectid);
         return ResultGenerator.genOkResult(apinum);
     }
 
@@ -495,8 +496,8 @@ public class ApiController {
     }
 
     @GetMapping("/getstaticsdeployapi")
-    public Result getstaticsdeployapi() {
-        List<Api> list = apiService.getstaticsdeployapi();
+    public Result getstaticsdeployapi(@RequestParam long projectid) {
+        List<Api> list = apiService.getstaticsdeployapi(projectid);
         List<StaticsDataForPie> result = new ArrayList<>();
         for (Api api : list) {
             StaticsDataForPie staticsDataForPie = new StaticsDataForPie();
@@ -526,7 +527,8 @@ public class ApiController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Api api) {
         Condition con = new Condition(Api.class);
-        con.createCriteria().andCondition("deployunitname = '" + api.getDeployunitname() + "'")
+        con.createCriteria().andCondition("projectid = "+api.getProjectid())
+                .andCondition("deployunitname = '" + api.getDeployunitname() + "'")
                 .andCondition("apiname = '" + api.getApiname().replace("'", "''") + "'")
                 .andCondition("id <> " + api.getId());
         if (apiService.ifexist(con) > 0) {

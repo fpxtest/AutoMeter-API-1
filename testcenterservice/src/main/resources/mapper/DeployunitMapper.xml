@@ -12,6 +12,7 @@
     <result column="baseurl" jdbcType="VARCHAR" property="baseurl" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -32,18 +33,19 @@
     <where>
       <if test="deployunitname != null and deployunitname != ''">a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
       <if test="protocal != null  and protocal != ''">and a.protocal like CONCAT('%',#{protocal},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>
 
   <select id="getdeploynum" resultType="java.lang.Integer">
     SELECT count(*)
-    FROM deployunit a
+    FROM deployunit a where a.projectid=#{projectid}
   </select>
 
   <select id="getstaticsdeploynames" resultType="java.lang.String">
     SELECT deployunitname
-    FROM deployunit a
+    FROM deployunit a where a.projectid=#{projectid}
   </select>
 
   <update id="updateDeploy" parameterType="com.zoctan.api.entity.Deployunit">

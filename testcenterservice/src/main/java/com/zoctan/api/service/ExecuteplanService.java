@@ -38,12 +38,12 @@ public interface ExecuteplanService extends Service<Executeplan> {
 
     int ifexist(Condition condition);
 
-    List<Executeplan> getallexplan();
-    List<Executeplan> getallexplanbytype(String usetype);
+    List<Executeplan> getallexplan(long projectid);
+    List<Executeplan> getallexplanbytype(String usetype,long projectid);
 
-    Integer getexecuteplannum();
+    Integer getexecuteplannum(long projectid);
 
-    List<String> getstaticsplan();
+    List<String> getstaticsplan(long projectid);
 
     void createNewTable(String tableName);
 }

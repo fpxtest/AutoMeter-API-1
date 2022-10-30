@@ -5,9 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.zoctan.api.core.response.Result;
 import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.StaticsDataForLine;
+import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.StaticsDeployunitandcases;
 import com.zoctan.api.service.StaticsDeployunitandcasesService;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -58,8 +60,10 @@ public class StaticsDeployunitandcasesController {
     }
 
     @GetMapping("/getdeployunitstatics")
-    public Result getplanstatics() {
-        List<StaticsDeployunitandcases> list = staticsDeployunitandcasesService.listAll();
+    public Result getplanstatics(@RequestParam long projectid) {
+        Condition con=new Condition(StaticsDeployunitandcases.class);
+        con.createCriteria().andCondition("projectid = "+projectid);
+        List<StaticsDeployunitandcases> list = staticsDeployunitandcasesService.listByCondition(con);//.listAll();
         List<StaticsDataForLine> staticsDataForLineList=new ArrayList<>();
         HashMap<String,List<Double>> tmp=new HashMap<>();
         for (StaticsDeployunitandcases staticsDeployunitandcases: list) {

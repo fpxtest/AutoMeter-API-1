@@ -9,6 +9,7 @@
     <result column="keyname" jdbcType="VARCHAR" property="keyname" />
     <result column="keyvalue" jdbcType="LONGVARCHAR" property="keyvalue" />
     <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
   </resultMap>
@@ -18,6 +19,7 @@
     FROM globalvariables a
     <where>
       <if test="keyname != null and keyname != ''">a.keyname like CONCAT('%',#{keyname},'%')</if>
+      <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
     order by lastmodify_time  DESC
   </select>

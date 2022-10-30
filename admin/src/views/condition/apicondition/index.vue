@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('apicondition:search')">
           <el-form-item label="父条件名：">
-            <el-select v-model="search.conditionname" placeholder="父条件名">
+            <el-select v-model="search.conditionname" placeholder="父条件名" clearable>
               <el-option label="请选择" value />
               <div v-for="(condition, index) in conditionList" :key="index">
                 <el-option :label="condition.conditionname" :value="condition.conditionname"/>
@@ -176,7 +176,7 @@
   import { getalltestcondition } from '@/api/condition/condition'
   import { getapiListbydeploy as getapiListbydeploy } from '@/api/deployunit/api'
   import { findcasesbyname as findcasesbyname } from '@/api/assets/apicases'
-  import { getdepunitList as getdepunitList } from '@/api/deployunit/depunit'
+  import { getdepunitLists as getdepunitLists } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
 
@@ -241,23 +241,26 @@
           caseid: '',
           casename: '',
           memo: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
           size: 10,
-          conditionname: null
+          conditionname: null,
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
       this.getapiconditionList()
-      this.getdepunitList()
+      this.getdepunitLists()
       this.getalltestcondition()
     },
 
@@ -342,10 +345,10 @@
       /**
        * 获取发布单元列表
        */
-      getdepunitList() {
+      getdepunitLists() {
         this.listLoading = true
-        getdepunitList(this.listQuery).then(response => {
-          this.deployunitList = response.data.list
+        getdepunitLists(this.search).then(response => {
+          this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
           this.$message.error('加载发布单元列表失败')
@@ -372,7 +375,7 @@
        */
       getalltestcondition() {
         this.listLoading = true
-        getalltestcondition().then(response => {
+        getalltestcondition(this.search).then(response => {
           this.conditionList = response.data
           this.total = response.data.total
           this.listLoading = false
@@ -437,6 +440,7 @@
         this.tmpapicondition.apiname = ''
         this.tmpapicondition.casename = ''
         this.tmpapicondition.creator = this.name
+        this.tmpapicondition.projectid = window.localStorage.getItem('pid')
       },
       /**
        * 添加接口条件

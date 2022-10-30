@@ -29,7 +29,7 @@
         <span v-if="hasPermission('macdepunit:search')">
 
           <el-form-item label="测试环境" prop="enviromentname"  >
-          <el-select v-model="search.enviromentname"   placeholder="测试环境名" style="width:100%" @change="selectChangedEN($event)">
+          <el-select v-model="search.enviromentname" clearable   placeholder="测试环境名" style="width:100%" @change="selectChangedEN($event)">
             <div v-for="(envname, index) in enviromentnameList" :key="index">
               <el-option :label="envname.enviromentname" :value="envname.enviromentname" required/>
             </div>
@@ -37,7 +37,7 @@
         </el-form-item>
 
            <el-form-item label="发布单元" prop="deployunitname"  >
-            <el-select v-model="search.deployunitname"  placeholder="发布单元" style="width:100%" @change="selectChangedDU($event)">
+            <el-select v-model="search.deployunitname" clearable  placeholder="发布单元" style="width:100%" @change="selectChangedDU($event)">
               <div v-for="(depunit, index) in deployUnitList" :key="index">
                 <el-option :label="depunit.deployunitname" :value="depunit.deployunitname" required/>
               </div>
@@ -223,6 +223,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: '环境部署',
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -271,7 +272,8 @@
           deployunitname: '',
           domain: '',
           visittype: '',
-          creator: ''
+          creator: '',
+          projectid: ''
         },
         search: {
           page: 1,
@@ -279,16 +281,22 @@
           enviromentname: null,
           depunitid: null,
           envid: null,
-          deployunitname: null
+          deployunitname: null,
+          projectid: ''
+        },
+        searchproject: {
+          projectid: ''
         }
       }
     },
 
     computed: {
-      ...mapGetters(['name', 'sidebar', 'avatar'])
+      ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid', 'projectname'])
     },
 
     created() {
+      this.search.projectid = window.localStorage.getItem('pid')
+      this.searchproject.projectid = window.localStorage.getItem('pid')
       this.getmacdepunitList()
       this.getenviromentallList()
       this.getmachineLists()
@@ -417,7 +425,7 @@
        * 获取环境列表
        */
       getenviromentallList() {
-        getenviromentallList().then(response => {
+        getenviromentallList(this.searchproject).then(response => {
           this.enviromentnameList = response.data
         }).catch(res => {
           this.$message.error('加载测试环境列表失败')
@@ -428,7 +436,7 @@
        * 获取服务器列表
        */
       getmachineLists() {
-        getmachineLists().then(response => {
+        getmachineLists(this.searchproject).then(response => {
           this.machinenameList = response.data
         }).catch(res => {
           this.$message.error('加载服务器列表失败')
@@ -439,7 +447,7 @@
        * 获取发布单元列表
        */
       getdepunitLists() {
-        getdepunitLists().then(response => {
+        getdepunitLists(this.searchproject).then(response => {
           this.deployUnitList = response.data
           console.log(this.deployunitList)
         }).catch(res => {
@@ -451,7 +459,7 @@
        * 获取环境组件名列表
        */
       getassembleLists() {
-        getassembleallnameList().then(response => {
+        getassembleallnameList(this.searchproject).then(response => {
           this.assembleList = response.data
         }).catch(res => {
           this.$message.error('加载组件名列表失败')

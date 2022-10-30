@@ -31,6 +31,7 @@
     <where>
       <if test="execplanname != null and execplanname != ''">a.execplanname like CONCAT('%',#{execplanname},'%')</if>
       <if test="batchname != null  and batchname != ''">and a.batchname like CONCAT('%',#{batchname},'%')</if>
+    and b.projectid =#{projectid}
     </where>
     order by create_time  DESC
   </select>

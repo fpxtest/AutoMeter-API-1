@@ -39,10 +39,10 @@ public interface ApicasesService extends Service<Apicases> {
 
     List<Apicases> getapicasebyName(long deployunitid,long apiid);
 
-    Integer getcasenum(String casetype);
+    Integer getcasenum(String casetype,long projectid);
 
 
-    List<Apicases> getstaticsdeployunitcases();
+    List<Apicases> getstaticsdeployunitcases(long projectid);
 
     List<Apicases> getcasebydeployunitid(Long deployunitid);
     List<Apicases> getcasebyapiid(Long apiid);
