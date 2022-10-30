@@ -1511,6 +1511,13 @@
       this.getglobalheaderallList()
     },
 
+    activated() {
+      this.getdepunitLists()
+      this.getalltestconditionbytype()
+      this.getglobalheaderallList()
+      this.getenviromentallList()
+    },
+
     computed: {
       ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid'])
     },
