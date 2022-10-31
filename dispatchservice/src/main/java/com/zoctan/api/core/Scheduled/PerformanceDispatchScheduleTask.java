@@ -109,7 +109,7 @@ public class PerformanceDispatchScheduleTask {
                                                     {
                                                         throw new Exception(respon);
                                                     }
-                                                    if(respon.contains("未找到发布单元为"))
+                                                    if(respon.contains("未找到微服务为"))
                                                     {
                                                         throw new Exception(respon);
                                                     }

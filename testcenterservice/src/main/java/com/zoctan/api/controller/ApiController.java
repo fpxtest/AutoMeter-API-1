@@ -423,7 +423,7 @@ public class ApiController {
                 .andCondition("deployunitname = '" + api.getDeployunitname() + "'")
                 .andCondition("apiname = '" + api.getApiname().replace("'", "''") + "'");
         if (apiService.ifexist(con) > 0) {
-            return ResultGenerator.genFailedResult("此发布单元下已经存在此API");
+            return ResultGenerator.genFailedResult("此微服务下已经存在此API");
         } else {
             apiService.save(api);
             return ResultGenerator.genOkResult();
@@ -486,7 +486,7 @@ public class ApiController {
     }
 
     /**
-     * 根据发布单元id获取apis
+     * 根据微服务id获取apis
      */
     @PostMapping("/getapibydeployunitid")
     public Result getapibydeployunitid(@RequestBody final Map<String, Object> param) {
@@ -532,7 +532,7 @@ public class ApiController {
                 .andCondition("apiname = '" + api.getApiname().replace("'", "''") + "'")
                 .andCondition("id <> " + api.getId());
         if (apiService.ifexist(con) > 0) {
-            return ResultGenerator.genFailedResult("此发布单元下已经存在此API");
+            return ResultGenerator.genFailedResult("此微服务下已经存在此API");
         } else {
 
             this.apiService.updateApi(api);

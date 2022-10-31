@@ -129,8 +129,8 @@
         </el-form-item>
 
         <div v-if="testcasevisible">
-          <el-form-item label="发布单元" prop="deployunitname" required >
-            <el-select v-model="tmpcondition.deployunitname" placeholder="发布单元" style="width:100%" @change="selectChanged($event)">
+          <el-form-item label="微服务" prop="deployunitname" required >
+            <el-select v-model="tmpcondition.deployunitname" placeholder="微服务" style="width:100%" @change="selectChanged($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(depunitname, index) in deployunitList" :key="index">
                 <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -288,7 +288,7 @@
         saveconditionorderList: [], // 条件顺序保存列表
         apiList: [], // api列表
         caseList: [], // 用例列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         enviromentnameList: [], // 环境列表
         machinenameList: [], // 服务器列表
         testcasevisible: false,
@@ -431,7 +431,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChanged(e) {
         this.tmpcondition.apiname = ''
@@ -496,7 +496,7 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         this.listLoading = true
@@ -504,7 +504,7 @@
           this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 

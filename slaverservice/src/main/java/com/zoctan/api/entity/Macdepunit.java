@@ -15,7 +15,7 @@ public class Macdepunit {
     private Long id;
 
     /**
-     * 发布单元Id
+     * 微服务Id
      */
     private Long depunitid;
 
@@ -30,7 +30,7 @@ public class Macdepunit {
     private Long assembleid;
 
     /**
-     * 发布单元名
+     * 微服务名
      */
     private String deployunitname;
 
@@ -119,36 +119,36 @@ public class Macdepunit {
     }
 
     /**
-     * 获取发布单元Id
+     * 获取微服务Id
      *
-     * @return depunitid - 发布单元Id
+     * @return depunitid - 微服务Id
      */
     public Long getDepunitid() {
         return depunitid;
     }
 
     /**
-     * 设置发布单元Id
+     * 设置微服务Id
      *
-     * @param depunitid 发布单元Id
+     * @param depunitid 微服务Id
      */
     public void setDepunitid(Long depunitid) {
         this.depunitid = depunitid;
     }
 
     /**
-     * 获取发布单元名
+     * 获取微服务名
      *
-     * @return deployunitname - 发布单元名
+     * @return deployunitname - 微服务名
      */
     public String getDeployunitname() {
         return deployunitname;
     }
 
     /**
-     * 设置发布单元名
+     * 设置微服务名
      *
-     * @param deployunitname 发布单元名
+     * @param deployunitname 微服务名
      */
     public void setDeployunitname(String deployunitname) {
         this.deployunitname = deployunitname;

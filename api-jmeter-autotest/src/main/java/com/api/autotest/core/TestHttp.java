@@ -19,7 +19,7 @@ public class TestHttp {
     public  TestResponeData doService(RequestObject requestObject,int connectTimeout) throws Exception {
         if(requestObject.getProtocal().isEmpty())
         {
-            throw new Exception("当前用例所属的API所在的发布单元不存在，请检查是否已经被删除");
+            throw new Exception("当前用例所属的API所在的微服务不存在，请检查是否已经被删除");
         }
         if(requestObject.getApistyle().isEmpty()&&requestObject.getRequestmMthod().isEmpty())
         {
@@ -27,11 +27,11 @@ public class TestHttp {
         }
         if(requestObject.getDeployunitvisittype().isEmpty())
         {
-            throw new Exception("当前用例所属的API所在的发布单元在环境部署中不存在，请检查是否已经被删除");
+            throw new Exception("当前用例所属的API所在的微服务在环境部署中不存在，请检查是否已经被删除");
         }
         if(requestObject.getMachineip().isEmpty())
         {
-            throw new Exception("当前用例所在的发布单元部署环境的服务器不存在，请检查是否已经被删除");
+            throw new Exception("当前用例所在的微服务部署环境的服务器不存在，请检查是否已经被删除");
         }
         TestResponeData responeData=new TestResponeData();
         String Protocal=requestObject.getProtocal();

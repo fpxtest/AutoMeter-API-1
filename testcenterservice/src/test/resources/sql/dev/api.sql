@@ -26,7 +26,7 @@ CREATE TABLE `api`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
     `deployunitid`  bigint(20) unsigned    NOT NULL  COMMENT 'DeployUnitId',
-    `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
+    `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '微服务名',
     `apiname`       varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '接口名',
     `visittype`     varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '访问方式，字典表获取',
     `apistyle`     varchar(10) CHARACTER SET utf8 COLLATE utf8_bin COMMENT 'restful,普通方式',
@@ -39,7 +39,7 @@ CREATE TABLE `api`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='发布单元表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='微服务表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

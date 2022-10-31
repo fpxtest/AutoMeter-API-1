@@ -38,7 +38,7 @@ CREATE TABLE `statics_deployunitandcases`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='api发布单元用例统计报告表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='api微服务用例统计报告表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

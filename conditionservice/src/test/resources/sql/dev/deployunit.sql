@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `deployunit`;
 CREATE TABLE `deployunit`
 (
     `id`            bigint(20) unsigned                             NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `deployunitname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元名',
+    `deployunitname`         varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '微服务名',
     `protocal`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '协议',
     `port`          varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '访问端口',
     `memo`      varchar(512) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '描述',
@@ -34,7 +34,7 @@ CREATE TABLE `deployunit`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='发布单元表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='微服务表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

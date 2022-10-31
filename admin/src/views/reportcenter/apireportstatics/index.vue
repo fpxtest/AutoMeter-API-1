@@ -104,7 +104,7 @@ export default {
       apiList: [], // api列表
       planbatchList: [], // 执行测试集合列表
       execplanList: [], // 测试集合列表
-      deployunitList: [], // 发布单元列表
+      deployunitList: [], // 微服务列表
       listLoading: false, // 数据加载等待动画
       dicvisitypeQuery: {
         page: 1, // 页码
@@ -162,7 +162,7 @@ export default {
     unix2CurrentTime,
 
     /**
-     * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+     * 微服务下拉选择事件获取微服务id  e的值为options的选值
      */
     testplanselectChanged(e) {
       for (let i = 0; i < this.execplanList.length; i++) {
@@ -178,7 +178,7 @@ export default {
     },
 
     /**
-     * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+     * 微服务下拉选择事件获取微服务id  e的值为options的选值
      */
     selectChanged(e) {
       for (let i = 0; i < this.deployunitList.length; i++) {
@@ -216,13 +216,13 @@ export default {
     },
 
     /**
-     * 获取发布单元列表
+     * 获取微服务列表
      */
     // getdepunitList() {
     //   getdepunitList(this.listQuery).then(response => {
     //     this.deployunitList = response.data.list
     //   }).catch(res => {
-    //     this.$message.error('加载发布单元列表失败')
+    //     this.$message.error('加载微服务列表失败')
     //   })
     // },
 

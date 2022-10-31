@@ -246,14 +246,14 @@ public class TestconditionController {
         Long Deployunitid = api.getDeployunitid();
         Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
         if (deployunit == null) {
-            Respone = "未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除";
+            Respone = "未找到条件运行接口API所在的微服务，请检查是否存在或已被删除";
             ConditionResultStatus = "失败";
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
         }
 
         Enviroment enviroment = enviromentService.getBy("id", executeplan.getEnvid());
         if (enviroment == null) {
-            Respone = "未找到条件接口发布单元部署的环境，请检查是否存在或已被删除";
+            Respone = "未找到条件接口微服务部署的环境，请检查是否存在或已被删除";
             ConditionResultStatus = "失败";
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
         }
@@ -268,7 +268,7 @@ public class TestconditionController {
         //区分环境类型
         Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(executeplan.getEnvid(), deployunit.getId());
         if (macdepunit == null) {
-            Respone = "接口所在的发布单元未在环境中部署，请检查是否存在或已被删除";
+            Respone = "接口所在的微服务未在环境中部署，请检查是否存在或已被删除";
             ConditionResultStatus = "失败";
             UpdatetestconditionReport(testconditionReport, Respone, ConditionResultStatus, new Long(0), conditionApi.getCreator());
         }
@@ -490,13 +490,13 @@ public class TestconditionController {
             Long Deployunitid = api.getDeployunitid();
             Deployunit deployunit = deployunitService.getBy("id", Deployunitid);
             if (deployunit == null) {
-                return ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行接口API所在的发布单元，请检查是否存在或已被删除！");
+                return ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件未找到条件运行接口API所在的微服务，请检查是否存在或已被删除！");
             }
             List<ApiCasedata> apiCasedataList = apiCasedataService.GetCaseDatasByCaseID(CaseID);
             //区分环境类型
             Macdepunit macdepunit = macdepunitService.getmacdepbyenvidanddepid(EnviromentID, deployunit.getId());
             if (macdepunit == null) {
-                return ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件所在的发布单元："+deployunit.getDeployunitname()+" 未在运行环境中部署，请检查是否部署或已被删除！");
+                return ResultGenerator.genFailedResult("接口子条件执行异常:接口子条件所在的微服务："+deployunit.getDeployunitname()+" 未在运行环境中部署，请检查是否部署或已被删除！");
             }
             Machine machine = machineService.getBy("id", macdepunit.getMachineid());
             if (machine == null) {

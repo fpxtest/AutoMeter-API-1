@@ -10,12 +10,12 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div id="11" class="chart-wrapper">
-          <PieChart BusinessName="发布单元:用例" :typeData="piedeployunittypedata" :typeValueData="pietypedeployunitcaseValueData"/>
+          <PieChart BusinessName="微服务:测试用例" :typeData="piedeployunittypedata" :typeValueData="pietypedeployunitcaseValueData"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div id="12" class="chart-wrapper">
-          <PieChart BusinessName="发布单元:API" :typeData="piedeployunittypedata"  :typeValueData="pietypedeployunitapiValueData"/>
+          <PieChart BusinessName="微服务:API接口" :typeData="piedeployunittypedata"  :typeValueData="pietypedeployunitapiValueData"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -26,7 +26,7 @@
     </el-row>
 
     <el-row  style="background:#fff;padding:16px 16px 15px;margin-bottom:15px;">
-      <Chart className="deployunitchar" id="deployunit" LineName="发布单元用例成功率" :PlanDateData="LineDateData" :StaticsData="DeployUnitStaticsData" height="300%" width="100%" />
+      <Chart className="deployunitchar" id="deployunit" LineName="微服务用例成功率" :PlanDateData="LineDateData" :StaticsData="DeployUnitStaticsData" height="300%" width="100%" />
     </el-row>
 
     <el-row  style="background:#fff;padding:16px 16px 15px;margin-bottom:15px;">
@@ -142,13 +142,13 @@ export default {
     },
 
     /**
-     * 获取统计发布单元用例成功率
+     * 获取统计微服务用例成功率
      */
     getStaticsDeployUnitCasesList() {
       getStaticsDeployUnitCasesList(this.search).then(response => {
         this.DeployUnitStaticsData = response.data
       }).catch(res => {
-        this.$message.error('加载统计发布单元用例成功率失败')
+        this.$message.error('加载统计微服务用例成功率失败')
       })
     },
 
@@ -175,7 +175,7 @@ export default {
       })
     },
     /**
-     * 获取统计发布单元列表
+     * 获取统计微服务列表
      */
     getstaticsdeploynames() {
       getstaticsdeploynames(this.search).then(response => {
@@ -183,7 +183,7 @@ export default {
         console.log('pppppppppppppppppppppppppppppp')
         console.log(this.piedeployunittypedata)
       }).catch(res => {
-        this.$message.error('加载统计发布单元列表失败')
+        this.$message.error('加载统计微服务列表失败')
       })
     },
 
@@ -199,24 +199,24 @@ export default {
     },
 
     /**
-     * 获取统计发布单元api列表
+     * 获取统计微服务api列表
      */
     getstaticsdeployapi() {
       getstaticsdeployapi(this.search).then(response => {
         this.pietypedeployunitapiValueData = response.data
       }).catch(res => {
-        this.$message.error('加载统计发布单元api列表失败')
+        this.$message.error('加载统计微服务api列表失败')
       })
     },
 
     /**
-     * 获取统计发布单元用例列表
+     * 获取统计微服务用例列表
      */
     getstaticsdeployunitcases() {
       getstaticsdeployunitcases(this.search).then(response => {
         this.pietypedeployunitcaseValueData = response.data
       }).catch(res => {
-        this.$message.error('加载统计发布单元用例失败')
+        this.$message.error('加载统计微服务用例失败')
       })
     }
   }

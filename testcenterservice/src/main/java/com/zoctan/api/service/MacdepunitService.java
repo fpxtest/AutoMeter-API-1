@@ -14,7 +14,7 @@ import java.util.Map;
 */
 public interface MacdepunitService extends Service<Macdepunit> {
     /**
-     * 按环境名或者服务器名获取服务器发布单元内容
+     * 按环境名或者服务器名获取服务器微服务内容
      *
      * @param params 参数
      * @return 环境服务器列表
@@ -25,7 +25,7 @@ public interface MacdepunitService extends Service<Macdepunit> {
 
 
     /**
-     * 更新服务器发布单元内容
+     * 更新服务器微服务内容
      *
      * @param params 参数
      * @return 环境服务器列表

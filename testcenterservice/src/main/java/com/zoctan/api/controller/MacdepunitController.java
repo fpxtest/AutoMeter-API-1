@@ -34,7 +34,7 @@ public class MacdepunitController {
         assemcon.createCriteria().andCondition("envid = " + macdepunit.getEnvid()).andCondition("assembleid = " + macdepunit.getAssembleid() );
         if(macdepunitService.ifexist(assemcon)>0)
         {
-            return ResultGenerator.genFailedResult("此环境已经存在此发布单元或者组件");
+            return ResultGenerator.genFailedResult("此环境已经存在此微服务或者组件");
         }
         else
         {
@@ -42,7 +42,7 @@ public class MacdepunitController {
             depcon.createCriteria().andCondition("envid = " + macdepunit.getEnvid()).andCondition("depunitid = " + macdepunit.getDepunitid() );
             if(macdepunitService.ifexist(depcon)>0)
             {
-                return ResultGenerator.genFailedResult("此环境已经存在此发布单元或者组件");
+                return ResultGenerator.genFailedResult("此环境已经存在此微服务或者组件");
             }
             else
             {
@@ -90,7 +90,7 @@ public class MacdepunitController {
                 .andCondition("id <> " + macdepunit.getId());
         if(macdepunitService.ifexist(assemcon)>0)
         {
-            return ResultGenerator.genFailedResult("此环境已经存在此发布单元或者组件");
+            return ResultGenerator.genFailedResult("此环境已经存在此微服务或者组件");
         }
         else
         {
@@ -99,7 +99,7 @@ public class MacdepunitController {
                     .andCondition("id <> " + macdepunit.getId());
             if(macdepunitService.ifexist(con)>0)
             {
-                return ResultGenerator.genFailedResult("此环境已经存在此发布单元或者组件");
+                return ResultGenerator.genFailedResult("此环境已经存在此微服务或者组件");
             }
             else {
                 this.macdepunitService.updateMacAndDep(macdepunit);

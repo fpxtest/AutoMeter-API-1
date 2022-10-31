@@ -93,8 +93,8 @@
         ref="tmpApicasesVariables"
       >
 
-        <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpApicasesVariables.deployunitname" placeholder="发布单元" style="width:100%" @change="deployunitselectChanged($event)">
+        <el-form-item label="微服务" prop="deployunitname" required >
+          <el-select v-model="tmpApicasesVariables.deployunitname" placeholder="微服务" style="width:100%" @change="deployunitselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -190,7 +190,7 @@
         variablesList: [], // 变量列表
         apiList: [], // api列表
         caseList: [], // 用例列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         dialogStatus: 'add',
@@ -246,7 +246,7 @@
       unix2CurrentTime,
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       deployunitselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {
@@ -266,7 +266,7 @@
       },
 
       /**
-       * api下拉选择事件获取发布单元id  e的值为options的选值
+       * api下拉选择事件获取微服务id  e的值为options的选值
        */
       apiselectChanged(e) {
         for (let i = 0; i < this.apiList.length; i++) {
@@ -316,7 +316,7 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitList() {
         this.listLoading = true
@@ -324,7 +324,7 @@
           this.deployunitList = response.data.list
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 

@@ -171,7 +171,7 @@ public class HttpApiFunction extends AbstractJavaSamplerClient {
         }
     }
 
-    //功能用例统计批次发布单元用例执行信息
+    //功能用例统计批次微服务用例执行信息
     private void CollectionBatchDeployReportStatics(TestCore core, ApicasesReportstatics apicasesReportstatics, String BatchName, int TotalCaseNums, int TotalPassNums, int TotalFailNUms, long AllCostTime, String SlaverId) {
         apicasesReportstatics.setBatchname(BatchName);
         apicasesReportstatics.setTotalcases(String.valueOf(TotalCaseNums));

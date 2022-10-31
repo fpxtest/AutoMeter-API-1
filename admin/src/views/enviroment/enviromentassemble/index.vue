@@ -360,7 +360,7 @@
       },
 
       /**
-       * 发布单元访问方式下拉控制是否显示域名  e的值为options的选值
+       * 微服务访问方式下拉控制是否显示域名  e的值为options的选值
        */
       selectChangedVisittype(e) {
         if (e === '域名') {
@@ -372,7 +372,7 @@
       },
 
       /**
-       * 服务器下拉选择事件获取发布单元id  e的值为options的选值
+       * 服务器下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedMN(e) {
         console.log(e)

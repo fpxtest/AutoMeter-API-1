@@ -21,7 +21,7 @@
 
         <span v-if="hasPermission('apiparams:search')">
           <el-form-item>
-            <el-select v-model="search.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+            <el-select v-model="search.deployunitname" placeholder="微服务" @change="selectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname"/>
@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column label="api名" align="center" prop="apiname" width="180"/>
       <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="130"/>
+      <el-table-column label="微服务" align="center" prop="deployunitname" width="130"/>
       <el-table-column label="参数名" align="center" prop="keynamebak" width="100">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -118,8 +118,8 @@
         :model="tmpapiparams"
         ref="tmpapiparams"
       >
-        <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpapiparams.deployunitname" placeholder="发布单元" @change="paramdeployselectChanged($event)">
+        <el-form-item label="微服务" prop="deployunitname" required >
+          <el-select v-model="tmpapiparams.deployunitname" placeholder="微服务" @change="paramdeployselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -205,7 +205,7 @@
         apiparamsList: [], // apiparams列表
         apiList: [], // api列表
         paramsapiList: [], // paramsapi列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         paramlist: [],
         listLoading: false, // 数据加载等待动画
         apiQuery: {
@@ -269,19 +269,19 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         getdepunitLists().then(response => {
           this.deployunitList = response.data
           console.log(this.deployunitList)
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChanged(e) {
         this.apiList = null
@@ -313,7 +313,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       paramdeployselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {

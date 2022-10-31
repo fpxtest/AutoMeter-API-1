@@ -75,8 +75,8 @@
 <!--        </el-form>-->
 <!--      <el-form :inline="true">-->
         <span v-if="hasPermission('apicases:search')" >
-          <el-form-item label="发布单元：">
-            <el-select v-model="search.deployunitname" placeholder="发布单元" clearable @change="deployunitselectChanged($event)">
+          <el-form-item label="微服务：">
+            <el-select v-model="search.deployunitname" placeholder="微服务" clearable @change="deployunitselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname"/>
@@ -133,7 +133,7 @@
       </el-table-column>
 
       <el-table-column label="用例名" align="center" prop="casename" width="100"/>
-      <el-table-column :show-overflow-tooltip="true" label="发布单元" align="center" prop="deployunitname" width="120"/>
+      <el-table-column :show-overflow-tooltip="true" label="微服务" align="center" prop="deployunitname" width="120"/>
       <el-table-column :show-overflow-tooltip="true" label="API" align="center" prop="apiname" width="100"/>
 <!--      <el-table-column label="Jmeter-Class" align="center" prop="casejmxname" width="100"/>-->
       <el-table-column label="类型" align="center" prop="casetype" width="50"/>
@@ -216,8 +216,8 @@
         :model="tmpapicases"
         ref="tmpapicases"
       >
-        <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpapicases.deployunitname" style="width:100%" placeholder="发布单元" @change="selectChanged($event)">
+        <el-form-item label="微服务" prop="deployunitname" required >
+          <el-select v-model="tmpapicases.deployunitname" style="width:100%" placeholder="微服务" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -513,8 +513,8 @@
         style="width: 400px; margin-left:50px;"
         :model="tmpcopycase"
         ref="tmpcopycase"
-      >      <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
-        <el-select v-model="tmpcopycase.sourcedeployunitname" placeholder="发布单元" style="width:100%" @change="CopyCasesSourceDeployselectChanged($event)">
+      >      <el-form-item label="源微服务" prop="sourcedeployunitname" required >
+        <el-select v-model="tmpcopycase.sourcedeployunitname" placeholder="微服务" style="width:100%" @change="CopyCasesSourceDeployselectChanged($event)">
           <el-option label="请选择" value="''" style="display: none" />
           <div v-for="(depunitname, index) in deployunitList" :key="index">
             <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -561,16 +561,16 @@
         :model="tmpbatchcopycase"
         ref="tmpbatchcopycase"
       >
-        <el-form-item label="源发布单元" prop="sourcedeployunitname" required >
-        <el-select v-model="tmpbatchcopycase.sourcedeployunitname" placeholder="发布单元" style="width:100%" @change="CopyBatchCasesSourceDeployselectChanged($event)">
+        <el-form-item label="源微服务" prop="sourcedeployunitname" required >
+        <el-select v-model="tmpbatchcopycase.sourcedeployunitname" placeholder="微服务" style="width:100%" @change="CopyBatchCasesSourceDeployselectChanged($event)">
           <el-option label="请选择" value="''" style="display: none" />
           <div v-for="(depunitname, index) in deployunitList" :key="index">
             <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
           </div>
         </el-select>
       </el-form-item>
-        <el-form-item label="目标发布单元" prop="destinationdeployunitname" required >
-          <el-select v-model="tmpbatchcopycase.destinationdeployunitname" placeholder="发布单元" style="width:100%" @change="CopyBatchDesiCasesSourceDeployselectChanged($event)">
+        <el-form-item label="目标微服务" prop="destinationdeployunitname" required >
+          <el-select v-model="tmpbatchcopycase.destinationdeployunitname" placeholder="微服务" style="width:100%" @change="CopyBatchDesiCasesSourceDeployselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -932,8 +932,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="发布单元:" prop="deployunitname" required>
-            <el-select v-model="searchnotexistcase.deployunitname" placeholder="发布单元" @change="notexistdeployunitnameselectChanged($event)">
+          <el-form-item label="微服务:" prop="deployunitname" required>
+            <el-select v-model="searchnotexistcase.deployunitname" placeholder="微服务" @change="notexistdeployunitnameselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
@@ -963,7 +963,7 @@
 
         <el-table-column type="selection" prop="status" width="50"/>
         <el-table-column label="用例名" align="center" prop="casename" width="350"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="220"/>
       </el-table>
       <el-pagination
         @size-change="casenotexisthandleSizeChange"
@@ -998,8 +998,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="发布单元:" prop="deployunitname" required>
-            <el-select v-model="searchexistcase.deployunitname" placeholder="发布单元" @change="existdeployunitnameselectChanged($event)">
+          <el-form-item label="微服务:" prop="deployunitname" required>
+            <el-select v-model="searchexistcase.deployunitname" placeholder="微服务" @change="existdeployunitnameselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
@@ -1030,7 +1030,7 @@
 
         <el-table-column type="selection" prop="status" width="50"/>
         <el-table-column label="用例名" align="center" prop="casename" width="350"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="220"/>
       </el-table>
       <el-pagination
         @size-change="caseexisthandleSizeChange"
@@ -1065,8 +1065,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="发布单元:" prop="deployunitname" required>
-            <el-select v-model="searchglobalnotexistheadercase.deployunitname" placeholder="发布单元" @change="notexistdeployunitnameselectChanged($event)">
+          <el-form-item label="微服务:" prop="deployunitname" required>
+            <el-select v-model="searchglobalnotexistheadercase.deployunitname" placeholder="微服务" @change="notexistdeployunitnameselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
@@ -1096,7 +1096,7 @@
 
         <el-table-column type="selection" prop="status" width="50"/>
         <el-table-column label="用例名" align="center" prop="testcasename" width="350"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="220"/>
       </el-table>
       <el-pagination
         @size-change="headercasenotexisthandleSizeChange"
@@ -1131,8 +1131,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="发布单元:" prop="deployunitname" required>
-            <el-select v-model="searchglobalheadercase.deployunitname" placeholder="发布单元" @change="existdeployunitnameselectChanged($event)">
+          <el-form-item label="微服务:" prop="deployunitname" required>
+            <el-select v-model="searchglobalheadercase.deployunitname" placeholder="微服务" @change="existdeployunitnameselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
@@ -1162,7 +1162,7 @@
 
         <el-table-column type="selection" prop="status" width="50"/>
         <el-table-column label="用例名" align="center" prop="testcasename" width="350"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="220"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="220"/>
       </el-table>
       <el-pagination
         @size-change="headercaseexisthandleSizeChange"
@@ -1264,7 +1264,7 @@
         multipleSelection: [], // 用例表格被选中的内容
         apiList: [], // api列表
         enviromentnameList: [], // 环境列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         caseparamtypelist: [], // 用例参数类型列表
         caseparamsbytypelist: [], // 根据类型获取用例参数名列表
         tmpcaseparamslist: [], // 获取用例参数临时列表，getcaseparamsbytype（）调用
@@ -1306,7 +1306,7 @@
         globalheaderctotal: 0,
         caseexisttotal: 0, // 已添加条件用例总数
         apiSearchQuery: {
-          deployunitname: '', // 发布单元名
+          deployunitname: '', // 微服务名
           apiname: '' // api名
         },
         apiQuery: {
@@ -1633,7 +1633,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectparamsChanged(e) {
         this.getcaseparamsbytype(e)
@@ -1758,7 +1758,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChanged(e) {
         this.apiList = []
@@ -1775,7 +1775,7 @@
         }).catch(res => {
           this.$message.error('加载api列表失败')
         })
-        // 获取发布单元对应的协议，是http或者https则不需要显示JmeterClass，其余显示
+        // 获取微服务对应的协议，是http或者https则不需要显示JmeterClass，其余显示
         findDeployNameValueWithCode(this.apiQuery).then(response => {
           this.tmpprotocal = response.data.protocal
           if (this.tmpprotocal === 'http' || this.tmpprotocal === 'https') {
@@ -1785,12 +1785,12 @@
             this.tmpapicases.casejmxname = ''
           }
         }).catch(res => {
-          this.$message.error('加载发布单元信息失败')
+          this.$message.error('加载微服务信息失败')
         })
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值,获取用例
        */
       CopyCasesSourceDeployselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {
@@ -1801,12 +1801,12 @@
         getcasebydeployunitid(this.tmpcopycase).then(response => {
           this.sourcetestcaseList = response.data
         }).catch(res => {
-          this.$message.error('根据发布单元id获取用例列表失败')
+          this.$message.error('根据微服务id获取用例列表失败')
         })
       },
 
       /**
-       * 批量复制用例发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       * 批量复制用例微服务下拉选择事件获取微服务id  e的值为options的选值,获取用例
        */
       CopyBatchCasesSourceDeployselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {
@@ -1817,7 +1817,7 @@
       },
 
       /**
-       * 批量复制用例发布单元下拉选择事件获取发布单元id  e的值为options的选值,获取用例
+       * 批量复制用例微服务下拉选择事件获取微服务id  e的值为options的选值,获取用例
        */
       CopyBatchDesiCasesSourceDeployselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {
@@ -1851,7 +1851,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       deployunitselectChanged(e) {
         this.apiList = null
@@ -1885,13 +1885,13 @@
         }
       },
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         getdepunitLists(this.search).then(response => {
           this.deployunitList = response.data
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 

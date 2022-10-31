@@ -25,8 +25,8 @@ DROP TABLE IF EXISTS `apicases_debug_condition`;
 CREATE TABLE `apicases_debug_condition`
 (
     `id`            bigint(20) unsigned    NOT NULL AUTO_INCREMENT COMMENT 'Id',
-    `deployunitid`    bigint(20) unsigned  COMMENT '发布单元Id',
-    `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '发布单元',
+    `deployunitid`    bigint(20) unsigned  COMMENT '微服务Id',
+    `deployunitname`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '微服务',
     `caseid`  bigint(20) unsigned  COMMENT '用例id',
     `casename`  varchar(64) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '用例名',
     `conditionname`  varchar(500) CHARACTER SET utf8 COLLATE utf8_bin COMMENT '条件名',

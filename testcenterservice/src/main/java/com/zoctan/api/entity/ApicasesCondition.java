@@ -137,7 +137,7 @@ public class ApicasesCondition {
     private String conditiontype;
 
     /**
-     * 包含调用接口的发布单元
+     * 包含调用接口的微服务
      */
     private String deployunitname;
 
@@ -259,18 +259,18 @@ public class ApicasesCondition {
     }
 
     /**
-     * 获取包含调用接口的发布单元
+     * 获取包含调用接口的微服务
      *
-     * @return deployunitname - 包含调用接口的发布单元
+     * @return deployunitname - 包含调用接口的微服务
      */
     public String getDeployunitname() {
         return deployunitname;
     }
 
     /**
-     * 设置包含调用接口的发布单元
+     * 设置包含调用接口的微服务
      *
-     * @param deployunitname 包含调用接口的发布单元
+     * @param deployunitname 包含调用接口的微服务
      */
     public void setDeployunitname(String deployunitname) {
         this.deployunitname = deployunitname;

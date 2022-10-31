@@ -223,7 +223,7 @@ public class ApicasesController {
     }
 
 
-    //批量复制发布单元的用例
+    //批量复制微服务的用例
     @PostMapping("/copydeployunitcases")
     public Result copydeployunitcases(@RequestBody final Map<String, Object> param) {
         Long sourcedeployunitid = Long.parseLong(param.get("sourcedeployunitid").toString());
@@ -232,7 +232,7 @@ public class ApicasesController {
         String destinationdeployunitname = param.get("destinationdeployunitname").toString();
 
         if (sourcedeployunitid.equals(destinationdeployunitid)) {
-            return ResultGenerator.genFailedResult("源发布单元和目标发布单元相同，请选择不同的发布单元进行批量复制用例");
+            return ResultGenerator.genFailedResult("源微服务和目标微服务相同，请选择不同的微服务进行批量复制用例");
         } else {
             //复制调试父条件
             long DebugDesConditionID = 0;
@@ -245,7 +245,7 @@ public class ApicasesController {
                 Testcondition testcondition = testconditionService.getBy("id", SourceConditionID);
                 if (testcondition != null) {
                     Testcondition NewCondition = testcondition;
-                    DestiConditionName = testcondition.getConditionname() + "-发布单元复制";
+                    DestiConditionName = testcondition.getConditionname() + "-微服务复制";
                     NewCondition.setConditionname(DestiConditionName);
                     NewCondition.setId(null);
                     testconditionService.save(NewCondition);
@@ -340,7 +340,7 @@ public class ApicasesController {
                         List<Testcondition> testconditionList = testconditionService.listByCondition(ParentSubCondition);
                         for (Testcondition SourceParentCondition : testconditionList) {
                             long SourceConditionID = SourceParentCondition.getId();
-                            String DestinationConditionName = SourceParentCondition.getConditionname() + "-发布单元复制";
+                            String DestinationConditionName = SourceParentCondition.getConditionname() + "-微服务复制";
                             SourceParentCondition.setObjectid(DestinationCaseID);
                             SourceParentCondition.setConditionname(DestinationConditionName);
                             SourceParentCondition.setApiid(DestinationApiid);
@@ -438,7 +438,7 @@ public class ApicasesController {
             if (CopyType.equalsIgnoreCase("case")) {
                 SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname() + "-用例复制");
             } else {
-                SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname() + "-发布单元复制");
+                SourceConditionOrder.setSubconditionname(SourceConditionOrder.getSubconditionname() + "-微服务复制");
             }
             conditionOrderService.save(SourceConditionOrder);
         }
@@ -618,7 +618,7 @@ public class ApicasesController {
     }
 
     /**
-     * 根据发布单元id获取用例
+     * 根据微服务id获取用例
      */
     @PostMapping("/getcasebydeployunitid")
     public Result getcasebydeployunitid(@RequestBody final Map<String, Object> param) {
@@ -813,7 +813,7 @@ public class ApicasesController {
         String ApiStyle = api.getApistyle();
         Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
         if (deployunit == null) {
-            return ResultGenerator.genFailedResult("当前用例的API所在的发布单元不存在，请检查是否被删除！");
+            return ResultGenerator.genFailedResult("当前用例的API所在的微服务不存在，请检查是否被删除！");
         }
         String Protocal = deployunit.getProtocal();
         String BaseUrl = deployunit.getBaseurl();
@@ -1026,7 +1026,7 @@ public class ApicasesController {
                 return ResultGenerator.genFailedResult(ExceptionMess);
             }
         } else {
-            return ResultGenerator.genFailedResult("当前环境未部署此用例API所在的发布单元，请先完成环境下的部署！");
+            return ResultGenerator.genFailedResult("当前环境未部署此用例API所在的微服务，请先完成环境下的部署！");
         }
     }
 

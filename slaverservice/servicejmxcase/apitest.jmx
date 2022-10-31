@@ -319,7 +319,7 @@ props.setProperty(&quot;newstatus&quot;,status);
             <stringProp name="resultSetHandler">Store as String</stringProp>
           </JDBCSampler>
           <hashTree/>
-          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="获取发布单元结果sql" enabled="true">
+          <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="获取微服务结果sql" enabled="true">
             <stringProp name="dataSource">testcenter</stringProp>
             <stringProp name="queryType">Select Statement</stringProp>
             <stringProp name="query">select b.protocal,b.port from apicases a inner join deployunit b on a.deployunitid=b.id where a.id=${caseid}</stringProp>

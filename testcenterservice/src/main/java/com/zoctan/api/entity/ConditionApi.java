@@ -28,7 +28,7 @@ public class ConditionApi {
     private Long conditionid;
 
     /**
-     * 发布单元id
+     * 微服务id
      */
     private Long deployunitid;
 
@@ -156,18 +156,18 @@ public class ConditionApi {
     }
 
     /**
-     * 获取发布单元id
+     * 获取微服务id
      *
-     * @return deployunitid - 发布单元id
+     * @return deployunitid - 微服务id
      */
     public Long getDeployunitid() {
         return deployunitid;
     }
 
     /**
-     * 设置发布单元id
+     * 设置微服务id
      *
-     * @param deployunitid 发布单元id
+     * @param deployunitid 微服务id
      */
     public void setDeployunitid(Long deployunitid) {
         this.deployunitid = deployunitid;

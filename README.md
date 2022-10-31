@@ -63,6 +63,7 @@
  [架构设计](https://gitee.com/season-fan/autometer-api/wikis/%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84?sort_id=4936162)
 
 ## 部署
+ 
  [服务器部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2/%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2?sort_id=4960162)
 
 [服务器简易部署](https://gitee.com/season-fan/autometer-api/wikis/%E9%83%A8%E7%BD%B2%EF%BC%8C%E6%9B%B4%E6%96%B0/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AE%80%E6%98%93%E9%83%A8%E7%BD%B2?sort_id=5701353)

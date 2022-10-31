@@ -309,7 +309,7 @@
         tmpscriptvariablesname: '',
         apiList: [], // api列表
         caseList: [], // 用例列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         scriptvariablesList: [], // 变量列表
         DbconditionList: [], // 脚本条件列表
         DbconditionVariablesList: [], // 用例变量列表
@@ -416,7 +416,7 @@
         })
       },
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         this.listLoading = true
@@ -424,12 +424,12 @@
           this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 
       /**
-       * 脚本条件下拉选择事件获取发布单元id  e的值为options的选值
+       * 脚本条件下拉选择事件获取微服务id  e的值为options的选值
        */
       dbconditionselectChanged(e) {
         for (let i = 0; i < this.DbconditionList.length; i++) {
@@ -441,7 +441,7 @@
       },
 
       /**
-       * api下拉选择事件获取发布单元id  e的值为options的选值
+       * api下拉选择事件获取微服务id  e的值为options的选值
        */
       apiselectChanged(e) {
         for (let i = 0; i < this.apiList.length; i++) {

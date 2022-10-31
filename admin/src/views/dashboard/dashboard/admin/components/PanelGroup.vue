@@ -33,7 +33,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            发布单元
+            微服务
           </div>
           <count-to :start-val="deployunum.start" :end-val="deployunum.end" :duration="2600" class="card-panel-num" />
         </div>
@@ -240,7 +240,7 @@ export default {
       getdeploynum(this.search).then(response => {
         this.deployunum.end = response.data
       }).catch(res => {
-        this.$message.error('加载发布单元数量失败')
+        this.$message.error('加载微服务数量失败')
       })
     },
     getexecuteplannum() {

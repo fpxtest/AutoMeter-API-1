@@ -77,7 +77,7 @@ export const asyncRouterMap = [
   //   component: Layout,
   //   redirect: '/enviroment/project/list',
   //   name: '需求管理',
-  //   icon: 'enviroment',
+  //   icon: 'rq',
   //   children: [
   //     { path: 'project/list', name: '用户故事', component: _import('assets/project/index'), meta: { title: '用户故事', permission: ['project:list'] }, icon: 'testmanager' }
   //   ]
@@ -86,7 +86,7 @@ export const asyncRouterMap = [
   //   path: '/enviroment',
   //   component: Layout,
   //   name: '迭代管理',
-  //   icon: 'enviroment',
+  //   icon: 'dd',
   //   children: [
   //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
   //     { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
@@ -99,8 +99,22 @@ export const asyncRouterMap = [
   // {
   //   path: '/enviroment',
   //   component: Layout,
-  //   name: '代码管理',
-  //   icon: 'enviroment',
+  //   name: '分支管理',
+  //   icon: 'branches',
+  //   children: [
+  //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
+  //     { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},
+  //     // { path: 'envmachine/list', name: '环境服务器', component: _import('enviroment/envmachine/index'), meta: { title: '环境服务器', permission: ['envmachine:list'] }},
+  //     { path: 'enviromentassemble/list', name: '环境组件', component: _import('enviroment/enviromentassemble/index'), meta: { title: '环境组件', permission: ['enviroment_assemble:list'] }},
+  //     { path: 'macdepunit/list', name: '环境部署', component: _import('enviroment/macdepunit/index'), meta: { title: '环境部署', permission: ['macdepunit:list'] }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/enviroment',
+  //   component: Layout,
+  //   name: '缺陷管理',
+  //   icon: 'bug',
   //   children: [
   //     { path: 'machine/list', name: '服务器管理', component: _import('assets/machine/index'), meta: { title: '服务器管理', permission: ['machine:list'] }},
   //     { path: 'testenviroment/list', name: '环境管理', component: _import('enviroment/testenviroment/index'), meta: { title: '环境管理', permission: ['enviroment:list'] }},

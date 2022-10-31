@@ -228,7 +228,7 @@ public class FunctionDispatchScheduleTask {
 //            break;
 //        }
 //
-//        //获取发布单元分组列表
+//        //获取微服务分组列表
 //        HashMap<String, List<Dispatch>> DeployUnitGroupDispatch = new HashMap<String, List<Dispatch>>();
 //        for (Dispatch dispatch : dispatchResultList) {
 //            String DeployUnit = dispatch.getDeployunitname();

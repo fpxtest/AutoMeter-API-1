@@ -301,7 +301,7 @@ public class ApiParamsController {
                 .andCondition("id <> " + apiParams.getId());
         if(apiParamsService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("发布单元下已经存在此类型的API参数");
+            return ResultGenerator.genFailedResult("微服务下已经存在此类型的API参数");
         }
 
         else

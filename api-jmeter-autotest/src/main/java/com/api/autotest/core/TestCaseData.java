@@ -140,7 +140,7 @@ public class TestCaseData {
             String apistyle = testMysqlHelp.getcaseValue("apistyle", apilist).toLowerCase();
             // 协议 http,https,rpc
             String protocal = testMysqlHelp.getcaseValue("protocal", deployunitlist).toLowerCase();
-            // 发布单元端口
+            // 微服务端口
             String port = testMysqlHelp.getcaseValue("port", deployunitlist);
 
             String BaseUrl = testMysqlHelp.getcaseValue("baseurl", deployunitlist);
@@ -148,7 +148,7 @@ public class TestCaseData {
 
             String deployunitid = testMysqlHelp.getcaseValue("id", deployunitlist);
 
-            // 获取发布单元访问方式，ip或者域名
+            // 获取微服务访问方式，ip或者域名
             String deployunitvisittype = testMysqlHelp.getcaseValue("visittype", deployunitmachineiplist);
 
             String IP = testMysqlHelp.getcaseValue("ip", deployunitmachineiplist);

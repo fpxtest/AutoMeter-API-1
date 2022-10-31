@@ -48,7 +48,7 @@ public class ExecuteplanTestcase {
     private Long caseorder;
 
     /**
-     * 发布单元
+     * 微服务
      */
     private String deployunitname;
 
@@ -193,18 +193,18 @@ public class ExecuteplanTestcase {
     }
 
     /**
-     * 获取发布单元
+     * 获取微服务
      *
-     * @return deployunitname - 发布单元
+     * @return deployunitname - 微服务
      */
     public String getDeployunitname() {
         return deployunitname;
     }
 
     /**
-     * 设置发布单元
+     * 设置微服务
      *
-     * @param deployunitname 发布单元
+     * @param deployunitname 微服务
      */
     public void setDeployunitname(String deployunitname) {
         this.deployunitname = deployunitname;

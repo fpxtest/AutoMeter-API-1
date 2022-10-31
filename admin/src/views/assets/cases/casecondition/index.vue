@@ -24,7 +24,7 @@
 
         <span v-if="hasPermission('apicases_condition:search')">
           <el-form-item>
-            <el-select v-model="search.casedeployunitname" placeholder="发布单元" @change="deployunitselectChanged($event)">
+            <el-select v-model="search.casedeployunitname" placeholder="微服务" @change="deployunitselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname"/>
@@ -158,8 +158,8 @@
         </el-form-item>
 
         <div v-if="testcasevisible">
-        <el-form-item label="发布单元" prop="casedeployunitname" required >
-          <el-select v-model="tmpapicases_condition.casedeployunitname" placeholder="发布单元" @change="selectChanged($event)">
+        <el-form-item label="微服务" prop="casedeployunitname" required >
+          <el-select v-model="tmpapicases_condition.casedeployunitname" placeholder="微服务" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -348,7 +348,7 @@
         caseList: [], // 用例列表
         searchcaseList: [], // 查询用例列表
         interfacecaseList: [], // 用例列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         caseparamtypelist: [], // 用例参数类型列表
         caseparamsbytypelist: [], // 根据类型获取用例参数名列表
         listLoading: false, // 数据加载等待动画
@@ -564,7 +564,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectparamsChanged(e) {
         this.getcaseparamsbytype(e)
@@ -585,7 +585,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChanged(e) {
         this.apiList = []
@@ -640,7 +640,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       deployunitselectChanged(e) {
         this.apiList = []
@@ -655,7 +655,7 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitList() {
         this.listLoading = true
@@ -663,7 +663,7 @@
           this.deployunitList = response.data.list
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 

@@ -13,18 +13,18 @@ import java.util.Map;
 */
 public interface ApicasesService extends Service<Apicases> {
     /**
-     * 按发布单元名或者协议名获取发布单元内容
+     * 按微服务名或者协议名获取微服务内容
      *
      * @param params 参数
-     * @return 发布单元列表
+     * @return 微服务列表
      */
     List<Apicases> findApiCaseWithName(final Map<String, Object> params);
 
     /**
-     * 更新发布单元内容
+     * 更新微服务内容
      *
      * @param params 参数
-     * @return 发布单元列表
+     * @return 微服务列表
      */
     void updateApicase(Apicases params);
 

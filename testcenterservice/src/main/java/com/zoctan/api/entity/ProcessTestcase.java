@@ -23,12 +23,12 @@ public class ProcessTestcase {
     private Long apiid;
 
     /**
-     * 发布单元id
+     * 微服务id
      */
     private Long deployunitid;
 
     /**
-     * 发布单元
+     * 微服务
      */
     private String deployunitname;
 
@@ -119,36 +119,36 @@ public class ProcessTestcase {
     }
 
     /**
-     * 获取发布单元id
+     * 获取微服务id
      *
-     * @return deployunitid - 发布单元id
+     * @return deployunitid - 微服务id
      */
     public Long getDeployunitid() {
         return deployunitid;
     }
 
     /**
-     * 设置发布单元id
+     * 设置微服务id
      *
-     * @param deployunitid 发布单元id
+     * @param deployunitid 微服务id
      */
     public void setDeployunitid(Long deployunitid) {
         this.deployunitid = deployunitid;
     }
 
     /**
-     * 获取发布单元
+     * 获取微服务
      *
-     * @return deployunitname - 发布单元
+     * @return deployunitname - 微服务
      */
     public String getDeployunitname() {
         return deployunitname;
     }
 
     /**
-     * 设置发布单元
+     * 设置微服务
      *
-     * @param deployunitname 发布单元
+     * @param deployunitname 微服务
      */
     public void setDeployunitname(String deployunitname) {
         this.deployunitname = deployunitname;

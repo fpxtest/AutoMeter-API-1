@@ -41,7 +41,7 @@
         </el-form-item>
 
           <el-form-item prop="deployunitname">
-            <el-select v-model="search.deployunitname" clearable placeholder="发布单元" @change="loaddeployunitselectChanged($event)">
+            <el-select v-model="search.deployunitname" clearable placeholder="微服务" @change="loaddeployunitselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in loaddeployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" required/>
@@ -86,7 +86,7 @@
         </template>
       </el-table-column>
       <el-table-column label="测试集合名" align="center" prop="executeplanname" width="150"/>
-      <el-table-column label="发布单元" align="center" prop="deployunitname" width="150"/>
+      <el-table-column label="微服务" align="center" prop="deployunitname" width="150"/>
       <el-table-column label="用例名" align="center" prop="casename" width="150"/>
       <el-table-column label="API" align="center" prop="apiname" width="150"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
@@ -132,8 +132,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="发布单元:" prop="deployunitname" required>
-            <el-select v-model="searchcase.deployunitname" placeholder="发布单元" @change="deployunitselectChanged($event)">
+          <el-form-item label="微服务:" prop="deployunitname" required>
+            <el-select v-model="searchcase.deployunitname" placeholder="微服务" @change="deployunitselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
@@ -176,7 +176,7 @@
         <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
         <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
         <el-table-column label="用例名" align="center" prop="casename" width="180"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="180"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="180"/>
         <el-table-column label="API" align="center" prop="apiname" width="220"/>
       </el-table>
       <el-pagination
@@ -238,7 +238,7 @@
         <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
         <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
         <el-table-column label="用例名" align="center" prop="casename" width="100"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="100"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="100"/>
         <el-table-column label="API" align="center" prop="apiname" width="100"/>
         <el-table-column min-width="200px" align="center" label="用例顺序">
           <template slot-scope="{row}">
@@ -340,8 +340,8 @@
         execplanList: [], // 计划列表
         apiList: [], // api列表
         loadapiList: [], // api列表
-        deployunitList: [], // 发布单元列表
-        loaddeployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
+        loaddeployunitList: [], // 微服务列表
         multipleSelection: [], // 首页装载表格被选中的内容
         casemultipleSelection: [], // 查询用例表格被选中的内容
         executeplancaseList: [], // 首页测试集合用例列表
@@ -551,7 +551,7 @@
       },
 
       /**
-       * 计划下拉选择事件获取发布单元id  e的值为options的选值
+       * 计划下拉选择事件获取微服务id  e的值为options的选值
        */
       testplanselectChanged(e) {
         this.tmpexecuteplanid = null
@@ -576,7 +576,7 @@
       },
 
       /**
-       * 首页计划下拉选择事件获取发布单元id  e的值为options的选值
+       * 首页计划下拉选择事件获取微服务id  e的值为options的选值
        */
       loadtestplanselectChanged(e) {
         this.tmploadapiid = null
@@ -594,7 +594,7 @@
       },
 
       /**
-       * 首页API下拉选择事件获取发布单元id  e的值为options的选值
+       * 首页API下拉选择事件获取微服务id  e的值为options的选值
        */
       loadApiselectChanged(e) {
         this.tmploadapiid = null
@@ -606,7 +606,7 @@
       },
 
       /**
-       * API下拉选择事件获取发布单元id  e的值为options的选值
+       * API下拉选择事件获取微服务id  e的值为options的选值
        */
       ApiselectChanged(e) {
         this.tmpapiid = null
@@ -618,7 +618,7 @@
       },
 
       /**
-       * 首页发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 首页微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       loaddeployunitselectChanged(e) {
         this.tmploadapiid = null
@@ -640,7 +640,7 @@
       },
 
       /**
-       * 装载层发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 装载层微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       deployunitselectChanged(e) {
         this.tmpapiid = null
@@ -662,24 +662,24 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         getdepunitLists(this.search).then(response => {
           this.deployunitList = response.data
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getloaddepunitLists() {
         getdepunitLists(this.search).then(response => {
           this.loaddeployunitList = response.data
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 
@@ -702,7 +702,7 @@
       },
 
       /**
-       * 获取发布单元和api的用例
+       * 获取微服务和api的用例
        */
       searchcaseBy() {
         this.searchcase.page = 1

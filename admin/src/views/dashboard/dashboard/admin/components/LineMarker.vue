@@ -123,7 +123,7 @@
         console.log('000000000000000000000000000000000000000000000000000')
         this.chart = echarts.init(document.getElementById(this.id))
         this.chart.setOption({
-          backgroundColor: 'rgba(246,246,245,0.99)',
+          backgroundColor: 'rgba(245,245,238,0.99)',
           title: {
             top: 20,
             text: this.LineName,
@@ -167,7 +167,7 @@
             boundaryGap: false,
             axisLine: {
               lineStyle: {
-                color: '#e7e9ee'
+                color: '#010310'
               }
             },
             data: this.PlanDateData

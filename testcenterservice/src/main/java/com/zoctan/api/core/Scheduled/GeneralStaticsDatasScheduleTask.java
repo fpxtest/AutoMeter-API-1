@@ -105,7 +105,7 @@ public class GeneralStaticsDatasScheduleTask {
 
     private void StaticsDeployUnitCase(String StaticsDate,String StartStaticsDate,String EndStaticsDate)
     {
-        GeneralStaticsDatasScheduleTask.log.info("------开始执行收集统计发布单元用例数据任务------------");
+        GeneralStaticsDatasScheduleTask.log.info("------开始执行收集统计微服务用例数据任务------------");
         List<StaticsDeployunitandcases> staticsDeployUnitandcasesList=new ArrayList<>();
         HashMap<String, Object> paramMap = Maps.newHashMap();
         paramMap.put("startTime", StartStaticsDate);
@@ -143,7 +143,7 @@ public class GeneralStaticsDatasScheduleTask {
         {
             staticsDeployunitandcasesMapper.savestaticsdeployunitandcases(staticsDeployUnitandcasesList);
         }
-        GeneralStaticsDatasScheduleTask.log.info("---------执行收集统计发布单元用例数据任务完成-----------");
+        GeneralStaticsDatasScheduleTask.log.info("---------执行收集统计微服务用例数据任务完成-----------");
 
     }
 

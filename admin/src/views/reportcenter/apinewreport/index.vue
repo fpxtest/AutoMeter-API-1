@@ -151,7 +151,7 @@
                 <span v-else style="color: #37B328">{{ scope.row.status }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
+            <el-table-column label="微服务" align="center" prop="deployunitname" width="120"/>
 
 
             <el-table-column label="请求地址" align="center" prop="url" width="80">
@@ -397,7 +397,7 @@
         apiList: [], // api列表
         planbatchList: [], // 执行计划列表
         execplanList: [], // 计划列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         listLoading: false, // 数据加载等待动画
         dicvisitypeQuery: {
           page: 1, // 页码
@@ -489,6 +489,7 @@
 
     activated() {
       this.getexecplanList()
+      this.testplanselectChanged(this.tmpquery.testplanname)
     },
 
     mounted() {
@@ -618,7 +619,7 @@
         })
       },
       /**
-       * 计划下拉选择事件获取发布单元id  e的值为options的选值
+       * 计划下拉选择事件获取微服务id  e的值为options的选值
        */
       testplanselectChanged(e) {
         for (let i = 0; i < this.execplanList.length; i++) {

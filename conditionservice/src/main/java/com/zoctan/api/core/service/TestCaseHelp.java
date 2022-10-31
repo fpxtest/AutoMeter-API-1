@@ -90,11 +90,11 @@ public class TestCaseHelp {
             String apistyle = api.getApistyle();
             // 协议 http,https,rpc
             String protocal = deployunit.getProtocal().toLowerCase();
-            // 发布单元端口
+            // 微服务端口
             String port = deployunit.getPort();
             String BaseUrl = deployunit.getBaseurl();
 
-            // 获取发布单元访问方式，ip或者域名
+            // 获取微服务访问方式，ip或者域名
             String deployunitvisittype = macdepunit.getVisittype();
             // 根据访问方式来确定ip还是域名
             String testserver = "";
@@ -318,10 +318,10 @@ public class TestCaseHelp {
             String apistyle = api.getApistyle();
             // 协议 http,https,rpc
             String protocal = deployunit.getProtocal().toLowerCase();
-            // 发布单元端口
+            // 微服务端口
             String port = deployunit.getPort();
             String BaseUrl = deployunit.getBaseurl();
-            // 获取发布单元访问方式，ip或者域名
+            // 获取微服务访问方式，ip或者域名
             String deployunitvisittype = macdepunit.getVisittype();
             // 根据访问方式来确定ip还是域名
             String testserver = "";

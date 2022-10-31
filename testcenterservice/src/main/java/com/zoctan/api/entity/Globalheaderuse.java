@@ -17,7 +17,7 @@ public class Globalheaderuse {
     private Long globalheaderid;
 
     /**
-     * 发布单元Id
+     * 微服务Id
      */
     public Long getExecuteplanid() {
         return executeplanid;

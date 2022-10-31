@@ -36,7 +36,7 @@ CREATE TABLE `testcase`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='服务器发布单元表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='服务器微服务表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

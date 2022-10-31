@@ -57,7 +57,7 @@
             <el-input v-model="search.apiname" clearable @keyup.enter.native="searchBy" placeholder="api名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="服务名"></el-input>
+            <el-input v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="微服务名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
@@ -85,7 +85,7 @@
         </template>
       </el-table-column>
       <el-table-column label="API" align="center" prop="apiname" width="120"/>
-      <el-table-column label="服务" align="center" prop="deployunitname" width="130"/>
+      <el-table-column label="微服务" align="center" prop="deployunitname" width="130"/>
       <el-table-column label="风格" align="center" prop="apistyle" width="80"/>
       <el-table-column label="访问方式" align="center" prop="visittype" width="80"/>
       <el-table-column label="路径" align="center" prop="path" width="60">
@@ -196,8 +196,8 @@
             v-model.trim="tmpapi.path"
           />
         </el-form-item>
-        <el-form-item label="服务:" prop="deployunitname" required>
-          <el-select v-model="tmpapi.deployunitname" placeholder="服务" style="width:100%"
+        <el-form-item label="微服务:" prop="deployunitname" required>
+          <el-select v-model="tmpapi.deployunitname" placeholder="微服务" style="width:100%"
                      @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none"/>
             <div v-for="(depunitname, index) in deployunitList" :key="index">
@@ -280,8 +280,8 @@
         :model="tmpcopyapi"
         ref="tmpcopyapi"
       >
-        <el-form-item label="源服务" prop="sourcedeployunitname" required>
-          <el-select v-model="tmpcopyapi.sourcedeployunitname" placeholder="服务" style="width:100%"
+        <el-form-item label="源微服务" prop="sourcedeployunitname" required>
+          <el-select v-model="tmpcopyapi.sourcedeployunitname" placeholder="微服务" style="width:100%"
                      @change="CopyAPISourceDeployselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none"/>
             <div v-for="(depunitname, index) in deployunitList" :key="index">
@@ -300,8 +300,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="目标服务" prop="objectdeployunitname" required>
-          <el-select v-model="tmpcopyapi.objectdeployunitname" placeholder="服务" style="width:100%"
+        <el-form-item label="目标微服务" prop="objectdeployunitname" required>
+          <el-select v-model="tmpcopyapi.objectdeployunitname" placeholder="微服务" style="width:100%"
                      @change="CopyObjectAPIDeployUnitChanged($event)">
             <el-option label="请选择" value="''" style="display: none"/>
             <div v-for="(depunitname, index) in deployunitList" :key="index">
@@ -363,7 +363,7 @@
         <el-table-column label="API" align="center" prop="apiname" width="120"/>
         <el-table-column label="属性类型" align="center" prop="propertytype" width="80"/>
         <el-table-column label="提交类型" align="center" prop="bodytype" width="80"/>
-        <el-table-column label="服务" align="center" prop="deployunitname" width="130"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="130"/>
         <el-table-column label="参数名" align="center" prop="keynamebak" width="100">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
@@ -588,8 +588,8 @@
         :model="uploadData"
         ref="uploadData"
       >
-        <el-form-item label="导入到服务:" prop="deptname" required>
-          <el-select v-model="uploadData.deptname" placeholder="服务" style="width:100%"
+        <el-form-item label="导入到微服务:" prop="deptname" required>
+          <el-select v-model="uploadData.deptname" placeholder="微服务" style="width:100%"
                      @change="uploadselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none"/>
             <div v-for="(depunitname, index) in deployunitList" :key="index">
@@ -627,8 +627,8 @@
         :model="uploadData"
         ref="uploadData"
       >
-        <el-form-item label="导入到服务:" prop="deptname" required>
-          <el-select v-model="uploadData.deptname" placeholder="服务" style="width:100%"
+        <el-form-item label="导入到微服务:" prop="deptname" required>
+          <el-select v-model="uploadData.deptname" placeholder="微服务" style="width:100%"
                      @change="uploadselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none"/>
             <div v-for="(depunitname, index) in deployunitList" :key="index">

@@ -1,0 +1,154 @@
+version: '3'
+services:
+  conditionservice:
+    container_name: conditionservice
+    privileged: true
+    build:
+      context: ../AutoMeter/conditionservice
+      dockerfile: Dockerfile
+    image: conditionservice:1.0
+    ports:
+      - "8083:8083"
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+      - slaverservice1
+      - slaverservice2
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.7
+
+  dispatchservice:
+    container_name: dispatchservice
+    privileged: true
+    build:
+      context: ../AutoMeter/dispatchservice
+      dockerfile: Dockerfile
+    image: dispatchservice:1.0
+    ports:
+      - "8082:8082"
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+      - conditionservice
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.6
+
+  mockservice:
+    container_name: mockservice
+    privileged: true
+    build:
+      context: ../AutoMeter/mockservice
+      dockerfile: Dockerfile
+    image: mockservice:1.0
+    ports:
+      - "8085:8084"
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.10
+
+  slaverservice1:
+    container_name: slaverservice1
+    privileged: true
+    build:
+      context: ../AutoMeter/slaverservice
+      dockerfile: Dockerfile
+    image: slaverservice:1.0
+    ports:
+      - "8081:8081"
+    restart: always
+    volumes:
+      - "../AutoMeter/BackupData/slaverservice/performancereport:/home/slaverservice/performancereport"
+      - "../AutoMeter/BackupData/slaverservice/performancereportlogfile:/home/slaverservice/performancereportlogfile"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.5
+
+  testcenterservice:
+    container_name: testcenterservice
+    privileged: true
+    build:
+      context: ../AutoMeter/testcenterservice
+      dockerfile: Dockerfile
+    image: testcenterservice:1.0
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+      - dispatchservice
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.4
+
+  testcenterapp:
+    container_name: testcenterapp
+    privileged: true
+    build:
+      context: ../AutoMeter/testcenterapp
+      dockerfile: Dockerfile
+    image: testcenterapp:1.0
+    ports:
+      - "8084:80"
+    restart: always
+    depends_on:
+      - testcenterservice
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.3
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    ports:
+      - "3406:3306"
+    restart: always
+    environment:
+      LANG: C.UTF-8 # 修改1
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: testcenter
+    volumes:
+      - "../AutoMeter/sql/init-sql:/docker-entrypoint-initdb.d/"
+      - "../AutoMeter/BackupData/mysql/data:/var/lib/mysql"
+      - "../AutoMeter/BackupData/mysql/config:/etc/mysql/conf.d"
+    depends_on:
+      - redis
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.2
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+
+  redis:
+    container_name: redis
+    privileged: true
+    image: redis:6.2.6
+    ports:
+      - "6479:6379"
+    restart: always
+    volumes:
+      - "../AutoMeter/BackupData/redis/data:/data"
+      - "../AutoMeter/BackupData/redis/config:/etc/redis/redis.conf"
+    networks:
+      autometer:
+        ipv4_address: 173.20.1.8
+
+networks:
+  autometer:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 173.20.1.0/24

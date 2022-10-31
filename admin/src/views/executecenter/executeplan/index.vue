@@ -209,8 +209,8 @@
       <div class="filter-container" >
         <el-form :inline="true" :model="searchcase" ref="searchcase" >
           <span v-if="hasPermission('apicases:search')">
-          <el-form-item label="发布单元:" prop="deployunitname" required>
-            <el-select v-model="searchcase.deployunitname" placeholder="发布单元" @change="selectChanged($event)">
+          <el-form-item label="微服务:" prop="deployunitname" required>
+            <el-select v-model="searchcase.deployunitname" placeholder="微服务" @change="selectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" required/>
@@ -253,7 +253,7 @@
         <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
         <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
         <el-table-column label="用例名" align="center" prop="casename" width="120"/>
-        <el-table-column label="发布单元" align="center" prop="deployunitname" width="120"/>
+        <el-table-column label="微服务" align="center" prop="deployunitname" width="120"/>
         <el-table-column label="API" align="center" prop="apiname" width="120"/>
         <el-table-column label="期望值" align="center" prop="expect" width="120"/>
       </el-table>
@@ -471,7 +471,7 @@
         PerformanceVisible: false, // 显示性能运行模式
         enviromentnameList: [], // 环境列表
         apiList: [], // api列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         multipleSelection: [], // 执行计划表格被选中的内容
         casemultipleSelection: [], // 用例表格被选中的内容
         globalheaderallList: [], // 全局header列表
@@ -891,7 +891,7 @@
         }
       },
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChanged(e) {
         this.apiList = null
@@ -930,7 +930,7 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitList() {
         this.caselistLoading = true
@@ -939,7 +939,7 @@
           // this.casetotal = response.data.total
           // this.caselistLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 
@@ -958,7 +958,7 @@
       },
 
       /**
-       * 获取发布单元和api的用例
+       * 获取微服务和api的用例
        */
       searchcaseBy() {
         this.searchtestplanexistcase()
@@ -993,7 +993,7 @@
       },
 
       /**
-       * 获取发布单元和api的用例，已废弃
+       * 获取微服务和api的用例，已废弃
        */
       async searchcaseBydepandapi() {
         this.$refs.searchcase.validate(valid => {
@@ -1016,7 +1016,7 @@
       },
 
       /**
-       * 获取执行计划下发布单元和api已的用例,如果是已装载过的，会带上装载状态
+       * 获取执行计划下微服务和api已的用例,如果是已装载过的，会带上装载状态
        */
       searchtestplanexistcase() {
         this.testcaselastList = []

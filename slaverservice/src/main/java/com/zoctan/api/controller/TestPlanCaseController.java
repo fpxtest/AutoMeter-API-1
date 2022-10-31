@@ -269,7 +269,7 @@ public class TestPlanCaseController {
         TestPlanCaseController.log.info("性能任务-执行多机并行性能用例名 is......." + CaseName);
         Deployunit Deployunit = deployunitService.findDeployNameValueWithCode(DeployUnitName,executeplan.getProjectid());
         if (Deployunit == null) {
-            return ResultGenerator.genFailedResult("未找到发布单元为：" + DeployUnitName);
+            return ResultGenerator.genFailedResult("未找到微服务为：" + DeployUnitName);
         }
         String Protocal = Deployunit.getProtocal();
         //如果是http,https，直接使用httpapitestcase下的functionhttpapi或者performancehttpapi来执行测试
@@ -423,7 +423,7 @@ public class TestPlanCaseController {
         jmeterPerformanceObject.setResponecontenttype(api.getResponecontenttype());
         Deployunit deployunit = deployunitService.getBy("id", api.getDeployunitid());
         if (deployunit == null) {
-            throw new Exception("未找到用例的API所在的发布单元，请检查是否被删除！");
+            throw new Exception("未找到用例的API所在的微服务，请检查是否被删除！");
         }
         jmeterPerformanceObject.setProtocal(deployunit.getProtocal());
 
@@ -473,7 +473,7 @@ public class TestPlanCaseController {
             jmeterPerformanceObject.setDeployunitvisittype(macdepunit.getVisittype());
             jmeterPerformanceObject.setResource(resource.trim());
         } else {
-            throw new Exception("未在环境中部署用例API所在的发布单元，请检查是否被删除！");
+            throw new Exception("未在环境中部署用例API所在的微服务，请检查是否被删除！");
         }
 
         List<ApicasesAssert> apicasesAssertList = apicasesAssertService.findAssertbycaseid(dispatch.getTestcaseid().toString());
@@ -1039,7 +1039,7 @@ public class TestPlanCaseController {
             break;
         }
 
-//        //获取发布单元分组列表
+//        //获取微服务分组列表
 //        HashMap<String, List<Dispatch>> DeployUnitGroupDispatch = new HashMap<String, List<Dispatch>>();
 //        for (Dispatch dispatch : dispatchResultList) {
 //            String DeployUnit = dispatch.getDeployunitname();

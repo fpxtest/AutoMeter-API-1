@@ -205,7 +205,7 @@
       unix2CurrentTime,
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedEN(e) {
         for (let i = 0; i < this.enviromentnameList.length; i++) {
@@ -217,7 +217,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedMN(e) {
         for (let i = 0; i < this.machinenameList.length; i++) {

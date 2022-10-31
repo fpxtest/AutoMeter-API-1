@@ -35,7 +35,7 @@ public class DeployunitController {
                 .andCondition("deployunitname = '" + deployunit.getDeployunitname().replace("'","''") + "'");
         if(deployunitService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("此发布单元已经存在");
+            return ResultGenerator.genFailedResult("此微服务已经存在");
         }
         else
         {
@@ -50,7 +50,7 @@ public class DeployunitController {
         List<Api> apiList= apiService.getapibydeployunitid(id);
         if(apiList.size()>0)
         {
-            return ResultGenerator.genFailedResult("当前发布单元还存在API，无法删除！");
+            return ResultGenerator.genFailedResult("当前微服务还存在API，无法删除！");
         }
         else
         {
@@ -120,7 +120,7 @@ public class DeployunitController {
                 .andCondition("id <> " + deployunit.getId());
         if(deployunitService.ifexist(con)>0)
         {
-            return ResultGenerator.genFailedResult("此发布单元已经存在");
+            return ResultGenerator.genFailedResult("此微服务已经存在");
         }
         else
         {

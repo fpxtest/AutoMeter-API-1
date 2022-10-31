@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column  label="父条件名" align="center" prop="conditionname" width="180"/>
       <el-table-column  label="子条件名" align="center" prop="subconditionname" width="170"/>
-      <el-table-column label="发布单元名" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="微服务名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="API名" align="center" prop="apiname" width="100"/>
       <el-table-column label="接口名" align="center" prop="casename" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="70"/>
@@ -119,8 +119,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="发布单元" prop="deployunitname" required >
-          <el-select v-model="tmpapicondition.deployunitname" placeholder="发布单元" style="width:100%" @change="deployunitselectChanged($event)">
+        <el-form-item label="微服务" prop="deployunitname" required >
+          <el-select v-model="tmpapicondition.deployunitname" placeholder="微服务" style="width:100%" @change="deployunitselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
@@ -200,7 +200,7 @@
         apiconditionList: [], // 接口条件列表
         apiList: [], // api列表
         caseList: [], // 用例列表
-        deployunitList: [], // 发布单元列表
+        deployunitList: [], // 微服务列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         deployunitQuery: {
@@ -273,7 +273,7 @@
       unix2CurrentTime,
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       deployunitselectChanged(e) {
         for (let i = 0; i < this.deployunitList.length; i++) {
@@ -294,7 +294,7 @@
       },
 
       /**
-       * api下拉选择事件获取发布单元id  e的值为options的选值
+       * api下拉选择事件获取微服务id  e的值为options的选值
        */
       apiselectChanged(e) {
         for (let i = 0; i < this.apiList.length; i++) {
@@ -336,7 +336,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedMN(e) {
         for (let i = 0; i < this.machinenameList.length; i++) {
@@ -348,7 +348,7 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         this.listLoading = true
@@ -356,7 +356,7 @@
           this.deployunitList = response.data
           this.listLoading = false
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 

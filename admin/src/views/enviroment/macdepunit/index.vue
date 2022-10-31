@@ -36,8 +36,8 @@
           </el-select>
         </el-form-item>
 
-           <el-form-item label="发布单元" prop="deployunitname"  >
-            <el-select v-model="search.deployunitname" clearable  placeholder="发布单元" style="width:100%" @change="selectChangedDU($event)">
+           <el-form-item label="微服务" prop="deployunitname"  >
+            <el-select v-model="search.deployunitname" clearable  placeholder="微服务" style="width:100%" @change="selectChangedDU($event)">
               <div v-for="(depunit, index) in deployUnitList" :key="index">
                 <el-option :label="depunit.deployunitname" :value="depunit.deployunitname" required/>
               </div>
@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column label="测试环境" align="center" prop="enviromentname" width="120"/>
       <el-table-column label="服务器" align="center" prop="machinename" width="100"/>
-      <el-table-column label="发布单元,组件名" align="center" prop="deployunitname" width="120"/>
+      <el-table-column label="微服务,组件名" align="center" prop="deployunitname" width="120"/>
       <el-table-column label="组件类型" align="center" prop="assembletype" width="70"/>
       <el-table-column label="访问方式" align="center" prop="visittype" width="70"/>
       <el-table-column label="访问域名" align="center" prop="domain" width="150"/>
@@ -137,13 +137,13 @@
         <el-form-item label="组件类型" prop="assembletype" required >
           <el-select v-model="tmpmacdepunit.assembletype" placeholder="组件类型" style="width:100%" @change="selectChangedAandD($event)">
             <el-option label="组件" value="组件"></el-option>
-            <el-option label="发布单元" value="发布单元"></el-option>
+            <el-option label="微服务" value="微服务"></el-option>
           </el-select>
         </el-form-item>
 
         <div v-if="deployunitVisible">
-          <el-form-item label="发布单元" prop="deployunitname" required >
-            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="发布单元" style="width:100%" @change="selectChangedDU($event)">
+          <el-form-item label="微服务" prop="deployunitname" required >
+            <el-select v-model="tmpmacdepunit.deployunitname" placeholder="微服务" style="width:100%" @change="selectChangedDU($event)">
               <el-option label="请选择" value="''" style="display: none" />
               <div v-for="(depunit, index) in deployUnitList" :key="index">
                 <el-option :label="depunit.deployunitname" :value="depunit.deployunitname" required/>
@@ -255,9 +255,9 @@
         domianVisible: false,
         dialogFormVisible: false,
         textMap: {
-          updateRole: '修改部署发布单元,组件',
-          update: '修改部署发布单元,组件',
-          add: '部署发布单元,组件'
+          updateRole: '修改部署微服务,组件',
+          update: '修改部署微服务,组件',
+          add: '部署微服务,组件'
         },
         btnLoading: false, // 按钮等待动画
         tmpmacdepunit: {
@@ -319,7 +319,7 @@
           this.deployunitVisible = false
           this.assembleVisible = true
         }
-        if (e === '发布单元') {
+        if (e === '微服务') {
           this.assembleVisible = false
           this.deployunitVisible = true
           this.domianVisible = false
@@ -332,7 +332,7 @@
       },
 
       /**
-       * 发布单元访问方式下拉控制是否显示域名  e的值为options的选值
+       * 微服务访问方式下拉控制是否显示域名  e的值为options的选值
        */
       selectChangedVisittype(e) {
         if (e === '域名') {
@@ -346,7 +346,7 @@
       },
 
       /**
-       * 环境下拉选择事件获取发布单元id  e的值为options的选值
+       * 环境下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedEN(e) {
         for (let i = 0; i < this.enviromentnameList.length; i++) {
@@ -358,7 +358,7 @@
       },
 
       /**
-       * 服务器下拉选择事件获取发布单元id  e的值为options的选值
+       * 服务器下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedMN(e) {
         for (let i = 0; i < this.machinenameList.length; i++) {
@@ -370,7 +370,7 @@
       },
 
       /**
-       * 发布单元下拉选择事件获取发布单元id  e的值为options的选值
+       * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
       selectChangedDU(e) {
         for (let i = 0; i < this.deployUnitList.length; i++) {
@@ -451,14 +451,14 @@
       },
 
       /**
-       * 获取发布单元列表
+       * 获取微服务列表
        */
       getdepunitLists() {
         getdepunitLists(this.searchproject).then(response => {
           this.deployUnitList = response.data
           console.log(this.deployunitList)
         }).catch(res => {
-          this.$message.error('加载发布单元列表失败')
+          this.$message.error('加载微服务列表失败')
         })
       },
 
@@ -583,7 +583,7 @@
           this.deployunitVisible = false
           this.assembleVisible = true
         }
-        if (this.tmpmacdepunit.assembletype === '发布单元') {
+        if (this.tmpmacdepunit.assembletype === '微服务') {
           this.assembleVisible = false
           this.deployunitVisible = true
         }
@@ -609,7 +609,7 @@
               this.tmpmacdepunit.depunitid = ''
               // this.tmpmacdepunit.domain = ''
             }
-            if (this.tmpmacdepunit.assembletype === '发布单元') {
+            if (this.tmpmacdepunit.assembletype === '微服务') {
               this.tmpmacdepunit.assembleid = ''
             }
             updatemacdepunit(this.tmpmacdepunit).then(() => {
@@ -652,7 +652,7 @@
             if (this.macdepunitList[i].enviromentname === macdepunit.enviromentname) {
               if (this.macdepunitList[i].machinename === macdepunit.machinename) {
                 if (this.macdepunitList[i].deployunitname === macdepunit.deployunitname) {
-                  this.$message.error('服务器发布单元已存在')
+                  this.$message.error('服务器微服务已存在')
                   return false
                 }
               }

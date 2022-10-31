@@ -98,7 +98,7 @@ public class ExecuteplanController {
                 List<ExecuteplanTestcase> deployidlist = execplantestcaseService.finddeployunitbyplanid(planid);
                 if(deployidlist.size()==0)
                 {
-                    return ResultGenerator.genFailedResult("该执行计划下用例所在的所有发布单元不存在，请检查是否被删除！");
+                    return ResultGenerator.genFailedResult("该执行计划下用例所在的所有微服务不存在，请检查是否被删除！");
                 }
                 else
                 {
@@ -108,7 +108,7 @@ public class ExecuteplanController {
                         Integer machinenum= macdepunitService.findmachinenumbyenvidanddeployid(envid,deployid);
                         if(machinenum.intValue()==0)
                         {
-                            return ResultGenerator.genFailedResult("该执行计划的用例所在的发布单元: "+deployname+" 在环境: "+enviromentname+" 中未完成部署！");
+                            return ResultGenerator.genFailedResult("该执行计划的用例所在的微服务: "+deployname+" 在环境: "+enviromentname+" 中未完成部署！");
                         }
                     }
                     return ResultGenerator.genOkResult();

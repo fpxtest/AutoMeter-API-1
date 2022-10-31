@@ -37,7 +37,7 @@ CREATE TABLE `api`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4 COMMENT ='发布单元表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='微服务表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
