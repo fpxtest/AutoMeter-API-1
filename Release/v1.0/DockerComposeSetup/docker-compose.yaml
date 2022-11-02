@@ -53,7 +53,7 @@ services:
       autometer:
         ipv4_address: 173.20.1.10
 
-  slaverservice1:
+  slaverservice:
     container_name: slaverservice
     privileged: true
     build:
