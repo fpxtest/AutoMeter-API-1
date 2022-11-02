@@ -13,8 +13,7 @@ services:
     depends_on:
       - mysql
       - redis
-      - slaverservice1
-      - slaverservice2
+      - slaverservice
     networks:
       autometer:
         ipv4_address: 173.20.1.7
@@ -55,7 +54,7 @@ services:
         ipv4_address: 173.20.1.10
 
   slaverservice1:
-    container_name: slaverservice1
+    container_name: slaverservice
     privileged: true
     build:
       context: ../AutoMeter/slaverservice
