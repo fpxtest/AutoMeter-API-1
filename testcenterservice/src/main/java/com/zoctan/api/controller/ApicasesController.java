@@ -210,13 +210,13 @@ public class ApicasesController {
                     SubCondition(SourceConditionID, DestinationConditionID, DestinationConditionName, "case");
                 }
                 //复制前置调试条件
-                ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", Long.parseLong(sourcecaseid));
-                if (apicasesDebugCondition != null) {
-                    apicasesDebugCondition.setId(null);
-                    apicasesDebugCondition.setCaseid(NewCaseId);
-                    apicasesDebugCondition.setCasename(newcasename);
-                    apicasesDebugConditionService.save(apicasesDebugCondition);
-                }
+//                ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", Long.parseLong(sourcecaseid));
+//                if (apicasesDebugCondition != null) {
+//                    apicasesDebugCondition.setId(null);
+//                    apicasesDebugCondition.setCaseid(NewCaseId);
+//                    apicasesDebugCondition.setCasename(newcasename);
+//                    apicasesDebugConditionService.save(apicasesDebugCondition);
+//                }
             }
             return ResultGenerator.genOkResult();
         }
@@ -297,19 +297,19 @@ public class ApicasesController {
                         long DestinationCaseID = DesitionApicase.getId();
 
                         //复制用例调试条件
-                        Condition casedebugcon = new Condition(ApicasesDebugCondition.class);
-                        casedebugcon.createCriteria().andCondition("caseid = " + SourceCaseID);
-                        ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", SourceCaseID);
-                        if (apicasesDebugCondition != null) {
-                            ApicasesDebugCondition DestiapicasesDebugCondition = apicasesDebugCondition;
-                            DestiapicasesDebugCondition.setId(null);
-                            DestiapicasesDebugCondition.setCaseid(DestinationCaseID);
-                            DestiapicasesDebugCondition.setDeployunitid(destinationdeployunitid);
-                            DestiapicasesDebugCondition.setDeployunitname(destinationdeployunitname);
-                            DestiapicasesDebugCondition.setConditionid(DebugDesConditionID);
-                            DestiapicasesDebugCondition.setConditionname(DestiConditionName);
-                            apicasesDebugConditionService.save(DestiapicasesDebugCondition);
-                        }
+//                        Condition casedebugcon = new Condition(ApicasesDebugCondition.class);
+//                        casedebugcon.createCriteria().andCondition("caseid = " + SourceCaseID);
+//                        ApicasesDebugCondition apicasesDebugCondition = apicasesDebugConditionService.getBy("caseid", SourceCaseID);
+//                        if (apicasesDebugCondition != null) {
+//                            ApicasesDebugCondition DestiapicasesDebugCondition = apicasesDebugCondition;
+//                            DestiapicasesDebugCondition.setId(null);
+//                            DestiapicasesDebugCondition.setCaseid(DestinationCaseID);
+//                            DestiapicasesDebugCondition.setDeployunitid(destinationdeployunitid);
+//                            DestiapicasesDebugCondition.setDeployunitname(destinationdeployunitname);
+//                            DestiapicasesDebugCondition.setConditionid(DebugDesConditionID);
+//                            DestiapicasesDebugCondition.setConditionname(DestiConditionName);
+//                            apicasesDebugConditionService.save(DestiapicasesDebugCondition);
+//                        }
 
 
                         //4.复制用例数据
