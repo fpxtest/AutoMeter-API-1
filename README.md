@@ -54,7 +54,7 @@
 
 ![输入图片说明](img/performanceralleport.png)
 
-![输入图片说明](img/performancereport.png)
+![输入图片说明](img/performancereport.jpg)
 
 ## 架构
 
