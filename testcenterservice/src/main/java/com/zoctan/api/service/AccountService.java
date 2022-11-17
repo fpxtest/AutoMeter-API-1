@@ -5,6 +5,7 @@ import com.zoctan.api.dto.AccountDto;
 import com.zoctan.api.dto.AccountWithRole;
 import com.zoctan.api.dto.AccountWithRolePermission;
 import com.zoctan.api.entity.Account;
+import com.zoctan.api.entity.Project;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
@@ -70,4 +71,7 @@ public interface AccountService extends Service<Account> {
    * @return boolean
    */
   boolean verifyPassword(String rawPassword, String encodedPassword);
+
+  List<Account> findAccountWithName(final Map<String, Object> params);
+
 }

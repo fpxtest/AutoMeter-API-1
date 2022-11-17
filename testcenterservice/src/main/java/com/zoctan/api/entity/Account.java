@@ -24,6 +24,19 @@ public class Account {
   /** 用户名 */
   private String name;
 
+  public String getNickname() {
+    return nickname;
+  }
+
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  private String nickname;
+
+
+
+
   /** 密码 */
   private String password;
 

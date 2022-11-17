@@ -50,4 +50,7 @@ public interface AccountMapper extends MyMapper<Account> {
    * @param name 用户名
    */
   void updateLoginTimeByName(@Param("name") String name);
+
+  List<Account> findAccountWithName(final Map<String, Object> params);
+
 }

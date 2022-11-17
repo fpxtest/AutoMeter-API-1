@@ -6,6 +6,7 @@ const getters = {
   accountId: state => state.account.accountId,
   email: state => state.account.email,
   name: state => state.account.name,
+  nickname: state => state.account.nickname,
   loginTime: state => state.account.loginTime,
   registerTime: state => state.account.registerTime,
   roleName: state => state.account.roleName,

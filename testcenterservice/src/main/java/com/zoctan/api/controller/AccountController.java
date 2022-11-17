@@ -8,6 +8,7 @@ import com.zoctan.api.core.response.ResultGenerator;
 import com.zoctan.api.dto.AccountDto;
 import com.zoctan.api.dto.AccountWithRole;
 import com.zoctan.api.entity.Account;
+import com.zoctan.api.entity.Deployunit;
 import com.zoctan.api.service.AccountService;
 import com.zoctan.api.service.impl.AccountDetailsServiceImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -170,5 +171,15 @@ public class AccountController {
     final UserDetails accountDetails = this.userDetailsService.loadUserByUsername(name);
     final String token = this.jwtUtil.sign(name, accountDetails.getAuthorities(), true);
     return ResultGenerator.genOkResult(token);
+  }
+
+  @PostMapping("/searchaccount")
+  public Result searchaccount(@RequestBody final Map<String, Object> param) {
+    Integer page= Integer.parseInt(param.get("page").toString());
+    Integer size= Integer.parseInt(param.get("size").toString());
+    PageHelper.startPage(page, size);
+    final List<Account> list = this.accountService.findAccountWithName(param);
+    final PageInfo<Account> pageInfo = new PageInfo<>(list);
+    return ResultGenerator.genOkResult(pageInfo);
   }
 }

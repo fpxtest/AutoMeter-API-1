@@ -116,6 +116,11 @@ public class AccountServiceImpl extends AbstractService<Account> implements Acco
   }
 
   @Override
+  public List<Account> findAccountWithName(Map<String, Object> params) {
+    return accountMapper.findAccountWithName(params);
+  }
+
+  @Override
   public void updateLoginTimeByName(final String name) {
     this.accountMapper.updateLoginTimeByName(name);
   }

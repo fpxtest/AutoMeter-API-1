@@ -27,6 +27,10 @@ public class AccountDto {
   @Size(min = 3, message = "用户名长度不能小于3")
   private String name;
 
+  /** 昵称 */
+  @NotEmpty(message = "昵称不能为空")
+  private String nickname;
+
   /** 密码 */
   @JSONField(serialize = false)
   @NotEmpty(message = "密码不能为空")

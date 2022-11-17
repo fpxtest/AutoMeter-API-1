@@ -51,6 +51,7 @@
         </template>
       </el-table-column>
       <el-table-column label="账户名" align="center" prop="name" width="140" />
+      <el-table-column label="昵称" align="center" prop="nickname" width="140" />
       <el-table-column label="邮箱" align="center" prop="email" width="160" />
       <el-table-column label="注册时间" align="center" prop="registerTime" width="160">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.registerTime) }}</template>
@@ -110,6 +111,15 @@
             auto-complete="off"
             :disabled="dialogStatus === 'updateRole'"
             v-model="tmpAccount.name"
+          />
+        </el-form-item>
+        <el-form-item label="昵称" prop="nickname" required>
+          <el-input
+            type="text"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            :disabled="dialogStatus === 'updateRole'"
+            v-model="tmpAccount.nickname"
           />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
@@ -229,6 +239,7 @@ export default {
         accountId: '',
         email: '',
         name: '',
+        nickname: '',
         password: '',
         roleId: 2 // 对应后端数据库普通用户角色Id
       },

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.ProjectAccountMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.ProjectAccount">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="projectid" jdbcType="BIGINT" property="projectid" />
+    <result column="accountid" jdbcType="BIGINT" property="accountid" />
+    <result column="projectname" jdbcType="VARCHAR" property="projectname" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findaccountbyprojectid" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM project_account a
+    where  a.projectid=#{projectid}
+    order by lastmodify_time  DESC
+  </select>
+
+  <insert id="saveprojectaccount">
+    INSERT INTO project_account (projectid,accountid,projectname,nickname,creator,
+    create_time,lastmodify_time)
+    VALUES
+    <foreach collection="projectaccountList" item="item" index="index" separator=",">
+      (#{item.projectid}, #{item.accountid}, #{item.projectname},#{item.nickname}, #{item.creator}
+      ,DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s'))
+    </foreach>
+  </insert>
+
+  <select id="findaccountbyprojectidandaccountid" resultType="java.lang.Integer">
+    select COUNT(*) from project_account a where a.projectid = #{projectid} and a.accountid = #{accountid}
+  </select>
+</mapper>

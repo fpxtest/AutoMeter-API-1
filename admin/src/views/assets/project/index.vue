@@ -80,12 +80,12 @@
 <!--            v-if="hasPermission('project:delete') && scope.row.id !== id"-->
 <!--            @click.native.prevent="removeproject(scope.$index)"-->
 <!--          >删除</el-button>-->
-<!--          <el-button-->
-<!--            type="primary"-->
-<!--            size="mini"-->
-<!--            v-if="hasPermission('project:delete') && scope.row.id !== id"-->
-<!--            @click.native.prevent="removeproject(scope.$index)"-->
-<!--          >成员</el-button>-->
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('project:update') && scope.row.id !== id"
+            @click.native.prevent="showprojectaccount(scope.$index)"
+          >成员</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -177,12 +177,121 @@
         >修改</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="项目成员" :visible.sync="ProjectAccountdialogFormVisible">
+      <div class="filter-container">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-plus"
+              v-if="hasPermission('project:add')"
+              @click.native.prevent="showAddprojectAccountDialog"
+            >增加成员</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table
+        ref="projectaccountTable"
+        :data="projectaccountList"
+        :key="projectaccountitemKey"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="projectaccountgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="项目名"  align="center" prop="projectname" width="180"/>
+        <el-table-column label="用户"  align="center" prop="nickname" width="190"/>
+        <el-table-column label="管理" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="danger"
+              size="mini"
+              @click.native.prevent="removeprojectaccount(scope.$index)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <el-pagination
+        @size-change="projectaccounthandleSizeChange"
+        @current-change="projectaccounthandleCurrentChange"
+        :current-page="searchprojectaccount.page"
+        :page-size="searchprojectaccount.size"
+        :total="projectaccounttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+    </el-dialog>
+
+    <el-dialog title="选择成员" :visible.sync="accountdialogFormVisible">
+      <div class="filter-container" >
+        <el-form :inline="true" :model="searchaccount" ref="searchaccount" >
+
+          <el-form-item label="成员名:"  prop="nickname" >
+              <el-input clearable maxlength="40" v-model="searchaccount.nickname" @keyup.enter.native="searchBy" placeholder="成员名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchaccountBy" :loading="btnLoading">查询</el-button>
+          </el-form-item>
+        </el-form>
+
+      </div>
+      <el-table
+        ref="caseTable"
+        :data="accountList"
+        :key="itemaccountKey"
+        @selection-change="accounthandleSelectionChange"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="60">
+          <template slot-scope="scope">
+            <span v-text="accountgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+
+        <el-table-column type="selection" prop="status" width="50"/>
+        <el-table-column label="用户名" align="center" prop="nickname" width="520"/>
+      </el-table>
+      <el-pagination
+        @size-change="accounthandleSizeChange"
+        @current-change="accounthandleCurrentChange"
+        :current-page="searchaccount.page"
+        :page-size="searchaccount.size"
+        :total="accounttotal"
+        :page-sizes="[10, 20, 30, 40]"
+        layout="total, sizes, prev, pager, next, jumper"
+      ></el-pagination>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="accountdialogFormVisible = false">取消</el-button>
+        <el-button
+          type="success"
+          :loading="btnLoading"
+          @click.native.prevent="addprojectaccount"
+        >新增</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
   import { search, addproject, updateproject, removeproject } from '@/api/assets/project'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
+  import { findaccountbyprojectid } from '@/api/assets/project_account'
+  import { searchaccount } from '@/api/account'
+  import { addprojectaccounts, removeprojectaccount } from '@/api/assets/project_account'
 
   export default {
     filters: {
@@ -198,12 +307,22 @@
     data() {
       return {
         itemKey: null,
+        projectaccountitemKey: null,
+        itemaccountKey: null,
         tmpprojectname: '',
+        accountmultipleSelection: [], // 查询用例表格被选中的内容
         projectList: [], // 项目迭代列表
+        projectaccountList: [], // 项目成员列表
+        projectaccountsList: [], // 项目成员列表
+        accountList: [], // 成员列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
+        projectaccounttotal: 0, // 数据总数
+        accounttotal: 0,
         dialogStatus: 'add',
         dialogFormVisible: false,
+        ProjectAccountdialogFormVisible: false,
+        accountdialogFormVisible: false,
         textMap: {
           updateRole: '修改项目迭代',
           update: '修改项目迭代',
@@ -224,6 +343,18 @@
           size: 10,
           projectname: null,
           status: null
+        },
+        searchprojectaccount: {
+          page: 1,
+          size: 10,
+          projectid: null,
+          projectname: null,
+          status: null
+        },
+        searchaccount: {
+          page: 1,
+          size: 10,
+          nickname: null
         }
       }
     },
@@ -254,6 +385,26 @@
         })
       },
 
+      /**
+       * 获取项目迭代列表
+       */
+      getprojectaccountList() {
+        findaccountbyprojectid(this.searchprojectaccount).then(response => {
+          this.projectaccountList = response.data.list
+          this.projectaccounttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('加载项目成员迭代列表失败')
+        })
+      },
+
+      getaccountList() {
+        searchaccount(this.searchaccount).then(response => {
+          this.accountList = response.data.list
+          this.accounttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('加载成员迭代列表失败')
+        })
+      },
       searchBy() {
         this.search.page = 1
         this.listLoading = true
@@ -269,6 +420,15 @@
         this.btnLoading = false
       },
 
+      searchaccountBy() {
+        this.searchaccount.page = 1
+        searchaccount(this.searchaccount).then(response => {
+          this.accountList = response.data.list
+          this.accounttotal = response.data.total
+        }).catch(res => {
+          this.$message.error('搜索失败')
+        })
+      },
       /**
        * 改变每页数量
        * @param size 页大小
@@ -296,6 +456,55 @@
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
       },
+
+      /**
+       * 改变每页数量
+       * @param size 页大小
+       */
+      projectaccounthandleSizeChange(size) {
+        this.searchprojectaccount.page = 1
+        this.searchprojectaccount.size = size
+        this.getprojectaccountList()
+      },
+      /**
+       * 改变页码
+       * @param page 页号
+       */
+      projectaccounthandleCurrentChange(page) {
+        this.searchprojectaccount.page = page
+        this.getprojectaccountList()
+      },
+      /**
+       * 表格序号
+       * 可参考自定义表格序号
+       * http://element-cn.eleme.io/#/zh-CN/component/table#zi-ding-yi-suo-yin
+       * @param index 数据下标
+       * @returns 表格序号
+       */
+      projectaccountgetIndex(index) {
+        return (this.searchprojectaccount.page - 1) * this.searchprojectaccount.size + index + 1
+      },
+
+      accounthandleSizeChange(size) {
+        this.searchaccount.page = 1
+        this.searchaccount.size = size
+        this.getaccountList()
+      },
+      /**
+       * 改变页码
+       * @param page 页号
+       */
+      accounthandleCurrentChange(page) {
+        this.searchaccount.page = page
+        this.getaccountList()
+      },
+      accountgetIndex(index) {
+        return (this.searchaccount.page - 1) * this.searchaccount.size + index + 1
+      },
+      accounthandleSelectionChange(rows) {
+        this.accountmultipleSelection = rows
+        // console.log(this.casemultipleSelection)
+      },
       /**
        * 显示添加项目迭代对话框
        */
@@ -311,6 +520,20 @@
         this.tmpproject.endTime = ''
         this.tmpproject.creator = this.name
       },
+
+      showAddprojectAccountDialog() {
+        // 显示新增对话框
+        this.accountdialogFormVisible = true
+        this.getaccountList()
+      },
+
+      showprojectaccount(index) {
+        // 显示新增对话框
+        this.ProjectAccountdialogFormVisible = true
+        this.searchprojectaccount.projectid = this.projectList[index].id
+        this.searchprojectaccount.projectname = this.projectList[index].projectname
+        this.getprojectaccountList()
+      },
       /**
        * 添加项目迭代
        */
@@ -323,13 +546,37 @@
               this.getprojectList()
               this.dialogFormVisible = false
               this.btnLoading = false
-              window.localStorage.set
+              // window.localStorage.setItem()
             }).catch(res => {
               this.$message.error('添加失败')
               this.btnLoading = false
             })
           }
         })
+      },
+
+      addprojectaccount() {
+        this.projectaccountsList = []
+        if (this.accountmultipleSelection.length === 0) {
+          this.$message.error('请选择用户')
+        } else {
+          for (let i = 0; i < this.accountmultipleSelection.length; i++) {
+            this.projectaccountsList.push({
+              'projectid': this.searchprojectaccount.projectid,
+              'accountid': this.accountmultipleSelection[i].id,
+              'projectname': this.searchprojectaccount.projectname,
+              'nickname': this.accountmultipleSelection[i].nickname,
+              'creator': this.name
+            })
+          }
+          addprojectaccounts(this.projectaccountsList).then(() => {
+            this.accountdialogFormVisible = false
+            this.getprojectaccountList()
+            this.$message.success('添加成功')
+          }).catch(res => {
+            this.$message.error('添加失败')
+          })
+        }
       },
       /**
        * 显示修改项目迭代对话框
@@ -377,6 +624,22 @@
           removeproject(id).then(() => {
             this.$message.success('删除成功')
             this.getprojectList()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
+
+      removeprojectaccount(index) {
+        this.$confirm('删除该用户？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.projectaccountList[index].id
+          removeprojectaccount(id).then(() => {
+            this.$message.success('删除成功')
+            this.getprojectaccountList()
           })
         }).catch(() => {
           this.$message.info('已取消删除')

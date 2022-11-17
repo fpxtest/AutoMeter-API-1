@@ -6,6 +6,7 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="register_time" jdbcType="TIMESTAMP" property="registerTime"/>
         <result column="login_time" jdbcType="TIMESTAMP" property="loginTime"/>
@@ -69,5 +70,14 @@
         SET login_time = NOW()
         WHERE name = #{name}
     </update>
+
+    <select id="findAccountWithName" resultMap="AccountMap">
+        SELECT a.*
+        FROM account a
+        <where>
+            <if test="nickname != null and nickname != ''">a.nickname like CONCAT('%',#{nickname},'%')</if>
+        </where>
+        order by register_time  DESC
+    </select>
 
 </mapper>

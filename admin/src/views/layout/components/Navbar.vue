@@ -11,7 +11,7 @@
 
     <el-dropdown class="account-container">
       <span class="el-dropdown-link">
-        {{ name }}
+        {{ nickname }}
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown">
@@ -44,7 +44,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'sidebar', 'projectlist', 'projectid', 'pname'])
+    ...mapGetters(['nickname', 'sidebar', 'projectlist', 'projectid', 'pname'])
   },
 
   created() {

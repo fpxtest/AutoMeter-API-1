@@ -8,6 +8,14 @@ export function search(searchForm1) {
   })
 }
 
+export function searchaccount(searchForm1) {
+  return request({
+    url: '/account/searchaccount',
+    method: 'post',
+    data: searchForm1
+  })
+}
+
 export function list(params) {
   return request({
     url: '/account',
