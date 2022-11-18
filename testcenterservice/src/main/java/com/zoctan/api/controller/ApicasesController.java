@@ -120,6 +120,9 @@ public class ApicasesController {
             if (apiCasedataList.size() > 0) {
                 apiCasedataService.save(apiCasedataList);
             }
+            long casecount=api.getCasecounts();
+            api.setCasecounts(casecount+1);
+            apiService.updateApi(api);
             return ResultGenerator.genOkResult();
         }
     }
@@ -217,6 +220,11 @@ public class ApicasesController {
 //                    apicasesDebugCondition.setCasename(newcasename);
 //                    apicasesDebugConditionService.save(apicasesDebugCondition);
 //                }
+                //api用例数加1
+                Api api= apiService.getById(Apiid);
+                long casecount=api.getCasecounts();
+                api.setCasecounts(casecount+1);
+                apiService.updateApi(api);
             }
             return ResultGenerator.genOkResult();
         }
@@ -267,6 +275,7 @@ public class ApicasesController {
                     DestinationApi.setDeployunitname(destinationdeployunitname);
                     DestinationApi.setDeployunitid(destinationdeployunitid);
                     DestinationApi.setId(null);
+                    DestinationApi.setCasecounts(new Long(1));
                     apiService.save(DestinationApi);
                     long DestinationApiid = DestinationApi.getId();
 
@@ -446,6 +455,7 @@ public class ApicasesController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        Apicases apicases=apicasesService.getById(id);
         apicasesService.deleteById(id);
         //删除用例值数据
         apiCasedataService.deletcasedatabyid(id);
@@ -481,6 +491,11 @@ public class ApicasesController {
         if (apicasesDebugConditionList.size() == 0) {
             testconditionService.deleteBy("id", ConditionID);
         }
+
+        Api api= apiService.getById(apicases.getApiid());
+        long casecount=api.getCasecounts();
+        api.setCasecounts(casecount-1);
+        apiService.updateApi(api);
         return ResultGenerator.genOkResult();
     }
 
@@ -524,6 +539,10 @@ public class ApicasesController {
             if (apicasesDebugConditionList.size() == 0) {
                 testconditionService.deleteBy("id", ConditionID);
             }
+            Api api= apiService.getById(apicases.getApiid());
+            long casecount=api.getCasecounts();
+            api.setCasecounts(casecount-1);
+            apiService.updateApi(api);
         }
         return ResultGenerator.genOkResult();
     }

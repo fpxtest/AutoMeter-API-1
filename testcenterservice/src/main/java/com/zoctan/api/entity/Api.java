@@ -19,6 +19,18 @@ public class Api {
      */
     private Long deployunitid;
 
+    public Long getCasecounts() {
+        return casecounts;
+    }
+
+    public void setCasecounts(Long casecounts) {
+        this.casecounts = casecounts;
+    }
+
+    private Long casecounts;
+
+
+
     public Long getProjectid() {
         return projectid;
     }
