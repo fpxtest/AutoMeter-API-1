@@ -27,6 +27,8 @@ public interface ExecuteplanTestcaseMapper extends MyMapper<ExecuteplanTestcase>
 
     Integer findcasebyplanidandcaseid(@Param("executeplanid") long executeplanid, @Param("testcaseid") long testcaseid);
 
+    ExecuteplanTestcase findexecplancasebyid(@Param("id")final long id);
+
     Integer findcasenumbyplanid(@Param("executeplanid") long executeplanid);
 
     void removeexecuteplantestcase(@Param("executeplanid") long executeplanid, @Param("testcaseid") long testcaseid);

@@ -86,14 +86,14 @@
         </template>
       </el-table-column>
       <el-table-column label="测试集合名" align="center" prop="executeplanname" width="150"/>
-      <el-table-column label="微服务" align="center" prop="deployunitname" width="150"/>
+      <el-table-column label="微服务" align="center" prop="deployunitname" width="130"/>
       <el-table-column label="用例名" align="center" prop="casename" width="150"/>
       <el-table-column label="API" align="center" prop="apiname" width="150"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="160">
+      <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>

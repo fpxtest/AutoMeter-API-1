@@ -9,8 +9,10 @@ import com.zoctan.api.dto.StaticsDataForPie;
 import com.zoctan.api.dto.TestplanCase;
 import com.zoctan.api.entity.Apicases;
 import com.zoctan.api.entity.Enviroment;
+import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.ExecuteplanTestcase;
 import com.zoctan.api.service.ApicasesService;
+import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanTestcaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,9 @@ public class ExecuteplanTestcaseController {
     @Autowired
     private ApicasesService apicaseservice;
 
+    @Resource
+    private ExecuteplanService executeplanService;
+
 
     @PostMapping
     public Result add(@RequestBody ExecuteplanTestcase executeplanTestcase) {
@@ -49,7 +54,15 @@ public class ExecuteplanTestcaseController {
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Long id) {
+        ExecuteplanTestcase executeplanTestcase=executeplanTestcaseService.findexecplancasebyid(id);
+        long execplanid=executeplanTestcase.getExecuteplanid();
         executeplanTestcaseService.deleteById(id);
+        Executeplan executeplan=executeplanService.getById(execplanid);
+        if(executeplan!=null)
+        {
+            executeplan.setCasecounts(executeplan.getCasecounts()-1);
+            executeplanService.update(executeplan);
+        }
         return ResultGenerator.genOkResult();
     }
 

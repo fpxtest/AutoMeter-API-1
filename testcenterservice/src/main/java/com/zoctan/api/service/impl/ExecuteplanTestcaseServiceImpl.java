@@ -1,8 +1,11 @@
 package com.zoctan.api.service.impl;
 
 import com.zoctan.api.core.service.AbstractService;
+import com.zoctan.api.entity.Executeplan;
 import com.zoctan.api.entity.ExecuteplanTestcase;
+import com.zoctan.api.mapper.ExecuteplanMapper;
 import com.zoctan.api.mapper.ExecuteplanTestcaseMapper;
+import com.zoctan.api.service.ExecuteplanService;
 import com.zoctan.api.service.ExecuteplanTestcaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +25,8 @@ import java.util.Map;
 public class ExecuteplanTestcaseServiceImpl extends AbstractService<ExecuteplanTestcase> implements ExecuteplanTestcaseService {
 @Resource
 private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
-
+    @Resource
+    private ExecuteplanService executeplanService;
 
     @Override
     public List<ExecuteplanTestcase> findexplanWithName(Map<String, Object> params) {
@@ -37,7 +41,9 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
     @Override
     public void savetestplancase(List<ExecuteplanTestcase> testcase) {
         List<ExecuteplanTestcase> caselist = new ArrayList<ExecuteplanTestcase>();
+        long execplanid=0;
         for (ExecuteplanTestcase tc : testcase) {
+            execplanid = tc.getExecuteplanid();
             Integer tmptestcase = executeplanTestcaseMapper.findcasebyplanidandcaseid(tc.getExecuteplanid(), tc.getTestcaseid());
             if (tmptestcase == null || tmptestcase.intValue() == 0) {
                 caselist.add(tc);
@@ -45,6 +51,13 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
         }
         if (caselist.size() > 0) {
             executeplanTestcaseMapper.savetestplancase(caselist);
+            Executeplan executeplan= executeplanService.getById(execplanid);
+            if(executeplan!=null)
+            {
+                long casecount=executeplan.getCasecounts();
+                executeplan.setCasecounts(casecount+caselist.size());
+                executeplanService.update(executeplan);
+            }
         }
     }
 
@@ -56,6 +69,11 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
     @Override
     public List<ExecuteplanTestcase> findcaseorderexist(long executeplanid, long caseorder) {
         return executeplanTestcaseMapper.findcaseorderexist(executeplanid, caseorder);
+    }
+
+    @Override
+    public ExecuteplanTestcase findexecplancasebyid(long id) {
+        return executeplanTestcaseMapper.findexecplancasebyid(id);
     }
 
     @Override
@@ -71,8 +89,17 @@ private ExecuteplanTestcaseMapper executeplanTestcaseMapper;
 
     @Override
     public void removeexecuteplantestcase(List<ExecuteplanTestcase> testcase) {
+        long execplanid=0;
         for (ExecuteplanTestcase tc : testcase) {
+            execplanid = tc.getExecuteplanid();
             executeplanTestcaseMapper.removeexecuteplantestcase(tc.getExecuteplanid(), tc.getTestcaseid());
+        }
+        Executeplan executeplan= executeplanService.getById(execplanid);
+        if(executeplan!=null)
+        {
+            long casecount=executeplan.getCasecounts();
+            executeplan.setCasecounts(casecount-testcase.size());
+            executeplanService.update(executeplan);
         }
     }
 

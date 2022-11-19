@@ -54,6 +54,10 @@
     select COUNT(*) from executeplan_testcase a where a.executeplanid = #{executeplanid}
   </select>
 
+  <select id="findexecplancasebyid" resultMap="BaseResultMap">
+    select a.*,b.executeplanname from executeplan_testcase a inner join executeplan b on a.executeplanid =b.id where a.id = #{id}
+  </select>
+
   <select id="finddeployunitbyplanid" resultMap="BaseResultMap">
     select a.deployunitid,b.deployunitname from executeplan_testcase a join deployunit b on a.deployunitid=b.id where a.executeplanid = #{executeplanid} group by a.deployunitid
   </select>

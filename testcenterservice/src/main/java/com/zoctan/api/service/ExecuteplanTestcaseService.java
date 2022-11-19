@@ -24,6 +24,8 @@ public interface ExecuteplanTestcaseService extends Service<ExecuteplanTestcase>
 
     List<ExecuteplanTestcase> findcaseorderexist(final long executeplanid,long caseorder);
 
+    ExecuteplanTestcase findexecplancasebyid(final long id);
+
     List<ExecuteplanTestcase> getplancasesbyplanidandorder(final long executeplanid);
 
     List<ExecuteplanTestcase> findcasebydeployandapi(final Map<String, Object> params);

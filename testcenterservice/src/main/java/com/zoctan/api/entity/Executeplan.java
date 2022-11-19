@@ -24,6 +24,16 @@ public class Executeplan {
 
     private Long projectid;
 
+    public Long getCasecounts() {
+        return casecounts;
+    }
+
+    public void setCasecounts(Long casecounts) {
+        this.casecounts = casecounts;
+    }
+
+    private Long casecounts;
+
     /**
      * 执行计划名
      */

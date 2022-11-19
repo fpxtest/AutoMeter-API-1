@@ -66,20 +66,21 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="集合名" align="center" prop="executeplanname" width="160"/>
+      <el-table-column :show-overflow-tooltip="true"  label="集合名" align="center" prop="executeplanname" width="100"/>
       <el-table-column label="envid" align="center" v-if="show" prop="envid" width="50"/>
       <el-table-column label="状态" align="center" prop="status" v-if="show" width="50"/>
-      <el-table-column label="业务类型" align="center" prop="businesstype" width="100"/>
-      <el-table-column :show-overflow-tooltip="true" label="执行环境" align="center" prop="enviromentname" width="100"/>
+      <el-table-column label="业务类型" align="center" prop="businesstype" width="70"/>
+      <el-table-column :show-overflow-tooltip="true" label="执行环境" align="center" prop="enviromentname" width="80"/>
       <el-table-column label="类型" align="center" prop="usetype" width="50"/>
       <el-table-column label="运行模式" align="center" prop="runmode" width="70"/>
-      <el-table-column :show-overflow-tooltip="true" label="通知钉钉" align="center" prop="dingdingtoken" width="90"/>
+      <el-table-column label="用例数" align="center" prop="casecounts" width="60"/>
+      <el-table-column :show-overflow-tooltip="true" label="通知钉钉token" align="center" prop="dingdingtoken" width="110"/>
       <el-table-column label="操作人" align="center" prop="creator" width="60"/>
-      <el-table-column :show-overflow-tooltip="true" label="描述" align="center" prop="memo" width="100"/>
-      <el-table-column :show-overflow-tooltip="true" label="创建时间" align="center" prop="createTime" width="130">
+      <el-table-column :show-overflow-tooltip="true" label="描述" align="center" prop="memo" width="80"/>
+      <el-table-column :show-overflow-tooltip="true" label="创建时间" align="center" prop="createTime" width="110">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
-      <el-table-column :show-overflow-tooltip="true" label="最后修改时间" align="center" prop="lastmodifyTime" width="130">
+      <el-table-column :show-overflow-tooltip="true" label="最后修改时间" align="center" prop="lastmodifyTime" width="110">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.lastmodifyTime) }}
         </template>
       </el-table-column>

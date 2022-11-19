@@ -128,8 +128,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="api" prop="apiname" required >
-          <el-select v-model="tmpapicondition.apiname" placeholder="api" style="width:100%" @change="apiselectChanged($event)">
+        <el-form-item label="API" prop="apiname" required >
+          <el-select v-model="tmpapicondition.apiname" placeholder="API" style="width:100%" @change="apiselectChanged($event)">
             <el-option label="请选择" value />
             <div v-for="(api, index) in apiList" :key="index">
               <el-option :label="api.apiname" :value="api.apiname"/>
