@@ -13,14 +13,8 @@ import com.zoctan.api.dto.PostMan.Query;
 import com.zoctan.api.dto.PostMan.Urlencoder;
 import com.zoctan.api.dto.Swagger.DeleteInfo;
 import com.zoctan.api.dto.Swagger.PostInfo;
-import com.zoctan.api.entity.Api;
-import com.zoctan.api.entity.ApiCasedata;
-import com.zoctan.api.entity.ApiParams;
-import com.zoctan.api.entity.Apicases;
-import com.zoctan.api.service.ApiCasedataService;
-import com.zoctan.api.service.ApiParamsService;
-import com.zoctan.api.service.ApiService;
-import com.zoctan.api.service.ApicasesService;
+import com.zoctan.api.entity.*;
+import com.zoctan.api.service.*;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +40,9 @@ public class ApiController {
     private ApicasesService apicasesService;
     @Resource
     private ApiCasedataService apiCasedataService;
+
+    @Resource
+    private DeployunitService deployunitService;
 
 
     @PostMapping("/exportswagger")
@@ -174,8 +171,6 @@ public class ApiController {
         String VisitType = apiInfo.getRequest().getMethod();
         //取到postman第一个接口名做为api名
         String ApiName = apiInfo.getName();
-
-        System.out.println("APIName:" + ApiName);
         Api api = new Api();
         api.setVisittype(VisitType);
         api.setApiname(ApiName);
@@ -221,6 +216,12 @@ public class ApiController {
         if (apiService.ifexist(con) == 0) {
             apiService.save(api);
             Long Apiid = api.getId();
+
+            long deployid=api.getDeployunitid();
+            Deployunit deployunit= deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts()+1);
+            deployunitService.update(deployunit);
+
             //保存api参数
             //1.保存Header参数
             List<ApiParams> apiHeaderParamsList = new ArrayList<>();
@@ -379,6 +380,11 @@ public class ApiController {
                 .andCondition("deployunitid = " + apicases.getDeployunitid());
         if (apicasesService.ifexist(con) == 0) {
             apicasesService.save(apicases);
+            Api api= apiService.getById(apicases.getApiid());
+            long casecount=api.getCasecounts();
+            api.setCasecounts(casecount+1);
+            apiService.updateApi(api);
+
             Long Apicaseid = apicases.getId();
             //5.保存用例Header数据
             List<ApiCasedata> Headercasedata = new ArrayList<>();
@@ -426,6 +432,10 @@ public class ApiController {
             return ResultGenerator.genFailedResult("此微服务下已经存在此API");
         } else {
             apiService.save(api);
+            long deployid=api.getDeployunitid();
+            Deployunit deployunit= deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts()+1);
+            deployunitService.update(deployunit);
             return ResultGenerator.genOkResult();
         }
     }
@@ -437,8 +447,14 @@ public class ApiController {
         if (apicasesList.size() > 0) {
             return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除,请先删除对应的测试用例");
         } else {
+            Api api=apiService.getById(id);
             apiService.deleteById(id);
             apiParamsService.deletebyApiid(id);
+
+            long deployid=api.getDeployunitid();
+            Deployunit deployunit= deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts()-1);
+            deployunitService.update(deployunit);
             return ResultGenerator.genOkResult();
         }
     }
@@ -453,6 +469,11 @@ public class ApiController {
             } else {
                 apiService.deleteById(id);
                 apiParamsService.deletebyApiid(id);
+
+                long deployid=api.getDeployunitid();
+                Deployunit deployunit= deployunitService.getById(deployid);
+                deployunit.setApicounts(deployunit.getApicounts()-1);
+                deployunitService.update(deployunit);
             }
         }
         return ResultGenerator.genOkResult();
@@ -582,6 +603,11 @@ public class ApiController {
             api.setCreateTime(date);
             api.setLastmodifyTime(date);
             apiService.save(api);
+            long deployid=api.getDeployunitid();
+            Deployunit deployunit= deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts()+1);
+            deployunitService.update(deployunit);
+
             Long ApiId = api.getId();
             //复制api参数
             for (ApiParams apiParams : apiParamsList) {

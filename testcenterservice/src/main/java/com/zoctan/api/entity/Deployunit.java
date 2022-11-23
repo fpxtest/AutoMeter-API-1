@@ -24,6 +24,16 @@ public class Deployunit {
 
     private Long projectid;
 
+    public Long getApicounts() {
+        return apicounts;
+    }
+
+    public void setApicounts(Long apicounts) {
+        this.apicounts = apicounts;
+    }
+
+    private Long apicounts;
+
     /**
      * 微服务名
      */
