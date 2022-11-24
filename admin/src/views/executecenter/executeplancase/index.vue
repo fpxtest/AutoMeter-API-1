@@ -119,12 +119,12 @@
       :page-sizes="[10, 20, 30, 40]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <el-dialog :title="loadcase" :visible.sync="casedialogFormVisible">
+    <el-dialog width="900px" :title="loadcase" :visible.sync="casedialogFormVisible">
       <div class="filter-container" >
         <el-form :inline="true" :model="searchcase" ref="searchcase" >
 
           <el-form-item label="测试集合:"  prop="executeplanname" required>
-            <el-select v-model="searchcase.executeplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
+            <el-select style="width: 130px" v-model="searchcase.executeplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(testplan, index) in execplanList" :key="index">
                 <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -132,8 +132,8 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="微服务:" prop="deployunitname" required>
-            <el-select v-model="searchcase.deployunitname" placeholder="微服务" @change="deployunitselectChanged($event)">
+          <el-form-item  label="微服务:" prop="deployunitname" required>
+            <el-select style="width: 170px" v-model="searchcase.deployunitname" placeholder="微服务" @change="deployunitselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
@@ -175,9 +175,9 @@
         <el-table-column type="selection" prop="status" width="50"/>
         <el-table-column label="apiid" v-if="show" align="center" prop="apiid" width="120"/>
         <el-table-column label="deployunitid" v-if="show" align="center" prop="deployunitid" width="120"/>
-        <el-table-column label="用例名" align="center" prop="casename" width="180"/>
+        <el-table-column label="用例名" align="center" prop="casename" width="280"/>
         <el-table-column label="微服务" align="center" prop="deployunitname" width="180"/>
-        <el-table-column label="API" align="center" prop="apiname" width="220"/>
+        <el-table-column label="API" align="center" prop="apiname" width="280"/>
       </el-table>
       <el-pagination
         @size-change="casehandleSizeChange"

@@ -47,8 +47,8 @@
         </template>
       </el-table-column>
       <el-table-column label="服务名" align="center" prop="deployunitname" width="120"/>
-      <el-table-column label="协议" align="center" prop="protocal" width="80"/>
-      <el-table-column label="访问端口" align="center" prop="port" width="100"/>
+      <el-table-column label="协议" align="center" prop="protocal" width="50"/>
+      <el-table-column label="访问端口" align="center" prop="port" width="80"/>
       <el-table-column label="基础路径" align="center" prop="baseurl" width="100"/>
       <el-table-column label="API数" align="center" prop="apicounts" width="60"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
@@ -76,6 +76,12 @@
             v-if="hasPermission('depunit:delete') && scope.row.id !== id"
             @click.native.prevent="removedepunit(scope.$index)"
           >删除</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            v-if="hasPermission('depunit:delete') && scope.row.id !== id"
+            @click.native.prevent="showmodelsDialog(scope.$index)"
+          >模块</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -163,12 +169,108 @@
         >修改</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="模块管理" :visible.sync="ModelsFormVisible">
+      <div class="filter-container">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-plus"
+              @click.native.prevent="showAddModelsDialog"
+            >添加模块</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <el-table
+        :data="modelsList"
+        :key="itemmodelKey"
+        v-loading.body="listLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="编号" align="center" width="45">
+          <template slot-scope="scope">
+            <span v-text="modelgetIndex(scope.$index)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="模块名" align="center" prop="modelname" width="280"/>
+        <el-table-column label="管理" align="center">
+          <template slot-scope="scope">
+            <el-button
+              type="warning"
+              size="mini"
+              @click.native.prevent="showUpdatedepunitmodelDialog(scope.$index)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              @click.native.prevent="removedeployunitmodel(scope.$index)"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <el-dialog :title="modeltextMap[modeldialogStatus]" :visible.sync="modeldialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
+        :model="tmpmodel"
+        ref="tmpmodel"
+      >
+        <el-form-item label="模块名" prop="modelname" required>
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpmodel.modelname"
+          />
+        </el-form-item>
+        <el-form-item label="备注" prop="memo" required>
+          <el-input
+            type="text"
+            maxlength="40"
+            prefix-icon="el-icon-edit"
+            auto-complete="off"
+            v-model="tmpmodel.memo"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="modeldialogFormVisible = false">取消</el-button>
+        <el-button
+          type="danger"
+          v-if="modeldialogStatus === 'add'"
+          @click.native.prevent="$refs['tmpmodel'].resetFields()"
+        >重置</el-button>
+        <el-button
+          type="success"
+          v-if="modeldialogStatus === 'add'"
+          @click.native.prevent="adddeployunitmodel"
+        >添加</el-button>
+        <el-button
+          type="success"
+          v-if="modeldialogStatus === 'update'"
+          @click.native.prevent="updatedeployunitmodel"
+        >修改</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
   import { search, adddepunit, updatedepunit, removedepunit } from '@/api/deployunit/depunit'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
+  import { searchdeployunitmodel, adddeployunitmodel, updatedeployunitmodel, removedeployunitmodel } from '@/api/deployunit/depunitmodel'
 
   export default {
     name: '微服务',
@@ -193,17 +295,27 @@
       return {
         id: null,
         itemKey: null,
+        itemmodelKey: null,
         tmpdeployunitname: null,
         tmpprotocal: null,
         depunitList: [], // 服务列表
+        modelsList: [], // 服务模块列表
         listLoading: false, // 数据加载等待动画
         total: 0, // 数据总数
         dialogStatus: 'add',
+        modeldialogStatus: 'add',
         dialogFormVisible: false,
+        ModelsFormVisible: false,
+        modeldialogFormVisible: false,
         textMap: {
           updateRole: '修改服务',
           update: '修改服务',
           add: '添加服务'
+        },
+        modeltextMap: {
+          updateRole: '修改模块',
+          update: '修改模块',
+          add: '添加模块'
         },
         btnLoading: false, // 按钮等待动画
         tmpdepunit: {
@@ -215,6 +327,18 @@
           memo: '',
           creator: '',
           projectid: ''
+        },
+        tmpdeploymodel: {
+          page: 1,
+          size: 10,
+          deployunitid: ''
+        },
+        tmpmodel: {
+          id: '',
+          deployunitid: '',
+          modelname: '',
+          memo: '',
+          creator: ''
         },
         search: {
           page: 1,
@@ -255,6 +379,14 @@
           this.listLoading = false
         }).catch(res => {
           this.$message.error('加载服务列表失败')
+        })
+      },
+
+      searchdeployunitmodel() {
+        searchdeployunitmodel(this.tmpdeploymodel).then(response => {
+          this.modelsList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载服务模块列表失败')
         })
       },
 
@@ -300,6 +432,10 @@
       getIndex(index) {
         return (this.search.page - 1) * this.search.size + index + 1
       },
+
+      modelgetIndex(index) {
+        return (this.tmpdeploymodel.page - 1) * this.tmpdeploymodel.size + index + 1
+      },
       /**
        * 显示添加服务对话框
        */
@@ -335,6 +471,23 @@
           }
         })
       },
+
+      adddeployunitmodel() {
+        this.$refs.tmpmodel.validate(valid => {
+          if (valid) {
+            this.btnLoading = true
+            adddeployunitmodel(this.tmpmodel).then(() => {
+              this.$message.success('添加成功')
+              this.searchdeployunitmodel()
+              this.modeldialogFormVisible = false
+              this.btnLoading = false
+            }).catch(res => {
+              this.$message.error('添加失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
       /**
        * 显示修改服务对话框
        * @param index 服务下标
@@ -351,6 +504,33 @@
         this.tmpdepunit.creator = this.name
         this.tmpdepunit.projectid = window.localStorage.getItem('pid')
       },
+
+      showUpdatedepunitmodelDialog(index) {
+        this.modeldialogFormVisible = true
+        this.modeldialogStatus = 'update'
+        this.tmpmodel.id = this.modelsList[index].id
+        this.tmpmodel.modelname = this.modelsList[index].modelname
+        this.tmpmodel.memo = this.modelsList[index].memo
+        this.tmpmodel.creator = this.name
+      },
+
+      showmodelsDialog(index) {
+        // 显示新增对话框
+        this.ModelsFormVisible = true
+        this.tmpdeploymodel.deployunitid = this.depunitList[index].id
+        this.searchdeployunitmodel()
+      },
+
+      showAddModelsDialog(index) {
+        // 显示新增对话框
+        this.modeldialogStatus = 'add'
+        this.modeldialogFormVisible = true
+        this.tmpmodel.id = ''
+        this.tmpmodel.deployunitid = this.tmpdeploymodel.deployunitid
+        this.tmpmodel.modelname = ''
+        this.tmpmodel.memo = ''
+        this.tmpmodel.creator = this.name
+      },
       /**
        * 更新服务
        */
@@ -361,6 +541,21 @@
               this.$message.success('更新成功')
               this.getdepunitList()
               this.dialogFormVisible = false
+            }).catch(res => {
+              this.$message.error('更新失败')
+              this.btnLoading = false
+            })
+          }
+        })
+      },
+
+      updatedeployunitmodel() {
+        this.$refs.tmpmodel.validate(valid => {
+          if (valid) {
+            updatedeployunitmodel(this.tmpmodel).then(() => {
+              this.$message.success('更新成功')
+              this.searchdeployunitmodel()
+              this.modeldialogFormVisible = false
             }).catch(res => {
               this.$message.error('更新失败')
               this.btnLoading = false
@@ -389,6 +584,21 @@
         })
       },
 
+      removedeployunitmodel(index) {
+        this.$confirm('删除该模块？', '警告', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
+          const id = this.modelsList[index].id
+          removedeployunitmodel(id).then(() => {
+            this.$message.success('删除成功')
+            this.searchdeployunitmodel()
+          })
+        }).catch(() => {
+          this.$message.info('已取消删除')
+        })
+      },
       /**
        * 服务资料是否唯一
        * @param 服务

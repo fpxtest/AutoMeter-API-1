@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoctan.api.mapper.DeployunitModelMapper">
+  <resultMap id="BaseResultMap" type="com.zoctan.api.entity.DeployunitModel">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="deployunitid" jdbcType="BIGINT" property="deployunitid" />
+    <result column="modelname" jdbcType="VARCHAR" property="modelname" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
+  </resultMap>
+
+  <select id="findDeployModelWithName" resultMap="BaseResultMap">
+    SELECT *
+    FROM deployunit_model
+    <where>
+      <if test="deployunitid != null  and deployunitid != ''"> deployunitid =#{deployunitid}</if>
+    </where>
+    order by lastmodify_time  DESC
+  </select>
+
+  <update id="updateDeploy" parameterType="com.zoctan.api.entity.DeployunitModel">
+    update deployunit_model set modelname = #{modelname}, memo = #{memo}, creator = #{creator},
+                                lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    where id = #{id};
+  </update>
+</mapper>
