@@ -86,6 +86,7 @@
       </el-table-column>
       <el-table-column label="API" align="center" prop="apiname" width="120"/>
       <el-table-column label="微服务" align="center" prop="deployunitname" width="130"/>
+      <el-table-column label="模块" align="center" prop="modelname" width="80"/>
       <el-table-column label="风格" align="center" prop="apistyle" width="80"/>
       <el-table-column label="访问方式" align="center" prop="visittype" width="80"/>
       <el-table-column label="路径" align="center" prop="path" width="60">
@@ -207,7 +208,15 @@
           </el-select>
         </el-form-item>
 
-
+        <el-form-item label="模块:" prop="modelname" >
+          <el-select v-model="tmpapi.modelname" placeholder="模块" style="width:100%"
+                     @change="modelselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none"/>
+            <div v-for="(model, index) in modelList" :key="index">
+              <el-option :label="model.modelname" :value="model.modelname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
 
         <!--        <el-form-item label="数据提交方式:" prop="requesttype" required >-->
         <!--          <el-select v-model="tmpapi.requesttype" placeholder="数据提交方式" style="width:100%">-->
@@ -679,6 +688,7 @@ import {
   removeapiparams,
   searchparamsbyapiid as searchparamsbyapiid
 } from '@/api/deployunit/apiparams'
+import { searchdeployunitmodel } from '@/api/deployunit/depunitmodel'
 import { unix2CurrentTime } from '@/utils'
 // import { getToken } from '@/utils/token'
 import { mapGetters } from 'vuex'
@@ -701,6 +711,7 @@ export default {
       fileName: '',
       fileList: [],
       SwfileList: [],
+      modelList: [],
       dialogAddFile: false, // 导入Postman对话框显示
       Headertabledatas: [],
       Paramstabledatas: [],
@@ -773,6 +784,8 @@ export default {
         id: '',
         deployunitid: '',
         deployunitname: '',
+        modelid: '',
+        modelname: '',
         apiname: '',
         visittype: '',
         requesttype: '',
@@ -823,6 +836,11 @@ export default {
         apiname: null,
         deployunitname: null,
         projectid: ''
+      },
+      tmpmodelquery: {
+        page: 1,
+        size: 100,
+        deployunitid: ''
       },
       uploadData: {
         deployid: '',
@@ -1114,6 +1132,14 @@ export default {
     //   console.log(fileList)
     // },
 
+    searchdeployunitmodel() {
+      searchdeployunitmodel(this.tmpmodelquery).then(response => {
+        this.modelList = response.data.list
+      }).catch(res => {
+        this.$message.error('加载服务模块列表失败')
+      })
+    },
+
     handleSelectionChange(rows) {
       // console.log(rows)
       this.multipleSelection = rows
@@ -1226,13 +1252,25 @@ export default {
      * 服务下拉选择事件获取服务id  e的值为options的选值
      */
     selectChanged(e) {
+      this.tmpapi.modelname = ''
       for (let i = 0; i < this.deployunitList.length; i++) {
         if (this.deployunitList[i].deployunitname === e) {
           this.tmpapi.deployunitid = this.deployunitList[i].id
+          this.tmpmodelquery.deployunitid = this.deployunitList[i].id
         }
         console.log(this.deployunitList[i].id)
+        this.searchdeployunitmodel()
       }
     },
+
+    modelselectChanged(e) {
+      for (let i = 0; i < this.modelList.length; i++) {
+        if (this.modelList[i].modelname === e) {
+          this.tmpapi.modelid = this.modelList[i].id
+        }
+      }
+    },
+
     uploadselectChanged(e) {
       for (let i = 0; i < this.deployunitList.length; i++) {
         if (this.deployunitList[i].deployunitname === e) {
@@ -1580,6 +1618,8 @@ export default {
       this.tmpapi.id = ''
       this.tmpapi.deployunitid = ''
       this.tmpapi.deployunitname = ''
+      this.tmpapi.modelid = ''
+      this.tmpapi.modelname = ''
       this.tmpapi.apiname = ''
       this.tmpapi.visittype = ''
       this.tmpapi.requesttype = ''
@@ -1800,6 +1840,8 @@ export default {
       this.tmpapi.id = this.apiList[index].id
       this.tmpapi.deployunitid = this.apiList[index].deployunitid
       this.tmpapi.deployunitname = this.apiList[index].deployunitname
+      this.tmpapi.modelid = this.apiList[index].modelid
+      this.tmpapi.modelname = this.apiList[index].modelname
       this.tmpapi.apiname = this.apiList[index].apiname
       this.tmpapi.visittype = this.apiList[index].visittype
       this.tmpapi.requesttype = this.apiList[index].requesttype

@@ -21,6 +21,8 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="casecounts" jdbcType="BIGINT" property="casecounts" />
+    <result column="modelid" jdbcType="BIGINT" property="modelid" />
+    <result column="modelname" jdbcType="VARCHAR" property="modelname" />
   </resultMap>
 
 
@@ -29,6 +31,7 @@
     FROM api a inner join deployunit b on a.deployunitid=b.id
     <where>
       <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
+      <if test="modelname != null and modelname != ''">a.modelname like CONCAT('%',#{modelname},'%')</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
       <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
@@ -59,7 +62,9 @@
   </select>
 
   <update id="updateApi" parameterType="com.zoctan.api.entity.Api">
-    update api set apiname = #{apiname}, deployunitid = #{deployunitid}, deployunitname = #{deployunitname}, visittype = #{visittype},requesttype = #{requesttype},apistyle=#{apistyle}, path = #{path},
+    update api set apiname = #{apiname}, deployunitid = #{deployunitid}, deployunitname = #{deployunitname},
+                   modelid = #{modelid}, modelname = #{modelname},
+                   visittype = #{visittype},requesttype = #{requesttype},apistyle=#{apistyle}, path = #{path},
     memo = #{memo}, requestcontenttype = #{requestcontenttype}, responecontenttype =#{responecontenttype},creator = #{creator},casecounts = #{casecounts},  lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
