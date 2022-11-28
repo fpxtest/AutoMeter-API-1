@@ -227,15 +227,15 @@
         ref="tmpapicases"
       >
         <el-form-item label="微服务" prop="deployunitname" required >
-          <el-select v-model="tmpapicases.deployunitname" style="width:100%" placeholder="微服务" @change="selectChanged($event)">
+          <el-select v-model="tmpapicases.deployunitname" clearable style="width:100%" placeholder="微服务" @change="selectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(depunitname, index) in deployunitList" :key="index">
               <el-option :label="depunitname.deployunitname" :value="depunitname.deployunitname" required/>
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item label="模块" prop="modelname" required >
-          <el-select v-model="tmpapicases.modelname" style="width:100%" placeholder="模块" @change="modelselectChanged($event)">
+        <el-form-item label="模块" prop="modelname" >
+          <el-select v-model="tmpapicases.modelname" clearable style="width:100%" placeholder="模块" @change="modelselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(model, index) in modelList" :key="index">
               <el-option :label="model.modelname" :value="model.modelname" required/>
@@ -244,7 +244,7 @@
         </el-form-item>
 
         <el-form-item label="API" prop="apiname" required >
-          <el-select v-model="tmpapicases.apiname" style="width:100%" placeholder="API" @change="apiselectChanged($event)">
+          <el-select v-model="tmpapicases.apiname" clearable style="width:100%" placeholder="API" @change="apiselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
             <div v-for="(apiname, index) in apiList" :key="index">
               <el-option :label="apiname.apiname" :value="apiname.apiname" required/>
@@ -1333,7 +1333,7 @@
         apiQuery: {
           deployunitid: '',
           deployunitname: '', // 获取字典表入参
-          modelid: ''
+          modelid: 0
         },
         dialogStatus: 'add',
         AssertdialogStatus: 'add',
@@ -1802,6 +1802,8 @@
         this.apiList = []
         this.tmpapicases.apiname = ''
         this.apiQuery.deployunitname = e
+        this.apiQuery.modelid = 0
+        this.tmpapicases.modelname = ''
         for (let i = 0; i < this.deployunitList.length; i++) {
           if (this.deployunitList[i].deployunitname === e) {
             this.tmpapicases.deployunitid = this.deployunitList[i].id
@@ -1810,6 +1812,11 @@
           }
         }
         this.searchdeployunitmodel()
+        getapiListbydeploy(this.apiQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
         // 获取微服务对应的协议，是http或者https则不需要显示JmeterClass，其余显示
         findDeployNameValueWithCode(this.apiQuery).then(response => {
           this.tmpprotocal = response.data.protocal
@@ -2059,6 +2066,7 @@
         this.tmpapicases.projectid = window.localStorage.getItem('pid')
         this.tmpapicases.modelid = ''
         this.tmpapicases.modelname = ''
+        this.apiQuery.modelid = 0
         console.log(this.name)
       },
 
