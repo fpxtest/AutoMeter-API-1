@@ -600,7 +600,9 @@
         this.tmploadapiid = null
         this.tmploaddeployunitid = null
         this.search.apiname = null
+        this.search.apiid = null
         this.search.deployunitname = null
+        this.search.deployunitid = null
         this.tmploadexecuteplanid = null
         for (let i = 0; i < this.loadexecplanList.length; i++) {
           if (this.loadexecplanList[i].executeplanname === e) {
@@ -619,6 +621,7 @@
         for (let i = 0; i < this.loadapiList.length; i++) {
           if (this.loadapiList[i].apiname === e) {
             this.tmploadapiid = this.loadapiList[i].id
+            this.search.apiid = this.loadapiList[i].id
           }
         }
       },
@@ -641,10 +644,12 @@
       loaddeployunitselectChanged(e) {
         this.tmploadapiid = null
         this.tmploaddeployunitid = null
+        this.search.apiid = null
         this.search.apiname = null
         for (let i = 0; i < this.loaddeployunitList.length; i++) {
           if (this.loaddeployunitList[i].deployunitname === e) {
             this.tmploaddeployunitid = this.loaddeployunitList[i].id
+            this.search.deployunitid = this.loaddeployunitList[i].id
             this.apiQuery.deployunitid = this.loaddeployunitList[i].id
           }
         }
