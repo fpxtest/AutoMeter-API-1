@@ -124,7 +124,7 @@
         <el-form :inline="true" :model="searchcase" ref="searchcase" >
 
           <el-form-item label="测试集合:"  prop="executeplanname" required>
-            <el-select style="width: 130px" v-model="searchcase.executeplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
+            <el-select style="width: 120px" v-model="searchcase.executeplanname" placeholder="测试集合" @change="testplanselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(testplan, index) in execplanList" :key="index">
                 <el-option :label="testplan.executeplanname" :value="testplan.executeplanname" />
@@ -133,15 +133,23 @@
           </el-form-item>
 
           <el-form-item  label="微服务:" prop="deployunitname" required>
-            <el-select style="width: 170px" v-model="searchcase.deployunitname" placeholder="微服务" @change="deployunitselectChanged($event)">
+            <el-select style="width: 120px" v-model="searchcase.deployunitname" placeholder="微服务" @change="deployunitselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname" />
               </div>
             </el-select>
           </el-form-item>
+          <el-form-item  label="模块:" prop="modelname" >
+            <el-select style="width: 120px" v-model="searchcase.modelname" placeholder="模块" @change="modelselectChanged($event)">
+              <el-option label="请选择" value />
+              <div v-for="(model, index) in modelList" :key="index">
+                <el-option :label="model.modelname" :value="model.modelname" />
+              </div>
+            </el-select>
+          </el-form-item>
           <el-form-item label="API:">
-            <el-select v-model="searchcase.apiname" placeholder="api名" @change="ApiselectChanged($event)">
+            <el-select style="width: 120px" v-model="searchcase.apiname" placeholder="api名" @change="ApiselectChanged($event)">
               <el-option label="请选择" value />
               <div v-for="(api, index) in apiList" :key="index">
                 <el-option :label="api.apiname" :value="api.apiname"/>
@@ -305,6 +313,7 @@
   import { getallexplan } from '@/api/executecenter/executeplan'
   import { unix2CurrentTime } from '@/utils'
   import { mapGetters } from 'vuex'
+  import { searchdeployunitmodel } from '@/api/deployunit/depunitmodel'
 
   export default {
     name: '集合用例',
@@ -339,6 +348,7 @@
         tmpapiid: null,
         execplanList: [], // 计划列表
         apiList: [], // api列表
+        modelList: [],
         loadapiList: [], // api列表
         deployunitList: [], // 微服务列表
         loaddeployunitList: [], // 微服务列表
@@ -359,7 +369,8 @@
         apiQuery: {
           page: 1, // 页码
           size: 10, // 每页数量
-          deployunitid: '',
+          deployunitid: 0,
+          modelid: 0,
           deployunitname: '' // 获取字典表入参
         },
         dialogStatus: 'add',
@@ -387,6 +398,7 @@
           executeplanname: null,
           deployunitid: null,
           deployunitname: null,
+          modelname: null,
           apiid: null,
           apiname: null,
           casetype: null
@@ -461,7 +473,13 @@
         this.casemultipleSelection = rows
         // console.log(this.casemultipleSelection)
       },
-
+      searchdeployunitmodel() {
+        searchdeployunitmodel(this.apiQuery).then(response => {
+          this.modelList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载服务模块列表失败')
+        })
+      },
       /**
        * 获取测试集合列表
        */
@@ -651,6 +669,7 @@
             this.apiQuery.deployunitid = this.deployunitList[i].id
           }
         }
+        this.searchdeployunitmodel()
         this.apiList = null
         this.searchcase.apiname = ''
         this.apiQuery.deployunitname = e
@@ -661,6 +680,21 @@
         })
       },
 
+      modelselectChanged(e) {
+        for (let i = 0; i < this.modelList.length; i++) {
+          if (this.modelList[i].modelname === e) {
+            this.apiQuery.modelid = this.modelList[i].id
+          }
+        }
+        this.apiList = null
+        this.searchcase.apiname = ''
+        this.apiQuery.deployunitname = e
+        getapiListbydeploy(this.apiQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
+      },
       /**
        * 获取微服务列表
        */
@@ -923,6 +957,7 @@
         this.searchcase.executeplanname = null
         this.searchcase.deployunitname = null
         this.searchcase.apiname = null
+        this.searchcase.modelname = null
         this.testcaselastList = []
         this.casetotal = 0
       },

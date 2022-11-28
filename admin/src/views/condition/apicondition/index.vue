@@ -205,6 +205,7 @@
         total: 0, // 数据总数
         deployunitQuery: {
           deployunitid: '',
+          modelid: 0,
           deployunitname: '' // 获取字典表入参
         },
         apiquery: {
