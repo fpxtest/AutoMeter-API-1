@@ -31,7 +31,7 @@
     FROM api a inner join deployunit b on a.deployunitid=b.id
     <where>
       <if test="apiname != null and apiname != ''">a.apiname like CONCAT('%',#{apiname},'%')</if>
-      <if test="modelname != null and modelname != ''">a.modelname like CONCAT('%',#{modelname},'%')</if>
+      <if test="modelname != null and modelname != ''">and a.modelname like CONCAT('%',#{modelname},'%')</if>
       <if test="deployunitname != null  and deployunitname != ''">and a.deployunitname like CONCAT('%',#{deployunitname},'%')</if>
       <if test="projectid != null  and projectid != ''">and a.projectid =#{projectid}</if>
     </where>
@@ -41,7 +41,7 @@
   <select id="listAllbydeploy" resultMap="BaseResultMap">
     SELECT a.*
     FROM api a
-    where a.deployunitid=#{deployunitid}
+    where a.deployunitid=#{deployunitid} and modelid=#{modelid}
   </select>
 
   <select id="getresponetypebydeployandapiname" resultMap="BaseResultMap">

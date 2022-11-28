@@ -14,6 +14,27 @@ public class Apicases {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long modelid;
+
+    public Long getModelid() {
+        return modelid;
+    }
+
+    public void setModelid(Long modelid) {
+        this.modelid = modelid;
+    }
+
+    public String getModelname() {
+        return modelname;
+    }
+
+    public void setModelname(String modelname) {
+        this.modelname = modelname;
+    }
+
+    private String modelname;
+
+
     public Long getProjectid() {
         return projectid;
     }

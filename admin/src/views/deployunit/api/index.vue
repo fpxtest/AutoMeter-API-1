@@ -54,15 +54,21 @@
 
         <span v-if="hasPermission('api:search')">
           <el-form-item>
-            <el-input v-model="search.apiname" clearable @keyup.enter.native="searchBy" placeholder="api名"></el-input>
+            <el-input style="width: 130px" v-model="search.apiname" clearable @keyup.enter.native="searchBy" placeholder="api名"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="微服务名"></el-input>
+            <el-input style="width: 130px" v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="微服务名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-input style="width: 130px" v-model="search.modelname" clearable @keyup.enter.native="searchBy" placeholder="模块名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
           </el-form-item>
+
         </span>
+
+
       </el-form>
     </div>
     <el-table
@@ -724,6 +730,7 @@ export default {
       itemKey: null,
       tmpapiname: '',
       tmpdeployunitname: '',
+      tmpmodelname: '',
       apiList: [], // api列表
       sourceapiList: [],
       visittypeList: [], // api访问方式列表
@@ -835,6 +842,7 @@ export default {
         size: 10,
         apiname: null,
         deployunitname: null,
+        modelname: null,
         projectid: ''
       },
       tmpmodelquery: {
@@ -1390,6 +1398,7 @@ export default {
       this.listLoading = true
       this.search.apiname = this.tmpapiname
       this.search.deployunitname = this.tmpdeployunitname
+      this.search.modelname = this.modelname
       search(this.search).then(response => {
         this.apiList = response.data.list
         this.total = response.data.total
@@ -1553,6 +1562,7 @@ export default {
       this.btnLoading = false
       this.tmpapiname = this.search.apiname
       this.tmpdeployunitname = this.search.deployunitname
+      this.tmpmodelname = this.search.modelname
     },
     /**
      * 改变每页数量

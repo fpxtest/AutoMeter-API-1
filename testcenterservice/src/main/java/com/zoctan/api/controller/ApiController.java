@@ -531,8 +531,8 @@ public class ApiController {
 
 
     @GetMapping("/apibydeploy")
-    public Result listbydeploy(@RequestParam long deployunitid) {
-        List<Api> list = apiService.listAllbydeploy(deployunitid);
+    public Result listbydeploy(@RequestParam long deployunitid,@RequestParam long modelid) {
+        List<Api> list = apiService.listAllbydeploy(deployunitid,modelid);
         return ResultGenerator.genOkResult(list);
     }
 

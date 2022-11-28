@@ -76,7 +76,7 @@
 <!--      <el-form :inline="true">-->
         <span v-if="hasPermission('apicases:search')" >
           <el-form-item label="微服务：">
-            <el-select v-model="search.deployunitname" placeholder="微服务" clearable @change="deployunitselectChanged($event)">
+            <el-select style="width: 120px" v-model="search.deployunitname" placeholder="微服务" clearable @change="deployunitselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(depname, index) in deployunitList" :key="index">
                 <el-option :label="depname.deployunitname" :value="depname.deployunitname"/>
@@ -84,8 +84,17 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="api名：">
-            <el-select v-model="search.apiname" placeholder="api名" clearable @change="searchapiselectChanged($event)">
+          <el-form-item label="模块：">
+            <el-select style="width: 120px" v-model="search.modelname" placeholder="模块" clearable @change="searchmodelselectChanged($event)">
+              <el-option label="请选择" value="请选择" />
+              <div v-for="(model, index) in modelList" :key="index">
+                <el-option :label="model.modelname" :value="model.modelname"/>
+              </div>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="API：">
+            <el-select style="width: 120px" v-model="search.apiname" placeholder="API" clearable @change="searchapiselectChanged($event)">
               <el-option label="请选择" value="请选择" />
               <div v-for="(api, index) in apiList" :key="index">
                 <el-option :label="api.apiname" :value="api.apiname"/>
@@ -94,7 +103,7 @@
           </el-form-item>
 
           <el-form-item label="用例类型：">
-          <el-select v-model="search.casetype" placeholder="用例类型" clearable>
+          <el-select style="width: 120px" v-model="search.casetype" placeholder="用例类型" clearable>
             <el-option label="请选择" value />
             <el-option label="功能" value="功能"></el-option>
             <el-option label="性能" value="性能"></el-option>
@@ -102,7 +111,7 @@
          </el-form-item>
 
           <el-form-item label="用例：">
-            <el-input clearable v-model="search.casename" clearable @keyup.enter.native="searchBy" placeholder="用例" style="width:150px">
+            <el-input   clearable v-model="search.casename" clearable @keyup.enter.native="searchBy" placeholder="用例" style="width:150px">
             </el-input>
           </el-form-item>
 
@@ -134,6 +143,7 @@
 
       <el-table-column label="用例名" align="center" prop="casename" width="100"/>
       <el-table-column :show-overflow-tooltip="true" label="微服务" align="center" prop="deployunitname" width="120"/>
+      <el-table-column :show-overflow-tooltip="true" label="模块" align="center" prop="modelname" width="60"/>
       <el-table-column :show-overflow-tooltip="true" label="API" align="center" prop="apiname" width="100"/>
 <!--      <el-table-column label="Jmeter-Class" align="center" prop="casejmxname" width="100"/>-->
       <el-table-column label="类型" align="center" prop="casetype" width="50"/>
@@ -224,6 +234,15 @@
             </div>
           </el-select>
         </el-form-item>
+        <el-form-item label="模块" prop="modelname" required >
+          <el-select v-model="tmpapicases.modelname" style="width:100%" placeholder="模块" @change="modelselectChanged($event)">
+            <el-option label="请选择" value="''" style="display: none" />
+            <div v-for="(model, index) in modelList" :key="index">
+              <el-option :label="model.modelname" :value="model.modelname" required/>
+            </div>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="API" prop="apiname" required >
           <el-select v-model="tmpapicases.apiname" style="width:100%" placeholder="API" @change="apiselectChanged($event)">
             <el-option label="请选择" value="''" style="display: none" />
@@ -262,8 +281,8 @@
         </div>
 
 
-        <el-form-item label="线程循环" prop="loops" required>
-          <el-input
+        <el-form-item label="循环次数" prop="loops" required>
+          <el-input placeholder="用例循环执行次数"
             oninput="value=value.replace(/[^\d]/g,'')"
             maxLength='20'
             type="number"
@@ -1210,6 +1229,7 @@
   import { searchnotexist, searchexist, addcasesdebugcondition, delatedebugconditiontestcase } from '@/api/assets/apicasesdebugcondition'
   import { getalltestconditionbytype } from '@/api/condition/condition'
   import { getglobalheaderallList } from '@/api/testvariables/globalheader'
+  import { searchdeployunitmodel } from '@/api/deployunit/depunitmodel'
 
   export default {
     name: '用例库',
@@ -1230,6 +1250,7 @@
         Paramstabledatas: [],
         Bodytabledatas: [],
         apicasesList: [],
+        modelList: [],
         checked: 'false',
         activeName: 'zero',
         itemKey: null,
@@ -1311,7 +1332,8 @@
         },
         apiQuery: {
           deployunitid: '',
-          deployunitname: '' // 获取字典表入参
+          deployunitname: '', // 获取字典表入参
+          modelid: ''
         },
         dialogStatus: 'add',
         AssertdialogStatus: 'add',
@@ -1355,7 +1377,14 @@
           middleparam: '',
           level: 0,
           memo: '',
-          creator: ''
+          creator: '',
+          modelid: '',
+          modelname: ''
+        },
+        tmpmodelquery: {
+          page: 1,
+          size: 100,
+          deployunitid: ''
         },
         tmpapicasesdata: {
           id: '',
@@ -1448,8 +1477,10 @@
           page: 1,
           size: 10,
           deployunitname: null,
+          modelname: null,
           apiid: '',
           deployunitid: '',
+          modelid: '',
           apiname: null,
           casetype: null,
           casename: null,
@@ -1757,6 +1788,13 @@
         })
       },
 
+      searchdeployunitmodel() {
+        searchdeployunitmodel(this.tmpmodelquery).then(response => {
+          this.modelList = response.data.list
+        }).catch(res => {
+          this.$message.error('加载服务模块列表失败')
+        })
+      },
       /**
        * 微服务下拉选择事件获取微服务id  e的值为options的选值
        */
@@ -1768,13 +1806,10 @@
           if (this.deployunitList[i].deployunitname === e) {
             this.tmpapicases.deployunitid = this.deployunitList[i].id
             this.apiQuery.deployunitid = this.deployunitList[i].id
+            this.tmpmodelquery.deployunitid = this.deployunitList[i].id
           }
         }
-        getapiListbydeploy(this.apiQuery).then(response => {
-          this.apiList = response.data
-        }).catch(res => {
-          this.$message.error('加载api列表失败')
-        })
+        this.searchdeployunitmodel()
         // 获取微服务对应的协议，是http或者https则不需要显示JmeterClass，其余显示
         findDeployNameValueWithCode(this.apiQuery).then(response => {
           this.tmpprotocal = response.data.protocal
@@ -1788,7 +1823,19 @@
           this.$message.error('加载微服务信息失败')
         })
       },
-
+      modelselectChanged(e) {
+        for (let i = 0; i < this.modelList.length; i++) {
+          if (this.modelList[i].modelname === e) {
+            this.apiQuery.modelid = this.modelList[i].id
+            this.tmpapicases.modelid = this.modelList[i].id
+          }
+          getapiListbydeploy(this.apiQuery).then(response => {
+            this.apiList = response.data
+          }).catch(res => {
+            this.$message.error('加载api列表失败')
+          })
+        }
+      },
       /**
        * 微服务下拉选择事件获取微服务id  e的值为options的选值,获取用例
        */
@@ -1866,14 +1913,25 @@
             this.tmpapicases.deployunitid = this.deployunitList[i].id
             this.apiQuery.deployunitid = this.deployunitList[i].id
             this.search.deployunitid = this.deployunitList[i].id
+            this.tmpmodelquery.deployunitid = this.deployunitList[i].id
           }
         }
-        getapiListbydeploy(this.apiQuery).then(response => {
+        this.searchdeployunitmodel()
+      },
+
+      searchmodelselectChanged(e) {
+        for (let i = 0; i < this.modelList.length; i++) {
+          if (this.modelList[i].modelname === e) {
+            this.search.modelid = this.modelList[i].id
+          }
+        }
+        getapiListbydeploy(this.search).then(response => {
           this.apiList = response.data
         }).catch(res => {
           this.$message.error('加载api列表失败')
         })
       },
+
       searchapiselectChanged(e) {
         this.search.apiid = ''
         console.log(e)
@@ -1999,6 +2057,8 @@
         this.tmpapicases.memo = ''
         this.tmpapicases.creator = this.name
         this.tmpapicases.projectid = window.localStorage.getItem('pid')
+        this.tmpapicases.modelid = ''
+        this.tmpapicases.modelname = ''
         console.log(this.name)
       },
 
@@ -2238,6 +2298,8 @@
         this.tmpapicases.level = this.apicasesList[index].level
         this.tmpapicases.memo = this.apicasesList[index].memo
         this.tmpapicases.loops = this.apicasesList[index].loops
+        this.tmpapicases.modelid = this.apicasesList[index].modelid
+        this.tmpapicases.modelname = this.apicasesList[index].modelname
         this.tmpapicases.creator = this.name
         this.tmpapicases.projectid = window.localStorage.getItem('pid')
         if (this.tmpapicases.casetype === '性能') {

@@ -24,6 +24,8 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="lastmodify_time" jdbcType="TIMESTAMP" property="lastmodifyTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modelid" jdbcType="BIGINT" property="modelid" />
+    <result column="modelname" jdbcType="VARCHAR" property="modelname" />
   </resultMap>
 
   <select id="findApiCaseWithName" resultMap="BaseResultMap">
@@ -31,6 +33,7 @@
     FROM apicases a inner join  deployunit b  inner join api c on a.deployunitid=b.id and a.apiid=c.id
     <where>
       <if test="apiid != null and apiid != ''">a.apiid = #{apiid}</if>
+      <if test="modelid != null and modelid != ''">and a.modelid = #{modelid}</if>
       <if test="casetype != null and casetype != ''">and a.casetype = #{casetype}</if>
       <if test="deployunitid != null  and deployunitid != ''">and a.deployunitid = #{deployunitid}</if>
       <if test="casename != null and casename != ''">and a.casename like CONCAT('%',#{casename},'%')</if>
@@ -70,7 +73,8 @@
 
   <update id="updateApicase" parameterType="com.zoctan.api.entity.Apicases">
     update apicases set casename = #{casename},casejmxname = #{casejmxname},apiid=#{apiid}, apiname = #{apiname},deployunitid=#{deployunitid}, deployunitname = #{deployunitname}, casecontent = #{casecontent},expect = #{expect},
-    memo = #{memo},casetype=#{casetype},threadnum=#{threadnum},loops=#{loops},middleparam=#{middleparam},level=#{level}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+                        modelid = #{modelid}, modelname = #{modelname},
+                        memo = #{memo},casetype=#{casetype},threadnum=#{threadnum},loops=#{loops},middleparam=#{middleparam},level=#{level}, creator = #{creator},lastmodify_time = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
     where id = #{id};
   </update>
 
