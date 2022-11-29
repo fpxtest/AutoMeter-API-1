@@ -370,6 +370,7 @@
         },
         deployunitQuery: {
           deployunitid: '', // 获取字典表入参
+          modelid: 0,
           deployunitname: '' // 获取字典表入参
         },
         VariablescaseQuery: {
