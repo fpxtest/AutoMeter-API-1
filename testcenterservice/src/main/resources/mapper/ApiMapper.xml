@@ -41,7 +41,10 @@
   <select id="listAllbydeploy" resultMap="BaseResultMap">
     SELECT a.*
     FROM api a
-    where a.deployunitid=#{deployunitid} and modelid=#{modelid}
+    <where>
+      <if test="deployunitid != null and deployunitid != ''">a.deployunitid =#{deployunitid}</if>
+      <if test="modelid != 0  and modelid != ''">and a.modelid =#{modelid}</if>
+    </where>
   </select>
 
   <select id="getresponetypebydeployandapiname" resultMap="BaseResultMap">

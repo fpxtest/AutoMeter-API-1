@@ -65,6 +65,16 @@ public class ApiController {
 
                 JsonElement jsonElement= JsonParser.parseString(jsonString);
                 JsonObject jsonObj = JsonParser.parseString(jsonString).getAsJsonObject();
+                JsonElement tagselements= jsonObj.get("tags");
+                JsonArray  jsonArray=  tagselements.getAsJsonArray();
+                for (JsonElement ae : jsonArray)
+                {
+                    JsonObject tag= ae.getAsJsonObject();
+                    JsonElement name=tag.get("name");
+                    String modelname= name.getAsString();
+                    System.out.println(modelname);
+                }
+
 
                 JsonElement pathonject= jsonObj.get("paths");
                 JsonObject postobjct= pathonject.getAsJsonObject();
