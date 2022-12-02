@@ -663,7 +663,7 @@
           <el-upload
             style="display: inline"
             :auto-upload="false"
-            :on-change="handleChange"
+            :on-change="SWhandleChange"
             :on-remove="removehandleChange"
             :file-list="this.SwfileList"
             accept=".json"
@@ -1187,6 +1187,10 @@ export default {
       this.fileList = fileList
       console.log(fileList)
     },
+    SWhandleChange(file, fileList) {
+      this.SwfileList = fileList
+      console.log(fileList)
+    },
     removehandleChange(file, fileList) {
       this.fileList = []
       console.log(fileList)
@@ -1227,7 +1231,7 @@ export default {
     uploadsw() {
       this.$refs.uploadData.validate(valid => {
         if (valid) {
-          if (this.fileList.length === 0) {
+          if (this.SwfileList.length === 0) {
             this.$message.warning('请选择导入的json文件！')
             return false
           }
@@ -1236,7 +1240,7 @@ export default {
           fd.append('deployunitname', this.uploadData.deptname)
           fd.append('apistyle', this.uploadData.apistyle)
           fd.append('creator', this.name)
-          this.fileList.forEach(item => {
+          this.SwfileList.forEach(item => {
             fd.append('file', item.raw)
           })
           axios.post(this.swfileurl, fd, {
@@ -1246,7 +1250,7 @@ export default {
             }
           }).then(res => {
             if (res.data.code === 200) {
-              this.dialogAddFile = false
+              this.SwaggerdialogAddFile = false
               this.getapiList()
               this.$message.success('上传完成')
             } else {
@@ -1660,7 +1664,7 @@ export default {
       this.uploadData.deployid = ''
       this.uploadData.deptname = ''
       this.uploadData.apistyle = ''
-      this.fileList = []
+      this.SwfileList = []
     },
     /**
      * 显示添加复制api对话框

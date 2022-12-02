@@ -16,4 +16,5 @@ public class parameters {
     private String required;
     private String type;
     private String format;
+    private schema schema;
 }
