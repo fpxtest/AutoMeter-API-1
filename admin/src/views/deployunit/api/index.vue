@@ -22,7 +22,6 @@
           <el-button
             type="primary"
             size="mini"
-            icon="el-icon-plus"
             v-if="hasPermission('api:add')"
             @click.native.prevent="showCopyapiDialog"
           >复制API
@@ -30,7 +29,6 @@
           <el-button
             type="primary"
             size="mini"
-            icon="el-icon-plus"
             v-if="hasPermission('api:add')"
             @click.native.prevent="showPostManDialog"
           >导入PostMan
@@ -38,7 +36,6 @@
           <el-button
             type="primary"
             size="mini"
-            icon="el-icon-plus"
             v-if="hasPermission('api:add')"
             @click.native.prevent="showSwaggerDialog"
           >导入Swagger
@@ -54,7 +51,7 @@
 
         <span v-if="hasPermission('api:search')">
           <el-form-item>
-            <el-input style="width: 130px" v-model="search.apiname" clearable @keyup.enter.native="searchBy" placeholder="api名"></el-input>
+            <el-input style="width: 130px" v-model="search.apiname" clearable @keyup.enter.native="searchBy" placeholder="API名"></el-input>
           </el-form-item>
           <el-form-item>
             <el-input style="width: 130px" v-model="search.deployunitname" clearable @keyup.enter.native="searchBy" placeholder="微服务名"></el-input>
@@ -885,6 +882,7 @@ export default {
   },
 
   activated() {
+    this.getapiList()
     this.getdepunitLists()
   },
   methods: {
@@ -1546,7 +1544,6 @@ export default {
       this.listLoading = true
       getdepunitLists(this.search).then(response => {
         this.deployunitList = response.data
-        this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
         this.$message.error('加载服务列表失败')
