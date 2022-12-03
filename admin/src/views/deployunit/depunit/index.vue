@@ -363,6 +363,10 @@
       console.log(window.localStorage.getItem('pid'))
     },
 
+    activated() {
+      this.getdepunitList()
+    },
+
     methods: {
       unix2CurrentTime,
 

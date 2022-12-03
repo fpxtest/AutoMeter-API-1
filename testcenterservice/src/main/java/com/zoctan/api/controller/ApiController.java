@@ -106,65 +106,82 @@ public class ApiController {
                 JsonElement pathonject= jsonObj.get("paths");
                 JsonObject postobjct= pathonject.getAsJsonObject();
 
+                long apicounts=0;
                 HashMap<String,Object>ddd=new HashMap<>();
-                for (Object e : postobjct.entrySet()) {
-                    Map.Entry entry = (Map.Entry) e;
-                    ddd.put(String.valueOf(entry.getKey()), entry.getValue());
-                    JsonObject jsonObject=(JsonObject) entry.getValue();
-                    int menthodnums=0;
-                    for (Object jd : jsonObject.entrySet()) {
-                        menthodnums++;
-                        Map.Entry entryjs = (Map.Entry) jd;
-                        JsonObject jsonObjectjd=(JsonObject) entryjs.getValue();
-                        String jsonstring=jsonObjectjd.toString();
-                        Type postType1 = new TypeToken<Post>() {}.getType();
-                        Post pathsob1 = gson.fromJson(jsonstring, postType1);
-                        List<String> RequestCTList= pathsob1.getConsumes();
-                        String RequestCT="Form表单";
-                        if(RequestCTList!=null)
-                        {
-                            if(RequestCTList.size()>0)
+                try
+                {
+                    for (Object e : postobjct.entrySet()) {
+                        Map.Entry entry = (Map.Entry) e;
+                        ddd.put(String.valueOf(entry.getKey()), entry.getValue());
+                        JsonObject jsonObject=(JsonObject) entry.getValue();
+                        int menthodnums=0;
+                        for (Object jd : jsonObject.entrySet()) {
+                            menthodnums++;
+                            Map.Entry entryjs = (Map.Entry) jd;
+                            JsonObject jsonObjectjd=(JsonObject) entryjs.getValue();
+                            String jsonstring=jsonObjectjd.toString();
+                            Type postType1 = new TypeToken<Post>() {}.getType();
+                            Post pathsob1 = gson.fromJson(jsonstring, postType1);
+                            List<String> RequestCTList= pathsob1.getConsumes();
+                            String RequestCT="Form表单";
+                            if(RequestCTList!=null)
                             {
-                                String tmp=RequestCTList.get(0);
-                                if(tmp.equalsIgnoreCase("application/json"))
+                                if(RequestCTList.size()>0)
                                 {
-                                    RequestCT="JSON";
+                                    String tmp=RequestCTList.get(0);
+                                    if(tmp.equalsIgnoreCase("application/json"))
+                                    {
+                                        RequestCT="JSON";
+                                    }
                                 }
                             }
-                        }
-                        String ApiName=entry.getKey().toString().substring(entry.getKey().toString().lastIndexOf("/")+1);
-                        if(menthodnums>1)
-                        {
-                            ApiName = ApiName+"-"+entryjs.getKey().toString();
-                        }
+                            String ApiName=entry.getKey().toString().substring(entry.getKey().toString().lastIndexOf("/")+1);
+                            if(menthodnums>1)
+                            {
+                                ApiName = ApiName+"-"+entryjs.getKey().toString();
+                            }
 
-                        Condition apicon = new Condition(Api.class);
-                        apicon.createCriteria().andCondition("deployunitid = "+deployunitid)
-                                .andCondition("apiname = '" + ApiName + "'");
-                        String VisiteType=entryjs.getKey().toString().toUpperCase();
-                        if (apiService.ifexist(apicon) == 0) {
-                            Api api=new Api();
-                            api.setCasecounts(new Long(0));
-                            api.setVisittype(VisiteType);
-                            api.setPath(entry.getKey().toString());
-                            api.setRequestcontenttype(RequestCT);
-                            api.setApiname(ApiName);
-                            api.setDeployunitid(deployunitid);
-                            api.setDeployunitname(deployunitname);
-                            api.setApistyle(apistyle);
-                            api.setCreateTime(new Date());
-                            api.setLastmodifyTime(new Date());
-                            api.setMemo(pathsob1.getDescription());
-                            api.setModelname(pathsob1.getTags().get(0));
-                            api.setModelid(modelmap.get(pathsob1.getTags().get(0)));
-                            api.setCreator(creator);
-                            apiService.save(api);
-                            System.out.println("url-------:"+entry.getKey()+" method-------:"+entryjs.getKey()+"  getDescription-------:"+pathsob1.getTags().get(0));
+                            Condition apicon = new Condition(Api.class);
+                            apicon.createCriteria().andCondition("deployunitid = "+deployunitid)
+                                    .andCondition("apiname = '" + ApiName + "'");
+                            String VisiteType=entryjs.getKey().toString().toUpperCase();
+                            if (apiService.ifexist(apicon) == 0) {
+                                apicounts++;
+                                Api api=new Api();
+                                api.setCasecounts(new Long(0));
+                                api.setVisittype(VisiteType);
+                                api.setPath(entry.getKey().toString());
+                                api.setRequestcontenttype(RequestCT);
+                                api.setApiname(ApiName);
+                                api.setDeployunitid(deployunitid);
+                                api.setDeployunitname(deployunitname);
+                                api.setApistyle(apistyle);
+                                api.setCreateTime(new Date());
+                                api.setLastmodifyTime(new Date());
+                                api.setMemo(pathsob1.getDescription());
+                                api.setModelname(pathsob1.getTags().get(0));
+                                api.setModelid(modelmap.get(pathsob1.getTags().get(0)));
+                                api.setCreator(creator);
+                                apiService.save(api);
+                                System.out.println("url-------:"+entry.getKey()+" method-------:"+entryjs.getKey()+"  getDescription-------:"+pathsob1.getTags().get(0));
 
-                            //api参数
-                            apiparmas(VisiteType,pathsob1,api.getId(),deployunitid,ApiName,deployunitname,RequestCT,creator);
+                                //api参数
+                                apiparmas(VisiteType,pathsob1,api.getId(),deployunitid,ApiName,deployunitname,RequestCT,creator);
+                            }
+
                         }
-
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ResultGenerator.genFailedResult("导入异常：" + ex.getMessage());
+                }
+                finally {
+                    Deployunit deployunit= deployunitService.getById(deployunitid);
+                    if(deployunit!=null)
+                    {
+                        deployunit.setApicounts(deployunit.getApicounts()+apicounts);
+                        deployunitService.update(deployunit);
                     }
                 }
             }
