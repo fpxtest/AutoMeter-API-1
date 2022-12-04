@@ -1,5 +1,6 @@
 package com.zoctan.api.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.*;
@@ -22,6 +23,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -64,30 +66,28 @@ public class ApiController {
             String jsonString = FileUtils.readFileToString(file, "UTF-8");
             if (".json".equals(suffixName)) {
                 Gson gson = new Gson();
-                String basePath="";
+                String basePath = "";
                 Map<String, Object> jsonmap = gson.fromJson(jsonString, Map.class);
-                JsonElement jsonElement= JsonParser.parseString(jsonString);
+                JsonElement jsonElement = JsonParser.parseString(jsonString);
                 JsonObject jsonObj = JsonParser.parseString(jsonString).getAsJsonObject();
-                JsonElement swaggerelements= jsonObj.get("swagger");
-                if(!swaggerelements.getAsString().contains("2.0"))
-                {
+                JsonElement swaggerelements = jsonObj.get("swagger");
+                if (!swaggerelements.getAsString().contains("2.0")) {
                     return ResultGenerator.genFailedResult("请导入Swagger的2.0版本的json文件");
                 }
 
-                JsonElement tagselements= jsonObj.get("tags");
-                JsonArray  jsonArray=  tagselements.getAsJsonArray();
+                JsonElement tagselements = jsonObj.get("tags");
+                JsonArray jsonArray = tagselements.getAsJsonArray();
                 //保存模块
-                HashMap<String,Long> modelmap=new HashMap<>();
-                for (JsonElement ae : jsonArray)
-                {
-                    JsonObject tag= ae.getAsJsonObject();
-                    JsonElement name=tag.get("name");
-                    String modelname= name.getAsString();
+                HashMap<String, Long> modelmap = new HashMap<>();
+                for (JsonElement ae : jsonArray) {
+                    JsonObject tag = ae.getAsJsonObject();
+                    JsonElement name = tag.get("name");
+                    String modelname = name.getAsString();
                     Condition con = new Condition(DeployunitModel.class);
-                    con.createCriteria().andCondition("deployunitid = "+deployunitid)
+                    con.createCriteria().andCondition("deployunitid = " + deployunitid)
                             .andCondition("modelname = '" + modelname + "'");
                     if (deployunitModelService.ifexist(con) == 0) {
-                        DeployunitModel deployunitModel=new DeployunitModel();
+                        DeployunitModel deployunitModel = new DeployunitModel();
                         deployunitModel.setDeployunitid(deployunitid);
                         deployunitModel.setModelname(modelname);
                         deployunitModel.setCreateTime(new Date());
@@ -95,59 +95,54 @@ public class ApiController {
                         deployunitModel.setMemo("Swagger导入");
                         deployunitModel.setCreator(creator);
                         deployunitModelService.save(deployunitModel);
-                        modelmap.put(modelname,deployunitModel.getId());
-                    } else
-                    {
-                        DeployunitModel deployunitModel=deployunitModelService.listByCondition(con).get(0);
-                        modelmap.put(modelname,deployunitModel.getId());
+                        modelmap.put(modelname, deployunitModel.getId());
+                    } else {
+                        DeployunitModel deployunitModel = deployunitModelService.listByCondition(con).get(0);
+                        modelmap.put(modelname, deployunitModel.getId());
                     }
                 }
                 //解析api保存
-                JsonElement pathonject= jsonObj.get("paths");
-                JsonObject postobjct= pathonject.getAsJsonObject();
+                JsonElement pathonject = jsonObj.get("paths");
+                JsonObject postobjct = pathonject.getAsJsonObject();
 
-                long apicounts=0;
-                HashMap<String,Object>ddd=new HashMap<>();
-                try
-                {
+                long apicounts = 0;
+                HashMap<String, Object> ddd = new HashMap<>();
+                try {
                     for (Object e : postobjct.entrySet()) {
                         Map.Entry entry = (Map.Entry) e;
                         ddd.put(String.valueOf(entry.getKey()), entry.getValue());
-                        JsonObject jsonObject=(JsonObject) entry.getValue();
-                        int menthodnums=0;
+                        JsonObject jsonObject = (JsonObject) entry.getValue();
+                        int menthodnums = 0;
                         for (Object jd : jsonObject.entrySet()) {
                             menthodnums++;
                             Map.Entry entryjs = (Map.Entry) jd;
-                            JsonObject jsonObjectjd=(JsonObject) entryjs.getValue();
-                            String jsonstring=jsonObjectjd.toString();
-                            Type postType1 = new TypeToken<Post>() {}.getType();
+                            JsonObject jsonObjectjd = (JsonObject) entryjs.getValue();
+                            String jsonstring = jsonObjectjd.toString();
+                            Type postType1 = new TypeToken<Post>() {
+                            }.getType();
                             Post pathsob1 = gson.fromJson(jsonstring, postType1);
-                            List<String> RequestCTList= pathsob1.getConsumes();
-                            String RequestCT="Form表单";
-                            if(RequestCTList!=null)
-                            {
-                                if(RequestCTList.size()>0)
-                                {
-                                    String tmp=RequestCTList.get(0);
-                                    if(tmp.equalsIgnoreCase("application/json"))
-                                    {
-                                        RequestCT="JSON";
+                            List<String> RequestCTList = pathsob1.getConsumes();
+                            String RequestCT = "Form表单";
+                            if (RequestCTList != null) {
+                                if (RequestCTList.size() > 0) {
+                                    String tmp = RequestCTList.get(0);
+                                    if (tmp.equalsIgnoreCase("application/json")) {
+                                        RequestCT = "JSON";
                                     }
                                 }
                             }
-                            String ApiName=entry.getKey().toString().substring(entry.getKey().toString().lastIndexOf("/")+1);
-                            if(menthodnums>1)
-                            {
-                                ApiName = ApiName+"-"+entryjs.getKey().toString();
+                            String ApiName = entry.getKey().toString().substring(entry.getKey().toString().lastIndexOf("/") + 1);
+                            if (menthodnums > 1) {
+                                ApiName = ApiName + "-" + entryjs.getKey().toString();
                             }
 
                             Condition apicon = new Condition(Api.class);
-                            apicon.createCriteria().andCondition("deployunitid = "+deployunitid)
+                            apicon.createCriteria().andCondition("deployunitid = " + deployunitid)
                                     .andCondition("apiname = '" + ApiName + "'");
-                            String VisiteType=entryjs.getKey().toString().toUpperCase();
+                            String VisiteType = entryjs.getKey().toString().toUpperCase();
                             if (apiService.ifexist(apicon) == 0) {
                                 apicounts++;
-                                Api api=new Api();
+                                Api api = new Api();
                                 api.setCasecounts(new Long(0));
                                 api.setVisittype(VisiteType);
                                 api.setPath(entry.getKey().toString());
@@ -163,30 +158,26 @@ public class ApiController {
                                 api.setModelid(modelmap.get(pathsob1.getTags().get(0)));
                                 api.setCreator(creator);
                                 apiService.save(api);
-                                System.out.println("url-------:"+entry.getKey()+" method-------:"+entryjs.getKey()+"  getDescription-------:"+pathsob1.getTags().get(0));
+                                System.out.println("url-------:" + entry.getKey() + " method-------:" + entryjs.getKey() + "  getDescription-------:" + pathsob1.getTags().get(0));
 
                                 //api参数
-                                apiparmas(VisiteType,pathsob1,api.getId(),deployunitid,ApiName,deployunitname,RequestCT,creator);
+                                swapiparmas(jsonObj, VisiteType, pathsob1, api.getId(), deployunitid, ApiName, deployunitname, RequestCT, creator);
+
                             }
 
                         }
                     }
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                     return ResultGenerator.genFailedResult("导入异常：" + ex.getMessage());
-                }
-                finally {
-                    Deployunit deployunit= deployunitService.getById(deployunitid);
-                    if(deployunit!=null)
-                    {
-                        deployunit.setApicounts(deployunit.getApicounts()+apicounts);
+                } finally {
+                    Deployunit deployunit = deployunitService.getById(deployunitid);
+                    if (deployunit != null) {
+                        deployunit.setApicounts(deployunit.getApicounts() + apicounts);
                         deployunitService.update(deployunit);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 return ResultGenerator.genFailedResult("导入异常,请导入Swagger的json文件");
             }
         } catch (Exception e) {
@@ -198,82 +189,134 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private void apiparmas(String VisiteType,Post pathsob1,long apiid,long deployunitid,String apiname,String deployunitname,String RequestCT,String creator)
-    {
-        List<String>RequestCTList = pathsob1.getConsumes();
-        List<parameters> parameterList= pathsob1.getParameters();
-        for (parameters pmt:parameterList) {
-            ApiParams apiParams=new ApiParams();
-            if(VisiteType.equalsIgnoreCase("GET"))
-            {
+    private boolean paramsexistref(Post pathsob1) {
+        boolean flag = false;
+        List<parameters> parameterList = pathsob1.getParameters();
+        for (parameters pmt : parameterList) {
+            schema schema = pmt.getSchema();
+            if (schema != null) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    private void swapiparmas(JsonObject jsonObj, String VisiteType, Post pathsob1, long apiid, long deployunitid, String apiname, String deployunitname, String RequestCT, String creator) {
+        List<String> RequestCTList = pathsob1.getConsumes();
+        List<parameters> parameterList = pathsob1.getParameters();
+        for (parameters pmt : parameterList) {
+            ApiParams apiParams = new ApiParams();
+            if (VisiteType.equalsIgnoreCase("GET")) {
                 apiParams.setPropertytype("Params");
             }
-            if(RequestCTList==null)
-            {
-                apiParams.setPropertytype("Params");
-            }
-            else {
-                if(RequestCTList.size()>0)
+            if (paramsexistref(pathsob1)) {
+                if(!pmt.getIn().equals("body"))
                 {
-                    String tmp=RequestCTList.get(0);
-                    if(tmp.equalsIgnoreCase("multipart/form-data"))
-                    {
-                        apiParams.setPropertytype("Body");
-                    }
-                    else if(tmp.equalsIgnoreCase("application/x-www-form-urlencoded"))
-                    {
-                        apiParams.setPropertytype("Params");
-                    }else
-                    {
-                        apiParams.setPropertytype("Body");
+                    apiParams.setPropertytype("Params");
+                    apiParams.setKeyname(pmt.getName());
+                    apiParams.setKeydefaultvalue("");
+                }
+                else {
+                    apiParams.setPropertytype("Body");
+                }
+            } else {
+                if (RequestCTList == null) {
+                    apiParams.setPropertytype("Params");
+                } else {
+                    if (RequestCTList.size() > 0) {
+                        String tmp = RequestCTList.get(0);
+                        if (tmp.equalsIgnoreCase("application/x-www-form-urlencoded")) {
+                            apiParams.setPropertytype("Params");
+                        }
+                        else {
+                            apiParams.setPropertytype("Body");
+                        }
                     }
                 }
             }
-
-            if(RequestCT.equalsIgnoreCase("Form表单"))
-            {
+            if (RequestCT.equalsIgnoreCase("Form表单")) {
                 apiParams.setKeyname(pmt.getName());
                 apiParams.setKeydefaultvalue("");
             } else {
-                schema schema= parameterList.get(0).getSchema();
-                if(schema!=null)
-                {
-                    String Ref= schema.get$ref();
-                    apiParams.setKeyname("{}");
-                    apiParams.setKeydefaultvalue("NoForm");
+                schema schema = pmt.getSchema();
+                if (schema != null) {
+                    String Ref = schema.get$ref();
+                    if (Ref != null) {
+                        String DefinaName = Ref.substring(Ref.lastIndexOf("/") + 1);
+                        JSONObject js = SWGetDefinitions("definitions", DefinaName, jsonObj);
+                        apiParams.setKeyname(js.toJSONString().replace("\\", ""));
+                        apiParams.setKeydefaultvalue("NoForm");
+                    }
                 }
             }
             apiParams.setApiid(apiid);
             apiParams.setApiname(apiname);
             apiParams.setDeployunitid(deployunitid);
             apiParams.setDeployunitname(deployunitname);
-            apiParams.setKeytype(GetparamsType(pmt.getType()));
+            apiParams.setKeytype(SWGetparamsType(pmt.getType()));
             apiParams.setCreateTime(new Date());
             apiParams.setLastmodifyTime(new Date());
             apiParams.setCreator(creator);
             apiParamsService.save(apiParams);
         }
-
     }
 
 
-    private  String GetparamsType(String source)
-    {
-        String Destination="String";
-        if(source==null)
-        {
+    private String SWGetparamsType(String source) {
+        String Destination = "String";
+        if (source == null) {
             return "JSON";
         }
-        if(source.equalsIgnoreCase("string"))
-        {
-            Destination= "String";
+        if (source.equalsIgnoreCase("string")) {
+            Destination = "String";
         }
-        if(source.equalsIgnoreCase("integer"))
-        {
-            Destination= "Number";
+        if (source.equalsIgnoreCase("integer")) {
+            Destination = "Number";
         }
 
         return Destination;
+    }
+
+    private JSONObject SWGetDefinitions(String NodeName, String ChildNodeName, JsonObject jsonObj) {
+        JsonElement Root = jsonObj.get(NodeName);
+        JsonObject RootOB = Root.getAsJsonObject();
+        JsonElement Child = RootOB.get(ChildNodeName);
+        JsonObject ChildOB = Child.getAsJsonObject();
+        JsonElement PropertyChild = ChildOB.get("properties");
+        JsonObject PropertyOB = PropertyChild.getAsJsonObject();
+
+        JSONObject ResultOnject = new JSONObject();
+
+        for (Object e : PropertyOB.entrySet()) {
+            Map.Entry entry = (Map.Entry) e;
+            JsonObject jsonObjectjd = (JsonObject) entry.getValue();
+
+            for (Object nametype : jsonObjectjd.entrySet()) {
+                Map.Entry entrytypr = (Map.Entry) nametype;
+
+                if (entrytypr.getKey().toString().equalsIgnoreCase("type")) {
+                    if (entrytypr.getValue().toString().replace("\"", "").equals("integer")) {
+                        ResultOnject.put(entry.getKey().toString(), 0);
+                    }
+                    if (entrytypr.getValue().toString().replace("\"", "").equals("array")) {
+                        ResultOnject.put(entry.getKey().toString(), new ArrayList<>());
+                    }
+                    if (entrytypr.getValue().toString().replace("\"", "").equals("string")) {
+                        ResultOnject.put(entry.getKey().toString(), "");
+                    }
+                    System.out.println("jsonname-------:" + entry.getKey() + " jsontype-------:" + entrytypr.getValue());
+                }
+                if (entrytypr.getKey().toString().startsWith("$ref")) {
+                    String ref = entrytypr.getValue().toString().substring(entrytypr.getValue().toString().lastIndexOf("/") + 1);
+                    ref = ref.replace("\"", "");
+                    JSONObject js = SWGetDefinitions("definitions", ref, jsonObj);
+                    String Value = js.toJSONString().replace("\\", "");
+                    ResultOnject.put(entry.getKey().toString(), Value);
+                }
+            }
+        }
+        return ResultOnject;
     }
 
     @PostMapping("/exportpostman")
@@ -386,9 +429,9 @@ public class ApiController {
             apiService.save(api);
             Long Apiid = api.getId();
 
-            long deployid=api.getDeployunitid();
-            Deployunit deployunit= deployunitService.getById(deployid);
-            deployunit.setApicounts(deployunit.getApicounts()+1);
+            long deployid = api.getDeployunitid();
+            Deployunit deployunit = deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts() + 1);
             deployunitService.update(deployunit);
 
             //保存api参数
@@ -438,8 +481,7 @@ public class ApiController {
                     List<ApiParams> apiBodyParamsformdataList = new ArrayList<>();
                     List<Formdata> formdataList = apiInfo.getRequest().getBody().getFormdata();
                     for (Formdata query : formdataList) {
-                        if(query.getKey().equalsIgnoreCase("file"))
-                        {
+                        if (query.getKey().equalsIgnoreCase("file")) {
                             query.setValue("file");
                         }
                         ApiParams apiParams = GetApiParam(Apiid, ApiName, creator, deployunitid, deployunitname, query.getKey(), query.getValue(), "String", "Body");
@@ -549,9 +591,9 @@ public class ApiController {
                 .andCondition("deployunitid = " + apicases.getDeployunitid());
         if (apicasesService.ifexist(con) == 0) {
             apicasesService.save(apicases);
-            Api api= apiService.getById(apicases.getApiid());
-            long casecount=api.getCasecounts();
-            api.setCasecounts(casecount+1);
+            Api api = apiService.getById(apicases.getApiid());
+            long casecount = api.getCasecounts();
+            api.setCasecounts(casecount + 1);
             apiService.updateApi(api);
 
             Long Apicaseid = apicases.getId();
@@ -594,16 +636,16 @@ public class ApiController {
     @PostMapping
     public Result add(@RequestBody Api api) {
         Condition con = new Condition(Api.class);
-        con.createCriteria().andCondition("projectid = "+api.getProjectid())
+        con.createCriteria().andCondition("projectid = " + api.getProjectid())
                 .andCondition("deployunitname = '" + api.getDeployunitname() + "'")
                 .andCondition("apiname = '" + api.getApiname().replace("'", "''") + "'");
         if (apiService.ifexist(con) > 0) {
             return ResultGenerator.genFailedResult("此微服务下已经存在此API");
         } else {
             apiService.save(api);
-            long deployid=api.getDeployunitid();
-            Deployunit deployunit= deployunitService.getById(deployid);
-            deployunit.setApicounts(deployunit.getApicounts()+1);
+            long deployid = api.getDeployunitid();
+            Deployunit deployunit = deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts() + 1);
             deployunitService.update(deployunit);
             return ResultGenerator.genOkResult();
         }
@@ -616,13 +658,13 @@ public class ApiController {
         if (apicasesList.size() > 0) {
             return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除,请先删除对应的测试用例");
         } else {
-            Api api=apiService.getById(id);
+            Api api = apiService.getById(id);
             apiService.deleteById(id);
             apiParamsService.deletebyApiid(id);
 
-            long deployid=api.getDeployunitid();
-            Deployunit deployunit= deployunitService.getById(deployid);
-            deployunit.setApicounts(deployunit.getApicounts()-1);
+            long deployid = api.getDeployunitid();
+            Deployunit deployunit = deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts() - 1);
             deployunitService.update(deployunit);
             return ResultGenerator.genOkResult();
         }
@@ -630,8 +672,8 @@ public class ApiController {
 
     @PostMapping("/removebatchapi")
     public Result removebatchapi(@RequestBody List<Api> apiList) {
-        for (Api api:apiList) {
-            long id=api.getId();
+        for (Api api : apiList) {
+            long id = api.getId();
             List<Apicases> apicasesList = apicasesService.getcasebyapiid(id);
             if (apicasesList.size() > 0) {
                 return ResultGenerator.genFailedResult("当前API还存在测试用例，无法删除,请先删除对应的测试用例");
@@ -639,9 +681,9 @@ public class ApiController {
                 apiService.deleteById(id);
                 apiParamsService.deletebyApiid(id);
 
-                long deployid=api.getDeployunitid();
-                Deployunit deployunit= deployunitService.getById(deployid);
-                deployunit.setApicounts(deployunit.getApicounts()-1);
+                long deployid = api.getDeployunitid();
+                Deployunit deployunit = deployunitService.getById(deployid);
+                deployunit.setApicounts(deployunit.getApicounts() - 1);
                 deployunitService.update(deployunit);
             }
         }
@@ -700,8 +742,8 @@ public class ApiController {
 
 
     @GetMapping("/apibydeploy")
-    public Result listbydeploy(@RequestParam long deployunitid,@RequestParam long modelid) {
-        List<Api> list = apiService.listAllbydeploy(deployunitid,modelid);
+    public Result listbydeploy(@RequestParam long deployunitid, @RequestParam long modelid) {
+        List<Api> list = apiService.listAllbydeploy(deployunitid, modelid);
         return ResultGenerator.genOkResult(list);
     }
 
@@ -717,7 +759,7 @@ public class ApiController {
     @PutMapping("/detail")
     public Result updateDeploy(@RequestBody final Api api) {
         Condition con = new Condition(Api.class);
-        con.createCriteria().andCondition("projectid = "+api.getProjectid())
+        con.createCriteria().andCondition("projectid = " + api.getProjectid())
                 .andCondition("deployunitname = '" + api.getDeployunitname() + "'")
                 .andCondition("apiname = '" + api.getApiname().replace("'", "''") + "'")
                 .andCondition("id <> " + api.getId());
@@ -772,9 +814,9 @@ public class ApiController {
             api.setCreateTime(date);
             api.setLastmodifyTime(date);
             apiService.save(api);
-            long deployid=api.getDeployunitid();
-            Deployunit deployunit= deployunitService.getById(deployid);
-            deployunit.setApicounts(deployunit.getApicounts()+1);
+            long deployid = api.getDeployunitid();
+            Deployunit deployunit = deployunitService.getById(deployid);
+            deployunit.setApicounts(deployunit.getApicounts() + 1);
             deployunitService.update(deployunit);
 
             Long ApiId = api.getId();

@@ -15,12 +15,15 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "codemirror": "^5.53.2",
     "echarts": "^4.2.1",
+    "jsonlint": "^1.6.3",
     "settings": "^0.1.1",
     "sortablejs": "^1.8.4",
     "vue": "^2.6.12",
     "vue-count-to": "^1.0.13",
     "vue-file-upload": "^0.1.12",
+    "vue-json-viewer": "^2.2.22",
     "vue-router": "^3.0.1",
     "vue-simple-file-upload": "^1.2.5",
     "vuex": "^3.0.1"

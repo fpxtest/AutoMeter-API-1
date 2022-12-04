@@ -3,7 +3,8 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handlemachineData()">
         <div class="card-panel-icon-wrapper icon-money">
-          <icon-svg icon-class="machine"  class-name="card-panel-icon"/>
+          <icon-svg icon-class="machine"  class-name="card-panel-icon" >
+          </icon-svg>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">

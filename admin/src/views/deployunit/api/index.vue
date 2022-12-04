@@ -508,8 +508,12 @@
                       :model="tmpapiparams"
                       ref="tmpapiparams">
                       <el-form-item label="Body参数：" prop="keyname">
+
+<!--                        <JsonEditor ref="JsonEditor" v-model="tmpapiparams.keyname" />-->
+
                         <el-input
-                          type="textarea"
+                            type="textarea"
+                          style="width: 100%;height: 600px;color: #0000FF"
                           rows="20" cols="70"
                           prefix-icon="el-icon-message"
                           auto-complete="off"
@@ -696,6 +700,8 @@ import { unix2CurrentTime } from '@/utils'
 // import { getToken } from '@/utils/token'
 import { mapGetters } from 'vuex'
 import store from '@/store'
+// import JsonEditor from '@/components/JsonEditor'
+
 export default {
   name: 'API接口',
   filters: {
@@ -1989,3 +1995,4 @@ export default {
   }
 }
 </script>
+
