@@ -408,11 +408,11 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog title='API新参数' :visible.sync="NewParamsdialogFormVisible">
+    <el-dialog  title='API新参数' :visible.sync="NewParamsdialogFormVisible">
       <div class="filter-container">
         <el-form :inline="true">
           <template>
-            <el-tabs v-model="activeName" type="card" ref="tabs">
+            <el-tabs v-model="activeName" @tab-click="tabclick" type="card" ref="tabs">
               <el-tab-pane label="Header" name="zero">
                 <template>
                   <el-table :data="Headertabledatas" border @selection-change="handleSelectionChange">
@@ -470,7 +470,7 @@
               </el-tab-pane>
               <el-tab-pane label="Body" name="second">
                 <template>
-                  <div v-if="BodyParamDataVisible">
+                  <div v-if="BodyParamDataVisible" class="components-container">
                     <el-table :data="Bodytabledatas" border>
                       <el-table-column label="参数" prop="keyname" align="center">
                         <template slot-scope="scope">
@@ -499,21 +499,20 @@
                         </template>
                       </el-table-column>
                     </el-table>
-                  </div>
-                  <div v-if="BodyDataVisible">
+                  </div >
+                  <div v-if="BodyDataVisible" >
                     <el-form
-                      status-icon
-                      class="small-space"
-                      label-position="left"
                       :model="tmpapiparams"
                       ref="tmpapiparams">
-                      <el-form-item label="Body参数：" prop="keyname">
+                      <el-form-item  prop="keyname">
+<!--                        <div class="editor-container">-->
+<!--                          <json-editor ref="jsonEditor" v-model="tmpapiparams.keyname" />-->
+<!--                        </div>-->
 
-<!--                        <JsonEditor ref="JsonEditor" v-model="tmpapiparams.keyname" />-->
 
                         <el-input
                             type="textarea"
-                          style="width: 100%;height: 600px;color: #0000FF"
+                          style="width: 650px;height: 400px;color: #0000FF"
                           rows="20" cols="70"
                           prefix-icon="el-icon-message"
                           auto-complete="off"
@@ -700,10 +699,10 @@ import { unix2CurrentTime } from '@/utils'
 // import { getToken } from '@/utils/token'
 import { mapGetters } from 'vuex'
 import store from '@/store'
-// import JsonEditor from '@/components/JsonEditor'
-
+import JsonEditor from '@/components/JsonEditor'
 export default {
   name: 'API接口',
+  components: { JsonEditor },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -892,6 +891,9 @@ export default {
     this.getdepunitLists()
   },
   methods: {
+    tabclick(tab, event) {
+      console.log(tab, event)
+    },
     // 单个复制
     copeHeader(val, index) {
       var newrow = {
@@ -1453,7 +1455,7 @@ export default {
       var bodypara = { apiid: this.tmpapi.id, propertytype: 'Body', keytype: this.tmpapi.requestcontenttype }
       getBodyNoFormbyapiid(bodypara).then(response => {
         this.tmpapiparams = response.data
-        console.log(this.tmpapiparams)
+        console.log(this.tmpapiparams.keyname)
       }).catch(res => {
         this.$message.error('获取Body非Form表单数据失败')
       })
@@ -1995,4 +1997,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+.editor-container{
+  width: auto;
+  position: relative;
+  height: 100%;
+}
+</style>
 

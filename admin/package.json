@@ -15,7 +15,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "codemirror": "^5.53.2",
+    "codemirror": "^5.45.0",
     "echarts": "^4.2.1",
     "jsonlint": "^1.6.3",
     "settings": "^0.1.1",
@@ -85,6 +85,7 @@
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
     "sass-loader": "^7.0.3",
+    "script-loader": "^0.7.2",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
     "style-loader": "^0.21.0",

@@ -189,56 +189,15 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private boolean paramsexistref(Post pathsob1) {
-        boolean flag = false;
-        List<parameters> parameterList = pathsob1.getParameters();
-        for (parameters pmt : parameterList) {
-            schema schema = pmt.getSchema();
-            if (schema != null) {
-                flag = true;
-                break;
-            }
-        }
-        return flag;
-    }
 
     private void swapiparmas(JsonObject jsonObj, String VisiteType, Post pathsob1, long apiid, long deployunitid, String apiname, String deployunitname, String RequestCT, String creator) {
-        List<String> RequestCTList = pathsob1.getConsumes();
         List<parameters> parameterList = pathsob1.getParameters();
         for (parameters pmt : parameterList) {
             ApiParams apiParams = new ApiParams();
-            if (VisiteType.equalsIgnoreCase("GET")) {
-                apiParams.setPropertytype("Params");
-            }
-            if (paramsexistref(pathsob1)) {
-                if(!pmt.getIn().equals("body"))
-                {
-                    apiParams.setPropertytype("Params");
-                    apiParams.setKeyname(pmt.getName());
-                    apiParams.setKeydefaultvalue("");
-                }
-                else {
-                    apiParams.setPropertytype("Body");
-                }
-            } else {
-                if (RequestCTList == null) {
-                    apiParams.setPropertytype("Params");
-                } else {
-                    if (RequestCTList.size() > 0) {
-                        String tmp = RequestCTList.get(0);
-                        if (tmp.equalsIgnoreCase("application/x-www-form-urlencoded")) {
-                            apiParams.setPropertytype("Params");
-                        }
-                        else {
-                            apiParams.setPropertytype("Body");
-                        }
-                    }
-                }
-            }
-            if (RequestCT.equalsIgnoreCase("Form表单")) {
-                apiParams.setKeyname(pmt.getName());
-                apiParams.setKeydefaultvalue("");
-            } else {
+
+            //设置参数setPropertytype，setKeyname
+            if (pmt.getIn().equals("body")) {
+                apiParams.setPropertytype("Body");
                 schema schema = pmt.getSchema();
                 if (schema != null) {
                     String Ref = schema.get$ref();
@@ -250,6 +209,37 @@ public class ApiController {
                     }
                 }
             }
+            if (pmt.getIn().equals("path") || pmt.getIn().equals("query")) {
+                apiParams.setPropertytype("Params");
+                apiParams.setKeyname(pmt.getName());
+                apiParams.setKeydefaultvalue("");
+            }
+            if (pmt.getIn().equals("header")) {
+                apiParams.setPropertytype("Header");
+                apiParams.setKeyname(pmt.getName());
+                apiParams.setKeydefaultvalue("");
+            }
+            if (pmt.getIn().equals("formData")) {
+                apiParams.setPropertytype("Body");
+                apiParams.setKeyname(pmt.getName());
+                apiParams.setKeydefaultvalue("");
+            }
+            //设置参数name
+//            if (RequestCT.equalsIgnoreCase("Form表单")) {
+//                apiParams.setKeyname(pmt.getName());
+//                apiParams.setKeydefaultvalue("");
+//            } else {
+//                schema schema = pmt.getSchema();
+//                if (schema != null) {
+//                    String Ref = schema.get$ref();
+//                    if (Ref != null) {
+//                        String DefinaName = Ref.substring(Ref.lastIndexOf("/") + 1);
+//                        JSONObject js = SWGetDefinitions("definitions", DefinaName, jsonObj);
+//                        apiParams.setKeyname(js.toJSONString().replace("\\", ""));
+//                        apiParams.setKeydefaultvalue("NoForm");
+//                    }
+//                }
+//            }
             apiParams.setApiid(apiid);
             apiParams.setApiname(apiname);
             apiParams.setDeployunitid(deployunitid);
@@ -287,23 +277,20 @@ public class ApiController {
         JsonObject PropertyOB = PropertyChild.getAsJsonObject();
 
         JSONObject ResultOnject = new JSONObject();
-
         for (Object e : PropertyOB.entrySet()) {
             Map.Entry entry = (Map.Entry) e;
             JsonObject jsonObjectjd = (JsonObject) entry.getValue();
-
             for (Object nametype : jsonObjectjd.entrySet()) {
                 Map.Entry entrytypr = (Map.Entry) nametype;
-
                 if (entrytypr.getKey().toString().equalsIgnoreCase("type")) {
                     if (entrytypr.getValue().toString().replace("\"", "").equals("integer")) {
-                        ResultOnject.put(entry.getKey().toString(), 0);
+                        ResultOnject.fluentPut(entry.getKey().toString(), 0);
                     }
                     if (entrytypr.getValue().toString().replace("\"", "").equals("array")) {
-                        ResultOnject.put(entry.getKey().toString(), new ArrayList<>());
+                        ResultOnject.fluentPut(entry.getKey().toString(), new ArrayList<>());
                     }
                     if (entrytypr.getValue().toString().replace("\"", "").equals("string")) {
-                        ResultOnject.put(entry.getKey().toString(), "");
+                        ResultOnject.fluentPut(entry.getKey().toString(), "");
                     }
                     System.out.println("jsonname-------:" + entry.getKey() + " jsontype-------:" + entrytypr.getValue());
                 }
@@ -311,8 +298,22 @@ public class ApiController {
                     String ref = entrytypr.getValue().toString().substring(entrytypr.getValue().toString().lastIndexOf("/") + 1);
                     ref = ref.replace("\"", "");
                     JSONObject js = SWGetDefinitions("definitions", ref, jsonObj);
-                    String Value = js.toJSONString().replace("\\", "");
-                    ResultOnject.put(entry.getKey().toString(), Value);
+                    ResultOnject.put(entry.getKey().toString(), js);
+                }
+
+                if (entrytypr.getKey().toString().equalsIgnoreCase("items")) {
+                    JsonObject jsonObjectitem = (JsonObject) entrytypr.getValue();
+                    for (Object item : jsonObjectitem.entrySet()) {
+                        Map.Entry entryitem = (Map.Entry) item;
+                        if (entryitem.getKey().toString().startsWith("$ref")) {
+                            String ref = entryitem.getValue().toString().substring(entryitem.getValue().toString().lastIndexOf("/") + 1);
+                            ref = ref.replace("\"", "");
+                            JSONObject js = SWGetDefinitions("definitions", ref, jsonObj);
+                            ArrayList<JSONObject> list = new ArrayList<>();
+                            list.add(js);
+                            ResultOnject.put(entry.getKey().toString(), list);
+                        }
+                    }
                 }
             }
         }

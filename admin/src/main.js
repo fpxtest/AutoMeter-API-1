@@ -10,8 +10,6 @@ import { default as request } from './utils/request'
 import { hasPermission } from './utils/hasPermission'
 import lang from 'element-ui/lib/locale/lang/zh-CN'
 import locale from 'element-ui/lib/locale'
-import JsonViewer from 'vue-json-viewer'
-Vue.use(JsonViewer)
 
 // 设置语言
 locale.use(lang)
