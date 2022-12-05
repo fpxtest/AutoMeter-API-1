@@ -17,6 +17,7 @@ import com.zoctan.api.entity.*;
 import com.zoctan.api.service.*;
 import io.swagger.models.auth.In;
 import org.apache.commons.io.FileUtils;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Condition;
@@ -340,8 +341,39 @@ public class ApiController {
                 if (GroupJson.equalsIgnoreCase("null")) {
                     return ResultGenerator.genFailedResult("导入异常,请导入PostMan2.X版本的json文件");
                 }
+
+                HashMap<String,Long>modelmap=new HashMap<>();
+                JsonParser parser = new JsonParser();
+                JsonElement el = parser.parse(GroupJson);
+                JsonArray jsonArray = null;
+                if (el.isJsonArray()) {
+                    jsonArray = el.getAsJsonArray();
+                }
+                Iterator it = jsonArray.iterator();
+                while (it.hasNext()) {
+                    JsonElement element = (JsonElement) it.next();
+                    String modelname = element.getAsJsonObject().get("name").getAsString();
+                    Condition con = new Condition(DeployunitModel.class);
+                    con.createCriteria().andCondition("deployunitid = " + deployunitid)
+                            .andCondition("modelname = '" + modelname + "'");
+                    if (deployunitModelService.ifexist(con) == 0) {
+                        DeployunitModel deployunitModel = new DeployunitModel();
+                        deployunitModel.setDeployunitid(deployunitid);
+                        deployunitModel.setModelname(modelname);
+                        deployunitModel.setCreateTime(new Date());
+                        deployunitModel.setLastmodifyTime(new Date());
+                        deployunitModel.setMemo("PostMan导入");
+                        deployunitModel.setCreator(creator);
+                        deployunitModelService.save(deployunitModel);
+                        modelmap.put(modelname, deployunitModel.getId());
+                    } else {
+                        DeployunitModel deployunitModel = deployunitModelService.listByCondition(con).get(0);
+                        modelmap.put(modelname, deployunitModel.getId());
+                    }
+                }
+
                 HashMap<String, ApiInfo> apiInfoHashMap = new HashMap<>();
-                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap);
+                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap,modelmap,"");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -352,28 +384,28 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap) throws Exception {
+    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap,HashMap<String,Long>modelmap,String Modelname) throws Exception {
         List<String> resu = GetJson(GroupJson);
         for (String apiinfojson : resu) {
             Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
-            System.out.println("GroupName:" + apiinfomap.get("name"));
             String apiJson = gson.toJson(apiinfomap.get("item"));
             if (!apiJson.equalsIgnoreCase("null")) {
-                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap);
+                 Modelname= apiinfomap.get("name").toString();
+                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap,modelmap,Modelname);
             } else {
                 Type apiinfoType = new TypeToken<ApiInfo>() {
                 }.getType();
                 //System.out.println("apiinfojson-------:" + apiinfojson);
                 ApiInfo apiInfo = gson.fromJson(apiinfojson, apiinfoType);
                 if (!apiInfoHashMap.containsKey(apiInfo.getName())) {
-                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator);
+                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator,modelmap,Modelname);
                 }
                 apiInfoHashMap.put(apiInfo.getName(), apiInfo);
             }
         }
     }
 
-    private void ExportData(ApiInfo apiInfo, String apistyle, Long deployunitid, String deployunitname, String creator) {
+    private void ExportData(ApiInfo apiInfo, String apistyle, Long deployunitid, String deployunitname, String creator,HashMap<String,Long>modelmap,String Modelname) {
         String AllPath = "";
         if (apiInfo.getRequest().getUrl() != null) {
             ArrayList<String> UrlPath = apiInfo.getRequest().getUrl().getPath();
@@ -388,6 +420,8 @@ public class ApiController {
         api.setVisittype(VisitType);
         api.setApiname(ApiName);
         api.setApistyle(apistyle);
+        api.setModelname(Modelname);
+        api.setModelid(modelmap.get(Modelname));
         String RequestCT = "Form表单";
         if (apiInfo.getRequest().getBody() != null) {
             if (apiInfo.getRequest().getBody().getOptions() != null) {
