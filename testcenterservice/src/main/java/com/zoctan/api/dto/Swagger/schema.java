@@ -18,5 +18,26 @@ public class schema {
         this.$ref = $ref;
     }
 
+    public items getItem() {
+        return items;
+    }
+
+    public void setItem(items item) {
+        this.items = item;
+    }
     private String $ref;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    private String type;
+
+
+    private items items;
+
 }

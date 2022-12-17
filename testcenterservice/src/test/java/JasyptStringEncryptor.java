@@ -24,10 +24,10 @@ public class JasyptStringEncryptor {
   public void encode() {
     final String name = this.stringEncryptor.encrypt("test");
     System.err.println("encryptname = " + name);
-    System.out.println(this.stringEncryptor.decrypt(name));
+    System.out.println(this.stringEncryptor.decrypt("k/LqLqGoeBEoMz+MLuB6cg=="));
 
     final String password = this.stringEncryptor.encrypt("test");
-    System.out.println(this.stringEncryptor.decrypt(password));
+    System.out.println(this.stringEncryptor.decrypt("I6NT3SWbkubdgO2sXBEivg=="));
     System.err.println("encryptpassword = " + password);
   }
 }
