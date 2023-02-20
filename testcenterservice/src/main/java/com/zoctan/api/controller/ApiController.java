@@ -48,13 +48,14 @@ public class ApiController {
 
 
     @PostMapping("/exportswagger")
-    public Result exportswagger(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator) {
+    public Result exportswagger(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator, @RequestParam("projectid") String projectid) {
         File file = null;
         try {
             if (multipartFile.isEmpty()) {
                 return ResultGenerator.genFailedResult("上传的文件为空，请检查");
             }
             Long deployunitid = Long.parseLong(deployid);
+            Long pid = Long.parseLong(projectid);
             String fileName = multipartFile.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             file = new File(fileName);
@@ -164,13 +165,13 @@ public class ApiController {
                                 //api参数
                                 swapiparmas(jsonObj, VisiteType, pathsob1, api.getId(), deployunitid, ApiName, deployunitname, RequestCT, creator);
                                 //4.保存用例，用例值
-                                SaveCaseData(ApiName, api.getId(), deployunitid, deployunitname, creator, Modelname, ModelID);
+                                SaveCaseData(ApiName, api.getId(), deployunitid, deployunitname, creator, Modelname, ModelID,pid);
                             } else {
                                 //API已经存在，只保存用例，用例值
                                 Api existApi = apiService.listByCondition(apicon).get(0);
                                 if (existApi != null) {
                                     Long ExcistApiid = existApi.getId();
-                                    SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID);
+                                    SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID,pid);
                                 }
                             }
                         }
@@ -340,13 +341,14 @@ public class ApiController {
     }
 
     @PostMapping("/exportpostman")
-    public Result exportpostman(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator) {
+    public Result exportpostman(@RequestParam("file") MultipartFile multipartFile, @RequestParam("deployid") String deployid, @RequestParam("deployunitname") String deployunitname, @RequestParam("apistyle") String apistyle, @RequestParam("creator") String creator, @RequestParam("projectid") String projectid) {
         File file = null;
         try {
             if (multipartFile.isEmpty()) {
                 return ResultGenerator.genFailedResult("上传的文件为空，请检查");
             }
             Long deployunitid = Long.parseLong(deployid);
+            Long pid = Long.parseLong(projectid);
             String fileName = multipartFile.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             file = new File(fileName);
@@ -391,7 +393,7 @@ public class ApiController {
                 }
 
                 HashMap<String, ApiInfo> apiInfoHashMap = new HashMap<>();
-                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, "");
+                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, "",pid);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -402,28 +404,28 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap, HashMap<String, Long> modelmap, String Modelname) throws Exception {
+    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap, HashMap<String, Long> modelmap, String Modelname,Long pid) throws Exception {
         List<String> resu = GetJson(GroupJson);
         for (String apiinfojson : resu) {
             Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
             String apiJson = gson.toJson(apiinfomap.get("item"));
             if (!apiJson.equalsIgnoreCase("null")) {
                 Modelname = apiinfomap.get("name").toString();
-                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, Modelname);
+                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, Modelname,pid);
             } else {
                 Type apiinfoType = new TypeToken<ApiInfo>() {
                 }.getType();
                 //System.out.println("apiinfojson-------:" + apiinfojson);
                 ApiInfo apiInfo = gson.fromJson(apiinfojson, apiinfoType);
                 if (!apiInfoHashMap.containsKey(apiInfo.getName())) {
-                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator, modelmap, Modelname);
+                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator, modelmap, Modelname,pid);
                 }
                 apiInfoHashMap.put(apiInfo.getName(), apiInfo);
             }
         }
     }
 
-    private void ExportData(ApiInfo apiInfo, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, Long> modelmap, String Modelname) {
+    private void ExportData(ApiInfo apiInfo, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, Long> modelmap, String Modelname,Long PID) {
         String AllPath = "";
         if (apiInfo.getRequest().getUrl() != null) {
             ArrayList<String> UrlPath = apiInfo.getRequest().getUrl().getPath();
@@ -439,6 +441,7 @@ public class ApiController {
         api.setApiname(ApiName);
         api.setApistyle(apistyle);
         api.setModelname(Modelname);
+        api.setProjectid(PID);
         long ModelID = 0;
         if (modelmap.containsKey(Modelname)) {
             ModelID = modelmap.get(Modelname);
@@ -553,14 +556,14 @@ public class ApiController {
                 }
             }
             //4.保存用例，用例值
-            SaveCaseData(ApiName, Apiid, deployunitid, deployunitname, creator, Modelname, ModelID);
+            SaveCaseData(ApiName, Apiid, deployunitid, deployunitname, creator, Modelname, ModelID,PID);
         } else {
             //API已经存在，只保存用例，用例值
             //Api existApi = apiService.getapibydvap(deployunitid, VisitType, AllPath);
             Api existApi = apiService.listByCondition(con).get(0);
             if (existApi != null) {
                 Long ExcistApiid = existApi.getId();
-                SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID);
+                SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID,PID);
             }
         }
         // }
@@ -605,7 +608,7 @@ public class ApiController {
         return apiParams;
     }
 
-    private Apicases GetApiCase(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator, String Modelname, Long ModelID) {
+    private Apicases GetApiCase(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator, String Modelname, Long ModelID,Long PID) {
         Apicases apicases = new Apicases();
         apicases.setApiname(ApiName);
         apicases.setApiid(Apiid);
@@ -627,6 +630,7 @@ public class ApiController {
         apicases.setCasecontent(ApiName);
         apicases.setModelid(ModelID);
         apicases.setModelname(Modelname);
+        apicases.setProjectid(PID);
         return apicases;
     }
 
@@ -644,9 +648,9 @@ public class ApiController {
         return apiCasedata;
     }
 
-    private void SaveCaseData(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator,  String ModelName, Long ModelID) {  //List<Header> headerList, List<Query> queryList,
+    private void SaveCaseData(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator,  String ModelName, Long ModelID,Long Pid) {  //List<Header> headerList, List<Query> queryList,
         //4.保存用例
-        Apicases apicases = GetApiCase(ApiName, Apiid, deployunitid, deployunitname, creator, ModelName, ModelID);
+        Apicases apicases = GetApiCase(ApiName, Apiid, deployunitid, deployunitname, creator, ModelName, ModelID,Pid);
         Condition con = new Condition(Apicases.class);
         con.createCriteria().andCondition("apiid = " + apicases.getApiid())
                 .andCondition("casename = '" + apicases.getCasename() + " '")
@@ -671,7 +675,7 @@ public class ApiController {
             }
             //6.保存用例Params数据
 
-            List<ApiParams> queryList = apiParamsService.findApiParamsbypropertytype(Apiid, "Header");
+            List<ApiParams> queryList = apiParamsService.findApiParamsbypropertytype(Apiid, "Params");
             List<ApiCasedata> Paramscasedata = new ArrayList<>();
             for (ApiParams query : queryList) {
                 ApiCasedata apiCasedata = GetApicaseData(ApiName, Apicaseid, "Params", query.getKeyname(), query.getKeydefaultvalue(), "String");

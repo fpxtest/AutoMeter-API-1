@@ -1213,6 +1213,7 @@ export default {
           fd.append('deployunitname', this.uploadData.deptname)
           fd.append('apistyle', this.uploadData.apistyle)
           fd.append('creator', this.name)
+          fd.append('projectid', window.localStorage.getItem('pid'))
           this.fileList.forEach(item => {
             fd.append('file', item.raw)
           })
@@ -1246,6 +1247,7 @@ export default {
           fd.append('deployunitname', this.uploadData.deptname)
           fd.append('apistyle', this.uploadData.apistyle)
           fd.append('creator', this.name)
+          fd.append('projectid', window.localStorage.getItem('pid'))
           this.SwfileList.forEach(item => {
             fd.append('file', item.raw)
           })
