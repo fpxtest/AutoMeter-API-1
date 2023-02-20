@@ -741,7 +741,7 @@
         <el-form-item label="断言值" prop="assertvalues" required>
           <el-input
             type="text"
-            maxlength="40"
+            maxlength="2000"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             v-model="tmpassert.assertvalues"
