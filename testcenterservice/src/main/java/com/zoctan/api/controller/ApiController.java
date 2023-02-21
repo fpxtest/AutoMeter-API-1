@@ -453,6 +453,8 @@ public class ApiController {
         if (apiInfo.getRequest().getBody() != null) {
             if (apiInfo.getRequest().getBody().getOptions() != null) {
                 RequestCT = apiInfo.getRequest().getBody().getOptions().getRaw().getLanguage().toUpperCase();
+            } else {
+                RequestCT="TEXT";
             }
         } else //到header中补偿下请求格式
         {
@@ -521,7 +523,7 @@ public class ApiController {
                 String mode = apiInfo.getRequest().getBody().getMode();
                 if (mode.equalsIgnoreCase("raw")) {
                     String BodyKeyValue = apiInfo.getRequest().getBody().getRaw();
-                    String KeyType = "JSON";
+                    String KeyType = "TEXT";
                     if (apiInfo.getRequest().getBody().getOptions() != null) {
                         KeyType = apiInfo.getRequest().getBody().getOptions().getRaw().getLanguage().toUpperCase();
                     }
