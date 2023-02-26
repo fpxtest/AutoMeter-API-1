@@ -1910,6 +1910,8 @@
       deployunitselectChanged(e) {
         this.apiList = null
         this.search.deployunitid = ''
+        this.search.modelid = ''
+        this.search.modelname = ''
         this.search.apiname = ''
         this.search.apiid = ''
         this.search.casetype = ''
@@ -1927,6 +1929,7 @@
       },
 
       searchmodelselectChanged(e) {
+        this.search.modelid = 0
         for (let i = 0; i < this.modelList.length; i++) {
           if (this.modelList[i].modelname === e) {
             this.search.modelid = this.modelList[i].id

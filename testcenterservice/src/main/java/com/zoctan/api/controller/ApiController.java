@@ -122,8 +122,8 @@ public class ApiController {
                             Post pathsob1 = gson.fromJson(jsonstring, postType1);
                             List<String> RequestCTList = pathsob1.getConsumes();
 
-                            String Modelname=pathsob1.getTags().get(0);
-                            Long ModelID=modelmap.get(pathsob1.getTags().get(0));
+                            String Modelname = pathsob1.getTags().get(0);
+                            Long ModelID = modelmap.get(pathsob1.getTags().get(0));
                             String RequestCT = "Form表单";
                             if (RequestCTList != null) {
                                 if (RequestCTList.size() > 0) {
@@ -165,13 +165,13 @@ public class ApiController {
                                 //api参数
                                 swapiparmas(jsonObj, VisiteType, pathsob1, api.getId(), deployunitid, ApiName, deployunitname, RequestCT, creator);
                                 //4.保存用例，用例值
-                                SaveCaseData(ApiName, api.getId(), deployunitid, deployunitname, creator, Modelname, ModelID,pid);
+                                SaveCaseData(ApiName, api.getId(), deployunitid, deployunitname, creator, Modelname, ModelID, pid);
                             } else {
                                 //API已经存在，只保存用例，用例值
                                 Api existApi = apiService.listByCondition(apicon).get(0);
                                 if (existApi != null) {
                                     Long ExcistApiid = existApi.getId();
-                                    SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID,pid);
+                                    SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID, pid);
                                 }
                             }
                         }
@@ -215,15 +215,14 @@ public class ApiController {
                         apiParams.setKeyname(js.toJSONString().replace("\\", ""));
                         apiParams.setKeydefaultvalue("NoForm");
                     }
-                    items schemaItems= schema.getItem();
+                    items schemaItems = schema.getItem();
                     if (schemaItems != null) {
                         String DefinaName = schemaItems.get$ref().substring(schemaItems.get$ref().lastIndexOf("/") + 1);
                         JSONObject js = SWGetDefinitions("definitions", DefinaName, jsonObj);
-                        if(schema.getType().equals("array"))
-                        {
-                            apiParams.setKeyname("["+js.toJSONString().replace("\\", "")+"]");
+                        if (schema.getType().equals("array")) {
+                            apiParams.setKeyname("[" + js.toJSONString().replace("\\", "") + "]");
 
-                        }else {
+                        } else {
                             apiParams.setKeyname(js.toJSONString().replace("\\", ""));
                         }
                         apiParams.setKeydefaultvalue("NoForm");
@@ -372,12 +371,15 @@ public class ApiController {
                 Iterator it = jsonArray.iterator();
                 while (it.hasNext()) {
                     JsonElement element = (JsonElement) it.next();
-                    String modelname = element.getAsJsonObject().get("name").getAsString();
+                    String modelname = "无模块";
+                    if (element.getAsJsonObject().get("item") != null) {
+                        modelname = element.getAsJsonObject().get("name").getAsString();
+                    }
                     Condition con = new Condition(DeployunitModel.class);
                     con.createCriteria().andCondition("deployunitid = " + deployunitid)
                             .andCondition("modelname = '" + modelname + "'");
+                    DeployunitModel deployunitModel = new DeployunitModel();
                     if (deployunitModelService.ifexist(con) == 0) {
-                        DeployunitModel deployunitModel = new DeployunitModel();
                         deployunitModel.setDeployunitid(deployunitid);
                         deployunitModel.setModelname(modelname);
                         deployunitModel.setCreateTime(new Date());
@@ -385,15 +387,15 @@ public class ApiController {
                         deployunitModel.setMemo("PostMan导入");
                         deployunitModel.setCreator(creator);
                         deployunitModelService.save(deployunitModel);
-                        modelmap.put(modelname, deployunitModel.getId());
+                        //modelmap.put(modelname, deployunitModel.getId());
                     } else {
-                        DeployunitModel deployunitModel = deployunitModelService.listByCondition(con).get(0);
-                        modelmap.put(modelname, deployunitModel.getId());
+                        deployunitModel = deployunitModelService.listByCondition(con).get(0);
+                        //modelmap.put(modelname, deployunitModel.getId());
                     }
+                    modelmap.put(modelname, deployunitModel.getId());
                 }
-
                 HashMap<String, ApiInfo> apiInfoHashMap = new HashMap<>();
-                recitem(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, "",pid);
+                GetItemArray(GroupJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, "", pid);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -404,28 +406,54 @@ public class ApiController {
         return ResultGenerator.genOkResult();
     }
 
-    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap, HashMap<String, Long> modelmap, String Modelname,Long pid) throws Exception {
+
+    private void GetItemArray(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap, HashMap<String, Long> modelmap, String Modelname, Long pid) throws Exception {
         List<String> resu = GetJson(GroupJson);
         for (String apiinfojson : resu) {
             Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
             String apiJson = gson.toJson(apiinfomap.get("item"));
             if (!apiJson.equalsIgnoreCase("null")) {
                 Modelname = apiinfomap.get("name").toString();
-                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, Modelname,pid);
+                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, Modelname, pid);
             } else {
+                Modelname = "无模块";
                 Type apiinfoType = new TypeToken<ApiInfo>() {
                 }.getType();
                 //System.out.println("apiinfojson-------:" + apiinfojson);
                 ApiInfo apiInfo = gson.fromJson(apiinfojson, apiinfoType);
                 if (!apiInfoHashMap.containsKey(apiInfo.getName())) {
-                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator, modelmap, Modelname,pid);
+                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator, modelmap, Modelname, pid);
                 }
                 apiInfoHashMap.put(apiInfo.getName(), apiInfo);
             }
         }
     }
 
-    private void ExportData(ApiInfo apiInfo, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, Long> modelmap, String Modelname,Long PID) {
+    private void recitem(String GroupJson, Gson gson, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, ApiInfo> apiInfoHashMap, HashMap<String, Long> modelmap, String Modelname, Long pid) throws Exception {
+        List<String> resu = GetJson(GroupJson);
+        for (String apiinfojson : resu) {
+            Map<String, Object> apiinfomap = gson.fromJson(apiinfojson, Map.class);
+            String apiJson = gson.toJson(apiinfomap.get("item"));
+            if (!apiJson.equalsIgnoreCase("null")) {
+//                if(Modelname.equalsIgnoreCase(""))
+//                {
+//                    Modelname = apiinfomap.get("name").toString();
+//                }
+                recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, Modelname, pid);
+            } else {
+                Type apiinfoType = new TypeToken<ApiInfo>() {
+                }.getType();
+                //System.out.println("apiinfojson-------:" + apiinfojson);
+                ApiInfo apiInfo = gson.fromJson(apiinfojson, apiinfoType);
+                if (!apiInfoHashMap.containsKey(apiInfo.getName())) {
+                    ExportData(apiInfo, apistyle, deployunitid, deployunitname, creator, modelmap, Modelname, pid);
+                }
+                apiInfoHashMap.put(apiInfo.getName(), apiInfo);
+            }
+        }
+    }
+
+    private void ExportData(ApiInfo apiInfo, String apistyle, Long deployunitid, String deployunitname, String creator, HashMap<String, Long> modelmap, String Modelname, Long PID) {
         String AllPath = "";
         if (apiInfo.getRequest().getUrl() != null) {
             ArrayList<String> UrlPath = apiInfo.getRequest().getUrl().getPath();
@@ -454,7 +482,7 @@ public class ApiController {
             if (apiInfo.getRequest().getBody().getOptions() != null) {
                 RequestCT = apiInfo.getRequest().getBody().getOptions().getRaw().getLanguage().toUpperCase();
             } else {
-                RequestCT="TEXT";
+                RequestCT = "TEXT";
             }
         } else //到header中补偿下请求格式
         {
@@ -558,14 +586,14 @@ public class ApiController {
                 }
             }
             //4.保存用例，用例值
-            SaveCaseData(ApiName, Apiid, deployunitid, deployunitname, creator, Modelname, ModelID,PID);
+            SaveCaseData(ApiName, Apiid, deployunitid, deployunitname, creator, Modelname, ModelID, PID);
         } else {
             //API已经存在，只保存用例，用例值
             //Api existApi = apiService.getapibydvap(deployunitid, VisitType, AllPath);
             Api existApi = apiService.listByCondition(con).get(0);
             if (existApi != null) {
                 Long ExcistApiid = existApi.getId();
-                SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID,PID);
+                SaveCaseData(ApiName, ExcistApiid, deployunitid, deployunitname, creator, Modelname, ModelID, PID);
             }
         }
         // }
@@ -610,7 +638,7 @@ public class ApiController {
         return apiParams;
     }
 
-    private Apicases GetApiCase(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator, String Modelname, Long ModelID,Long PID) {
+    private Apicases GetApiCase(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator, String Modelname, Long ModelID, Long PID) {
         Apicases apicases = new Apicases();
         apicases.setApiname(ApiName);
         apicases.setApiid(Apiid);
@@ -650,9 +678,9 @@ public class ApiController {
         return apiCasedata;
     }
 
-    private void SaveCaseData(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator,  String ModelName, Long ModelID,Long Pid) {  //List<Header> headerList, List<Query> queryList,
+    private void SaveCaseData(String ApiName, Long Apiid, Long deployunitid, String deployunitname, String creator, String ModelName, Long ModelID, Long Pid) {  //List<Header> headerList, List<Query> queryList,
         //4.保存用例
-        Apicases apicases = GetApiCase(ApiName, Apiid, deployunitid, deployunitname, creator, ModelName, ModelID,Pid);
+        Apicases apicases = GetApiCase(ApiName, Apiid, deployunitid, deployunitname, creator, ModelName, ModelID, Pid);
         Condition con = new Condition(Apicases.class);
         con.createCriteria().andCondition("apiid = " + apicases.getApiid())
                 .andCondition("casename = '" + apicases.getCasename() + " '")
