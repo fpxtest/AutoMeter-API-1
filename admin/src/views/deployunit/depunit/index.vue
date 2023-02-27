@@ -50,10 +50,10 @@
       <el-table-column label="协议" align="center" prop="protocal" width="50"/>
       <el-table-column label="访问端口" align="center" prop="port" width="80"/>
       <el-table-column label="基础路径" align="center" prop="baseurl" width="100"/>
-      <el-table-column label="API数" align="center" prop="apicounts" width="60"/>
+      <el-table-column label="API数" align="center" prop="apicounts" sortable width="80"/>
       <el-table-column label="描述" align="center" prop="memo" width="100"/>
       <el-table-column label="操作人" align="center" prop="creator" width="80"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="140">
+      <el-table-column label="创建时间" align="center" prop="createTime" sortable width="140">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.createTime) }}</template>
       </el-table-column>
       <el-table-column label="最后修改时间" align="center" prop="lastmodifyTime" width="140">

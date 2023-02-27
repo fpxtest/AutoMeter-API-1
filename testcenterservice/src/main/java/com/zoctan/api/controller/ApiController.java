@@ -371,7 +371,7 @@ public class ApiController {
                 Iterator it = jsonArray.iterator();
                 while (it.hasNext()) {
                     JsonElement element = (JsonElement) it.next();
-                    String modelname = "无模块";
+                    String modelname = "默认模块";
                     if (element.getAsJsonObject().get("item") != null) {
                         modelname = element.getAsJsonObject().get("name").getAsString();
                     }
@@ -416,7 +416,7 @@ public class ApiController {
                 Modelname = apiinfomap.get("name").toString();
                 recitem(apiJson, gson, apistyle, deployunitid, deployunitname, creator, apiInfoHashMap, modelmap, Modelname, pid);
             } else {
-                Modelname = "无模块";
+                Modelname = "默认模块";
                 Type apiinfoType = new TypeToken<ApiInfo>() {
                 }.getType();
                 //System.out.println("apiinfojson-------:" + apiinfojson);
