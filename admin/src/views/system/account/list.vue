@@ -107,6 +107,7 @@
         <el-form-item label="账户名" prop="name" required>
           <el-input
             type="text"
+            maxlength="20"
             prefix-icon="el-icon-edit"
             auto-complete="off"
             :disabled="dialogStatus === 'updateRole'"

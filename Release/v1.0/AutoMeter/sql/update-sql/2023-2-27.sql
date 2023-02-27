@@ -1,0 +1,1 @@
+ALTER TABLE testcenter.apicases MODIFY COLUMN creator varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NULL COMMENT '创建者';
