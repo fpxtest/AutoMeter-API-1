@@ -1227,7 +1227,7 @@
   import { mapGetters } from 'vuex'
   import { searchheadernotexist, searchheaderexist, addheadercasesdebug, deleteheadercase } from '@/api/assets/globalheaderuse'
   import { searchnotexist, searchexist, addcasesdebugcondition, delatedebugconditiontestcase } from '@/api/assets/apicasesdebugcondition'
-  import { getalltestconditionbytype } from '@/api/condition/condition'
+  import { getalltestcondition } from '@/api/condition/condition'
   import { getglobalheaderallList } from '@/api/testvariables/globalheader'
   import { searchdeployunitmodel } from '@/api/deployunit/depunitmodel'
 
@@ -1538,13 +1538,13 @@
       this.getenviromentallList()
       this.getapicasesList()
       this.getdepunitLists()
-      this.getalltestconditionbytype()
+      this.getalltestcondition()
       this.getglobalheaderallList()
     },
 
     activated() {
       this.getdepunitLists()
-      this.getalltestconditionbytype()
+      this.getalltestcondition()
       this.getglobalheaderallList()
       this.getenviromentallList()
     },
@@ -2143,7 +2143,7 @@
             copybatchcases(this.tmpbatchcopycase).then(() => {
               this.$message.success('批量复制成功')
               this.getapicasesList()
-              this.getalltestconditionbytype(this.tmpconditionquery)
+              // this.getalltestconditionbytype(this.tmpconditionquery)
               this.CopybatchdialogFormVisible = false
               this.btnLoading = false
             }).catch(res => {
@@ -2717,9 +2717,9 @@
           })
         }
       },
-      getalltestconditionbytype() {
+      getalltestcondition() {
         this.tmpconditionquery.objecttype = '测试集合'
-        getalltestconditionbytype(this.tmpconditionquery).then(response => {
+        getalltestcondition(this.tmpconditionquery).then(response => {
           this.conditionList = response.data
           this.casenotexisttotal = response.data.total
         }).catch(res => {
