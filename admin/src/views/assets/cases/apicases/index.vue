@@ -1836,12 +1836,12 @@
             this.apiQuery.modelid = this.modelList[i].id
             this.tmpapicases.modelid = this.modelList[i].id
           }
-          getapiListbydeploy(this.apiQuery).then(response => {
-            this.apiList = response.data
-          }).catch(res => {
-            this.$message.error('加载api列表失败')
-          })
         }
+        getapiListbydeploy(this.apiQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
       },
       /**
        * 微服务下拉选择事件获取微服务id  e的值为options的选值,获取用例
@@ -2322,6 +2322,21 @@
           this.tmpapicases.threadnum = 1
           // this.tmpapicases.loops = 1
         }
+        this.apiList = []
+        this.apiQuery.deployunitname = this.apicasesList[index].deployunitname
+        this.apiQuery.modelid = 0
+        for (let i = 0; i < this.deployunitList.length; i++) {
+          if (this.deployunitList[i].deployunitname === this.apicasesList[index].deployunitname) {
+            this.apiQuery.deployunitid = this.deployunitList[i].id
+            this.tmpmodelquery.deployunitid = this.deployunitList[i].id
+          }
+        }
+        this.searchdeployunitmodel()
+        getapiListbydeploy(this.apiQuery).then(response => {
+          this.apiList = response.data
+        }).catch(res => {
+          this.$message.error('加载api列表失败')
+        })
       },
 
       async getapi() {
